@@ -1,6 +1,7 @@
 package liquid
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -11,10 +12,17 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/utils"
-	"gopkg.in/osteele/liquid.v1"
+	"github.com/osteele/liquid"
 )
 
-// Engine struct
+func newLiquidEngine(templates map[string]*liquid.Template) *liquid.Engine {
+	engine := liquid.NewEngine()
+	addTags(engine, templates)
+	addFilters(engine)
+	return engine
+}
+
+// Engine implements fiber.Views interface to load and render Liquid templates.
 type Engine struct {
 	// views folder
 	directory string
@@ -22,43 +30,42 @@ type Engine struct {
 	fileSystem http.FileSystem
 	// views extension
 	extension string
-	// layout variable name that incapsulates the template
-	layout string
+	// layoutVar variable name that encapsulates the template
+	layoutVar string
 	// determines if the engine parsed all templates
 	loaded bool
 	// reload on each render
 	reload bool
-	// debug prints the parsed templates
-	debug bool
-	// lock for funcmap and templates
+	// lock for loading up the engine
 	mutex sync.RWMutex
 	// templates
 	Templates map[string]*liquid.Template
 }
 
-// New returns a Handlebar render engine for Fiber
+// New creates a Liquid template render engine for Fiber.
 func New(directory, extension string) *Engine {
 	engine := &Engine{
 		directory: directory,
 		extension: extension,
-		layout:    "embed",
+		layoutVar: "embed",
 	}
 	return engine
 }
 
+// NewFileSystem creates a Liquid template render engine for Fiber.
 func NewFileSystem(fs http.FileSystem, extension string) *Engine {
 	engine := &Engine{
 		directory:  "/",
 		fileSystem: fs,
 		extension:  extension,
-		layout:     "embed",
+		layoutVar:  "embed",
 	}
 	return engine
 }
 
 // Layout defines the variable name that will incapsulate the template
 func (e *Engine) Layout(key string) *Engine {
-	e.layout = key
+	e.layoutVar = key
 	return e
 }
 
@@ -70,12 +77,6 @@ func (e *Engine) Reload(enabled bool) *Engine {
 	return e
 }
 
-// Debug will print the parsed templates when Load is triggered.
-func (e *Engine) Debug(enabled bool) *Engine {
-	e.debug = enabled
-	return e
-}
-
 // Load parses the templates to the engine.
 func (e *Engine) Load() error {
 	// race safe
@@ -83,12 +84,12 @@ func (e *Engine) Load() error {
 	defer e.mutex.Unlock()
 
 	e.Templates = make(map[string]*liquid.Template)
-	liquidEngine := liquid.NewEngine()
+	liquidEngine := newLiquidEngine(e.Templates)
 
 	// Loop trough each directory and register template files
 	walkFn := func(path string, info os.FileInfo, err error) error {
 		if err != nil {
-			return err
+			return NewLoadError(path, err)
 		}
 		if info == nil || info.IsDir() {
 			return nil
@@ -96,35 +97,25 @@ func (e *Engine) Load() error {
 		if !strings.HasSuffix(path, e.extension) {
 			return nil
 		}
-		// Get the relative file path
-		// ./views/html/index.tmpl -> index.tmpl
+		// get the relative file path, e.g: ./views/html/index.tmpl -> index.tmpl
 		rel, err := filepath.Rel(e.directory, path)
 		if err != nil {
-			return err
+			return NewLoadError(path, errors.New("failed make relative file path"))
 		}
-		// Reverse slashes '\' -> '/' and
-		// partials\footer.tmpl -> partials/footer.tmpl
+		// reverse slashes '\' -> '/'
 		name := filepath.ToSlash(rel)
-		// Remove ext from name 'index.tmpl' -> 'index'
-		name = strings.TrimSuffix(name, e.extension)
-		// name = strings.Replace(name, e.extension, "", -1)
-		// Read the file
-		// #gosec G304
+		// read the file
 		buf, err := utils.ReadFile(path, e.fileSystem)
 		if err != nil {
-			return err
+			return NewLoadError(path, err)
 		}
-		// Create new template associated with the current one
+		// create new template associated with the current one
 		tmpl, err := liquidEngine.ParseTemplate(buf)
 		if err != nil {
-			return err
+			return NewLoadError(path, err)
 		}
 		e.Templates[name] = tmpl
-		// Debugging
-		if e.debug {
-			fmt.Printf("views: parsed template: %s\n", name)
-		}
-		return err
+		return nil
 	}
 	// notify engine that we parsed all templates
 	e.loaded = true
@@ -134,25 +125,40 @@ func (e *Engine) Load() error {
 	return filepath.Walk(e.directory, walkFn)
 }
 
-func getLiquidBinding(binding interface{}) liquid.Bindings {
-	if binding == nil {
-		return nil
-	}
-	if binds, ok := binding.(liquid.Bindings); ok {
-		return binds
-	}
-	if binds, ok := binding.(map[string]interface{}); ok {
-		return binds
-	}
-	if binds, ok := binding.(fiber.Map); ok {
-		bind := make(liquid.Bindings)
-		for key, value := range binds {
-			bind[key] = value
+func getLiquidBinding(binding interface{}) (liquid.Bindings, error) {
+	var liqBinding liquid.Bindings
+	if binding != nil {
+		switch t := binding.(type) {
+		case liquid.Bindings:
+			liqBinding = t
+		case map[string]interface{}:
+			liqBinding = t
+		case fiber.Map:
+			liqBinding = make(liquid.Bindings)
+			for key, value := range t {
+				liqBinding[key] = value
+			}
+		default:
+			return liqBinding, errors.New("invalid binding")
 		}
-		return bind
 	}
+	// for capture_global tag
+	liqBinding["capture_global"] = make(map[string][]string)
 
-	return nil
+	return liqBinding, nil
+}
+
+// getTemplate returns the template by name or name+extension.
+func (e *Engine) getTemplate(name string) (*liquid.Template, error) {
+	tmpl, ok := e.Templates[name]
+	if ok {
+		return tmpl, nil
+	}
+	tmpl, ok = e.Templates[name+e.extension]
+	if ok {
+		return tmpl, nil
+	}
+	return nil, fmt.Errorf("template %s does not exist", name)
 }
 
 // Render will render the template by name
@@ -162,33 +168,39 @@ func (e *Engine) Render(out io.Writer, template string, binding interface{}, lay
 			e.loaded = false
 		}
 		if err := e.Load(); err != nil {
-			return err
+			return NewRenderError(template, err)
 		}
-	}
-	tmpl, ok := e.Templates[template]
-	if !ok {
-		return fmt.Errorf("template %s does not exist", template)
 	}
 
 	var err error
-	liquidBinding := getLiquidBinding(binding)
+	var tmpl *liquid.Template
+	if tmpl, err = e.getTemplate(template); err != nil {
+		return NewRenderError(template, err)
+	}
+
+	liquidBinding, err := getLiquidBinding(binding)
+	if err != nil {
+		return NewRenderError(template, err)
+	}
 	rendered, err := tmpl.Render(liquidBinding)
 	if err != nil {
-		return err
+		return NewRenderError(template, err)
 	}
 	if len(layout) > 0 && layout[0] != "" {
 		if liquidBinding == nil {
 			liquidBinding = make(map[string]interface{}, 1)
 		}
-		liquidBinding[e.layout] = rendered
-		template := e.Templates[layout[0]]
-		if template == nil {
-			return fmt.Errorf("layout %s does not exist", layout[0])
+		liquidBinding[e.layoutVar] = rendered
+		if tmpl, err = e.getTemplate(layout[0]); err != nil {
+			return NewRenderError(template, err)
 		}
 		rendered, err = tmpl.Render(liquidBinding)
+		if err != nil {
+			return NewRenderError(template, err)
+		}
 	}
 	if _, err = out.Write(rendered); err != nil {
-		return err
+		return NewRenderError(template, err)
 	}
 	return nil
 }
