@@ -1,5 +1,7 @@
 # Project
 /tmp
+/main
+/public/
 
 # IDE
 /.vscode
