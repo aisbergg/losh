@@ -3,6 +3,7 @@ package liquid
 import (
 	"regexp"
 	"strings"
+	"unicode/utf8"
 
 	"github.com/osteele/liquid"
 	"golang.org/x/text/language"
@@ -21,14 +22,15 @@ func firstLetterFilter(input string) string {
 	if len(input) == 0 {
 		return ""
 	}
-	return input[:1]
+	firstLetter, _ := utf8.DecodeRuneInString(input)
+	return string(firstLetter)
 }
 
 func firstLettersFilter(input string) string {
 	words := strings.Fields(input)
 	fl := make([]string, 0, len(words))
 	for _, word := range words {
-		fl = append(fl, word[:1])
+		fl = append(fl, firstLetterFilter(word))
 	}
 	return strings.Join(fl, "")
 }
