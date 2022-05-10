@@ -2,28 +2,15 @@ package config
 
 import (
 	"fmt"
+	"losh/web/app/controllers"
 	"losh/web/lib/template/liquid"
+	"losh/web/lib/utils"
 	"os"
-	"path"
-	"strconv"
-	"strings"
 
+	"github.com/rotisserie/eris"
 	"github.com/spf13/viper"
 
-	hashing "github.com/thomasvvugt/fiber-hashing"
-	argon_driver "github.com/thomasvvugt/fiber-hashing/driver/argon2id"
-	bcrypt_driver "github.com/thomasvvugt/fiber-hashing/driver/bcrypt"
-
-	"github.com/alexedwards/argon2id"
-	"github.com/jameskeane/bcrypt"
-
 	"github.com/gofiber/fiber/v2"
-
-	"github.com/gofiber/fiber/v2/middleware/session"
-	"github.com/gofiber/storage/memcache"
-	fMysql "github.com/gofiber/storage/mysql"
-	fRedis "github.com/gofiber/storage/redis"
-	fSQLite "github.com/gofiber/storage/sqlite3"
 )
 
 type Config struct {
@@ -31,33 +18,6 @@ type Config struct {
 
 	errorHandler fiber.ErrorHandler
 	fiber        *fiber.Config
-}
-
-var defaultErrorHandler = func(c *fiber.Ctx, err error) error {
-	// Status code defaults to 500
-	code := fiber.StatusInternalServerError
-
-	// Set error message
-	message := err.Error()
-
-	// Check if it's a fiber.Error type
-	if e, ok := err.(*fiber.Error); ok {
-		code = e.Code
-		message = e.Message
-	}
-
-	// TODO: Check return type for the client, JSON, HTML, YAML or any other (API vs web)
-
-	// Return HTTP response
-	c.Set(fiber.HeaderContentType, fiber.MIMETextPlainCharsetUTF8)
-	c.Status(code)
-
-	// Render default error view
-	err = c.Render("errors/"+strconv.Itoa(code), fiber.Map{"message": message})
-	if err != nil {
-		return c.SendString(message)
-	}
-	return err
 }
 
 func New() *Config {
@@ -84,7 +44,7 @@ func New() *Config {
 		}
 	}
 
-	config.SetErrorHandler(defaultErrorHandler)
+	config.SetErrorHandler(controllers.ErrorHandler(config.GetBool("FIBER_VIEWS_DEBUG")))
 
 	// TODO: Logger (Maybe a different zap object)
 
@@ -106,39 +66,6 @@ func (config *Config) setDefaults() {
 	// Set default App configuration
 	config.SetDefault("APP_ADDR", ":8080")
 	config.SetDefault("APP_ENV", "local")
-
-	// Set default database configuration
-	config.SetDefault("DB_DRIVER", "mysql")
-	config.SetDefault("DB_HOST", "localhost")
-	config.SetDefault("DB_USERNAME", "fiber")
-	config.SetDefault("DB_PASSWORD", "password")
-	config.SetDefault("DB_PORT", 3306)
-	config.SetDefault("DB_DATABASE", "boilerplate")
-
-	// Set default hasher configuration
-	config.SetDefault("HASHER_DRIVER", "argon2id")
-	config.SetDefault("HASHER_MEMORY", 131072)
-	config.SetDefault("HASHER_ITERATIONS", 4)
-	config.SetDefault("HASHER_PARALLELISM", 4)
-	config.SetDefault("HASHER_SALTLENGTH", 16)
-	config.SetDefault("HASHER_KEYLENGTH", 32)
-	config.SetDefault("HASHER_ROUNDS", bcrypt.DefaultRounds)
-
-	// Set default session configuration
-	config.SetDefault("SESSION_PROVIDER", "sqlite3")
-	config.SetDefault("SESSION_KEYPREFIX", "session")
-	config.SetDefault("SESSION_HOST", "localhost")
-	config.SetDefault("SESSION_PORT", 3306)
-	config.SetDefault("SESSION_USERNAME", "fiber")
-	config.SetDefault("SESSION_PASSWORD", "secret")
-	config.SetDefault("SESSION_DATABASE", "boilerplate")
-	config.SetDefault("SESSION_TABLENAME", "sessions")
-	config.SetDefault("SESSION_LOOKUP", "cookie:session_id")
-	config.SetDefault("SESSION_DOMAIN", "")
-	config.SetDefault("SESSION_SAMESITE", "Lax")
-	config.SetDefault("SESSION_EXPIRATION", "12h")
-	config.SetDefault("SESSION_SECURE", false)
-	config.SetDefault("SESSION_GCINTERVAL", "1m")
 
 	// Set default Fiber configuration
 	config.SetDefault("FIBER_PREFORK", false)
@@ -182,9 +109,6 @@ func (config *Config) setDefaults() {
 
 	// Set default Force HTTPS middleware configuration
 	config.SetDefault("MW_FORCE_HTTPS_ENABLED", false)
-
-	// Set default Force trailing slash middleware configuration
-	config.SetDefault("MW_FORCE_TRAILING_SLASH_ENABLED", false)
 
 	// Set default HSTS middleware configuration
 	config.SetDefault("MW_HSTS_ENABLED", false)
@@ -251,14 +175,17 @@ func (config *Config) setDefaults() {
 }
 
 func (config *Config) getFiberViewsEngine() fiber.Views {
-	execPath, err := os.Executable()
+	tmplPath, err := utils.ResolveExecRelPath("assets/templates")
+	if err != nil {
+		panic(eris.Wrapf(err, "missing template dir '%s'", tmplPath))
+	}
+	engine := liquid.New(tmplPath, ".html")
+	engine.Layout("content")
+	engine.Reload(config.GetBool("FIBER_VIEWS_DEBUG"))
+	err = engine.Load()
 	if err != nil {
 		panic(err)
 	}
-	resPath := path.Join(path.Dir(execPath), "resources/views")
-	engine := liquid.New(resPath, ".html")
-	engine.Reload(config.GetBool("FIBER_VIEWS_DEBUG")).
-		Debug(config.GetBool("FIBER_VIEWS_DEBUG"))
 	return engine
 }
 
@@ -270,7 +197,7 @@ func (config *Config) setFiberConfig() {
 		BodyLimit:             20 * 1024 * 1024,
 		Concurrency:           config.GetInt("FIBER_CONCURRENCY"),
 		Views:                 config.getFiberViewsEngine(),
-		ViewsLayout:           "layouts/main",
+		ViewsLayout:           "layouts/default2",
 		PassLocalsToViews:     false,
 		ReadTimeout:           config.GetDuration("FIBER_READTIMEOUT"),
 		WriteTimeout:          config.GetDuration("FIBER_WRITETIMEOUT"),
@@ -287,64 +214,4 @@ func (config *Config) setFiberConfig() {
 
 func (config *Config) GetFiberConfig() *fiber.Config {
 	return config.fiber
-}
-
-func (config *Config) GetHasherConfig() hashing.Config {
-	if strings.ToLower(config.GetString("HASHER_DRIVER")) == "bcrypt" {
-		return hashing.Config{
-			Driver: bcrypt_driver.New(bcrypt_driver.Config{
-				Complexity: config.GetInt("HASHER_ROUNDS"),
-			})}
-	} else {
-		return hashing.Config{
-			Driver: argon_driver.New(argon_driver.Config{
-				Params: &argon2id.Params{
-					Memory:      config.GetUint32("HASHER_MEMORY"),
-					Iterations:  config.GetUint32("HASHER_ITERATIONS"),
-					Parallelism: uint8(config.GetInt("HASHER_PARALLELISM")),
-					SaltLength:  config.GetUint32("HASHER_SALTLENGTH"),
-					KeyLength:   config.GetUint32("HASHER_KEYLENGTH"),
-				}})}
-	}
-}
-
-func (config *Config) GetSessionConfig() session.Config {
-	var provider fiber.Storage
-	switch strings.ToLower(config.GetString("SESSION_PROVIDER")) {
-	case "memcache":
-		provider = memcache.New(memcache.Config{
-			Servers: config.GetString("SESSION_HOST") + ":" + config.GetString("SESSION_PORT"),
-		})
-	case "mysql":
-		provider = fMysql.New(fMysql.Config{
-			Host:     config.GetString("SESSION_HOST"),
-			Port:     config.GetInt("SESSION_PORT"),
-			Username: config.GetString("SESSION_USERNAME"),
-			Password: config.GetString("SESSION_PASSWORD"),
-			Database: config.GetString("SESSION_DATABASE"),
-			Table:    config.GetString("SESSION_TABLENAME"),
-		})
-	case "redis":
-		provider = fRedis.New(fRedis.Config{
-			Host:     config.GetString("SESSION_HOST"),
-			Port:     config.GetInt("SESSION_PORT"),
-			Username: config.GetString("SESSION_USERNAME"),
-			Password: config.GetString("SESSION_PASSWORD"),
-			Database: config.GetInt("SESSION_DATABASE"),
-		})
-	case "sqlite3":
-		provider = fSQLite.New(fSQLite.Config{
-			Database: config.GetString("SESSION_DATABASE"),
-			Table:    config.GetString("SESSION_TABLENAME"),
-		})
-	}
-
-	return session.Config{
-		Expiration:     config.GetDuration("SESSION_EXPIRATION"),
-		Storage:        provider,
-		KeyLookup:      config.GetString("SESSION_LOOKUP"),
-		CookieDomain:   config.GetString("SESSION_DOMAIN"),
-		CookieSecure:   config.GetBool("SESSION_SECURE"),
-		CookieSameSite: config.GetString("SESSION_SAMESITE"),
-	}
 }
