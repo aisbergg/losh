@@ -1,7 +1,6 @@
 package lib
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
 
@@ -39,6 +38,5 @@ func GetBindings() map[string]interface{} {
 		},
 		"site": siteBindings,
 	}
-	fmt.Println(bindings)
 	return bindings
 }
