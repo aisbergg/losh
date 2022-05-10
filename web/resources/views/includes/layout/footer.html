@@ -1,0 +1,29 @@
+<footer class="footer footer-transparent d-print-none">
+	<div class="container-xl">
+		<div class="row text-center align-items-center flex-row-reverse">
+			<div class="col-lg-auto ms-lg-auto">
+				<ul class="list-inline list-inline-dots mb-0">
+					<li class="list-inline-item"><a href="{{ site.base }}/" class="link-secondary">Terms of Service</a></li>
+					<li class="list-inline-item"><a href="{{ site.base }}/" class="link-secondary">Privacy Policy</a></li>
+					<li class="list-inline-item"><a href="{{ site.base }}/" class="link-secondary">Report an Issue</a></li>
+					<li class="list-inline-item">
+						<a href="?theme=dark" class="link-secondary px-0 hide-theme-dark" title="Enable dark mode" data-bs-toggle="tooltip" data-bs-placement="bottom">
+							{% include ui/icon.html icon="moon" %}
+						</a>
+						<a href="?theme=light" class="link-secondary px-0 hide-theme-light" title="Enable light mode" data-bs-toggle="tooltip" data-bs-placement="bottom">
+							{% include ui/icon.html icon="sun" %}
+						</a>
+					</li>
+				</ul>
+			</div>
+			<div class="col-12 col-lg-auto mt-3 mt-lg-0">
+				<ul class="list-inline list-inline-dots mb-0">
+					<li class="list-inline-item">
+						Copyright &copy; {{ "now" | date: "%Y" }}
+						<a href="{{ site.base }}" class="link-secondary">{{ site.copy-right }}</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</footer>
