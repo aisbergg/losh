@@ -89,7 +89,7 @@ func (e *Engine) Load() error {
 	// Loop trough each directory and register template files
 	walkFn := func(path string, info os.FileInfo, err error) error {
 		if err != nil {
-			return NewLoadError(path, err)
+			return NewLoadError(path, err, nil)
 		}
 		if info == nil || info.IsDir() {
 			return nil
@@ -100,19 +100,19 @@ func (e *Engine) Load() error {
 		// get the relative file path, e.g: ./views/html/index.tmpl -> index.tmpl
 		rel, err := filepath.Rel(e.directory, path)
 		if err != nil {
-			return NewLoadError(path, errors.New("failed make relative file path"))
+			return NewLoadError(path, errors.New("failed make relative file path"), nil)
 		}
 		// reverse slashes '\' -> '/'
 		name := filepath.ToSlash(rel)
 		// read the file
 		buf, err := utils.ReadFile(path, e.fileSystem)
 		if err != nil {
-			return NewLoadError(path, err)
+			return NewLoadError(path, err, nil)
 		}
 		// create new template associated with the current one
 		tmpl, err := liquidEngine.ParseTemplate(buf)
 		if err != nil {
-			return NewLoadError(path, err)
+			return NewLoadError(path, err, nil)
 		}
 		e.Templates[name] = tmpl
 		return nil
@@ -168,23 +168,23 @@ func (e *Engine) Render(out io.Writer, template string, binding interface{}, lay
 			e.loaded = false
 		}
 		if err := e.Load(); err != nil {
-			return NewRenderError(template, err)
+			return NewRenderError(template, err, binding)
 		}
 	}
 
 	var err error
 	var tmpl *liquid.Template
 	if tmpl, err = e.getTemplate(template); err != nil {
-		return NewRenderError(template, err)
+		return NewRenderError(template, err, binding)
 	}
 
 	liquidBinding, err := getLiquidBinding(binding)
 	if err != nil {
-		return NewRenderError(template, err)
+		return NewRenderError(template, err, binding)
 	}
 	rendered, err := tmpl.Render(liquidBinding)
 	if err != nil {
-		return NewRenderError(template, err)
+		return NewRenderError(template, err, binding)
 	}
 	if len(layout) > 0 && layout[0] != "" {
 		if liquidBinding == nil {
@@ -192,15 +192,15 @@ func (e *Engine) Render(out io.Writer, template string, binding interface{}, lay
 		}
 		liquidBinding[e.layoutVar] = rendered
 		if tmpl, err = e.getTemplate(layout[0]); err != nil {
-			return NewRenderError(template, err)
+			return NewRenderError(template, err, binding)
 		}
 		rendered, err = tmpl.Render(liquidBinding)
 		if err != nil {
-			return NewRenderError(template, err)
+			return NewRenderError(template, err, binding)
 		}
 	}
 	if _, err = out.Write(rendered); err != nil {
-		return NewRenderError(template, err)
+		return NewRenderError(template, err, binding)
 	}
 	return nil
 }

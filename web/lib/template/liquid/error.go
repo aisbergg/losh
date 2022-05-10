@@ -11,11 +11,13 @@ type TemplatingError interface {
 	error
 	FilePath() string
 	Cause() error
+	Bindings() interface{}
 }
 
 type templatingError struct {
 	filePath string
 	cause    error
+	binding  interface{}
 }
 
 func (e *templatingError) FilePath() string {
@@ -26,12 +28,16 @@ func (e *templatingError) Cause() error {
 	return e.cause
 }
 
+func (e *templatingError) Bindings() interface{} {
+	return e.binding
+}
+
 func (e *templatingError) Error() string {
 	return ""
 }
 
 // NewLoadError creates a loadError.
-func NewLoadError(filePath string, cause error) TemplatingError {
+func NewLoadError(filePath string, cause error, binding interface{}) TemplatingError {
 	return &loadError{
 		templatingError: templatingError{
 			filePath: filePath,
@@ -49,7 +55,7 @@ func (e *loadError) Error() string {
 }
 
 // NewRenderError creates a renderError.
-func NewRenderError(filePath string, cause error) TemplatingError {
+func NewRenderError(filePath string, cause error, binding interface{}) TemplatingError {
 	return &renderError{
 		templatingError: templatingError{
 			filePath: filePath,
@@ -137,47 +143,6 @@ func formatLocation(err error) (location, cause string) {
 	default:
 		return "", typedErr.Error()
 	}
-
-	// if te.Cause() != nil {
-	// 	switch err := te.Cause().(type) {
-	// 	case liquid.SourceError:
-	// 		loc := ""
-	// 		if err.LineNumber() > 0 {
-	// 			loc = fmt.Sprintf("(%s:%d)", te.FilePath(), err.LineNumber())
-	// 		} else {
-	// 			loc = fmt.Sprintf("(%s)", te.FilePath())
-	// 		}
-	// 		if location = "" {
-	// 			location = loc
-	// 		} else {
-	// 			location = fmt.Sprintf("%s -> %s", location, loc)
-	// 		}
-	// 		formatLocation()
-
-	// 		c := err.(error)
-	// 		for {
-	// 			if c != nil {
-	// 				fmt.Println("ERROR: ", c)
-	// 				if tc, ok := c.(liquid.err); ok {
-	// 					c = tc.Cause()
-	// 				} else {
-	// 					break
-	// 				}
-	// 			}
-	// 		}
-	// 		if err.Cause() != nil {
-	// 			cause = err.Cause().Error()
-	// 		} else {
-	// 			cause = err.Error()
-	// 		}
-	// 	case TemplatingError:
-
-	// 	}
-	// }
-
-	// return
-
-	// return fmt.Sprintf("template %s error %s: %s", stage, location, cause)
 
 	return
 }

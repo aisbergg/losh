@@ -169,7 +169,7 @@ func includeFromDir(dir string, templates map[string]*liquid.Template, rc render
 	// get template
 	template, ok := templates[filename]
 	if !ok {
-		return "", NewRenderError(filename, errors.New("cannot locate file"))
+		return "", NewRenderError(filename, errors.New("cannot locate file"), rc.Bindings())
 	}
 
 	// copy lexical environment and add 'include'
@@ -182,7 +182,7 @@ func includeFromDir(dir string, templates map[string]*liquid.Template, rc render
 	// render template
 	rendered, err := template.Render(bindings)
 	if err != nil {
-		return "", NewRenderError(filename, err)
+		return "", NewRenderError(filename, err, bindings)
 	}
 	return string(rendered), nil
 }
