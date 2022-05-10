@@ -11,11 +11,11 @@ charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
 
-[{Makefile,go.mod,go.sum,*.go,.gitmodules}]
+[{Makefile,go.mod,go.sum,*.go,.gitmodules,*.html}]
 indent_style = tab
 
 [*.md]
 trim_trailing_whitespace = false
 
-[*.{yml,yaml,toml}]
+[*.{yml,yaml,toml,json,css}]
 indent_size = 2
