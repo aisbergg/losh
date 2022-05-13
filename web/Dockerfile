@@ -17,7 +17,8 @@ RUN yarn run prod
 
 FROM golang:1.18-alpine as build-app
 WORKDIR /build
-COPY ./go.mod /go.sum ./
+COPY ./go.mod ./go.sum ./
+COPY ./lib/vendor/ ./lib/vendor/
 RUN go mod download
 COPY ./ ./
 RUN set -e \
