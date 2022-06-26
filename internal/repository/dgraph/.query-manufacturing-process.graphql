@@ -1,0 +1,28 @@
+fragment ManufacturingProcessFragment on ManufacturingProcess {
+	...NodeFragment
+	name
+	description
+}
+
+# ------------------------------------------------------------------------------
+
+query GetManufacturingProcess($id: ID!) {
+	getManufacturingProcess(id: $id) {
+		...ManufacturingProcessFragment
+	}
+}
+
+query GetManufacturingProcesses($filter: ManufacturingProcessFilter, $order: ManufacturingProcessOrder, $first: Int, $offset: Int) {
+	queryManufacturingProcess(filter: $filter, order: $order, first: $first, offset: $offset) {
+		...ManufacturingProcessFragment
+	}
+}
+
+mutation SaveManufacturingProcesses($input: [AddManufacturingProcessInput!]!, $deleteIds: [ID!]!) {
+	deleteManufacturingProcess(filter: {id: $deleteIds}) {manufacturingProcess {id}}
+	addManufacturingProcess(input: $input) {manufacturingProcess {id}}
+}
+
+mutation DeleteManufacturingProcesses($filter: ManufacturingProcessFilter!) {
+	deleteManufacturingProcess(filter: $filter) {manufacturingProcess {id}}
+}

@@ -1,0 +1,96 @@
+fragment UserOrGroupFragment on UserOrGroup {
+	... on User {id}
+	... on Group {id}
+	xid
+	host {id}
+	name
+	email
+	avatar {id}
+	url
+	memberOf {id}
+	products {id}
+}
+
+fragment UserFragment on User {
+	...NodeFragment
+	...UserOrGroupFragment
+	fullName
+	locale
+}
+
+fragment GroupFragment on Group {
+	...NodeFragment
+	...UserOrGroupFragment
+	members {
+		... on User {id}
+		... on Group {id}
+	}
+}
+
+# ------------------------------------------------------------------------------
+
+query GetUserOrGroup($id: ID, $xid: String) {
+	getUserOrGroup(id: $id, xid: $xid) {
+		... on User {
+			...UserFragment
+		}
+		... on Group {
+			...GroupFragment
+		}
+	}
+}
+
+query GetUserOrGroups($filter: UserOrGroupFilter, $order: UserOrGroupOrder, $first: Int, $offset: Int) {
+	queryUserOrGroup(filter: $filter, order: $order, first: $first, offset: $offset) {
+		... on User {
+			...UserFragment
+		}
+		... on Group {
+			...GroupFragment
+		}
+	}
+}
+
+mutation DeleteUserOrGroup($filter: UserOrGroupFilter!) {
+	deleteUserOrGroup(filter: $filter) {userOrGroup {id}}
+}
+
+query GetUser($id: ID, $xid: String) {
+	getUser(id: $id, xid: $xid) {
+		...UserFragment
+	}
+}
+
+query GetUsers($filter: UserFilter, $order: UserOrder, $first: Int, $offset: Int) {
+	queryUser(filter: $filter, order: $order, first: $first, offset: $offset) {
+		...UserFragment
+	}
+}
+
+mutation SaveUsers($input: [AddUserInput!]!) {
+	addUser(input: $input, upsert: true) {user {id}}
+}
+
+mutation DeleteUser($filter: UserFilter!) {
+	deleteUser(filter: $filter) {user {id}}
+}
+
+query GetGroup($id: ID, $xid: String) {
+	getGroup(id: $id, xid: $xid) {
+		...GroupFragment
+	}
+}
+
+query GetGroups($filter: GroupFilter, $order: GroupOrder, $first: Int, $offset: Int) {
+	queryGroup(filter: $filter, order: $order, first: $first, offset: $offset) {
+		...GroupFragment
+	}
+}
+
+mutation SaveGroups($input: [AddGroupInput!]!) {
+	addGroup(input: $input, upsert: true) {group {id}}
+}
+
+mutation DeleteGroup($filter: GroupFilter!) {
+	deleteGroup(filter: $filter) {group {id}}
+}

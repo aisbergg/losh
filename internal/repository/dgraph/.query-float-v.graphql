@@ -1,0 +1,27 @@
+fragment FloatVFragment on FloatV {
+	...NodeFragment
+	value
+}
+
+# ------------------------------------------------------------------------------
+
+query GetFloatV($id: ID!) {
+	getFloatV(id: $id) {
+		...FloatVFragment
+	}
+}
+
+query GetFloatVs($filter: FloatVFilter, $order: FloatVOrder, $first: Int, $offset: Int) {
+	queryFloatV(filter: $filter, order: $order, first: $first, offset: $offset) {
+		...FloatVFragment
+	}
+}
+
+mutation SaveFloatVs($input: [AddFloatVInput!]!, $deleteIds: [ID!]!) {
+	deleteFloatV(filter: {id: $deleteIds}) {floatV {id}}
+	addFloatV(input: $input) {floatV {id}}
+}
+
+mutation DeleteFloatVs($filter: FloatVFilter!) {
+	deleteFloatV(filter: $filter) {floatV {id}}
+}

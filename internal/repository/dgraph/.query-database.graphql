@@ -1,0 +1,19 @@
+fragment DatabaseFragment on Database {
+	id
+	version
+}
+
+# ------------------------------------------------------------------------------
+
+query GetDatabaseInfo() {
+	queryDatabase(first: 1) {
+		...DatabaseFragment
+	}
+}
+
+mutation SaveDatabaseInfo($dbInfo: [AddDatabaseInput!]!) {
+	# delete old information first
+	deleteDatabase(filter: {}) {database {id}}
+	# save new information
+	addDatabase(input: $dbInfo) {database {id}}
+}

@@ -1,0 +1,32 @@
+fragment CategoryFragment on Category {
+	id
+	xid
+	fullName
+	name
+	description
+	parent {id}
+	children {id}
+	products {id}
+}
+
+# ------------------------------------------------------------------------------
+
+query GetCategory($id: ID, $xid: String) {
+	getCategory(id: $id, xid: $xid) {
+		...CategoryFragment
+	}
+}
+
+query GetCategories($filter: CategoryFilter, $order: CategoryOrder, $first: Int, $offset: Int) {
+	queryCategory(filter: $filter, order: $order, first: $first, offset: $offset) {
+		...CategoryFragment
+	}
+}
+
+mutation SaveCategories($input: [AddCategoryInput!]!) {
+	addCategory(input: $input, upsert: true) {category {id}}
+}
+
+mutation DeleteCategory($filter: CategoryFilter!) {
+	deleteCategory(filter: $filter) {category {id}}
+}

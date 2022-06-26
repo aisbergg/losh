@@ -1,0 +1,29 @@
+fragment TechnicalStandardFragment on TechnicalStandard {
+	...NodeFragment
+	xid
+	name
+	description
+	components {id}
+}
+
+# ------------------------------------------------------------------------------
+
+query GetTechnicalStandard($id: ID, $xid: String) {
+	getTechnicalStandard(id: $id, xid: $xid) {
+		...TechnicalStandardFragment
+	}
+}
+
+query GetTechnicalStandards($filter: TechnicalStandardFilter, $order: TechnicalStandardOrder, $first: Int, $offset: Int) {
+	queryTechnicalStandard(filter: $filter, order: $order, first: $first, offset: $offset) {
+		...TechnicalStandardFragment
+	}
+}
+
+mutation SaveTechnicalStandards($input: [AddTechnicalStandardInput!]!) {
+	addTechnicalStandard(input: $input, upsert: true) {technicalStandard {id}}
+}
+
+mutation DeleteTechnicalStandard($filter: TechnicalStandardFilter!) {
+	deleteTechnicalStandard(filter: $filter) {technicalStandard {id}}
+}

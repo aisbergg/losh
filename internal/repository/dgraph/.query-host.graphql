@@ -1,0 +1,27 @@
+fragment HostFragment on Host {
+	...NodeFragment
+	domain
+	name
+}
+
+# ------------------------------------------------------------------------------
+
+query GetHost($id: ID, $domain: String) {
+	getHost(id: $id, domain: $domain) {
+		...HostFragment
+	}
+}
+
+query GetHosts($filter: HostFilter, $order: HostOrder, $first: Int, $offset: Int) {
+	queryHost(filter: $filter, order: $order, first: $first, offset: $offset) {
+		...HostFragment
+	}
+}
+
+mutation SaveHosts($hosts: [AddHostInput!]!) {
+	addHost(input: $hosts, upsert: true) {host {id}}
+}
+
+mutation DeleteHost($filter: HostFilter!) {
+	deleteHost(filter: $filter) {host {id}}
+}

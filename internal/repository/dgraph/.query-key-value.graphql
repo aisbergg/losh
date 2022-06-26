@@ -1,0 +1,30 @@
+fragment KeyValueFragment on KeyValue {
+	...NodeFragment
+	key
+	value {
+		... on StringV {id, stringValue: value}
+		... on FloatV {id, floatValue: value}
+	}
+}
+
+# ------------------------------------------------------------------------------
+
+query GetKeyValue($id: ID!) {
+	getKeyValue(id: $id) {
+		...KeyValueFragment
+	}
+}
+
+query GetKeyValues($filter: KeyValueFilter, $order: KeyValueOrder, $first: Int, $offset: Int) {
+	queryKeyValue(filter: $filter, order: $order, first: $first, offset: $offset) {
+		...KeyValueFragment
+	}
+}
+
+mutation SaveKeyValues($keyValues: [AddKeyValueInput!]!) {
+	addKeyValue(input: $keyValues) {keyValue {id}}
+}
+
+mutation DeleteKeyValue($filter: KeyValueFilter!) {
+	deleteKeyValue(filter: $filter) {keyValue {id}}
+}

@@ -1,0 +1,29 @@
+fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
+	id
+	height
+	width
+	depth
+}
+
+# ------------------------------------------------------------------------------
+
+query GetBoundingBoxDimensions($id: ID!) {
+	getBoundingBoxDimensions(id: $id) {
+		...BoundingBoxDimensionsFragment
+	}
+}
+
+query GetBoundingBoxDimensionss($filter: BoundingBoxDimensionsFilter, $order: BoundingBoxDimensionsOrder, $first: Int, $offset: Int) {
+	queryBoundingBoxDimensions(filter: $filter, order: $order, first: $first, offset: $offset) {
+		...BoundingBoxDimensionsFragment
+	}
+}
+
+mutation SaveBoundingBoxDimensionss($input: [AddBoundingBoxDimensionsInput!]!, $deleteIds: [ID!]!) {
+	deleteBoundingBoxDimensions(filter: {id: $deleteIds}) {boundingBoxDimensions {id}}
+	addBoundingBoxDimensions(input: $input) {boundingBoxDimensions {id}}
+}
+
+mutation DeleteBoundingBoxDimensions($filter: BoundingBoxDimensionsFilter!) {
+	deleteBoundingBoxDimensions(filter: $filter) {boundingBoxDimensions {id}}
+}

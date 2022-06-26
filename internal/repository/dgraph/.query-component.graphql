@@ -1,0 +1,67 @@
+fragment ComponentFragment on Component {
+	id
+	xid
+	name
+	description
+	owner {id}
+	version
+	createdAt
+	releases {id}
+	isLatest
+	repository {id}
+	license {id}
+	additionalLicenses {id}
+	licensor {id}
+	documentationLanguage
+	technologyReadinessLevel
+	documentationReadinessLevel
+	attestation
+	publication
+	compliesWith {id}
+	cpcPatentClass
+	tsdc {id}
+	components {id}
+	software {id}
+	image {id}
+	readme {id}
+	contributionGuide {id}
+	bom {id}
+	manufacturingInstructions {id}
+	userManual {id}
+	product {id}
+	usedIn {id}
+	source {id}
+	export {id}
+	auxiliary {id}
+	organization {id}
+	mass
+	outerDimensions {
+    ... on BoundingBoxDimensions {id}
+    ... on OpenSCADDimensions {id}
+  }
+	material {id}
+	manufacturingProcess {id}
+	productionMetadata {id}
+}
+
+# ------------------------------------------------------------------------------
+
+query GetComponent($id: ID, $xid: String) {
+	getComponent(id: $id, xid: $xid) {
+		...ComponentFragment
+	}
+}
+
+query GetComponents($filter: ComponentFilter, $order: ComponentOrder, $first: Int, $offset: Int) {
+	queryComponent(filter: $filter, order: $order, first: $first, offset: $offset) {
+		...ComponentFragment
+	}
+}
+
+mutation SaveComponents($input: [AddComponentInput!]!) {
+	addComponent(input: $input, upsert: true) {component {id}}
+}
+
+mutation DeleteComponent($filter: ComponentFilter!) {
+	deleteComponent(filter: $filter) {component {id}}
+}

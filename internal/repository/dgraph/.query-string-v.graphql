@@ -1,0 +1,27 @@
+fragment StringVFragment on StringV {
+	...NodeFragment
+	value
+}
+
+# ------------------------------------------------------------------------------
+
+query GetStringV($id: ID!) {
+	getStringV(id: $id) {
+		...StringVFragment
+	}
+}
+
+query GetStringVs($filter: StringVFilter, $order: StringVOrder, $first: Int, $offset: Int) {
+	queryStringV(filter: $filter, order: $order, first: $first, offset: $offset) {
+		...StringVFragment
+	}
+}
+
+mutation SaveStringVs($input: [AddStringVInput!]!, $deleteIds: [ID!]!) {
+	deleteStringV(filter: {id: $deleteIds}) {stringV {id}}
+	addStringV(input: $input) {stringV {id}}
+}
+
+mutation DeleteStringVs($filter: StringVFilter!) {
+	deleteStringV(filter: $filter) {stringV {id}}
+}

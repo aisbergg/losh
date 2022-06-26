@@ -1,0 +1,30 @@
+fragment TechnologySpecificDocumentationCriteriaFragment on TechnologySpecificDocumentationCriteria {
+	...NodeFragment
+	xid
+	name
+	comment
+	requirementsUri
+	components {id}
+}
+
+# ------------------------------------------------------------------------------
+
+query GetTechnologySpecificDocumentationCriteria($id: ID, $xid: String) {
+	getTechnologySpecificDocumentationCriteria(id: $id, xid: $xid) {
+		...TechnologySpecificDocumentationCriteriaFragment
+	}
+}
+
+query GetTechnologySpecificDocumentationCriterias($filter: TechnologySpecificDocumentationCriteriaFilter, $order: TechnologySpecificDocumentationCriteriaOrder, $first: Int, $offset: Int) {
+	queryTechnologySpecificDocumentationCriteria(filter: $filter, order: $order, first: $first, offset: $offset) {
+		...TechnologySpecificDocumentationCriteriaFragment
+	}
+}
+
+mutation SaveTechnologySpecificDocumentationCriterias($input: [AddTechnologySpecificDocumentationCriteriaInput!]!) {
+	addTechnologySpecificDocumentationCriteria(input: $input, upsert: true) {technologySpecificDocumentationCriteria {id}}
+}
+
+mutation DeleteTechnologySpecificDocumentationCriteria($filter: TechnologySpecificDocumentationCriteriaFilter!) {
+	deleteTechnologySpecificDocumentationCriteria(filter: $filter) {technologySpecificDocumentationCriteria {id}}
+}

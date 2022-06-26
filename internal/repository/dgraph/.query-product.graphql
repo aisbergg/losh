@@ -1,0 +1,40 @@
+fragment ProductFragment on Product {
+	...NodeFragment
+	...CrawlerMetaFragment
+	xid
+	name
+	owner {id}
+	description
+	website
+	version
+	release {id}
+	releases {id}
+	renamedTo {id}
+	renamedFrom {id}
+	forkOf {id}
+	forks {id}
+	tags {id}
+	category {id}
+}
+
+# ------------------------------------------------------------------------------
+
+query GetProduct($id: ID, $xid: String) {
+	getProduct(id: $id, xid: $xid) {
+		...ProductFragment
+	}
+}
+
+query GetProducts($filter: ProductFilter, $order: ProductOrder, $first: Int, $offset: Int) {
+	queryProduct(filter: $filter, order: $order, first: $first, offset: $offset) {
+		...ProductFragment
+	}
+}
+
+mutation SaveProducts($products: [AddProductInput!]!) {
+	addProduct(input: $products, upsert: true) {product {id}}
+}
+
+mutation DeleteProduct($filter: ProductFilter!) {
+	deleteProduct(filter: $filter) {product {id}}
+}

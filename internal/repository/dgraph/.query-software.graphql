@@ -1,0 +1,32 @@
+fragment SoftwareFragment on Software {
+	...NodeFragment
+	...CrawlerMetaFragment
+	release
+	installationGuide {id}
+	documentationLanguage
+	license {id}
+	licensor
+}
+
+# ------------------------------------------------------------------------------
+
+query GetSoftware($id: ID!) {
+	getSoftware(id: $id) {
+		...SoftwareFragment
+	}
+}
+
+query GetSoftwares($filter: SoftwareFilter, $order: SoftwareOrder, $first: Int, $offset: Int) {
+	querySoftware(filter: $filter, order: $order, first: $first, offset: $offset) {
+		...SoftwareFragment
+	}
+}
+
+mutation SaveSoftwares($input: [AddSoftwareInput!]!, $deleteIds: [ID!]!) {
+	deleteSoftware(filter: {id: $deleteIds}) {software {id}}
+	addSoftware(input: $input) {software {id}}
+}
+
+mutation DeleteSoftware($filter: SoftwareFilter!) {
+	deleteSoftware(filter: $filter) {software {id}}
+}

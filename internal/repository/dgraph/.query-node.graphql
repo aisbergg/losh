@@ -1,0 +1,19 @@
+fragment NodeFragment on Node {
+	id
+}
+
+# ------------------------------------------------------------------------------
+
+query GetNode($id: ID!) {
+	getNode(id: $id) {
+		...NodeFragment
+	}
+}
+
+query GetNodes($filter: NodeFilter, $first: Int, $offset: Int) {
+	queryNode(filter: $filter, first: $first, offset: $offset) {id}
+}
+
+mutation DeleteNode($filter: NodeFilter!) {
+	deleteNode(filter: $filter) {node {id}}
+}

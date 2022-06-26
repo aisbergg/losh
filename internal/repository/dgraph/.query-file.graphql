@@ -1,0 +1,32 @@
+fragment FileFragment on File {
+	...NodeFragment
+	...CrawlerMetaFragment
+	name
+	path
+	mimeType
+	url
+	createdAt
+}
+
+# ------------------------------------------------------------------------------
+
+query GetFile($id: ID!) {
+	getFile(id: $id) {
+		...FileFragment
+	}
+}
+
+query GetFiles($filter: FileFilter, $order: FileOrder, $first: Int, $offset: Int) {
+	queryFile(filter: $filter, order: $order, first: $first, offset: $offset) {
+		...FileFragment
+	}
+}
+
+mutation SaveFiles($input: [AddFileInput!]!, $deleteIds: [ID!]!) {
+	deleteFile(filter: {id: $deleteIds}) {file {id}}
+	addFile(input: $input) {file {id}}
+}
+
+mutation DeleteFile($filter: FileFilter!) {
+	deleteFile(filter: $filter) {file {id}}
+}

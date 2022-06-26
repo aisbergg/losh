@@ -1,0 +1,16 @@
+model:
+  filename: ./../../models/gen.go
+client:
+  filename: ./dgclient/client.go
+models:
+  Int:
+    model: github.com/99designs/gqlgen/graphql.Int64
+  DateTime:
+    model: github.com/99designs/gqlgen/graphql.Time
+query:
+  - "*.graphql"
+endpoint:
+  url: http://localhost:8080/graphql
+generate:
+  clientV2: true
+  clientInterfaceName: "DgraphGraphQLClient"

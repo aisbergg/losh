@@ -1,0 +1,29 @@
+fragment TagFragment on Tag {
+	id
+	xid
+	name
+	aliases {id}
+	related {id}
+}
+
+# ------------------------------------------------------------------------------
+
+query GetTag($id: ID, $xid: String) {
+	getTag(id: $id, xid: $xid) {
+		...TagFragment
+	}
+}
+
+query GetTags($filter: TagFilter, $order: TagOrder, $first: Int, $offset: Int) {
+	queryTag(filter: $filter, order: $order, first: $first, offset: $offset) {
+		...TagFragment
+	}
+}
+
+mutation SaveTags($input: [AddTagInput!]!) {
+	addTag(input: $input, upsert: true) {tag {id}}
+}
+
+mutation DeleteTag($filter: TagFilter!) {
+	deleteTag(filter: $filter) {tag {id}}
+}

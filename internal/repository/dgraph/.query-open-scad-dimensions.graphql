@@ -1,0 +1,28 @@
+fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
+	...NodeFragment
+	openscad
+	unit
+}
+
+# ------------------------------------------------------------------------------
+
+query GetOpenSCADDimensions($id: ID!) {
+	getOpenSCADDimensions(id: $id) {
+		...OpenSCADDimensionsFragment
+	}
+}
+
+query GetOpenSCADDimensionss($filter: OpenSCADDimensionsFilter, $order: OpenSCADDimensionsOrder, $first: Int, $offset: Int) {
+	queryOpenSCADDimensions(filter: $filter, order: $order, first: $first, offset: $offset) {
+		...OpenSCADDimensionsFragment
+	}
+}
+
+mutation SaveOpenSCADDimensionss($input: [AddOpenSCADDimensionsInput!]!, $deleteIds: [ID!]!) {
+	deleteOpenSCADDimensions(filter: {id: $deleteIds}) {openSCADDimensions {id}}
+	addOpenSCADDimensions(input: $input) {openSCADDimensions {id}}
+}
+
+mutation DeleteOpenSCADDimensionss($filter: OpenSCADDimensionsFilter!) {
+	deleteOpenSCADDimensions(filter: $filter) {openSCADDimensions {id}}
+}
