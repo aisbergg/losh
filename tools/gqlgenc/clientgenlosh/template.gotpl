@@ -1,0 +1,80 @@
+{{- if .GenerateClient }}
+	{{ reserveImport "bytes" }}
+	{{ reserveImport "context" }}
+	{{ reserveImport "encoding/json" }}
+	{{ reserveImport "fmt" }}
+	{{ reserveImport "io" }}
+	{{ reserveImport "io/ioutil" }}
+	{{ reserveImport "net/http" }}
+	{{ reserveImport "net/url" }}
+	{{ reserveImport "path" }}
+	{{ reserveImport "time" }}
+
+	{{ reserveImport "losh/internal/net/request" }}
+
+	{{ reserveImport "github.com/Yamashou/gqlgenc/graphqljson" }}
+
+
+	{{- if .ClientInterfaceName }}
+		type {{ .ClientInterfaceName }} interface {
+			{{- range $model := .Operation }}
+				{{ $model.Name | go }} (ctx context.Context{{- range $arg := .Args }}, {{ $arg.Variable | goPrivate }} {{ $arg.Type | ref }} {{- end }}) (*{{ $model.ResponseStructName | go }}, error)
+			{{- end }}
+		}
+	{{- end }}
+
+	type Client struct {
+		Requester *request.GraphQLRequester
+	}
+
+	func NewClient(requester *request.GraphQLRequester) {{- if .ClientInterfaceName }} {{ .ClientInterfaceName }} {{- else }} *Client {{- end }} {
+		return &Client{
+			Requester: requester,
+		}
+	}
+
+{{- end }}
+
+type {{ .Query.Name | go }} {{ .Query.Type | ref }}
+
+{{- if .Mutation }}
+	type {{ .Mutation.Name | go }} {{ .Mutation.Type | ref }}
+{{- end }}
+
+{{- range $name, $element := .Fragment }}
+	type  {{ .Name | go  }} {{ .Type | ref }}
+{{- end }}
+
+{{- range $name, $element := .StructSources }}
+	type {{ .Name }} {{ .Type | ref }}
+{{- end}}
+
+{{- range $name, $element := .OperationResponse }}
+	type  {{ .Name | go  }} {{ .Type | ref }}
+{{- end }}
+
+{{- range $model := .Operation}}
+	const {{ $model.Name|go }}Document = `{{ $model.Operation }}`
+
+	{{- if $.GenerateClient }}
+		func (c *Client) {{ $model.Name|go }} (ctx context.Context{{- range $arg := .Args }}, {{ $arg.Variable | goPrivate }} {{ $arg.Type | ref }} {{- end }}) (*{{ $model.ResponseStructName | go }}, error) {
+			req := request.GraphQLRequest{
+				Ctx:           ctx,
+				OperationName: "{{ $model.Name }}",
+				Query:         {{ $model.Name|go }}Document,
+				Variables: map[string]interface{}{
+				{{- range $args := .VariableDefinitions}}
+					"{{ $args.Variable }}": {{ $args.Variable | goPrivate }},
+				{{- end }}
+				},
+			}
+
+			var resp {{ $model.ResponseStructName | go }}
+			err := c.Requester.Do(req, &resp)
+			if err != nil {
+				return nil, err
+			}
+			return &resp, nil
+		}
+	{{- end}}
+{{- end}}
