@@ -4,7 +4,7 @@ import (
 	"context"
 	"embed"
 	"encoding/json"
-	"losh/crawler/logging"
+	"losh/internal/logging"
 	"losh/internal/models"
 	"losh/internal/net/download"
 	"losh/internal/net/request"
