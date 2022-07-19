@@ -53,9 +53,9 @@ func New(directory, extension string) *Engine {
 }
 
 // NewFileSystem creates a Liquid template render engine for Fiber.
-func NewFileSystem(fs http.FileSystem, extension string) *Engine {
+func NewFileSystem(fs http.FileSystem, directory, extension string) *Engine {
 	engine := &Engine{
-		directory:  "/",
+		directory:  directory,
 		fileSystem: fs,
 		extension:  extension,
 		layoutVar:  "embed",
