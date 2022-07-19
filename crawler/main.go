@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
+	"losh/crawler/cmd"
 	"losh/internal/errors"
-	"losh/web/cmd"
 
 	"github.com/gookit/gcli/v3"
 )
@@ -14,14 +14,14 @@ func main() {
 	// create the CLI application
 	app := gcli.NewApp()
 	app.Version = "0.0.1"
-	app.Desc = "LOSH Web"
+	app.Desc = "LOSH Crawler"
 
 	// register error handler
 	app.On(gcli.EvtAppRunError, errorHandler)
 
 	// register commands
-	app.Add(cmd.RunCommand)
 	app.Add(cmd.ConfigCommand)
+	app.Add(cmd.ManageCommand)
 
 	// run the application
 	os.Exit(app.Run(nil))
