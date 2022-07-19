@@ -1,0 +1,26 @@
+crawler:
+  userAgent: "OKH-LOSH-Crawler github.com/OPEN-NEXT/OKH-LOSH"  # (opt)
+
+log:
+  level: info  # debug, info, warning, error, critical
+  format: json  # can be either json or console
+
+  fileName: ""
+  # https://doc.traefik.io/traefik/observability/logs/#log-rotation
+  rotate: true
+  maxSize: 5 # in MB
+  maxAge: 0  # in days
+  maxBackups: 0
+  compress: true
+  localTime: true
+  permissions: "0644"
+
+database:
+  host: localhost
+  port: 8080
+  tls:
+    enabled: false
+    verify: false
+    cert: ""
+    key: ""
+    caCertificates: []
