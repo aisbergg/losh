@@ -1,6 +1,9 @@
 package liquid
 
 import (
+	"fmt"
+	"math"
+	gourl "net/url"
 	"regexp"
 	"strings"
 	"unicode/utf8"
@@ -14,12 +17,37 @@ import (
 
 func addFilters(e *liquid.Engine) {
 	addJekyllFilters(e)
+
+	// map filters
 	e.RegisterFilter("dict2items", dict2itemsFilter)
-	e.RegisterFilter("first_letter", firstLetterFilter)
-	e.RegisterFilter("first_letters", firstLettersFilter)
+
+	// format filters
 	e.RegisterFilter("format_datetime", formatDatetimeFilter)
 	e.RegisterFilter("format_number", formatNumberFilter)
+
+	// string filters
+	e.RegisterFilter("first_letter", firstLetterFilter)
+	e.RegisterFilter("first_letters", firstLettersFilter)
 	e.RegisterFilter("replace_regex", replaceRegexFilter)
+
+	// number filters
+	e.RegisterFilter("min", minFilter)
+	e.RegisterFilter("max", maxFilter)
+	e.RegisterFilter("random_number", randomNumberFilter)
+	e.RegisterFilter("random_item", randomItemFilter)
+
+	// type conversion filters
+	e.RegisterFilter("int", toIntFilter)
+	e.RegisterFilter("int64", toInt64Filter)
+	e.RegisterFilter("float", toFloatFilter)
+	e.RegisterFilter("string", toStringFilter)
+
+	// URL filters
+	e.RegisterFilter("url_with_params", urlWithParamsFilter)
+
+	// other
+	e.RegisterFilter("ternary", ternaryFilter)
+
 }
 
 func dict2itemsFilter(value map[string]interface{}) []interface{} {
@@ -76,10 +104,135 @@ func formatNumberFilter(input interface{}) string {
 	return p.Sprintf("%v", n)
 }
 
+func minFilter(arg1 interface{}, argN ...interface{}) (min interface{}) {
+	min = arg1
+	minF := toFloatFilter(arg1)
+	for _, arg := range argN {
+		num := toFloatFilter(arg)
+		if num < minF {
+			min = arg
+			minF = num
+		}
+	}
+	return
+}
+
+func maxFilter(arg1 interface{}, argN ...interface{}) (max interface{}) {
+	max = arg1
+	maxF := toFloatFilter(arg1)
+	for _, arg := range argN {
+		num := toFloatFilter(arg)
+		if num > maxF {
+			max = arg
+			maxF = num
+		}
+	}
+	return
+}
+
+func randomNumberFilter(x, min, max float64, round uint) float64 {
+	// based on https://github.com/codecalm/jekyll-random
+	value := math.Mod((x*x*math.Pi*math.E*(max+1)*(math.Sin(x)/math.Cos(x*x))), (max+1-min)) + min
+
+	if value > max {
+		value = max
+	}
+	if value < min {
+		value = min
+	}
+
+	value = roundFloat(value, round)
+	return value
+}
+
+func randomItemFilter(x float64, items []interface{}) interface{} {
+	index := int(randomNumberFilter(x, 0, float64(len(items)), 0))
+	return items[index]
+}
+
+func roundFloat(val float64, precision uint) float64 {
+	ratio := math.Pow(10, float64(precision))
+	return math.Round(val*ratio) / ratio
+}
+
 func replaceRegexFilter(input, search, replace string) (string, error) {
 	searchPattern, err := regexp.Compile(search)
 	if err != nil {
 		return "", err
 	}
 	return searchPattern.ReplaceAllString(input, replace), nil
+}
+
+func toIntFilter(input interface{}) int {
+	numF := toFloatFilter(input)
+	if math.IsNaN(numF) {
+		return 0
+	}
+	return int(numF)
+}
+
+func toInt64Filter(input interface{}) int64 {
+	numF := toFloatFilter(input)
+	if math.IsNaN(numF) {
+		return 0
+	}
+	return int64(numF)
+}
+
+func toFloatFilter(num interface{}) float64 {
+	switch i := num.(type) {
+	case float64:
+		return i
+	case float32:
+		return float64(i)
+	case int64:
+		return float64(i)
+	case int32:
+		return float64(i)
+	case int:
+		return float64(i)
+	case uint64:
+		return float64(i)
+	case uint32:
+		return float64(i)
+	case uint:
+		return float64(i)
+	default:
+		return math.NaN()
+	}
+}
+
+func toStringFilter(input interface{}) string {
+	return fmt.Sprint(input)
+}
+
+func urlWithParamsFilter(url interface{}, args ...interface{}) (string, error) {
+	var parsedURL *gourl.URL
+	switch u := url.(type) {
+	case *gourl.URL:
+		parsedURL = u
+	case string:
+		var err error
+		parsedURL, err = gourl.Parse(u)
+		if err != nil {
+			return "", err
+		}
+	default:
+		return "", fmt.Errorf("url_with_params: invalid url type %T", url)
+	}
+	params := parsedURL.Query()
+	for i := 0; i < len(args); i += 2 {
+		key := fmt.Sprint(args[i])
+		value := fmt.Sprint(args[i+1])
+		params.Set(key, value)
+	}
+	parsedURL.RawQuery = params.Encode()
+	return parsedURL.String(), nil
+}
+
+func ternaryFilter(cond bool, t, f interface{}) interface{} {
+	if cond {
+		return t
+	}
+	return f
 }

@@ -11,7 +11,8 @@ import (
 
 func addTags(e *liquid.Engine, templates map[string]*liquid.Template) {
 	addJekyllTags(e, templates)
-	// required for tabler.io
+
+	// tabler.io tags
 	e.RegisterBlock("removeemptylines", removeEmptyLinesBlock)
 	e.RegisterBlock("hide", hideBlock)
 	e.RegisterBlock("card", cardBlock)
