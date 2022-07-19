@@ -49,6 +49,8 @@ type Downloader struct {
 	userAgent string
 	// The headers to add to regular HTTP requests.
 	headers http.Header
+	// The return codes that are considered successful. Defaults to [200].
+	okCodes []int
 }
 
 // NewDownloaderWithRequester creates a new Downloader with given HTTP client.
@@ -56,6 +58,7 @@ func NewDownloaderWithRequester(requester *request.HTTPRequester) *Downloader {
 	return &Downloader{
 		requester: requester,
 		headers:   make(http.Header),
+		okCodes:   []int{200},
 	}
 }
 
@@ -67,6 +70,7 @@ func NewDownloaderWithClient(httpClient *http.Client) *Downloader {
 	return &Downloader{
 		requester: requester,
 		headers:   make(http.Header),
+		okCodes:   []int{200},
 	}
 }
 
@@ -84,6 +88,18 @@ func (r *Downloader) SetUserAgent(userAgent string) *Downloader {
 // AddHeader adds a header to the requests.
 func (r *Downloader) AddHeader(key, value string) *Downloader {
 	r.headers.Add(key, value)
+	return r
+}
+
+// AddOKCode adds a return code that is considered successful.
+func (r *Downloader) AddOKCode(code int) *Downloader {
+	r.okCodes = append(r.okCodes, code)
+	return r
+}
+
+// SetOKCodes sets the return codes that are considered successful.
+func (r *Downloader) SetOKCodes(codes []int) *Downloader {
+	r.okCodes = codes
 	return r
 }
 
@@ -153,6 +169,18 @@ func (r *Downloader) download(ctx context.Context, urlStr string, maxSize unit.B
 		return errors.Wrap(err, "request failed")
 	}
 	defer resp.Body.Close()
+
+	// check if response is ok
+	successful := false
+	for _, code := range r.okCodes {
+		if resp.StatusCode == code {
+			successful = true
+			break
+		}
+	}
+	if !successful {
+		return errors.Errorf("request failed with status code %d", resp.StatusCode)
+	}
 
 	// continue with downloading the request body
 	reader = resp.Body
