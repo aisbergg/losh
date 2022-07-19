@@ -1,14 +1,14 @@
 package file
 
-import "github.com/aisbergg/go-pathlib"
+import "github.com/aisbergg/go-pathlib/pkg/pathlib"
 
 // FileRepository is the license repository that uses a file as the backend.
 type FileRepository struct {
-	Path *pathlib.Path
+	Path pathlib.Path
 }
 
 // NewFileRepository creates a new FileProvider.
-func NewFileRepository(path *pathlib.Path) *FileRepository {
+func NewFileRepository(path pathlib.Path) *FileRepository {
 	return &FileRepository{
 		Path: path,
 	}

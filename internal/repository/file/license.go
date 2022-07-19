@@ -5,7 +5,7 @@ import (
 	"losh/internal/models"
 
 	"github.com/aisbergg/go-errors/pkg/errors"
-	"github.com/rotisserie/eris"
+	"github.com/aisbergg/go-pathlib/pkg/pathlib"
 )
 
 // GetLicense returns a license by its ID.
@@ -83,7 +83,7 @@ func (fr *FileRepository) DeleteAllLicenses() error {
 }
 
 // readFile reads a file and returns its content.
-func readFile(path *pathlib.Path) ([]byte, error) {
+func readFile(path pathlib.Path) ([]byte, error) {
 	if exists, err := path.Exists(); err != nil || !exists {
 		return nil, errors.New("file does not exist")
 	}
@@ -100,7 +100,7 @@ func readFile(path *pathlib.Path) ([]byte, error) {
 }
 
 // saveFile reads a file and returns its content.
-func saveFile(path *pathlib.Path, content []byte) error {
+func saveFile(path pathlib.Path, content []byte) error {
 	if exists, _ := path.Exists(); exists {
 		if isFile, _ := path.IsFile(); !isFile {
 			return errors.New("path is not a file")
