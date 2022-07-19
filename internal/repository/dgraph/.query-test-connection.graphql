@@ -1,0 +1,3 @@
+query TestConnection {
+  __schema {queryType {name}}
+}

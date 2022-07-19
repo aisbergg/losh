@@ -6,7 +6,13 @@ fragment NodeFragment on Node {
 
 query GetNode($id: ID!) {
 	getNode(id: $id) {
+		__typename
 		...NodeFragment
+		... on Product {...ProductFragment}
+		... on Component {...ComponentFragment}
+		... on License {...LicenseFragment}
+		... on User {...UserFragment}
+		... on Group {...GroupFragment}
 	}
 }
 

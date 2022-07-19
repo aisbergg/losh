@@ -21,9 +21,11 @@ func (dr *DgraphRepository) GetFloatV(id string) (*models.FloatV, error) {
 		return nil, repository.WrapRepoError(err, errGetFloatVStr).
 			Add("floatVId", id)
 	}
+	if getFloatV.GetFloatV == nil { // not found
+		return nil, nil
 	}
 	floatV := &models.FloatV{ID: id}
-	if err = copier.CopyWithOption(floatV, getFloatV.GetFloatV, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
+	if err = dr.dataCopier.CopyTo(getFloatV.GetFloatV, floatV); err != nil {
 		panic(err)
 	}
 	return floatV, nil
@@ -39,7 +41,7 @@ func (dr *DgraphRepository) GetFloatVs(filter *models.FloatVFilter, order *model
 	floatVs := make([]*models.FloatV, 0, len(getFloatVs.QueryFloatV))
 	for _, x := range getFloatVs.QueryFloatV {
 		floatV := &models.FloatV{ID: x.ID}
-		if err = copier.CopyWithOption(floatV, x, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
+		if err = dr.dataCopier.CopyTo(x, floatV); err != nil {
 			panic(err)
 		}
 		floatVs = append(floatVs, floatV)
@@ -72,10 +74,14 @@ func (dr *DgraphRepository) SaveFloatVs(floatVs []*models.FloatV) error {
 			continue
 		}
 		floatV := &models.AddFloatVInput{}
+		if err := dr.dataCopier.CopyTo(x, floatV); err != nil {
 			return repository.WrapRepoError(err, errSaveFloatVStr).
 				Add("floatVId", x.ID)
 		}
 		reqData = append(reqData, floatV)
+	}
+	if len(reqData) == 0 {
+		return nil
 	}
 	ctx := context.Background()
 	respData, err := dr.client.SaveFloatVs(ctx, reqData, []string{})

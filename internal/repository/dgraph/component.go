@@ -5,8 +5,6 @@ import (
 	"losh/internal/errors"
 	"losh/internal/models"
 	"losh/internal/repository"
-
-	"github.com/jinzhu/copier"
 )
 
 var (
@@ -23,9 +21,11 @@ func (dr *DgraphRepository) GetComponent(id, xid *string) (*models.Component, er
 		return nil, repository.WrapRepoError(err, errGetComponentStr).
 			Add("componentId", id).Add("componentXid", xid)
 	}
+	if getComponent.GetComponent == nil { // not found
+		return nil, nil
 	}
 	component := &models.Component{ID: *id}
-	if err = copier.CopyWithOption(component, getComponent.GetComponent, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
+	if err = dr.dataCopier.CopyTo(getComponent.GetComponent, component); err != nil {
 		panic(err)
 	}
 	return component, nil
@@ -41,7 +41,7 @@ func (dr *DgraphRepository) GetComponents(filter *models.ComponentFilter, order 
 	components := make([]*models.Component, 0, len(getComponents.QueryComponent))
 	for _, x := range getComponents.QueryComponent {
 		component := &models.Component{ID: x.ID}
-		if err = copier.CopyWithOption(component, x, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
+		if err = dr.dataCopier.CopyTo(x, component); err != nil {
 			panic(err)
 		}
 		components = append(components, component)
@@ -74,10 +74,14 @@ func (dr *DgraphRepository) SaveComponents(components []*models.Component) error
 			continue
 		}
 		component := &models.AddComponentInput{}
+		if err := dr.dataCopier.CopyTo(x, component); err != nil {
 			return repository.WrapRepoError(err, errSaveComponentStr).
 				Add("componentId", x.ID).Add("componentXid", x.Xid)
 		}
 		reqData = append(reqData, component)
+	}
+	if len(reqData) == 0 {
+		return nil
 	}
 	ctx := context.Background()
 	respData, err := dr.client.SaveComponents(ctx, reqData)

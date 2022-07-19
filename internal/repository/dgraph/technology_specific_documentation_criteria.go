@@ -5,8 +5,6 @@ import (
 	"losh/internal/errors"
 	"losh/internal/models"
 	"losh/internal/repository"
-
-	"github.com/jinzhu/copier"
 )
 
 var (
@@ -23,9 +21,11 @@ func (dr *DgraphRepository) GetTechnologySpecificDocumentationCriteria(id, xid *
 		return nil, repository.WrapRepoError(err, errGetTechnologySpecificDocumentationCriteriaStr).
 			Add("tsdcId", id).Add("tsdcXid", xid)
 	}
+	if getTechnologySpecificDocumentationCriteria.GetTechnologySpecificDocumentationCriteria == nil { // not found
+		return nil, nil
 	}
 	tsdc := &models.TechnologySpecificDocumentationCriteria{ID: *id}
-	if err = copier.CopyWithOption(tsdc, getTechnologySpecificDocumentationCriteria.GetTechnologySpecificDocumentationCriteria, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
+	if err = dr.dataCopier.CopyTo(getTechnologySpecificDocumentationCriteria.GetTechnologySpecificDocumentationCriteria, tsdc); err != nil {
 		panic(err)
 	}
 	return tsdc, nil
@@ -41,7 +41,7 @@ func (dr *DgraphRepository) GetTechnologySpecificDocumentationCriterias(filter *
 	tsdcs := make([]*models.TechnologySpecificDocumentationCriteria, 0, len(getTechnologySpecificDocumentationCriterias.QueryTechnologySpecificDocumentationCriteria))
 	for _, x := range getTechnologySpecificDocumentationCriterias.QueryTechnologySpecificDocumentationCriteria {
 		tsdc := &models.TechnologySpecificDocumentationCriteria{ID: x.ID}
-		if err = copier.CopyWithOption(tsdc, x, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
+		if err = dr.dataCopier.CopyTo(x, tsdc); err != nil {
 			panic(err)
 		}
 		tsdcs = append(tsdcs, tsdc)
@@ -74,10 +74,14 @@ func (dr *DgraphRepository) SaveTechnologySpecificDocumentationCriterias(tsdcs [
 			continue
 		}
 		tsdc := &models.AddTechnologySpecificDocumentationCriteriaInput{}
+		if err := dr.dataCopier.CopyTo(x, tsdc); err != nil {
 			return repository.WrapRepoError(err, errSaveTechnologySpecificDocumentationCriteriaStr).
 				Add("tsdcId", x.ID).Add("tsdcXid", x.Xid)
 		}
 		reqData = append(reqData, tsdc)
+	}
+	if len(reqData) == 0 {
+		return nil
 	}
 	ctx := context.Background()
 	respData, err := dr.client.SaveTechnologySpecificDocumentationCriterias(ctx, reqData)

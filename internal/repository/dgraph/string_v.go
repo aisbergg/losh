@@ -5,8 +5,6 @@ import (
 	"losh/internal/errors"
 	"losh/internal/models"
 	"losh/internal/repository"
-
-	"github.com/jinzhu/copier"
 )
 
 var (
@@ -23,9 +21,11 @@ func (dr *DgraphRepository) GetStringV(id string) (*models.StringV, error) {
 		return nil, repository.WrapRepoError(err, errGetStringVStr).
 			Add("stringVId", id)
 	}
+	if getStringV.GetStringV == nil { // not found
+		return nil, nil
 	}
 	stringV := &models.StringV{ID: id}
-	if err = copier.CopyWithOption(stringV, getStringV.GetStringV, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
+	if err = dr.dataCopier.CopyTo(getStringV.GetStringV, stringV); err != nil {
 		panic(err)
 	}
 	return stringV, nil
@@ -41,7 +41,7 @@ func (dr *DgraphRepository) GetStringVs(filter *models.StringVFilter, order *mod
 	stringVs := make([]*models.StringV, 0, len(getStringVs.QueryStringV))
 	for _, x := range getStringVs.QueryStringV {
 		stringV := &models.StringV{ID: x.ID}
-		if err = copier.CopyWithOption(stringV, x, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
+		if err = dr.dataCopier.CopyTo(x, stringV); err != nil {
 			panic(err)
 		}
 		stringVs = append(stringVs, stringV)
@@ -74,10 +74,14 @@ func (dr *DgraphRepository) SaveStringVs(stringVs []*models.StringV) error {
 			continue
 		}
 		stringV := &models.AddStringVInput{}
+		if err := dr.dataCopier.CopyTo(x, stringV); err != nil {
 			return repository.WrapRepoError(err, errSaveStringVStr).
 				Add("stringVId", x.ID)
 		}
 		reqData = append(reqData, stringV)
+	}
+	if len(reqData) == 0 {
+		return nil
 	}
 	ctx := context.Background()
 	respData, err := dr.client.SaveStringVs(ctx, reqData, []string{})

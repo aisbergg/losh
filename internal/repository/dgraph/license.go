@@ -5,8 +5,6 @@ import (
 	"losh/internal/errors"
 	"losh/internal/models"
 	"losh/internal/repository"
-
-	"github.com/jinzhu/copier"
 )
 
 var (
@@ -23,9 +21,11 @@ func (dr *DgraphRepository) GetLicense(id, xid *string) (*models.License, error)
 		return nil, repository.WrapRepoError(err, errGetLicenseStr).
 			Add("licenseId", id).Add("licenseXid", xid)
 	}
+	if getLicense.GetLicense == nil { // not found
+		return nil, nil
 	}
 	license := &models.License{ID: *id}
-	if err = copier.CopyWithOption(license, getLicense.GetLicense, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
+	if err = dr.dataCopier.CopyTo(getLicense.GetLicense, license); err != nil {
 		panic(err)
 	}
 	return license, nil
@@ -41,7 +41,7 @@ func (dr *DgraphRepository) GetLicenses(filter *models.LicenseFilter, order *mod
 	licenses := make([]*models.License, 0, len(getLicenses.QueryLicense))
 	for _, x := range getLicenses.QueryLicense {
 		license := &models.License{ID: x.ID}
-		if err = copier.CopyWithOption(license, x, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
+		if err = dr.dataCopier.CopyTo(x, license); err != nil {
 			panic(err)
 		}
 		licenses = append(licenses, license)
@@ -74,10 +74,14 @@ func (dr *DgraphRepository) SaveLicenses(licenses []*models.License) error {
 			continue
 		}
 		license := &models.AddLicenseInput{}
+		if err := dr.dataCopier.CopyTo(x, license); err != nil {
 			return repository.WrapRepoError(err, errSaveLicenseStr).
 				Add("licenseId", x.ID).Add("licenseXid", x.Xid)
 		}
 		reqData = append(reqData, license)
+	}
+	if len(reqData) == 0 {
+		return nil
 	}
 	ctx := context.Background()
 	respData, err := dr.client.SaveLicenses(ctx, reqData)

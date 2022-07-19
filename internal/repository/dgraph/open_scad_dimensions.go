@@ -5,8 +5,6 @@ import (
 	"losh/internal/errors"
 	"losh/internal/models"
 	"losh/internal/repository"
-
-	"github.com/jinzhu/copier"
 )
 
 var (
@@ -23,9 +21,11 @@ func (dr *DgraphRepository) GetOpenSCADDimensions(id string) (*models.OpenSCADDi
 		return nil, repository.WrapRepoError(err, errGetOpenSCADDimensionsStr).
 			Add("osdId", id)
 	}
+	if getOpenSCADDimensions.GetOpenSCADDimensions == nil { // not found
+		return nil, nil
 	}
 	osd := &models.OpenSCADDimensions{ID: id}
-	if err = copier.CopyWithOption(osd, getOpenSCADDimensions.GetOpenSCADDimensions, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
+	if err = dr.dataCopier.CopyTo(getOpenSCADDimensions.GetOpenSCADDimensions, osd); err != nil {
 		panic(err)
 	}
 	return osd, nil
@@ -41,7 +41,7 @@ func (dr *DgraphRepository) GetOpenSCADDimensionss(filter *models.OpenSCADDimens
 	osds := make([]*models.OpenSCADDimensions, 0, len(getOpenSCADDimensionss.QueryOpenSCADDimensions))
 	for _, x := range getOpenSCADDimensionss.QueryOpenSCADDimensions {
 		osd := &models.OpenSCADDimensions{ID: x.ID}
-		if err = copier.CopyWithOption(osd, x, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
+		if err = dr.dataCopier.CopyTo(x, osd); err != nil {
 			panic(err)
 		}
 		osds = append(osds, osd)
@@ -74,10 +74,14 @@ func (dr *DgraphRepository) SaveOpenSCADDimensionss(osds []*models.OpenSCADDimen
 			continue
 		}
 		osd := &models.AddOpenSCADDimensionsInput{}
+		if err := dr.dataCopier.CopyTo(x, osd); err != nil {
 			return repository.WrapRepoError(err, errSaveOpenSCADDimensionsStr).
 				Add("osdId", x.ID)
 		}
 		reqData = append(reqData, osd)
+	}
+	if len(reqData) == 0 {
+		return nil
 	}
 	ctx := context.Background()
 	respData, err := dr.client.SaveOpenSCADDimensionss(ctx, reqData, []string{})

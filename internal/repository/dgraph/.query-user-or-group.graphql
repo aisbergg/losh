@@ -1,4 +1,5 @@
 fragment UserOrGroupFragment on UserOrGroup {
+	__typename
 	... on User {id}
 	... on Group {id}
 	xid

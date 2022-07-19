@@ -4,8 +4,6 @@ import (
 	"context"
 	"losh/internal/models"
 	"losh/internal/repository"
-
-	"github.com/jinzhu/copier"
 )
 
 // GetDatabaseInfo returns the database information. If non exists, it returns
@@ -20,7 +18,7 @@ func (dr *DgraphRepository) GetDatabaseInfo(id string) (*models.Database, error)
 		return nil, nil
 	}
 	databaseInfo := &models.Database{}
-	if err = copier.CopyWithOption(databaseInfo, getDatabaseInfo.QueryDatabase[0], copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
+	if err = dr.dataCopier.CopyTo(getDatabaseInfo.QueryDatabase[0], databaseInfo); err != nil {
 		panic(err)
 	}
 	return databaseInfo, nil
@@ -31,8 +29,7 @@ func (dr *DgraphRepository) GetDatabaseInfo(id string) (*models.Database, error)
 // data.
 func (dr *DgraphRepository) SaveDatabaseInfo(database *models.Database) (err error) {
 	databaseInfo := &models.AddDatabaseInput{}
-	if err = copier.CopyWithOption(databaseInfo, database,
-		copier.Option{Converters: dr.convertersForSave, DeepCopy: true, IgnoreEmpty: true}); err != nil {
+	if err = dr.dataCopier.CopyTo(database, databaseInfo); err != nil {
 		panic(err)
 	}
 	reqData := []*models.AddDatabaseInput{databaseInfo}

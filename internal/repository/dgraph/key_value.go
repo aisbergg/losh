@@ -5,8 +5,6 @@ import (
 	"losh/internal/errors"
 	"losh/internal/models"
 	"losh/internal/repository"
-
-	"github.com/jinzhu/copier"
 )
 
 var (
@@ -23,9 +21,11 @@ func (dr *DgraphRepository) GetKeyValue(id string) (*models.KeyValue, error) {
 		return nil, repository.WrapRepoError(err, errGetKeyValueStr).
 			Add("keyValueId", id)
 	}
+	if getKeyValue.GetKeyValue == nil { // not found
+		return nil, nil
 	}
 	keyValue := &models.KeyValue{ID: id}
-	if err = copier.CopyWithOption(keyValue, getKeyValue.GetKeyValue, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
+	if err = dr.dataCopier.CopyTo(getKeyValue.GetKeyValue, keyValue); err != nil {
 		panic(err)
 	}
 	return keyValue, nil
@@ -41,7 +41,7 @@ func (dr *DgraphRepository) GetKeyValues(filter *models.KeyValueFilter, order *m
 	keyValues := make([]*models.KeyValue, 0, len(getKeyValues.QueryKeyValue))
 	for _, x := range getKeyValues.QueryKeyValue {
 		keyValue := &models.KeyValue{ID: x.ID}
-		if err = copier.CopyWithOption(keyValue, x, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
+		if err = dr.dataCopier.CopyTo(x, keyValue); err != nil {
 			panic(err)
 		}
 		keyValues = append(keyValues, keyValue)
@@ -74,10 +74,14 @@ func (dr *DgraphRepository) SaveKeyValues(keyValues []*models.KeyValue) error {
 			continue
 		}
 		keyValue := &models.AddKeyValueInput{}
+		if err := dr.dataCopier.CopyTo(x, keyValue); err != nil {
 			return repository.WrapRepoError(err, errSaveKeyValueStr).
 				Add("keyValueId", x.ID)
 		}
 		reqData = append(reqData, keyValue)
+	}
+	if len(reqData) == 0 {
+		return nil
 	}
 	ctx := context.Background()
 	respData, err := dr.client.SaveKeyValues(ctx, reqData)

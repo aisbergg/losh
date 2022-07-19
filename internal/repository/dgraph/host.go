@@ -5,8 +5,6 @@ import (
 	"losh/internal/errors"
 	"losh/internal/models"
 	"losh/internal/repository"
-
-	"github.com/jinzhu/copier"
 )
 
 var (
@@ -23,9 +21,11 @@ func (dr *DgraphRepository) GetHost(id, domain *string) (*models.Host, error) {
 		return nil, repository.WrapRepoError(err, errGetHostStr).
 			Add("hostId", id).Add("hostDomain", domain)
 	}
+	if getHost.GetHost == nil { // not found
+		return nil, nil
 	}
 	host := &models.Host{ID: *id}
-	if err = copier.CopyWithOption(host, getHost.GetHost, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
+	if err = dr.dataCopier.CopyTo(getHost.GetHost, host); err != nil {
 		panic(err)
 	}
 	return host, nil
@@ -41,7 +41,7 @@ func (dr *DgraphRepository) GetHosts(filter *models.HostFilter, order *models.Ho
 	hosts := make([]*models.Host, 0, len(getHosts.QueryHost))
 	for _, x := range getHosts.QueryHost {
 		host := &models.Host{ID: x.ID}
-		if err = copier.CopyWithOption(host, x, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
+		if err = dr.dataCopier.CopyTo(x, host); err != nil {
 			panic(err)
 		}
 		hosts = append(hosts, host)
@@ -74,10 +74,14 @@ func (dr *DgraphRepository) SaveHosts(hosts []*models.Host) error {
 			continue
 		}
 		host := &models.AddHostInput{}
+		if err := dr.dataCopier.CopyTo(x, host); err != nil {
 			return repository.WrapRepoError(err, errSaveHostStr).
 				Add("hostId", x.ID).Add("hostDomain", x.Domain)
 		}
 		reqData = append(reqData, host)
+	}
+	if len(reqData) == 0 {
+		return nil
 	}
 	ctx := context.Background()
 	respData, err := dr.client.SaveHosts(ctx, reqData)

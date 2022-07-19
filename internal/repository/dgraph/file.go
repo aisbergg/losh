@@ -21,9 +21,11 @@ func (dr *DgraphRepository) GetFile(id string) (*models.File, error) {
 		return nil, repository.WrapRepoError(err, errGetFileStr).
 			Add("fileId", id)
 	}
+	if getFile.GetFile == nil { // not found
+		return nil, nil
 	}
 	file := &models.File{ID: id}
-	if err = copier.CopyWithOption(file, getFile.GetFile, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
+	if err = dr.dataCopier.CopyTo(getFile.GetFile, file); err != nil {
 		panic(err)
 	}
 	return file, nil
@@ -39,7 +41,7 @@ func (dr *DgraphRepository) GetFiles(filter *models.FileFilter, order *models.Fi
 	files := make([]*models.File, 0, len(getFiles.QueryFile))
 	for _, x := range getFiles.QueryFile {
 		file := &models.File{ID: x.ID}
-		if err = copier.CopyWithOption(file, x, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
+		if err = dr.dataCopier.CopyTo(x, file); err != nil {
 			panic(err)
 		}
 		files = append(files, file)
@@ -72,10 +74,14 @@ func (dr *DgraphRepository) SaveFiles(files []*models.File) error {
 			continue
 		}
 		file := &models.AddFileInput{}
+		if err := dr.dataCopier.CopyTo(x, file); err != nil {
 			return repository.WrapRepoError(err, errSaveFileStr).
 				Add("fileId", x.ID)
 		}
 		reqData = append(reqData, file)
+	}
+	if len(reqData) == 0 {
+		return nil
 	}
 	ctx := context.Background()
 	respData, err := dr.client.SaveFiles(ctx, reqData, []string{})

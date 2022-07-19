@@ -87,6 +87,7 @@ type DgraphGraphQLClient interface {
 	GetTechnologySpecificDocumentationCriterias(ctx context.Context, filter *models.TechnologySpecificDocumentationCriteriaFilter, order *models.TechnologySpecificDocumentationCriteriaOrder, first *int64, offset *int64) (*GetTechnologySpecificDocumentationCriterias, error)
 	SaveTechnologySpecificDocumentationCriterias(ctx context.Context, input []*models.AddTechnologySpecificDocumentationCriteriaInput) (*SaveTechnologySpecificDocumentationCriterias, error)
 	DeleteTechnologySpecificDocumentationCriteria(ctx context.Context, filter models.TechnologySpecificDocumentationCriteriaFilter) (*DeleteTechnologySpecificDocumentationCriteria, error)
+	TestConnection(ctx context.Context) (*TestConnection, error)
 	GetUserOrGroup(ctx context.Context, id *string, xid *string) (*GetUserOrGroup, error)
 	GetUserOrGroups(ctx context.Context, filter *models.UserOrGroupFilter, order *models.UserOrGroupOrder, first *int64, offset *int64) (*GetUserOrGroups, error)
 	DeleteUserOrGroup(ctx context.Context, filter models.UserOrGroupFilter) (*DeleteUserOrGroup, error)
@@ -359,6 +360,7 @@ type LicenseFragment struct {
 	Xid           string             "json:\"xid\" graphql:\"xid\""
 	Name          string             "json:\"name\" graphql:\"name\""
 	Text          *string            "json:\"text\" graphql:\"text\""
+	TextHTML      *string            "json:\"textHTML\" graphql:\"textHTML\""
 	ReferenceURL  *string            "json:\"referenceURL\" graphql:\"referenceURL\""
 	DetailsURL    *string            "json:\"detailsURL\" graphql:\"detailsURL\""
 	Type          models.LicenseType "json:\"type\" graphql:\"type\""
@@ -442,6 +444,7 @@ type TechnologySpecificDocumentationCriteriaFragment struct {
 	Components      []*TechnologySpecificDocumentationCriteriaFragment_Components "json:\"components\" graphql:\"components\""
 }
 type UserOrGroupFragment struct {
+	Typename *string                         "json:\"__typename\" graphql:\"__typename\""
 	User     UserOrGroupFragment_User        "graphql:\"... on User\""
 	Group    UserOrGroupFragment_Group       "graphql:\"... on Group\""
 	Xid      string                          "json:\"xid\" graphql:\"xid\""
@@ -455,6 +458,7 @@ type UserOrGroupFragment struct {
 }
 type UserFragment struct {
 	ID       string                                       "json:\"id\" graphql:\"id\""
+	Typename *string                                      "json:\"__typename\" graphql:\"__typename\""
 	User     UserFragment_UserOrGroupFragment_User        "graphql:\"... on User\""
 	Group    UserFragment_UserOrGroupFragment_Group       "graphql:\"... on Group\""
 	Xid      string                                       "json:\"xid\" graphql:\"xid\""
@@ -470,6 +474,7 @@ type UserFragment struct {
 }
 type GroupFragment struct {
 	ID       string                                        "json:\"id\" graphql:\"id\""
+	Typename *string                                       "json:\"__typename\" graphql:\"__typename\""
 	User     GroupFragment_UserOrGroupFragment_User        "graphql:\"... on User\""
 	Group    GroupFragment_UserOrGroupFragment_Group       "graphql:\"... on Group\""
 	Xid      string                                        "json:\"xid\" graphql:\"xid\""
@@ -1101,6 +1106,173 @@ type DeleteMaterials_DeleteMaterial_Material struct {
 type DeleteMaterials_DeleteMaterial struct {
 	Material []*DeleteMaterials_DeleteMaterial_Material "json:\"material\" graphql:\"material\""
 }
+type GetNode_GetNode_Product_ProductFragment_Owner struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Product_ProductFragment_Release struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Product_ProductFragment_Releases struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Product_ProductFragment_RenamedTo struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Product_ProductFragment_RenamedFrom struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Product_ProductFragment_ForkOf struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Product_ProductFragment_Forks struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Product_ProductFragment_Tags struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Product_ProductFragment_Category struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Component_ComponentFragment_Owner struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Component_ComponentFragment_Releases struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Component_ComponentFragment_Repository struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Component_ComponentFragment_License struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Component_ComponentFragment_AdditionalLicenses struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Component_ComponentFragment_Licensor struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Component_ComponentFragment_CompliesWith struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Component_ComponentFragment_Tsdc struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Component_ComponentFragment_Components struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Component_ComponentFragment_Software struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Component_ComponentFragment_Image struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Component_ComponentFragment_Readme struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Component_ComponentFragment_ContributionGuide struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Component_ComponentFragment_Bom struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Component_ComponentFragment_ManufacturingInstructions struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Component_ComponentFragment_UserManual struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Component_ComponentFragment_Product struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Component_ComponentFragment_UsedIn struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Component_ComponentFragment_Source struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Component_ComponentFragment_Export struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Component_ComponentFragment_Auxiliary struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Component_ComponentFragment_Organization struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Component_ComponentFragment_OuterDimensions_BoundingBoxDimensions struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Component_ComponentFragment_OuterDimensions_OpenSCADDimensions struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Component_ComponentFragment_OuterDimensions struct {
+	BoundingBoxDimensions GetNode_GetNode_Component_ComponentFragment_OuterDimensions_BoundingBoxDimensions "graphql:\"... on BoundingBoxDimensions\""
+	OpenSCADDimensions    GetNode_GetNode_Component_ComponentFragment_OuterDimensions_OpenSCADDimensions    "graphql:\"... on OpenSCADDimensions\""
+}
+type GetNode_GetNode_Component_ComponentFragment_Material struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Component_ComponentFragment_ManufacturingProcess struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Component_ComponentFragment_ProductionMetadata struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_User_UserFragment_UserOrGroupFragment_User struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_User_UserFragment_UserOrGroupFragment_Group struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_User_UserFragment_UserOrGroupFragment_Host struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_User_UserFragment_UserOrGroupFragment_Avatar struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_User_UserFragment_UserOrGroupFragment_MemberOf struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_User_UserFragment_UserOrGroupFragment_Products struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Group_GroupFragment_UserOrGroupFragment_User struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Group_GroupFragment_UserOrGroupFragment_Group struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Group_GroupFragment_UserOrGroupFragment_Host struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Group_GroupFragment_UserOrGroupFragment_Avatar struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Group_GroupFragment_UserOrGroupFragment_MemberOf struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Group_GroupFragment_UserOrGroupFragment_Products struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Group_GroupFragment_Members_User struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Group_GroupFragment_Members_Group struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetNode_GetNode_Group_GroupFragment_Members struct {
+	User  GetNode_GetNode_Group_GroupFragment_Members_User  "graphql:\"... on User\""
+	Group GetNode_GetNode_Group_GroupFragment_Members_Group "graphql:\"... on Group\""
+}
+type GetNode_GetNode struct {
+	Typename  *string           "json:\"__typename\" graphql:\"__typename\""
+	ID        string            "json:\"id\" graphql:\"id\""
+	Product   ProductFragment   "graphql:\"... on Product\""
+	Component ComponentFragment "graphql:\"... on Component\""
+	License   LicenseFragment   "graphql:\"... on License\""
+	User      UserFragment      "graphql:\"... on User\""
+	Group     GroupFragment     "graphql:\"... on Group\""
+}
 type GetNodes_QueryNode struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
@@ -1301,6 +1473,12 @@ type DeleteTechnologySpecificDocumentationCriteria_DeleteTechnologySpecificDocum
 }
 type DeleteTechnologySpecificDocumentationCriteria_DeleteTechnologySpecificDocumentationCriteria struct {
 	TechnologySpecificDocumentationCriteria []*DeleteTechnologySpecificDocumentationCriteria_DeleteTechnologySpecificDocumentationCriteria_TechnologySpecificDocumentationCriteria "json:\"technologySpecificDocumentationCriteria\" graphql:\"technologySpecificDocumentationCriteria\""
+}
+type TestConnection_Schema_QueryType struct {
+	Name *string "json:\"name\" graphql:\"name\""
+}
+type TestConnection_Schema struct {
+	QueryType TestConnection_Schema_QueryType "json:\"queryType\" graphql:\"queryType\""
 }
 type GetUserOrGroup_GetUserOrGroup_User_UserFragment_UserOrGroupFragment_User struct {
 	ID string "json:\"id\" graphql:\"id\""
@@ -1669,7 +1847,7 @@ type DeleteMaterials struct {
 	DeleteMaterial *DeleteMaterials_DeleteMaterial "json:\"deleteMaterial\" graphql:\"deleteMaterial\""
 }
 type GetNode struct {
-	GetNode *NodeFragment "json:\"getNode\" graphql:\"getNode\""
+	GetNode *GetNode_GetNode "json:\"getNode\" graphql:\"getNode\""
 }
 type GetNodes struct {
 	QueryNode []*GetNodes_QueryNode "json:\"queryNode\" graphql:\"queryNode\""
@@ -1763,6 +1941,9 @@ type SaveTechnologySpecificDocumentationCriterias struct {
 }
 type DeleteTechnologySpecificDocumentationCriteria struct {
 	DeleteTechnologySpecificDocumentationCriteria *DeleteTechnologySpecificDocumentationCriteria_DeleteTechnologySpecificDocumentationCriteria "json:\"deleteTechnologySpecificDocumentationCriteria\" graphql:\"deleteTechnologySpecificDocumentationCriteria\""
+}
+type TestConnection struct {
+	Schema TestConnection_Schema "json:\"__schema\" graphql:\"__schema\""
 }
 type GetUserOrGroup struct {
 	GetUserOrGroup *GetUserOrGroup_GetUserOrGroup "json:\"getUserOrGroup\" graphql:\"getUserOrGroup\""
@@ -2577,6 +2758,10 @@ const GetFileDocument = `query GetFile ($id: ID!) {
 		... FileFragment
 	}
 }
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
+}
 fragment FileFragment on File {
 	... NodeFragment
 	... CrawlerMetaFragment
@@ -2588,10 +2773,6 @@ fragment FileFragment on File {
 }
 fragment NodeFragment on Node {
 	id
-}
-fragment CrawlerMetaFragment on CrawlerMeta {
-	discoveredAt
-	lastIndexedAt
 }
 `
 
@@ -2618,6 +2799,10 @@ const GetFilesDocument = `query GetFiles ($filter: FileFilter, $order: FileOrder
 		... FileFragment
 	}
 }
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
+}
 fragment FileFragment on File {
 	... NodeFragment
 	... CrawlerMetaFragment
@@ -2629,10 +2814,6 @@ fragment FileFragment on File {
 }
 fragment NodeFragment on Node {
 	id
-}
-fragment CrawlerMetaFragment on CrawlerMeta {
-	discoveredAt
-	lastIndexedAt
 }
 `
 
@@ -2754,12 +2935,12 @@ const GetFloatVsDocument = `query GetFloatVs ($filter: FloatVFilter, $order: Flo
 		... FloatVFragment
 	}
 }
-fragment NodeFragment on Node {
-	id
-}
 fragment FloatVFragment on FloatV {
 	... NodeFragment
 	value
+}
+fragment NodeFragment on Node {
+	id
 }
 `
 
@@ -2883,13 +3064,13 @@ const GetHostsDocument = `query GetHosts ($filter: HostFilter, $order: HostOrder
 		... HostFragment
 	}
 }
+fragment NodeFragment on Node {
+	id
+}
 fragment HostFragment on Host {
 	... NodeFragment
 	domain
 	name
-}
-fragment NodeFragment on Node {
-	id
 }
 `
 
@@ -3119,6 +3300,7 @@ fragment LicenseFragment on License {
 	xid
 	name
 	text
+	textHTML
 	referenceURL
 	detailsURL
 	type
@@ -3159,6 +3341,7 @@ fragment LicenseFragment on License {
 	xid
 	name
 	text
+	textHTML
 	referenceURL
 	detailsURL
 	type
@@ -3505,11 +3688,224 @@ func (c *Client) DeleteMaterials(ctx context.Context, filter models.MaterialFilt
 
 const GetNodeDocument = `query GetNode ($id: ID!) {
 	getNode(id: $id) {
+		__typename
 		... NodeFragment
+		... on Product {
+			... ProductFragment
+		}
+		... on Component {
+			... ComponentFragment
+		}
+		... on License {
+			... LicenseFragment
+		}
+		... on User {
+			... UserFragment
+		}
+		... on Group {
+			... GroupFragment
+		}
 	}
 }
 fragment NodeFragment on Node {
 	id
+}
+fragment ProductFragment on Product {
+	... NodeFragment
+	... CrawlerMetaFragment
+	xid
+	name
+	owner {
+		id
+	}
+	description
+	website
+	version
+	release {
+		id
+	}
+	releases {
+		id
+	}
+	renamedTo {
+		id
+	}
+	renamedFrom {
+		id
+	}
+	forkOf {
+		id
+	}
+	forks {
+		id
+	}
+	tags {
+		id
+	}
+	category {
+		id
+	}
+}
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
+}
+fragment ComponentFragment on Component {
+	id
+	xid
+	name
+	description
+	owner {
+		id
+	}
+	version
+	createdAt
+	releases {
+		id
+	}
+	isLatest
+	repository {
+		id
+	}
+	license {
+		id
+	}
+	additionalLicenses {
+		id
+	}
+	licensor {
+		id
+	}
+	documentationLanguage
+	technologyReadinessLevel
+	documentationReadinessLevel
+	attestation
+	publication
+	compliesWith {
+		id
+	}
+	cpcPatentClass
+	tsdc {
+		id
+	}
+	components {
+		id
+	}
+	software {
+		id
+	}
+	image {
+		id
+	}
+	readme {
+		id
+	}
+	contributionGuide {
+		id
+	}
+	bom {
+		id
+	}
+	manufacturingInstructions {
+		id
+	}
+	userManual {
+		id
+	}
+	product {
+		id
+	}
+	usedIn {
+		id
+	}
+	source {
+		id
+	}
+	export {
+		id
+	}
+	auxiliary {
+		id
+	}
+	organization {
+		id
+	}
+	mass
+	outerDimensions {
+		... on BoundingBoxDimensions {
+			id
+		}
+		... on OpenSCADDimensions {
+			id
+		}
+	}
+	material {
+		id
+	}
+	manufacturingProcess {
+		id
+	}
+	productionMetadata {
+		id
+	}
+}
+fragment LicenseFragment on License {
+	id
+	xid
+	name
+	text
+	textHTML
+	referenceURL
+	detailsURL
+	type
+	isSpdx
+	isDeprecated
+	isOsiApproved
+	isFsfLibre
+	isBlocked
+}
+fragment UserFragment on User {
+	... NodeFragment
+	... UserOrGroupFragment
+	fullName
+	locale
+}
+fragment UserOrGroupFragment on UserOrGroup {
+	__typename
+	... on User {
+		id
+	}
+	... on Group {
+		id
+	}
+	xid
+	host {
+		id
+	}
+	name
+	email
+	avatar {
+		id
+	}
+	url
+	memberOf {
+		id
+	}
+	products {
+		id
+	}
+}
+fragment GroupFragment on Group {
+	... NodeFragment
+	... UserOrGroupFragment
+	members {
+		... on User {
+			id
+		}
+		... on Group {
+			id
+		}
+	}
 }
 `
 
@@ -3590,13 +3986,13 @@ const GetOpenSCADDimensionsDocument = `query GetOpenSCADDimensions ($id: ID!) {
 		... OpenSCADDimensionsFragment
 	}
 }
-fragment NodeFragment on Node {
-	id
-}
 fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
 	... NodeFragment
 	openscad
 	unit
+}
+fragment NodeFragment on Node {
+	id
 }
 `
 
@@ -3719,10 +4115,6 @@ const GetProductDocument = `query GetProduct ($id: ID, $xid: String) {
 		... ProductFragment
 	}
 }
-fragment CrawlerMetaFragment on CrawlerMeta {
-	discoveredAt
-	lastIndexedAt
-}
 fragment ProductFragment on Product {
 	... NodeFragment
 	... CrawlerMetaFragment
@@ -3761,6 +4153,10 @@ fragment ProductFragment on Product {
 }
 fragment NodeFragment on Node {
 	id
+}
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
 }
 `
 
@@ -3788,6 +4184,13 @@ const GetProductsDocument = `query GetProducts ($filter: ProductFilter, $order: 
 		... ProductFragment
 	}
 }
+fragment NodeFragment on Node {
+	id
+}
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
+}
 fragment ProductFragment on Product {
 	... NodeFragment
 	... CrawlerMetaFragment
@@ -3823,13 +4226,6 @@ fragment ProductFragment on Product {
 	category {
 		id
 	}
-}
-fragment NodeFragment on Node {
-	id
-}
-fragment CrawlerMetaFragment on CrawlerMeta {
-	discoveredAt
-	lastIndexedAt
 }
 `
 
@@ -3958,9 +4354,6 @@ const GetSoftwaresDocument = `query GetSoftwares ($filter: SoftwareFilter, $orde
 		... SoftwareFragment
 	}
 }
-fragment NodeFragment on Node {
-	id
-}
 fragment CrawlerMetaFragment on CrawlerMeta {
 	discoveredAt
 	lastIndexedAt
@@ -3977,6 +4370,9 @@ fragment SoftwareFragment on Software {
 		id
 	}
 	licensor
+}
+fragment NodeFragment on Node {
+	id
 }
 `
 
@@ -4584,6 +4980,31 @@ func (c *Client) DeleteTechnologySpecificDocumentationCriteria(ctx context.Conte
 	return &resp, nil
 }
 
+const TestConnectionDocument = `query TestConnection {
+	__schema {
+		queryType {
+			name
+		}
+	}
+}
+`
+
+func (c *Client) TestConnection(ctx context.Context) (*TestConnection, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "TestConnection",
+		Query:         TestConnectionDocument,
+		Variables:     map[string]interface{}{},
+	}
+
+	var resp TestConnection
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
 const GetUserOrGroupDocument = `query GetUserOrGroup ($id: ID, $xid: String) {
 	getUserOrGroup(id: $id, xid: $xid) {
 		... on User {
@@ -4591,18 +5012,6 @@ const GetUserOrGroupDocument = `query GetUserOrGroup ($id: ID, $xid: String) {
 		}
 		... on Group {
 			... GroupFragment
-		}
-	}
-}
-fragment GroupFragment on Group {
-	... NodeFragment
-	... UserOrGroupFragment
-	members {
-		... on User {
-			id
-		}
-		... on Group {
-			id
 		}
 	}
 }
@@ -4616,6 +5025,7 @@ fragment NodeFragment on Node {
 	id
 }
 fragment UserOrGroupFragment on UserOrGroup {
+	__typename
 	... on User {
 		id
 	}
@@ -4637,6 +5047,18 @@ fragment UserOrGroupFragment on UserOrGroup {
 	}
 	products {
 		id
+	}
+}
+fragment GroupFragment on Group {
+	... NodeFragment
+	... UserOrGroupFragment
+	members {
+		... on User {
+			id
+		}
+		... on Group {
+			id
+		}
 	}
 }
 `
@@ -4670,18 +5092,6 @@ const GetUserOrGroupsDocument = `query GetUserOrGroups ($filter: UserOrGroupFilt
 		}
 	}
 }
-fragment GroupFragment on Group {
-	... NodeFragment
-	... UserOrGroupFragment
-	members {
-		... on User {
-			id
-		}
-		... on Group {
-			id
-		}
-	}
-}
 fragment UserFragment on User {
 	... NodeFragment
 	... UserOrGroupFragment
@@ -4692,6 +5102,7 @@ fragment NodeFragment on Node {
 	id
 }
 fragment UserOrGroupFragment on UserOrGroup {
+	__typename
 	... on User {
 		id
 	}
@@ -4713,6 +5124,18 @@ fragment UserOrGroupFragment on UserOrGroup {
 	}
 	products {
 		id
+	}
+}
+fragment GroupFragment on Group {
+	... NodeFragment
+	... UserOrGroupFragment
+	members {
+		... on User {
+			id
+		}
+		... on Group {
+			id
+		}
 	}
 }
 `
@@ -4770,7 +5193,17 @@ const GetUserDocument = `query GetUser ($id: ID, $xid: String) {
 		... UserFragment
 	}
 }
+fragment UserFragment on User {
+	... NodeFragment
+	... UserOrGroupFragment
+	fullName
+	locale
+}
+fragment NodeFragment on Node {
+	id
+}
 fragment UserOrGroupFragment on UserOrGroup {
+	__typename
 	... on User {
 		id
 	}
@@ -4793,15 +5226,6 @@ fragment UserOrGroupFragment on UserOrGroup {
 	products {
 		id
 	}
-}
-fragment UserFragment on User {
-	... NodeFragment
-	... UserOrGroupFragment
-	fullName
-	locale
-}
-fragment NodeFragment on Node {
-	id
 }
 `
 
@@ -4829,16 +5253,8 @@ const GetUsersDocument = `query GetUsers ($filter: UserFilter, $order: UserOrder
 		... UserFragment
 	}
 }
-fragment UserFragment on User {
-	... NodeFragment
-	... UserOrGroupFragment
-	fullName
-	locale
-}
-fragment NodeFragment on Node {
-	id
-}
 fragment UserOrGroupFragment on UserOrGroup {
+	__typename
 	... on User {
 		id
 	}
@@ -4861,6 +5277,15 @@ fragment UserOrGroupFragment on UserOrGroup {
 	products {
 		id
 	}
+}
+fragment UserFragment on User {
+	... NodeFragment
+	... UserOrGroupFragment
+	fullName
+	locale
+}
+fragment NodeFragment on Node {
+	id
 }
 `
 
@@ -4960,6 +5385,7 @@ fragment NodeFragment on Node {
 	id
 }
 fragment UserOrGroupFragment on UserOrGroup {
+	__typename
 	... on User {
 		id
 	}
@@ -5025,6 +5451,7 @@ fragment NodeFragment on Node {
 	id
 }
 fragment UserOrGroupFragment on UserOrGroup {
+	__typename
 	... on User {
 		id
 	}

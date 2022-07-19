@@ -5,8 +5,6 @@ import (
 	"losh/internal/errors"
 	"losh/internal/models"
 	"losh/internal/repository"
-
-	"github.com/jinzhu/copier"
 )
 
 var (
@@ -23,9 +21,11 @@ func (dr *DgraphRepository) GetCategory(id, xid *string) (*models.Category, erro
 		return nil, repository.WrapRepoError(err, errGetCategoryStr).
 			Add("categoryId", id).Add("categoryXid", xid)
 	}
+	if getCategory.GetCategory == nil { // not found
+		return nil, nil
 	}
 	category := &models.Category{ID: *id}
-	if err = copier.CopyWithOption(category, getCategory.GetCategory, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
+	if err = dr.dataCopier.CopyTo(getCategory.GetCategory, category); err != nil {
 		panic(err)
 	}
 	return category, nil
@@ -41,7 +41,7 @@ func (dr *DgraphRepository) GetCategories(filter *models.CategoryFilter, order *
 	categories := make([]*models.Category, 0, len(getCategories.QueryCategory))
 	for _, x := range getCategories.QueryCategory {
 		category := &models.Category{ID: x.ID}
-		if err = copier.CopyWithOption(category, x, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
+		if err = dr.dataCopier.CopyTo(x, category); err != nil {
 			panic(err)
 		}
 		categories = append(categories, category)
@@ -74,10 +74,14 @@ func (dr *DgraphRepository) SaveCategories(categories []*models.Category) error 
 			continue
 		}
 		category := &models.AddCategoryInput{}
+		if err := dr.dataCopier.CopyTo(x, category); err != nil {
 			return repository.WrapRepoError(err, errSaveCategoryStr).
 				Add("categoryId", x.ID).Add("categoryXid", x.Xid)
 		}
 		reqData = append(reqData, category)
+	}
+	if len(reqData) == 0 {
+		return nil
 	}
 	ctx := context.Background()
 	respData, err := dr.client.SaveCategories(ctx, reqData)

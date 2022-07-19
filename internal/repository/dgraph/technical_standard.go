@@ -5,8 +5,6 @@ import (
 	"losh/internal/errors"
 	"losh/internal/models"
 	"losh/internal/repository"
-
-	"github.com/jinzhu/copier"
 )
 
 var (
@@ -23,9 +21,11 @@ func (dr *DgraphRepository) GetTechnicalStandard(id, xid *string) (*models.Techn
 		return nil, repository.WrapRepoError(err, errGetTechnicalStandardStr).
 			Add("technicalStandardId", id).Add("technicalStandardXid", xid)
 	}
+	if getTechnicalStandard.GetTechnicalStandard == nil { // not found
+		return nil, nil
 	}
 	technicalStandard := &models.TechnicalStandard{ID: *id}
-	if err = copier.CopyWithOption(technicalStandard, getTechnicalStandard.GetTechnicalStandard, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
+	if err = dr.dataCopier.CopyTo(getTechnicalStandard.GetTechnicalStandard, technicalStandard); err != nil {
 		panic(err)
 	}
 	return technicalStandard, nil
@@ -41,7 +41,7 @@ func (dr *DgraphRepository) GetTechnicalStandards(filter *models.TechnicalStanda
 	technicalStandards := make([]*models.TechnicalStandard, 0, len(getTechnicalStandards.QueryTechnicalStandard))
 	for _, x := range getTechnicalStandards.QueryTechnicalStandard {
 		technicalStandard := &models.TechnicalStandard{ID: x.ID}
-		if err = copier.CopyWithOption(technicalStandard, x, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
+		if err = dr.dataCopier.CopyTo(x, technicalStandard); err != nil {
 			panic(err)
 		}
 		technicalStandards = append(technicalStandards, technicalStandard)
@@ -74,10 +74,14 @@ func (dr *DgraphRepository) SaveTechnicalStandards(technicalStandards []*models.
 			continue
 		}
 		technicalStandard := &models.AddTechnicalStandardInput{}
+		if err := dr.dataCopier.CopyTo(x, technicalStandard); err != nil {
 			return repository.WrapRepoError(err, errSaveTechnicalStandardStr).
 				Add("technicalStandardId", x.ID).Add("technicalStandardXid", x.Xid)
 		}
 		reqData = append(reqData, technicalStandard)
+	}
+	if len(reqData) == 0 {
+		return nil
 	}
 	ctx := context.Background()
 	respData, err := dr.client.SaveTechnicalStandards(ctx, reqData)

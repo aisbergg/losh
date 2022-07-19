@@ -6,8 +6,6 @@ import (
 	"losh/internal/errors"
 	"losh/internal/models"
 	"losh/internal/repository"
-
-	"github.com/jinzhu/copier"
 )
 
 var (
@@ -33,9 +31,11 @@ func (dr *DgraphRepository) GetUser(id, xid *string) (*models.User, error) {
 		return nil, repository.WrapRepoError(err, errGetUserStr).
 			Add("userId", id).Add("userXid", xid)
 	}
+	if getUser.GetUser == nil { // not found
+		return nil, nil
 	}
 	user := &models.User{ID: *id}
-	if err = copier.CopyWithOption(user, getUser.GetUser, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
+	if err = dr.dataCopier.CopyTo(getUser.GetUser, user); err != nil {
 		panic(err)
 	}
 	return user, nil
@@ -51,7 +51,7 @@ func (dr *DgraphRepository) GetUsers(filter *models.UserFilter, order *models.Us
 	users := make([]*models.User, 0, len(getUsers.QueryUser))
 	for _, x := range getUsers.QueryUser {
 		user := &models.User{ID: x.ID}
-		if err = copier.CopyWithOption(user, x.User, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
+		if err = dr.dataCopier.CopyTo(x.User, user); err != nil {
 			panic(err)
 		}
 		users = append(users, user)
@@ -84,10 +84,14 @@ func (dr *DgraphRepository) SaveUsers(users []*models.User) error {
 			continue
 		}
 		user := &models.AddUserInput{}
+		if err := dr.dataCopier.CopyTo(x, user); err != nil {
 			return repository.WrapRepoError(err, errSaveUserStr).
 				Add("userId", x.ID).Add("userXid", x.Xid)
 		}
 		reqData = append(reqData, user)
+	}
+	if len(reqData) == 0 {
+		return nil
 	}
 	ctx := context.Background()
 	respData, err := dr.client.SaveUsers(ctx, reqData)
@@ -138,9 +142,11 @@ func (dr *DgraphRepository) GetGroup(id, xid *string) (*models.Group, error) {
 		return nil, repository.WrapRepoError(err, errGetGroupStr).
 			Add("groupId", id).Add("groupXid", xid)
 	}
+	if getGroup.GetGroup == nil { // not found
+		return nil, nil
 	}
 	group := &models.Group{ID: *id}
-	if err = copier.CopyWithOption(group, getGroup.GetGroup, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
+	if err = dr.dataCopier.CopyTo(getGroup.GetGroup, group); err != nil {
 		panic(err)
 	}
 	return group, nil
@@ -156,7 +162,7 @@ func (dr *DgraphRepository) GetGroups(filter *models.GroupFilter, order *models.
 	groups := make([]*models.Group, 0, len(getGroups.QueryGroup))
 	for _, x := range getGroups.QueryGroup {
 		group := &models.Group{ID: x.ID}
-		if err = copier.CopyWithOption(group, x.Group, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
+		if err = dr.dataCopier.CopyTo(x.Group, group); err != nil {
 			panic(err)
 		}
 		groups = append(groups, group)
@@ -189,6 +195,7 @@ func (dr *DgraphRepository) SaveGroups(groups []*models.Group) error {
 			continue
 		}
 		group := &models.AddGroupInput{}
+		if err := dr.dataCopier.CopyTo(x, group); err != nil {
 			return repository.WrapRepoError(err, errSaveGroupStr).
 				Add("groupId", x.ID).Add("groupXid", x.Xid)
 		}

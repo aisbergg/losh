@@ -5,8 +5,6 @@ import (
 	"losh/internal/errors"
 	"losh/internal/models"
 	"losh/internal/repository"
-
-	"github.com/jinzhu/copier"
 )
 
 var (
@@ -23,9 +21,11 @@ func (dr *DgraphRepository) GetComponentSource(id, xid *string) (*models.Compone
 		return nil, repository.WrapRepoError(err, errGetComponentSourceStr).
 			Add("componentSourceId", id).Add("componentSourceXid", xid)
 	}
+	if getComponentSource.GetComponentSource == nil { // not found
+		return nil, nil
 	}
 	componentSource := &models.ComponentSource{ID: *id}
-	if err = copier.CopyWithOption(componentSource, getComponentSource.GetComponentSource, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
+	if err = dr.dataCopier.CopyTo(getComponentSource.GetComponentSource, componentSource); err != nil {
 		panic(err)
 	}
 	return componentSource, nil
@@ -41,7 +41,7 @@ func (dr *DgraphRepository) GetComponentSources(filter *models.ComponentSourceFi
 	componentSources := make([]*models.ComponentSource, 0, len(getComponentSources.QueryComponentSource))
 	for _, x := range getComponentSources.QueryComponentSource {
 		componentSource := &models.ComponentSource{ID: x.ID}
-		if err = copier.CopyWithOption(componentSource, x, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
+		if err = dr.dataCopier.CopyTo(x, componentSource); err != nil {
 			panic(err)
 		}
 		componentSources = append(componentSources, componentSource)
@@ -74,10 +74,14 @@ func (dr *DgraphRepository) SaveComponentSources(componentSources []*models.Comp
 			continue
 		}
 		componentSource := &models.AddComponentSourceInput{}
+		if err := dr.dataCopier.CopyTo(x, componentSource); err != nil {
 			return repository.WrapRepoError(err, errSaveComponentSourceStr).
 				Add("componentSourceId", x.ID).Add("componentSourceXid", x.Xid)
 		}
 		reqData = append(reqData, componentSource)
+	}
+	if len(reqData) == 0 {
+		return nil
 	}
 	ctx := context.Background()
 	respData, err := dr.client.SaveComponentSources(ctx, reqData)

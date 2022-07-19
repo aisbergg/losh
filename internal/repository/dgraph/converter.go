@@ -5,7 +5,7 @@ import (
 	"losh/internal/models"
 	"losh/internal/repository"
 
-	"github.com/jinzhu/copier"
+	"github.com/aisbergg/go-copier/pkg/copier"
 )
 
 // initializeConverters initializes the converters for the copier.

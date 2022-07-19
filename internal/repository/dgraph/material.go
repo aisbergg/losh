@@ -5,8 +5,6 @@ import (
 	"losh/internal/errors"
 	"losh/internal/models"
 	"losh/internal/repository"
-
-	"github.com/jinzhu/copier"
 )
 
 var (
@@ -23,9 +21,11 @@ func (dr *DgraphRepository) GetMaterial(id string) (*models.Material, error) {
 		return nil, repository.WrapRepoError(err, errGetMaterialStr).
 			Add("materialId", id)
 	}
+	if getMaterial.GetMaterial == nil { // not found
+		return nil, nil
 	}
 	material := &models.Material{ID: id}
-	if err = copier.CopyWithOption(material, getMaterial.GetMaterial, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
+	if err = dr.dataCopier.CopyTo(getMaterial.GetMaterial, material); err != nil {
 		panic(err)
 	}
 	return material, nil
@@ -41,7 +41,7 @@ func (dr *DgraphRepository) GetMaterials(filter *models.MaterialFilter, order *m
 	materials := make([]*models.Material, 0, len(getMaterials.QueryMaterial))
 	for _, x := range getMaterials.QueryMaterial {
 		material := &models.Material{ID: x.ID}
-		if err = copier.CopyWithOption(material, x, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
+		if err = dr.dataCopier.CopyTo(x, material); err != nil {
 			panic(err)
 		}
 		materials = append(materials, material)
@@ -74,10 +74,14 @@ func (dr *DgraphRepository) SaveMaterials(materials []*models.Material) error {
 			continue
 		}
 		material := &models.AddMaterialInput{}
+		if err := dr.dataCopier.CopyTo(x, material); err != nil {
 			return repository.WrapRepoError(err, errSaveMaterialStr).
 				Add("materialId", x.ID)
 		}
 		reqData = append(reqData, material)
+	}
+	if len(reqData) == 0 {
+		return nil
 	}
 	ctx := context.Background()
 	respData, err := dr.client.SaveMaterials(ctx, reqData, []string{})

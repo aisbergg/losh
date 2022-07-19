@@ -5,8 +5,6 @@ import (
 	"losh/internal/errors"
 	"losh/internal/models"
 	"losh/internal/repository"
-
-	"github.com/jinzhu/copier"
 )
 
 var (
@@ -23,9 +21,11 @@ func (dr *DgraphRepository) GetBoundingBoxDimensions(id string) (*models.Boundin
 		return nil, repository.WrapRepoError(err, errGetBoundingBoxDimensionsStr).
 			Add("bbdId", id)
 	}
+	if getBoundingBoxDimensions.GetBoundingBoxDimensions == nil { // not found
+		return nil, nil
 	}
 	bbd := &models.BoundingBoxDimensions{ID: id}
-	if err = copier.CopyWithOption(bbd, getBoundingBoxDimensions.GetBoundingBoxDimensions, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
+	if err = dr.dataCopier.CopyTo(getBoundingBoxDimensions.GetBoundingBoxDimensions, bbd); err != nil {
 		panic(err)
 	}
 	return bbd, nil
@@ -41,7 +41,7 @@ func (dr *DgraphRepository) GetBoundingBoxDimensionss(filter *models.BoundingBox
 	bbds := make([]*models.BoundingBoxDimensions, 0, len(getBoundingBoxDimensionss.QueryBoundingBoxDimensions))
 	for _, x := range getBoundingBoxDimensionss.QueryBoundingBoxDimensions {
 		bbd := &models.BoundingBoxDimensions{ID: x.ID}
-		if err = copier.CopyWithOption(bbd, x, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
+		if err = dr.dataCopier.CopyTo(x, bbd); err != nil {
 			panic(err)
 		}
 		bbds = append(bbds, bbd)
@@ -74,10 +74,14 @@ func (dr *DgraphRepository) SaveBoundingBoxDimensionss(bbds []*models.BoundingBo
 			continue
 		}
 		bbd := &models.AddBoundingBoxDimensionsInput{}
+		if err := dr.dataCopier.CopyTo(x, bbd); err != nil {
 			return repository.WrapRepoError(err, errSaveBoundingBoxDimensionsStr).
 				Add("bbdId", x.ID)
 		}
 		reqData = append(reqData, bbd)
+	}
+	if len(reqData) == 0 {
+		return nil
 	}
 	ctx := context.Background()
 	respData, err := dr.client.SaveBoundingBoxDimensionss(ctx, reqData, []string{})

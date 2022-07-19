@@ -21,9 +21,11 @@ func (dr *DgraphRepository) GetProduct(id, xid *string) (*models.Product, error)
 		return nil, repository.WrapRepoError(err, errGetProductStr).
 			Add("productId", id).Add("productXid", xid)
 	}
+	if getProduct.GetProduct == nil { // not found
+		return nil, nil
 	}
 	product := &models.Product{ID: *id}
-	if err = copier.CopyWithOption(product, getProduct.GetProduct, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
+	if err = dr.dataCopier.CopyTo(getProduct.GetProduct, product); err != nil {
 		panic(err)
 	}
 	return product, nil
@@ -39,7 +41,7 @@ func (dr *DgraphRepository) GetProducts(filter *models.ProductFilter, order *mod
 	products := make([]*models.Product, 0, len(getProducts.QueryProduct))
 	for _, x := range getProducts.QueryProduct {
 		product := &models.Product{ID: x.ID}
-		if err = copier.CopyWithOption(product, x, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
+		if err = dr.dataCopier.CopyTo(x, product); err != nil {
 			panic(err)
 		}
 		products = append(products, product)
@@ -72,10 +74,14 @@ func (dr *DgraphRepository) SaveProducts(products []*models.Product) error {
 			continue
 		}
 		product := &models.AddProductInput{}
+		if err := dr.dataCopier.CopyTo(x, product); err != nil {
 			return repository.WrapRepoError(err, errSaveProductStr).
 				Add("productId", x.ID).Add("productXid", x.Xid)
 		}
 		reqData = append(reqData, product)
+	}
+	if len(reqData) == 0 {
+		return nil
 	}
 	ctx := context.Background()
 	respData, err := dr.client.SaveProducts(ctx, reqData)

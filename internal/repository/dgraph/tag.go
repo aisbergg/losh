@@ -21,6 +21,8 @@ func (dr *DgraphRepository) GetTag(id, xid *string) (*models.Tag, error) {
 		return nil, repository.WrapRepoError(err, errGetTagStr).
 			Add("tagId", id).Add("tagXid", xid)
 	}
+	if getTag.GetTag == nil { // not found
+		return nil, nil
 	}
 	tag := &models.Tag{ID: *id}
 	if err = dr.dataCopier.CopyTo(getTag.GetTag, tag); err != nil {
@@ -39,7 +41,7 @@ func (dr *DgraphRepository) GetTags(filter *models.TagFilter, order *models.TagO
 	tags := make([]*models.Tag, 0, len(getTags.QueryTag))
 	for _, x := range getTags.QueryTag {
 		tag := &models.Tag{ID: x.ID}
-		if err = copier.CopyWithOption(tag, x, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
+		if err = dr.dataCopier.CopyTo(x, tag); err != nil {
 			panic(err)
 		}
 		tags = append(tags, tag)
@@ -72,10 +74,14 @@ func (dr *DgraphRepository) SaveTags(tags []*models.Tag) error {
 			continue
 		}
 		tag := &models.AddTagInput{}
+		if err := dr.dataCopier.CopyTo(x, tag); err != nil {
 			return repository.WrapRepoError(err, errSaveTagStr).
 				Add("tagId", x.ID).Add("tagXid", x.Xid)
 		}
 		reqData = append(reqData, tag)
+	}
+	if len(reqData) == 0 {
+		return nil
 	}
 	ctx := context.Background()
 	respData, err := dr.client.SaveTags(ctx, reqData)

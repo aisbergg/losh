@@ -3,6 +3,7 @@ fragment LicenseFragment on License {
 	xid
 	name
 	text
+	textHTML
 	referenceURL
 	detailsURL
 	type

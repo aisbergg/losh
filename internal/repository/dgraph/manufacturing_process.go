@@ -5,8 +5,6 @@ import (
 	"losh/internal/errors"
 	"losh/internal/models"
 	"losh/internal/repository"
-
-	"github.com/jinzhu/copier"
 )
 
 var (
@@ -23,9 +21,11 @@ func (dr *DgraphRepository) GetManufacturingProcess(id string) (*models.Manufact
 		return nil, repository.WrapRepoError(err, errGetManufacturingProcessStr).
 			Add("manufacturingProcessId", id)
 	}
+	if getManufacturingProcess.GetManufacturingProcess == nil { // not found
+		return nil, nil
 	}
 	manufacturingProcess := &models.ManufacturingProcess{ID: id}
-	if err = copier.CopyWithOption(manufacturingProcess, getManufacturingProcess.GetManufacturingProcess, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
+	if err = dr.dataCopier.CopyTo(getManufacturingProcess.GetManufacturingProcess, manufacturingProcess); err != nil {
 		panic(err)
 	}
 	return manufacturingProcess, nil
@@ -41,7 +41,7 @@ func (dr *DgraphRepository) GetManufacturingProcesss(filter *models.Manufacturin
 	manufacturingProcesss := make([]*models.ManufacturingProcess, 0, len(getManufacturingProcesss.QueryManufacturingProcess))
 	for _, x := range getManufacturingProcesss.QueryManufacturingProcess {
 		manufacturingProcess := &models.ManufacturingProcess{ID: x.ID}
-		if err = copier.CopyWithOption(manufacturingProcess, x, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
+		if err = dr.dataCopier.CopyTo(x, manufacturingProcess); err != nil {
 			panic(err)
 		}
 		manufacturingProcesss = append(manufacturingProcesss, manufacturingProcess)
@@ -74,10 +74,14 @@ func (dr *DgraphRepository) SaveManufacturingProcesss(manufacturingProcesss []*m
 			continue
 		}
 		manufacturingProcess := &models.AddManufacturingProcessInput{}
+		if err := dr.dataCopier.CopyTo(x, manufacturingProcess); err != nil {
 			return repository.WrapRepoError(err, errSaveManufacturingProcessStr).
 				Add("manufacturingProcessId", x.ID)
 		}
 		reqData = append(reqData, manufacturingProcess)
+	}
+	if len(reqData) == 0 {
+		return nil
 	}
 	ctx := context.Background()
 	respData, err := dr.client.SaveManufacturingProcesses(ctx, reqData, []string{})

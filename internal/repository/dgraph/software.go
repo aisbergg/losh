@@ -5,8 +5,6 @@ import (
 	"losh/internal/errors"
 	"losh/internal/models"
 	"losh/internal/repository"
-
-	"github.com/jinzhu/copier"
 )
 
 var (
@@ -23,9 +21,11 @@ func (dr *DgraphRepository) GetSoftware(id string) (*models.Software, error) {
 		return nil, repository.WrapRepoError(err, errGetSoftwareStr).
 			Add("softwareId", id)
 	}
+	if getSoftware.GetSoftware == nil { // not found
+		return nil, nil
 	}
 	software := &models.Software{ID: id}
-	if err = copier.CopyWithOption(software, getSoftware.GetSoftware, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
+	if err = dr.dataCopier.CopyTo(getSoftware.GetSoftware, software); err != nil {
 		panic(err)
 	}
 	return software, nil
@@ -41,7 +41,7 @@ func (dr *DgraphRepository) GetSoftwares(filter *models.SoftwareFilter, order *m
 	softwares := make([]*models.Software, 0, len(getSoftwares.QuerySoftware))
 	for _, x := range getSoftwares.QuerySoftware {
 		software := &models.Software{ID: x.ID}
-		if err = copier.CopyWithOption(software, x, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
+		if err = dr.dataCopier.CopyTo(x, software); err != nil {
 			panic(err)
 		}
 		softwares = append(softwares, software)
@@ -74,10 +74,14 @@ func (dr *DgraphRepository) SaveSoftwares(softwares []*models.Software) error {
 			continue
 		}
 		software := &models.AddSoftwareInput{}
+		if err := dr.dataCopier.CopyTo(x, software); err != nil {
 			return repository.WrapRepoError(err, errSaveSoftwareStr).
 				Add("softwareId", x.ID)
 		}
 		reqData = append(reqData, software)
+	}
+	if len(reqData) == 0 {
+		return nil
 	}
 	ctx := context.Background()
 	respData, err := dr.client.SaveSoftwares(ctx, reqData, []string{})
