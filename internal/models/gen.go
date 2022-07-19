@@ -98,6 +98,7 @@ type AddComponentInput struct {
 	Attestation *string `json:"attestation,omitempty"`
 	// The scientific publication (DOI) in which the component has been peer reviewed.
 	Publication  *string               `json:"publication,omitempty"`
+	Issues       *string               `json:"issues,omitempty"`
 	CompliesWith *TechnicalStandardRef `json:"compliesWith,omitempty"`
 	// The international patent classification (IPC) of the component.
 	CpcPatentClass            *string                                     `json:"cpcPatentClass,omitempty"`
@@ -237,6 +238,8 @@ type AddLicenseInput struct {
 	Name string `json:"name"`
 	// The full text of the license.
 	Text *string `json:"text,omitempty"`
+	// The full text of the license formatted as HTML.
+	TextHTML *string `json:"textHTML,omitempty"`
 	// The reference URL of the license with more information.
 	ReferenceURL *string `json:"referenceURL,omitempty"`
 	// The details URL of the license with information in machine readable format.
@@ -603,6 +606,7 @@ type Component struct {
 	Attestation *string `json:"attestation,omitempty"`
 	// The scientific publication (DOI) in which the component has been peer reviewed.
 	Publication *string `json:"publication,omitempty"`
+	Issues      *string `json:"issues,omitempty"`
 	// The technical standard that the component complies with.
 	CompliesWith *TechnicalStandard `json:"compliesWith,omitempty"`
 	// The international patent classification (IPC) of the component.
@@ -683,6 +687,8 @@ type ComponentAggregateResult struct {
 	AttestationMax           *string    `json:"attestationMax,omitempty"`
 	PublicationMin           *string    `json:"publicationMin,omitempty"`
 	PublicationMax           *string    `json:"publicationMax,omitempty"`
+	IssuesMin                *string    `json:"issuesMin,omitempty"`
+	IssuesMax                *string    `json:"issuesMax,omitempty"`
 	CpcPatentClassMin        *string    `json:"cpcPatentClassMin,omitempty"`
 	CpcPatentClassMax        *string    `json:"cpcPatentClassMax,omitempty"`
 	MassMin                  *float64   `json:"massMin,omitempty"`
@@ -704,6 +710,7 @@ type ComponentFilter struct {
 	DocumentationLanguage *StringHashFilter                                       `json:"documentationLanguage,omitempty"`
 	Attestation           *StringHashFilter                                       `json:"attestation,omitempty"`
 	Publication           *StringHashFilter                                       `json:"publication,omitempty"`
+	Issues                *StringHashFilter                                       `json:"issues,omitempty"`
 	CpcPatentClass        *StringHashFilter                                       `json:"cpcPatentClass,omitempty"`
 	Mass                  *FloatFilter                                            `json:"mass,omitempty"`
 	Has                   []*ComponentHasFilter                                   `json:"has,omitempty"`
@@ -755,6 +762,7 @@ type ComponentPatch struct {
 	Attestation *string `json:"attestation,omitempty"`
 	// The scientific publication (DOI) in which the component has been peer reviewed.
 	Publication  *string               `json:"publication,omitempty"`
+	Issues       *string               `json:"issues,omitempty"`
 	CompliesWith *TechnicalStandardRef `json:"compliesWith,omitempty"`
 	// The international patent classification (IPC) of the component.
 	CpcPatentClass            *string                                     `json:"cpcPatentClass,omitempty"`
@@ -819,6 +827,7 @@ type ComponentRef struct {
 	Attestation *string `json:"attestation,omitempty"`
 	// The scientific publication (DOI) in which the component has been peer reviewed.
 	Publication  *string               `json:"publication,omitempty"`
+	Issues       *string               `json:"issues,omitempty"`
 	CompliesWith *TechnicalStandardRef `json:"compliesWith,omitempty"`
 	// The international patent classification (IPC) of the component.
 	CpcPatentClass            *string                                     `json:"cpcPatentClass,omitempty"`
@@ -1548,6 +1557,8 @@ type License struct {
 	Name string `json:"name"`
 	// The full text of the license.
 	Text *string `json:"text,omitempty"`
+	// The full text of the license formatted as HTML.
+	TextHTML *string `json:"textHTML,omitempty"`
 	// The reference URL of the license with more information.
 	ReferenceURL *string `json:"referenceURL,omitempty"`
 	// The details URL of the license with information in machine readable format.
@@ -1576,6 +1587,8 @@ type LicenseAggregateResult struct {
 	NameMax         *string `json:"nameMax,omitempty"`
 	TextMin         *string `json:"textMin,omitempty"`
 	TextMax         *string `json:"textMax,omitempty"`
+	TextHTMLMin     *string `json:"textHTMLMin,omitempty"`
+	TextHTMLMax     *string `json:"textHTMLMax,omitempty"`
 	ReferenceURLMin *string `json:"referenceURLMin,omitempty"`
 	ReferenceURLMax *string `json:"referenceURLMax,omitempty"`
 	DetailsURLMin   *string `json:"detailsURLMin,omitempty"`
@@ -1610,6 +1623,8 @@ type LicensePatch struct {
 	Name *string `json:"name,omitempty"`
 	// The full text of the license.
 	Text *string `json:"text,omitempty"`
+	// The full text of the license formatted as HTML.
+	TextHTML *string `json:"textHTML,omitempty"`
 	// The reference URL of the license with more information.
 	ReferenceURL *string `json:"referenceURL,omitempty"`
 	// The details URL of the license with information in machine readable format.
@@ -1636,6 +1651,8 @@ type LicenseRef struct {
 	Name *string `json:"name,omitempty"`
 	// The full text of the license.
 	Text *string `json:"text,omitempty"`
+	// The full text of the license formatted as HTML.
+	TextHTML *string `json:"textHTML,omitempty"`
 	// The reference URL of the license with more information.
 	ReferenceURL *string `json:"referenceURL,omitempty"`
 	// The details URL of the license with information in machine readable format.
@@ -1784,8 +1801,8 @@ type OpenSCADDimensions struct {
 	Unit     *string `json:"unit,omitempty"`
 }
 
-func (OpenSCADDimensions) IsNode()            {}
 func (OpenSCADDimensions) IsOuterDimensions() {}
+func (OpenSCADDimensions) IsNode()            {}
 
 type OpenSCADDimensionsAggregateResult struct {
 	Count       *int64  `json:"count,omitempty"`
@@ -2976,6 +2993,7 @@ const (
 	ComponentHasFilterDocumentationReadinessLevel ComponentHasFilter = "documentationReadinessLevel"
 	ComponentHasFilterAttestation                 ComponentHasFilter = "attestation"
 	ComponentHasFilterPublication                 ComponentHasFilter = "publication"
+	ComponentHasFilterIssues                      ComponentHasFilter = "issues"
 	ComponentHasFilterCompliesWith                ComponentHasFilter = "compliesWith"
 	ComponentHasFilterCpcPatentClass              ComponentHasFilter = "cpcPatentClass"
 	ComponentHasFilterTsdc                        ComponentHasFilter = "tsdc"
@@ -3021,6 +3039,7 @@ var AllComponentHasFilter = []ComponentHasFilter{
 	ComponentHasFilterDocumentationReadinessLevel,
 	ComponentHasFilterAttestation,
 	ComponentHasFilterPublication,
+	ComponentHasFilterIssues,
 	ComponentHasFilterCompliesWith,
 	ComponentHasFilterCpcPatentClass,
 	ComponentHasFilterTsdc,
@@ -3047,7 +3066,7 @@ var AllComponentHasFilter = []ComponentHasFilter{
 
 func (e ComponentHasFilter) IsValid() bool {
 	switch e {
-	case ComponentHasFilterDiscoveredAt, ComponentHasFilterLastIndexedAt, ComponentHasFilterDataSource, ComponentHasFilterXid, ComponentHasFilterName, ComponentHasFilterDescription, ComponentHasFilterOwner, ComponentHasFilterVersion, ComponentHasFilterCreatedAt, ComponentHasFilterReleases, ComponentHasFilterIsLatest, ComponentHasFilterRepository, ComponentHasFilterLicense, ComponentHasFilterAdditionalLicenses, ComponentHasFilterLicensor, ComponentHasFilterDocumentationLanguage, ComponentHasFilterTechnologyReadinessLevel, ComponentHasFilterDocumentationReadinessLevel, ComponentHasFilterAttestation, ComponentHasFilterPublication, ComponentHasFilterCompliesWith, ComponentHasFilterCpcPatentClass, ComponentHasFilterTsdc, ComponentHasFilterComponents, ComponentHasFilterSoftware, ComponentHasFilterImage, ComponentHasFilterReadme, ComponentHasFilterContributionGuide, ComponentHasFilterBom, ComponentHasFilterManufacturingInstructions, ComponentHasFilterUserManual, ComponentHasFilterProduct, ComponentHasFilterUsedIn, ComponentHasFilterSource, ComponentHasFilterExport, ComponentHasFilterAuxiliary, ComponentHasFilterOrganization, ComponentHasFilterMass, ComponentHasFilterOuterDimensions, ComponentHasFilterMaterial, ComponentHasFilterManufacturingProcess, ComponentHasFilterProductionMetadata:
+	case ComponentHasFilterDiscoveredAt, ComponentHasFilterLastIndexedAt, ComponentHasFilterDataSource, ComponentHasFilterXid, ComponentHasFilterName, ComponentHasFilterDescription, ComponentHasFilterOwner, ComponentHasFilterVersion, ComponentHasFilterCreatedAt, ComponentHasFilterReleases, ComponentHasFilterIsLatest, ComponentHasFilterRepository, ComponentHasFilterLicense, ComponentHasFilterAdditionalLicenses, ComponentHasFilterLicensor, ComponentHasFilterDocumentationLanguage, ComponentHasFilterTechnologyReadinessLevel, ComponentHasFilterDocumentationReadinessLevel, ComponentHasFilterAttestation, ComponentHasFilterPublication, ComponentHasFilterIssues, ComponentHasFilterCompliesWith, ComponentHasFilterCpcPatentClass, ComponentHasFilterTsdc, ComponentHasFilterComponents, ComponentHasFilterSoftware, ComponentHasFilterImage, ComponentHasFilterReadme, ComponentHasFilterContributionGuide, ComponentHasFilterBom, ComponentHasFilterManufacturingInstructions, ComponentHasFilterUserManual, ComponentHasFilterProduct, ComponentHasFilterUsedIn, ComponentHasFilterSource, ComponentHasFilterExport, ComponentHasFilterAuxiliary, ComponentHasFilterOrganization, ComponentHasFilterMass, ComponentHasFilterOuterDimensions, ComponentHasFilterMaterial, ComponentHasFilterManufacturingProcess, ComponentHasFilterProductionMetadata:
 		return true
 	}
 	return false
@@ -3087,6 +3106,7 @@ const (
 	ComponentOrderableDocumentationLanguage ComponentOrderable = "documentationLanguage"
 	ComponentOrderableAttestation           ComponentOrderable = "attestation"
 	ComponentOrderablePublication           ComponentOrderable = "publication"
+	ComponentOrderableIssues                ComponentOrderable = "issues"
 	ComponentOrderableCpcPatentClass        ComponentOrderable = "cpcPatentClass"
 	ComponentOrderableMass                  ComponentOrderable = "mass"
 )
@@ -3102,13 +3122,14 @@ var AllComponentOrderable = []ComponentOrderable{
 	ComponentOrderableDocumentationLanguage,
 	ComponentOrderableAttestation,
 	ComponentOrderablePublication,
+	ComponentOrderableIssues,
 	ComponentOrderableCpcPatentClass,
 	ComponentOrderableMass,
 }
 
 func (e ComponentOrderable) IsValid() bool {
 	switch e {
-	case ComponentOrderableDiscoveredAt, ComponentOrderableLastIndexedAt, ComponentOrderableXid, ComponentOrderableName, ComponentOrderableDescription, ComponentOrderableVersion, ComponentOrderableCreatedAt, ComponentOrderableDocumentationLanguage, ComponentOrderableAttestation, ComponentOrderablePublication, ComponentOrderableCpcPatentClass, ComponentOrderableMass:
+	case ComponentOrderableDiscoveredAt, ComponentOrderableLastIndexedAt, ComponentOrderableXid, ComponentOrderableName, ComponentOrderableDescription, ComponentOrderableVersion, ComponentOrderableCreatedAt, ComponentOrderableDocumentationLanguage, ComponentOrderableAttestation, ComponentOrderablePublication, ComponentOrderableIssues, ComponentOrderableCpcPatentClass, ComponentOrderableMass:
 		return true
 	}
 	return false
@@ -4011,6 +4032,7 @@ const (
 	LicenseHasFilterXid           LicenseHasFilter = "xid"
 	LicenseHasFilterName          LicenseHasFilter = "name"
 	LicenseHasFilterText          LicenseHasFilter = "text"
+	LicenseHasFilterTextHTML      LicenseHasFilter = "textHTML"
 	LicenseHasFilterReferenceURL  LicenseHasFilter = "referenceURL"
 	LicenseHasFilterDetailsURL    LicenseHasFilter = "detailsURL"
 	LicenseHasFilterType          LicenseHasFilter = "type"
@@ -4025,6 +4047,7 @@ var AllLicenseHasFilter = []LicenseHasFilter{
 	LicenseHasFilterXid,
 	LicenseHasFilterName,
 	LicenseHasFilterText,
+	LicenseHasFilterTextHTML,
 	LicenseHasFilterReferenceURL,
 	LicenseHasFilterDetailsURL,
 	LicenseHasFilterType,
@@ -4037,7 +4060,7 @@ var AllLicenseHasFilter = []LicenseHasFilter{
 
 func (e LicenseHasFilter) IsValid() bool {
 	switch e {
-	case LicenseHasFilterXid, LicenseHasFilterName, LicenseHasFilterText, LicenseHasFilterReferenceURL, LicenseHasFilterDetailsURL, LicenseHasFilterType, LicenseHasFilterIsSpdx, LicenseHasFilterIsDeprecated, LicenseHasFilterIsOsiApproved, LicenseHasFilterIsFsfLibre, LicenseHasFilterIsBlocked:
+	case LicenseHasFilterXid, LicenseHasFilterName, LicenseHasFilterText, LicenseHasFilterTextHTML, LicenseHasFilterReferenceURL, LicenseHasFilterDetailsURL, LicenseHasFilterType, LicenseHasFilterIsSpdx, LicenseHasFilterIsDeprecated, LicenseHasFilterIsOsiApproved, LicenseHasFilterIsFsfLibre, LicenseHasFilterIsBlocked:
 		return true
 	}
 	return false
@@ -4070,6 +4093,7 @@ const (
 	LicenseOrderableXid          LicenseOrderable = "xid"
 	LicenseOrderableName         LicenseOrderable = "name"
 	LicenseOrderableText         LicenseOrderable = "text"
+	LicenseOrderableTextHTML     LicenseOrderable = "textHTML"
 	LicenseOrderableReferenceURL LicenseOrderable = "referenceURL"
 	LicenseOrderableDetailsURL   LicenseOrderable = "detailsURL"
 )
@@ -4078,13 +4102,14 @@ var AllLicenseOrderable = []LicenseOrderable{
 	LicenseOrderableXid,
 	LicenseOrderableName,
 	LicenseOrderableText,
+	LicenseOrderableTextHTML,
 	LicenseOrderableReferenceURL,
 	LicenseOrderableDetailsURL,
 }
 
 func (e LicenseOrderable) IsValid() bool {
 	switch e {
-	case LicenseOrderableXid, LicenseOrderableName, LicenseOrderableText, LicenseOrderableReferenceURL, LicenseOrderableDetailsURL:
+	case LicenseOrderableXid, LicenseOrderableName, LicenseOrderableText, LicenseOrderableTextHTML, LicenseOrderableReferenceURL, LicenseOrderableDetailsURL:
 		return true
 	}
 	return false
