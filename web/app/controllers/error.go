@@ -2,17 +2,49 @@ package controllers
 
 import (
 	losherrors "losh/internal/errors"
+	"losh/web/app/controllers/binding"
 	"losh/web/lib/template/liquid"
 
+	"github.com/aisbergg/go-errors/pkg/errors"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/utils"
+	"go.uber.org/zap"
 )
 
+// IsControllerError returns true if err is of type ControllerError.
+func IsControllerError(err error) bool {
+	_, ok := err.(interface{ IsControllerError() })
+	return ok
+}
+
+// ControllerError is an error that is temporary and can be retried.
+type ControllerError struct {
+	losherrors.AppError
+	RequestInfo *RequestInfo
+}
+
+// newControllerError wraps an error into ControllerError.
+func newControllerError(err error, requestInfo *RequestInfo, format string, args ...interface{}) error {
+	svrErr := &ControllerError{
+		AppError:    *losherrors.NewAppErrorWrap(err, format, args...),
+		RequestInfo: requestInfo,
+	}
+	svrErr.Add("reqURL", requestInfo.URL)
+	svrErr.Add("reqMethod", requestInfo.Method)
+	svrErr.Add("reqHeaders", requestInfo.Headers)
+	svrErr.Add("reqParams", requestInfo.Params)
+	svrErr.Add("reqQueryParams", requestInfo.QueryParams)
+	return svrErr
+}
+
+// IsControllerError indicates the type of the error.
+func (e *ControllerError) IsControllerError() {}
+
 type errorInfo struct {
-	Code    int    `liquid:"code"`
-	Reason  string `liquid:"reason"`
-	Title   string `liquid:"title"`
-	Message string `liquid:"message"`
+	Code    int    `json:"code" liquid:"code"`
+	Reason  string `json:"reason" liquid:"reason"`
+	Title   string `json:"title" liquid:"title"`
+	Message string `json:"message" liquid:"message"`
 }
 
 var errorInfos = map[int]errorInfo{
@@ -48,7 +80,7 @@ var errorInfos = map[int]errorInfo{
 	},
 	500: errorInfo{
 		500,
-		"internalServerError",
+		"internalControllerError",
 		"Internal Server Error",
 		"We are sorry but our server encountered an internal error",
 	},
@@ -60,31 +92,56 @@ var errorInfos = map[int]errorInfo{
 	},
 }
 
-func ErrorHandler(debug bool) fiber.ErrorHandler {
-	return func(ctx *fiber.Ctx, err error) error {
-		// 500 as default error code
-		code := fiber.StatusInternalServerError
-		message := err.Error()
+type ErrorController struct {
+	log       *zap.SugaredLogger
+	tplBndPrv binding.TemplateBindingProvider
+	debug     bool
+}
 
-		// retrieve the custom status code if it's an fiber.*Error
-		if e, ok := err.(*fiber.Error); ok {
-			code = e.Code
-			message = e.Message
-		}
-
-		// set response status code
-		ctx.Status(code)
-
-		// handle client or server error
-		if 400 <= code && code < 500 {
-			return handleClientError(ctx, code, message)
-		}
-		return handleServerError(ctx, code, message, debug)
+// NewErrorController creates a new ErrorController.
+func NewErrorController(debug bool, log *zap.SugaredLogger, tplBndPrv binding.TemplateBindingProvider) ErrorController {
+	return ErrorController{
+		debug:     debug,
+		log:       log,
+		tplBndPrv: tplBndPrv,
 	}
 }
 
-// handleServerError handles a 4XX error.
-func handleClientError(ctx *fiber.Ctx, code int, message string) (err error) {
+// RegisterDebugRoute registers a simple debug route handler.
+func RegisterDebugRoute(router fiber.Router) {
+	router.Get("/error", func(ctx *fiber.Ctx) error {
+		reqInf := parseRequestInfo(ctx, parseParamNoop, parseParamNoop)
+		barErr := losherrors.NewAppError("bar").
+			Add("foo", "1").
+			Add("bar", "2")
+		fooErr := newControllerError(barErr, reqInf, "foo")
+		return fooErr
+	})
+}
+
+func (c ErrorController) Handle(ctx *fiber.Ctx, err error) error {
+	// 500 as default error code
+	code := fiber.StatusInternalServerError
+	message := err.Error()
+
+	// retrieve the custom status code if it's an fiber.*Error
+	if e, ok := err.(*fiber.Error); ok {
+		code = e.Code
+		message = e.Message
+	}
+
+	// set response status code
+	ctx.Status(code)
+
+	// handle client or server error
+	if 400 <= code && code < 500 {
+		return c.handleClientError(ctx, code, message)
+	}
+	return c.handleControllerError(ctx, code, message, err)
+}
+
+// handleControllerError handles a 4XX error.
+func (c ErrorController) handleClientError(ctx *fiber.Ctx, code int, message string) (err error) {
 	info, ok := errorInfos[code]
 	if !ok {
 		info = errorInfo{Code: code, Message: message}
@@ -101,48 +158,48 @@ func handleClientError(ctx *fiber.Ctx, code int, message string) (err error) {
 		ctx.Set(fiber.HeaderContentType, fiber.MIMETextPlainCharsetUTF8)
 		err = ctx.Render("error.html", bind, "layouts/base")
 		if err != nil {
+			c.log.Errorw("failed to render error.html", "error", err)
 			err = ctx.SendString(info.Message)
 		}
 	}
 	return
 }
 
-// handleServerError handles a 5XX error.
-func handleServerError(ctx *fiber.Ctx, code int, message string, debug bool) (err error) {
-	info, ok := errorInfos[code]
+// handleControllerError handles a 5XX error.
+func (c ErrorController) handleControllerError(ctx *fiber.Ctx, code int, message string, err error) error {
+	// log the error
+	c.logError(err)
+
+	// render the error page
+	errInf, ok := errorInfos[code]
 	if !ok {
-		info = errorInfo{Code: code, Reason: "unknown", Message: message}
+		errInf = errorInfo{Code: code, Reason: "unknown", Message: message}
 	}
-	bind := map[string]interface{}{
-		"error": info,
-	}
+	tplBnd := c.tplBndPrv.Get()
+	tplBnd["error"] = errInf
 
 	// add more values in debug mode
-	if debug {
+	if c.debug {
 		// add user values (locals set via ctx.Locals(k, v))
 		locals := make(map[string]interface{})
 		ctx.Context().VisitUserValues(func(key []byte, value interface{}) {
 			locals[utils.UnsafeString(key)] = value
 		})
-		bind["locals"] = locals
+		tplBnd["locals"] = locals
 
 		// add template bind vars
 		if tplErr, ok := err.(liquid.TemplatingError); ok {
-			bind["vars"] = tplErr.Bindings()
+			tplBnd["vars"] = tplErr.Bindings()
 		}
 
 		// add request information
 		request := make(map[string]interface{})
 		request["uri"] = utils.UnsafeString(ctx.Request().RequestURI())
 		request["method"] = utils.UnsafeString(ctx.Request().Header.Method())
-		bind["request"] = request
+		tplBnd["request"] = request
 
-		// // add request method
-		// requestMethod := make(map[string]interface{})
-		// ctx.Request().Header.VisitAllInOrder(func(key, value []byte) {
-		// 	requestMethod[utils.UnsafeString(key)] = utils.UnsafeString(value)
-		// })
-		// request["method"] = requestMethod
+		// add request method
+		request["method"] = ctx.Method()
 
 		// add request headers
 		requestHeaders := make(map[string]interface{})
@@ -157,28 +214,54 @@ func handleServerError(ctx *fiber.Ctx, code int, message string, debug bool) (er
 			requestCookies[utils.UnsafeString(key)] = utils.UnsafeString(value)
 		})
 		request["cookies"] = requestCookies
-	}
 
-	// TODO: proper error logging; sentry?
-	fmt.Printf("error: %d - %s", code, message)
+		// error
+		errMsg := errors.ToString(err, false)
+		var errStk interface{} = []string{}
+		if terr, ok := err.(interface{ FullStack() errors.Stack }); ok {
+			errStk = terr.FullStack()
+		}
+		errCtx := losherrors.GetFullContext(err)
+		tplBnd["error"] = map[string]interface{}{
+			"message": errMsg,
+			"stack":   errStk,
+			"context": errCtx,
+		}
+	}
 
 	contentType := string(ctx.Request().Header.ContentType())
-	if contentType == fiber.MIMEApplicationJSON || contentType == fiber.MIMEApplicationJSONCharsetUTF8 {
+	switch contentType {
+	case fiber.MIMEApplicationJSON, fiber.MIMEApplicationJSONCharsetUTF8:
 		// TODO: json error https://cloud.google.com/storage/docs/json_api/v1/status-codes#403-forbidden
 		ctx.Set("Content-Type", "application/json")
-		err = ctx.JSON(bind)
-	} else {
+		return ctx.JSON(tplBnd)
+
+	default:
 		ctx.Set(fiber.HeaderContentType, fiber.MIMETextPlainCharsetUTF8)
-		if debug {
-			err = ctx.Render("error-debug.html", bind, "layouts/base")
-			fmt.Println(err)
+		if c.debug {
+			err = ctx.Render("error-debug.html", tplBnd, "layouts/base")
 		} else {
-			err = ctx.Render("error.html", bind, "layouts/base")
+			err = ctx.Render("error.html", tplBnd, "layouts/base")
 		}
 		if err != nil {
-			err = ctx.SendString(info.Message)
+			c.log.Errorw("failed to render error.html", "error", err)
+			err = ctx.SendString(errInf.Message)
+			return err
 		}
 	}
 
-	return
+	return nil
+}
+
+func (c ErrorController) logError(err error) {
+	errCnt := losherrors.GetFullContext(err)
+	if terr, ok := err.(interface{ FullStack() errors.Stack }); ok {
+		errCnt["stack"] = terr.FullStack()
+	}
+	ctxKV := make([]interface{}, 0, len(errCnt)*2)
+	for k, v := range errCnt {
+		ctxKV = append(ctxKV, k, v)
+	}
+	msg := errors.ToString(err, false)
+	c.log.Errorw(msg, ctxKV...)
 }

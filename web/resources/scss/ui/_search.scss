@@ -1,0 +1,46 @@
+.search-result-info {
+  display: flex;
+  align-items: start;
+  color: inherit;
+}
+
+@for $i from 1 to 3 {
+  .text-ellipses-line-#{$i} {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: $i;
+    -webkit-box-orient: vertical;
+  }
+}
+
+.search-result-info-link {
+  display: flex;
+  @include transition(color $transition-time);
+  align-items: start;
+  color: inherit;
+
+  &:hover,
+  &:focus {
+    color: $primary;
+    text-decoration: none;
+  }
+
+  &.disabled {
+    color: rgba($body-color, .3);
+  }
+}
+
+.search-result-info-icon {
+  margin-right: .25rem;
+  margin-top: -.1rem;
+  opacity: $text-muted-opacity;
+
+  i {
+    width: 1rem;
+    height: 1rem;
+    font-size: 1rem;
+    vertical-align: middle;
+  }
+}
+
