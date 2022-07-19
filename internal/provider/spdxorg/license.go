@@ -8,7 +8,9 @@ import (
 	"losh/internal/models"
 	"losh/internal/net/download"
 	"losh/internal/net/request"
+	"losh/internal/util/stringutil"
 	"net/http"
+	"strings"
 
 	"github.com/aisbergg/go-errors/pkg/errors"
 	"go.uber.org/zap"
@@ -34,7 +36,8 @@ type spdxLicense struct {
 }
 
 type spdxLicenseDetails struct {
-	LicenseText string `json:"licenseText"`
+	LicenseText     string `json:"licenseText"`
+	LicenseTextHTML string `json:"licenseTextHtml"`
 }
 
 //go:embed *.json
@@ -75,11 +78,12 @@ func (p *SpdxOrgProvider) GetLicense(_, spdxID *string) (*models.License, error)
 			if l.DetailsURL != nil && *l.DetailsURL == "" {
 				return l, nil
 			}
-			text, err := p.getLicenseText(*l.DetailsURL)
+			text, textHTML, err := p.getLicenseText(*l.DetailsURL)
 			if err != nil {
 				return nil, errors.Wrapf(err, "failed to get license text for %s", l.Xid)
 			}
 			l.Text = &text
+			l.TextHTML = &textHTML
 
 			return l, nil
 		}
@@ -91,32 +95,35 @@ func (p *SpdxOrgProvider) GetLicense(_, spdxID *string) (*models.License, error)
 // GetAllLicenses returns a list of all licenses
 func (p *SpdxOrgProvider) GetAllLicenses() ([]*models.License, error) {
 	p.log.Debug("downloading base license information")
-	licenses, err := p.getBaseLicenses()
+	incompleteLicenses, err := p.getBaseLicenses()
 	if err != nil {
 		return nil, err
 	}
+	licenses := make([]*models.License, 0, len(incompleteLicenses))
 
 	// download license texts
-	for _, l := range licenses {
+	for _, l := range incompleteLicenses {
 		if l.DetailsURL == nil || *l.DetailsURL == "" {
 			continue
 		}
 		p.log.Debugw("downloading license text", "spdxId", l.Xid)
-		text, err := p.getLicenseText(*l.DetailsURL)
+		text, textHTML, err := p.getLicenseText(*l.DetailsURL)
 		if err != nil {
 			p.log.Errorw("failed to get license text", "spdxId", l.Xid)
 			continue
 		}
 		l.Text = &text
+		l.TextHTML = &textHTML
+		licenses = append(licenses, l)
 	}
 
 	return licenses, nil
 }
 
 // getLicenseText returns the license text for the given url.
-func (p *SpdxOrgProvider) getLicenseText(url string) (string, error) {
+func (p *SpdxOrgProvider) getLicenseText(url string) (text string, textHTML string, err error) {
 	if url == "" {
-		return "", nil
+		return "", "", nil
 	}
 
 	// download the license details file
@@ -133,7 +140,7 @@ func (p *SpdxOrgProvider) getLicenseText(url string) (string, error) {
 		return "", "", errors.Wrapf(err, "failed to parse content, content was: %s", stringutil.Ellipses(strings.ReplaceAll(string(detailsContent), "\n", "\\n"), 60))
 	}
 
-	return details.LicenseText, nil
+	return details.LicenseText, details.LicenseTextHTML, nil
 }
 
 // getLicenses returns a list of all licenses without license text.
