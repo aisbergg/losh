@@ -4,7 +4,7 @@ import (
 	"losh/internal/models"
 	"losh/internal/util/stringutil"
 
-	"github.com/rotisserie/eris"
+	"github.com/aisbergg/go-errors/pkg/errors"
 )
 
 // Provider is the interface for providing SPDX licenses.
@@ -82,7 +82,7 @@ func (lc *LicenseCache) loadLicenses() error {
 	// get licenses from provider
 	licenses, err := lc.provider.GetAllLicenses()
 	if err != nil {
-		return eris.Wrap(err, "failed to get a list of licenses")
+		return errors.Wrap(err, "failed to get a list of licenses")
 	}
 
 	lc.licenses = make(map[string]*models.License, len(licenses))

@@ -15,7 +15,7 @@ import (
 	n "losh/internal/net"
 	"losh/internal/net/request"
 
-	"github.com/rotisserie/eris"
+	"github.com/aisbergg/go-errors/pkg/errors"
 )
 
 // ErrTooLarge indicates that the download content is too large.
@@ -116,7 +116,7 @@ func (r *Downloader) DownloadFileWithMaxSize(ctx context.Context, urlStr, filena
 	// create blank file
 	file, err := os.Create(filename)
 	if err != nil {
-		return eris.Wrap(err, "failed to create download file")
+		return errors.Wrap(err, "failed to create download file")
 	}
 	defer file.Close()
 
@@ -124,12 +124,12 @@ func (r *Downloader) DownloadFileWithMaxSize(ctx context.Context, urlStr, filena
 	if err := r.download(ctx, urlStr, maxSize, file); err != nil {
 		// remove partially downloaded file
 		if err := file.Close(); err != nil {
-			return eris.Wrap(err, "failed to delete partially downloaded file")
+			return errors.Wrap(err, "failed to delete partially downloaded file")
 		}
 		if err := os.Remove(filename); err != nil {
-			return eris.Wrap(err, "failed to delete partially downloaded file")
+			return errors.Wrap(err, "failed to delete partially downloaded file")
 		}
-		return eris.Wrap(err, "file download failed")
+		return errors.Wrap(err, "file download failed")
 	}
 
 	return nil
@@ -146,11 +146,11 @@ func (r *Downloader) download(ctx context.Context, urlStr string, maxSize unit.B
 	// create request and execute it
 	req, err = http.NewRequestWithContext(ctx, http.MethodGet, urlStr, nil)
 	if err != nil {
-		return eris.Wrap(err, "failed to create request")
+		return errors.Wrap(err, "failed to create request")
 	}
 	resp, err = r.requester.Do(req)
 	if err != nil {
-		return eris.Wrap(err, "request failed")
+		return errors.Wrap(err, "request failed")
 	}
 	defer resp.Body.Close()
 
@@ -162,7 +162,7 @@ func (r *Downloader) download(ctx context.Context, urlStr string, maxSize unit.B
 		if _, ok := reader.(*gzip.Reader); !ok {
 			gz, err := gzip.NewReader(reader)
 			if err != nil {
-				return eris.Wrap(err, "failed to create gzip reader")
+				return errors.Wrap(err, "failed to create gzip reader")
 			}
 			defer gz.Close()
 			reader = gz
@@ -183,9 +183,9 @@ func (r *Downloader) download(ctx context.Context, urlStr string, maxSize unit.B
 	// copy content to writer
 	if _, err := io.Copy(w, reader); err != nil {
 		if err == errLimitExceeded {
-			return eris.Wrap(&ErrTooLarge{Limit: maxSize}, "failed to download content")
+			return errors.Wrap(&ErrTooLarge{Limit: maxSize}, "failed to download content")
 		}
-		return eris.Wrap(err, "failed to download content")
+		return errors.Wrap(err, "failed to download content")
 	}
 
 	return nil

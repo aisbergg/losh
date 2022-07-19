@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"fmt"
+	losherrors "losh/internal/errors"
 	"losh/web/lib/template/liquid"
 
 	"github.com/gofiber/fiber/v2"

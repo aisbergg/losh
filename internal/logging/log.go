@@ -1,65 +1,152 @@
 package logging
 
 import (
+	"fmt"
+	"io/fs"
+	"os"
 	"strings"
 
+	"github.com/aisbergg/go-pathlib/pkg/pathlib"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
-// LoggerWrapper is just for wrapping the logging instance together with the log
+// LoggerManager is just for wrapping the logging instance together with the log
 // file.
-type LoggerWrapper struct {
-	Logger  *zap.Logger
-	LogFile *lumberjack.Logger
+type LoggerManager struct {
+	rootLogger *zap.Logger
+	logFile    *lumberjack.Logger
 }
 
-// CreateLogger creates a new logger with the given configuration.
-func CreateLogger(level zapcore.Level, cfg CommonLogConfig) (LoggerWrapper, error) {
-	var err error
-	var lw LoggerWrapper
+// NewLoggerManager creates a new LoggerManager with the given configuration.
+func NewLoggerManager(config Config) (LoggerManager, error) {
+	lm := LoggerManager{}
 
-	if cfg.Filename == "" {
-		// console logger
-		logCfg := zap.NewProductionConfig()
-		logCfg.Level = zap.NewAtomicLevelAt(level)
-		logCfg.Encoding = "console"
-		lw.Logger, err = logCfg.Build()
-		if err != nil {
-			return lw, err
-		}
-
-	} else {
-		// file logger
-
-		// TODO: file checks
-		// TODO: file permission
-		lw.LogFile = &lumberjack.Logger{
-			Filename:   cfg.Filename,
-			MaxSize:    cfg.MaxSize,
-			MaxAge:     cfg.MaxAge,
-			MaxBackups: cfg.MaxBackups,
-			LocalTime:  cfg.LocalTime,
-			Compress:   cfg.Compress,
-		}
-		logWriter := zapcore.AddSync(lw.LogFile)
-		var logEncoder zapcore.Encoder
-		if cfg.Format == "json" {
-			logEncoder = zapcore.NewJSONEncoder(zap.NewProductionEncoderConfig())
-		} else {
-			logEncoder = zapcore.NewConsoleEncoder(zap.NewProductionEncoderConfig())
-		}
-		lw.Logger = zap.New(zapcore.NewCore(
-			logEncoder,
-			logWriter,
-			level,
-		))
+	var encoder zapcore.Encoder
+	switch config.Format {
+	case "json":
+		encoderConfig := zap.NewProductionEncoderConfig()
+		encoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
+		encoderConfig.TimeKey = "time"
+		encoderConfig.NameKey = "name"
+		encoder = zapcore.NewJSONEncoder(encoderConfig)
+	case "console":
+		encoderConfig := zap.NewDevelopmentEncoderConfig()
+		encoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
+		encoder = zapcore.NewConsoleEncoder(encoderConfig)
+	default:
+		panic(fmt.Sprintf("unknown logging format: %s", config.Format))
 	}
 
-	defer lw.Logger.Sync()
+	var writer zapcore.WriteSyncer
+	if config.Filename != "" {
+		// write logs to file
+		path := pathlib.NewPath(config.Filename)
+		exists, err := path.Exists()
+		if err != nil {
+			return lm, err
+		}
+		if !exists {
+			err = path.Parent().MkdirAll()
+			if err != nil {
+				return lm, err
+			}
+			_, err = path.Create()
+			if err != nil {
+				return lm, err
+			}
+		}
+		if config.Permissions != 0 {
+			err = path.Chmod(fs.FileMode(config.Permissions))
+			if err != nil {
+				return lm, err
+			}
+		}
 
-	return lw, nil
+		lm.logFile = &lumberjack.Logger{
+			Filename:   config.Filename,
+			MaxSize:    config.MaxSize,
+			MaxAge:     config.MaxAge,
+			MaxBackups: config.MaxBackups,
+			LocalTime:  config.LocalTime,
+			Compress:   config.Compress,
+		}
+		writer = zapcore.AddSync(lm.logFile)
+	} else {
+		// write logs to console
+		writer = zapcore.Lock(os.Stdout)
+	}
+
+	level := LevelForName(config.Level)
+	core := zapcore.NewCore(encoder, writer, level)
+	lm.rootLogger = zap.New(
+		core,
+		// zap.AddStacktrace(zapcore.DebugLevel),
+
+	)
+
+	return lm, nil
+}
+
+// NewLogger creates a new child logger.
+func (lm LoggerManager) NewLogger(name string, args ...interface{}) *zap.SugaredLogger {
+	return lm.rootLogger.Sugar().With(args...).Named(name)
+}
+
+// RotateLogFile rotates the underlying log files, if log files are used.
+func (lm LoggerManager) RotateLogFile() error {
+	if lm.logFile != nil {
+		err := lm.logFile.Rotate()
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// Close flushes the logs and closes the underlying log file.
+func (lm LoggerManager) Close() error {
+	if lm.rootLogger != nil {
+		lm.rootLogger.Sync()
+		lm.rootLogger = nil
+		if lm.logFile != nil {
+			logFile := lm.logFile
+			lm.logFile = nil
+			return logFile.Close()
+		}
+	}
+	return nil
+}
+
+// -----------------------------------------------------------------------------
+
+var appLoggerManager LoggerManager
+
+// Initialize initializes the App logger manager.
+func Initialize(config Config) (err error) {
+	appLoggerManager, err = NewLoggerManager(config)
+	return
+}
+
+// NewLogger creates a new child logger to be used for general purpose logging
+// in the application. It panics if the app logger hasn't been initialized
+// beforehand.
+func NewLogger(name string, args ...interface{}) *zap.SugaredLogger {
+	if appLoggerManager.rootLogger == nil {
+		panic("logger has to be initialized first")
+	}
+	return appLoggerManager.NewLogger(name, args...)
+}
+
+// RotateLogFile rotates the underlying App log files, if log files are used.
+func RotateLogFile() error {
+	return appLoggerManager.RotateLogFile()
+}
+
+// Close flushes the App logs and closes the underlying log file.
+func Close() error {
+	return appLoggerManager.Close()
 }
 
 // LevelForName returns the zap log level for the given name.

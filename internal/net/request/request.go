@@ -2,7 +2,7 @@ package request
 
 import (
 	"context"
-	lerrors "losh/crawler/errors"
+	losherrors "losh/internal/errors"
 	"losh/internal/net/ratelimit"
 	"time"
 )
@@ -33,7 +33,7 @@ func applyRateLimiters(ctx context.Context, rateLimiters []ratelimit.RateLimiter
 		}
 	}
 	if maxWaitTime > 0 && wait > maxWaitTime {
-		return lerrors.NewTemporaryError(time.Now().Add(wait), "wait time limit exceeded")
+		return losherrors.NewTemporaryError(nil, time.Now().Add(wait), "wait time limit exceeded")
 	}
 	ratelimit.SleepWithContext(ctx, wait)
 	return nil

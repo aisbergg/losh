@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"losh/internal/models"
 
-	"github.com/aisbergg/go-pathlib"
+	"github.com/aisbergg/go-errors/pkg/errors"
 	"github.com/rotisserie/eris"
 )
 
@@ -19,7 +19,7 @@ func (fr *FileRepository) GetLicense(id string) (*models.License, error) {
 			return l, nil
 		}
 	}
-	return nil, eris.New("license not found")
+	return nil, errors.New("license not found")
 }
 
 // GetAllLicenses returns a list of all licenses
@@ -31,7 +31,7 @@ func (fr *FileRepository) GetAllLicenses() ([]*models.License, error) {
 	var licenses []*models.License
 	err = json.Unmarshal(content, &licenses)
 	if err != nil {
-		return nil, eris.Wrap(err, "failed to read license file")
+		return nil, errors.Wrap(err, "failed to read license file")
 	}
 
 	// remove Dgraph ID and normalize license type
@@ -47,7 +47,7 @@ func (fr *FileRepository) GetAllLicenses() ([]*models.License, error) {
 func (fr *FileRepository) SaveLicenses(licenses []*models.License) error {
 	b, err := json.Marshal(licenses)
 	if err != nil {
-		return eris.Wrap(err, "failed to marshal licenses")
+		return errors.Wrap(err, "failed to marshal licenses")
 	}
 
 	// remove Dgraph ID
@@ -57,7 +57,7 @@ func (fr *FileRepository) SaveLicenses(licenses []*models.License) error {
 
 	err = saveFile(fr.Path, b)
 	if err != nil {
-		return eris.Wrap(err, "failed to write licenses to file")
+		return errors.Wrap(err, "failed to write licenses to file")
 	}
 	return nil
 }
@@ -85,15 +85,15 @@ func (fr *FileRepository) DeleteAllLicenses() error {
 // readFile reads a file and returns its content.
 func readFile(path *pathlib.Path) ([]byte, error) {
 	if exists, err := path.Exists(); err != nil || !exists {
-		return nil, eris.New("file does not exist")
+		return nil, errors.New("file does not exist")
 	}
 	if isFile, err := path.IsFile(); err != nil || !isFile {
-		return nil, eris.New("path is not a file")
+		return nil, errors.New("path is not a file")
 	}
 
 	content, err := path.ReadFile()
 	if err != nil {
-		return nil, eris.Wrap(err, "failed to read license file")
+		return nil, errors.Wrap(err, "failed to read license file")
 	}
 
 	return content, nil
@@ -103,10 +103,10 @@ func readFile(path *pathlib.Path) ([]byte, error) {
 func saveFile(path *pathlib.Path, content []byte) error {
 	if exists, _ := path.Exists(); exists {
 		if isFile, _ := path.IsFile(); !isFile {
-			return eris.New("path is not a file")
+			return errors.New("path is not a file")
 		}
 	} else if exists, _ := path.Parent().Exists(); !exists {
-		return eris.New("parent directory does not exist")
+		return errors.New("parent directory does not exist")
 	}
 	return path.WriteFile(content)
 }

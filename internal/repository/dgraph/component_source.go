@@ -2,7 +2,7 @@ package dgraph
 
 import (
 	"context"
-	"losh/crawler/errors"
+	"losh/internal/errors"
 	"losh/internal/models"
 	"losh/internal/repository"
 

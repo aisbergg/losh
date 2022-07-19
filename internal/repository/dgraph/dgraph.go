@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/aisbergg/go-errors/pkg/errors"
+
 	gql "github.com/Yamashou/gqlgenc/clientv2"
 	"github.com/jinzhu/copier"
 	"go.uber.org/zap"

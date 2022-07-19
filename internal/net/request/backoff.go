@@ -9,10 +9,8 @@ import (
 	"github.com/sethvargo/go-retry"
 	"go.uber.org/zap"
 
-	lerrors "losh/crawler/errors"
+	losherrors "losh/internal/errors"
 )
-
-// ----------------------------------------------------------------------------
 
 // retryable is an interface for a retryable error.
 type retryable interface {
@@ -150,7 +148,7 @@ func WithDelayLimit(limit time.Duration, next retry.Backoff) retry.Backoff {
 
 		if delay > limit {
 			retryAfter := time.Now().UTC().Add(delay)
-			return retry.Stop, lerrors.NewTemporaryErrorWrap(err, retryAfter, "wait time limit exceeded")
+			return retry.Stop, losherrors.NewTemporaryError(err, retryAfter, "wait time limit exceeded")
 		}
 
 		return delay, err
