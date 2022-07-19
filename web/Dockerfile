@@ -23,7 +23,7 @@ RUN go mod download
 COPY ./ ./
 RUN set -e \
     && mkdir -p build \
-    && CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-s -w -extldflags "-static"' -o build/losh-web web/main.go \
+    && CGO_ENABLED=0 GOOS=linux go build -trimpath -a -ldflags '-s -w -extldflags "-static"' -o build/losh-web web/main.go \
     && mkdir /upload
 
 
