@@ -213,6 +213,9 @@ type Component implements Node & CrawlerMeta {
   # TODO: should be a dedicated type
   publication: String @search(by: [hash])
 
+	# TODO: issues URL
+	issues: String  @search(by: [hash])
+
   """
   The technical standard that the component complies with.
   """
@@ -409,6 +412,11 @@ type License implements Node {
   The full text of the license.
   """
   text: String
+
+  """
+  The full text of the license formatted as HTML.
+  """
+  textHTML: String
 
   """
   The reference URL of the license with more information.
