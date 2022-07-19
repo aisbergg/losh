@@ -18,8 +18,9 @@ func (dr *DgraphRepository) GetFloatV(id string) (*models.FloatV, error) {
 	ctx := context.Background()
 	getFloatV, err := dr.client.GetFloatV(ctx, id)
 	if err != nil {
-		return nil, repository.NewRepoErrorWrap(err, errGetFloatVStr).
-			AddIfNotNil("floatVId", id)
+		return nil, repository.WrapRepoError(err, errGetFloatVStr).
+			Add("floatVId", id)
+	}
 	}
 	floatV := &models.FloatV{ID: id}
 	if err = copier.CopyWithOption(floatV, getFloatV.GetFloatV, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
@@ -33,7 +34,7 @@ func (dr *DgraphRepository) GetFloatVs(filter *models.FloatVFilter, order *model
 	ctx := context.Background()
 	getFloatVs, err := dr.client.GetFloatVs(ctx, filter, order, first, offset)
 	if err != nil {
-		return nil, repository.NewRepoErrorWrap(err, errGetFloatVStr)
+		return nil, repository.WrapRepoError(err, errGetFloatVStr)
 	}
 	floatVs := make([]*models.FloatV, 0, len(getFloatVs.QueryFloatV))
 	for _, x := range getFloatVs.QueryFloatV {
@@ -57,7 +58,7 @@ func (dr *DgraphRepository) SaveFloatV(floatV *models.FloatV) (err error) {
 	err = dr.SaveFloatVs([]*models.FloatV{floatV})
 	if aerr, ok := err.(errors.ContextAdder); ok {
 		// enrich error context
-		aerr.AddIfNotNil("floatVId", floatV.ID)
+		aerr.Add("floatVId", floatV.ID)
 	}
 	return
 }
@@ -71,17 +72,15 @@ func (dr *DgraphRepository) SaveFloatVs(floatVs []*models.FloatV) error {
 			continue
 		}
 		floatV := &models.AddFloatVInput{}
-		if err := copier.CopyWithOption(floatV, x,
-			copier.Option{Converters: dr.convertersForSave, DeepCopy: true, IgnoreEmpty: true}); err != nil {
-			return repository.NewRepoErrorWrap(err, errSaveFloatVStr).
-				AddIfNotNil("floatVId", x.ID)
+			return repository.WrapRepoError(err, errSaveFloatVStr).
+				Add("floatVId", x.ID)
 		}
 		reqData = append(reqData, floatV)
 	}
 	ctx := context.Background()
 	respData, err := dr.client.SaveFloatVs(ctx, reqData, []string{})
 	if err != nil {
-		return repository.NewRepoErrorWrap(err, errSaveFloatVStr)
+		return repository.WrapRepoError(err, errSaveFloatVStr)
 	}
 	// save ID from response
 	for i, x := range floatVs {
@@ -99,8 +98,8 @@ func (dr *DgraphRepository) DeleteFloatV(id *string) error {
 	}
 	_, err := dr.client.DeleteFloatVs(ctx, delFilter)
 	if err != nil {
-		return repository.NewRepoErrorWrap(err, errDeleteFloatVStr).
-			AddIfNotNil("floatVId", id)
+		return repository.WrapRepoError(err, errDeleteFloatVStr).
+			Add("floatVId", id)
 	}
 	return nil
 }

@@ -3,29 +3,27 @@ package liquid
 import (
 	"fmt"
 
+	losherrors "losh/internal/errors"
+
 	"github.com/osteele/liquid"
 )
 
 // TemplatingError is a error for loading or rendering a template.
 type TemplatingError interface {
 	error
+	Unwrap() error
 	FilePath() string
-	Cause() error
 	Bindings() interface{}
 }
 
 type templatingError struct {
+	losherrors.AppError
 	filePath string
-	cause    error
 	binding  interface{}
 }
 
 func (e *templatingError) FilePath() string {
 	return e.filePath
-}
-
-func (e *templatingError) Cause() error {
-	return e.cause
 }
 
 func (e *templatingError) Bindings() interface{} {
@@ -38,12 +36,14 @@ func (e *templatingError) Error() string {
 
 // NewLoadError creates a loadError.
 func NewLoadError(filePath string, cause error, binding interface{}) TemplatingError {
-	return &loadError{
+	err := &loadError{
 		templatingError: templatingError{
+			AppError: *losherrors.NewAppErrorWrap(cause, ""),
 			filePath: filePath,
-			cause:    cause,
 		},
 	}
+	err.Add("file_path", filePath)
+	return err
 }
 
 type loadError struct {
@@ -56,12 +56,14 @@ func (e *loadError) Error() string {
 
 // NewRenderError creates a renderError.
 func NewRenderError(filePath string, cause error, binding interface{}) TemplatingError {
-	return &renderError{
+	err := &renderError{
 		templatingError: templatingError{
+			AppError: *losherrors.NewAppErrorWrap(cause, ""),
 			filePath: filePath,
-			cause:    cause,
 		},
 	}
+	err.Add("file_path", filePath)
+	return err
 }
 
 type renderError struct {
@@ -72,42 +74,8 @@ func (e *renderError) Error() string {
 	return formatError(&e.templatingError, "render")
 }
 
-func formatErrorBak(te templatingError, stage string) string {
-	cause := ""
-	location := fmt.Sprintf("(%s)", te.filePath)
-	if te.cause != nil {
-		sourceError, ok := te.cause.(liquid.SourceError)
-		if ok {
-			if sourceError.LineNumber() > 0 {
-				location = fmt.Sprintf("(%s, %d)", te.filePath, sourceError.LineNumber()+1)
-			}
-			c := sourceError.(error)
-			for {
-				if c != nil {
-					fmt.Println("ERROR: ", c)
-					if tc, ok := c.(liquid.SourceError); ok {
-						c = tc.Cause()
-					} else {
-						break
-					}
-				}
-			}
-			if sourceError.Cause() != nil {
-				cause = sourceError.Cause().Error()
-			} else {
-				cause = sourceError.Error()
-			}
-		} else {
-			cause = te.cause.Error()
-		}
-	}
-
-	return fmt.Sprintf("template %s error %s: %s", stage, location, cause)
-}
-
 func formatError(te *templatingError, stage string) string {
 	location, cause := formatLocation(te)
-
 	return fmt.Sprintf("template %s error %s: %s", stage, location, cause)
 }
 
@@ -119,7 +87,7 @@ func formatLocation(err error) (location, cause string) {
 	switch typedErr := err.(type) {
 	case TemplatingError:
 		location = fmt.Sprintf("(%s)", typedErr.FilePath())
-		serr, ok := typedErr.Cause().(liquid.SourceError)
+		serr, ok := typedErr.Unwrap().(liquid.SourceError)
 		if ok {
 			if serr.LineNumber() > 0 {
 				location = fmt.Sprintf("(%s:%d)", typedErr.FilePath(), serr.LineNumber()+1)
@@ -134,12 +102,14 @@ func formatLocation(err error) (location, cause string) {
 				cause = serr.Error()
 			}
 		} else {
-			cause = typedErr.Cause().Error()
+			cause = typedErr.Unwrap().Error()
 		}
+
 	case liquid.SourceError:
 		if typedErr.Cause() != nil {
 			return formatLocation(typedErr.Cause())
 		}
+
 	default:
 		return "", typedErr.Error()
 	}

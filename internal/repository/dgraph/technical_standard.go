@@ -20,8 +20,9 @@ func (dr *DgraphRepository) GetTechnicalStandard(id, xid *string) (*models.Techn
 	ctx := context.Background()
 	getTechnicalStandard, err := dr.client.GetTechnicalStandard(ctx, id, xid)
 	if err != nil {
-		return nil, repository.NewRepoErrorWrap(err, errGetTechnicalStandardStr).
-			AddIfNotNil("technicalStandardId", id).AddIfNotNil("technicalStandardXid", xid)
+		return nil, repository.WrapRepoError(err, errGetTechnicalStandardStr).
+			Add("technicalStandardId", id).Add("technicalStandardXid", xid)
+	}
 	}
 	technicalStandard := &models.TechnicalStandard{ID: *id}
 	if err = copier.CopyWithOption(technicalStandard, getTechnicalStandard.GetTechnicalStandard, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
@@ -35,7 +36,7 @@ func (dr *DgraphRepository) GetTechnicalStandards(filter *models.TechnicalStanda
 	ctx := context.Background()
 	getTechnicalStandards, err := dr.client.GetTechnicalStandards(ctx, filter, order, first, offset)
 	if err != nil {
-		return nil, repository.NewRepoErrorWrap(err, errGetTechnicalStandardStr)
+		return nil, repository.WrapRepoError(err, errGetTechnicalStandardStr)
 	}
 	technicalStandards := make([]*models.TechnicalStandard, 0, len(getTechnicalStandards.QueryTechnicalStandard))
 	for _, x := range getTechnicalStandards.QueryTechnicalStandard {
@@ -59,7 +60,7 @@ func (dr *DgraphRepository) SaveTechnicalStandard(technicalStandard *models.Tech
 	err = dr.SaveTechnicalStandards([]*models.TechnicalStandard{technicalStandard})
 	if aerr, ok := err.(errors.ContextAdder); ok {
 		// enrich error context
-		aerr.AddIfNotNil("technicalStandardId", technicalStandard.ID).AddIfNotNil("technicalStandardXid", technicalStandard.Xid)
+		aerr.Add("technicalStandardId", technicalStandard.ID).Add("technicalStandardXid", technicalStandard.Xid)
 	}
 	return
 }
@@ -73,17 +74,15 @@ func (dr *DgraphRepository) SaveTechnicalStandards(technicalStandards []*models.
 			continue
 		}
 		technicalStandard := &models.AddTechnicalStandardInput{}
-		if err := copier.CopyWithOption(technicalStandard, x,
-			copier.Option{Converters: dr.convertersForSave, DeepCopy: true, IgnoreEmpty: true}); err != nil {
-			return repository.NewRepoErrorWrap(err, errSaveTechnicalStandardStr).
-				AddIfNotNil("technicalStandardId", x.ID).AddIfNotNil("technicalStandardXid", x.Xid)
+			return repository.WrapRepoError(err, errSaveTechnicalStandardStr).
+				Add("technicalStandardId", x.ID).Add("technicalStandardXid", x.Xid)
 		}
 		reqData = append(reqData, technicalStandard)
 	}
 	ctx := context.Background()
 	respData, err := dr.client.SaveTechnicalStandards(ctx, reqData)
 	if err != nil {
-		return repository.NewRepoErrorWrap(err, errSaveTechnicalStandardStr)
+		return repository.WrapRepoError(err, errSaveTechnicalStandardStr)
 	}
 	// save ID from response
 	for i, x := range technicalStandards {
@@ -104,8 +103,8 @@ func (dr *DgraphRepository) DeleteTechnicalStandard(id, xid *string) error {
 	}
 	_, err := dr.client.DeleteTechnicalStandard(ctx, delFilter)
 	if err != nil {
-		return repository.NewRepoErrorWrap(err, errDeleteTechnicalStandardStr).
-			AddIfNotNil("technicalStandardId", id).AddIfNotNil("technicalStandardXid", xid)
+		return repository.WrapRepoError(err, errDeleteTechnicalStandardStr).
+			Add("technicalStandardId", id).Add("technicalStandardXid", xid)
 	}
 	return nil
 }

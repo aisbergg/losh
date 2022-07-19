@@ -10,7 +10,7 @@ import (
 	"losh/internal/net/request"
 	"net/http"
 
-	"github.com/rotisserie/eris"
+	"github.com/aisbergg/go-errors/pkg/errors"
 	"go.uber.org/zap"
 )
 
@@ -77,7 +77,7 @@ func (p *SpdxOrgProvider) GetLicense(_, spdxID *string) (*models.License, error)
 			}
 			text, err := p.getLicenseText(*l.DetailsURL)
 			if err != nil {
-				return nil, err
+				return nil, errors.Wrapf(err, "failed to get license text for %s", l.Xid)
 			}
 			l.Text = &text
 
@@ -85,7 +85,7 @@ func (p *SpdxOrgProvider) GetLicense(_, spdxID *string) (*models.License, error)
 		}
 	}
 
-	return nil, eris.New("license not found")
+	return nil, errors.New("license not found")
 }
 
 // GetAllLicenses returns a list of all licenses
@@ -104,7 +104,8 @@ func (p *SpdxOrgProvider) GetAllLicenses() ([]*models.License, error) {
 		p.log.Debugw("downloading license text", "spdxId", l.Xid)
 		text, err := p.getLicenseText(*l.DetailsURL)
 		if err != nil {
-			return nil, err
+			p.log.Errorw("failed to get license text", "spdxId", l.Xid)
+			continue
 		}
 		l.Text = &text
 	}
@@ -122,14 +123,14 @@ func (p *SpdxOrgProvider) getLicenseText(url string) (string, error) {
 	ctx := context.Background()
 	detailsContent, err := p.dowloader.DownloadContent(ctx, url)
 	if err != nil {
-		return "", eris.Wrap(err, "failed to download")
+		return "", "", errors.Wrap(err, "failed to download")
 	}
 
 	// parse license details
 	var details spdxLicenseDetails
 	err = json.Unmarshal(detailsContent, &details)
 	if err != nil {
-		return "", eris.Wrap(err, "failed to parse content")
+		return "", "", errors.Wrapf(err, "failed to parse content, content was: %s", stringutil.Ellipses(strings.ReplaceAll(string(detailsContent), "\n", "\\n"), 60))
 	}
 
 	return details.LicenseText, nil
@@ -141,14 +142,14 @@ func (p *SpdxOrgProvider) getBaseLicenses() ([]*models.License, error) {
 	ctx := context.Background()
 	lcnt, err := p.dowloader.DownloadContent(ctx, p.licensesURL)
 	if err != nil {
-		return nil, eris.Wrap(err, "failed to download license list")
+		return nil, errors.Wrap(err, "failed to download license list")
 	}
 
 	// parse licenses
 	var licenseFile spdxLicenseFile
 	err = json.Unmarshal(lcnt, &licenseFile)
 	if err != nil {
-		return nil, eris.Wrap(err, "failed to parse license file")
+		return nil, errors.Wrap(err, "failed to parse license file")
 	}
 	licenses := make([]*models.License, 0, len(licenseFile.Licenses))
 	for i := 0; i < len(licenseFile.Licenses); i++ {

@@ -20,8 +20,9 @@ func (dr *DgraphRepository) GetMaterial(id string) (*models.Material, error) {
 	ctx := context.Background()
 	getMaterial, err := dr.client.GetMaterial(ctx, id)
 	if err != nil {
-		return nil, repository.NewRepoErrorWrap(err, errGetMaterialStr).
-			AddIfNotNil("materialId", id)
+		return nil, repository.WrapRepoError(err, errGetMaterialStr).
+			Add("materialId", id)
+	}
 	}
 	material := &models.Material{ID: id}
 	if err = copier.CopyWithOption(material, getMaterial.GetMaterial, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
@@ -35,7 +36,7 @@ func (dr *DgraphRepository) GetMaterials(filter *models.MaterialFilter, order *m
 	ctx := context.Background()
 	getMaterials, err := dr.client.GetMaterials(ctx, filter, order, first, offset)
 	if err != nil {
-		return nil, repository.NewRepoErrorWrap(err, errGetMaterialStr)
+		return nil, repository.WrapRepoError(err, errGetMaterialStr)
 	}
 	materials := make([]*models.Material, 0, len(getMaterials.QueryMaterial))
 	for _, x := range getMaterials.QueryMaterial {
@@ -59,7 +60,7 @@ func (dr *DgraphRepository) SaveMaterial(material *models.Material) (err error) 
 	err = dr.SaveMaterials([]*models.Material{material})
 	if aerr, ok := err.(errors.ContextAdder); ok {
 		// enrich error context
-		aerr.AddIfNotNil("materialId", material.ID)
+		aerr.Add("materialId", material.ID)
 	}
 	return
 }
@@ -73,17 +74,15 @@ func (dr *DgraphRepository) SaveMaterials(materials []*models.Material) error {
 			continue
 		}
 		material := &models.AddMaterialInput{}
-		if err := copier.CopyWithOption(material, x,
-			copier.Option{Converters: dr.convertersForSave, DeepCopy: true, IgnoreEmpty: true}); err != nil {
-			return repository.NewRepoErrorWrap(err, errSaveMaterialStr).
-				AddIfNotNil("materialId", x.ID)
+			return repository.WrapRepoError(err, errSaveMaterialStr).
+				Add("materialId", x.ID)
 		}
 		reqData = append(reqData, material)
 	}
 	ctx := context.Background()
 	respData, err := dr.client.SaveMaterials(ctx, reqData, []string{})
 	if err != nil {
-		return repository.NewRepoErrorWrap(err, errSaveMaterialStr)
+		return repository.WrapRepoError(err, errSaveMaterialStr)
 	}
 	// save ID from response
 	for i, x := range materials {
@@ -101,8 +100,8 @@ func (dr *DgraphRepository) DeleteMaterial(id *string) error {
 	}
 	_, err := dr.client.DeleteMaterials(ctx, delFilter)
 	if err != nil {
-		return repository.NewRepoErrorWrap(err, errDeleteMaterialStr).
-			AddIfNotNil("materialId", id)
+		return repository.WrapRepoError(err, errDeleteMaterialStr).
+			Add("materialId", id)
 	}
 	return nil
 }

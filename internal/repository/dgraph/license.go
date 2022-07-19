@@ -20,8 +20,9 @@ func (dr *DgraphRepository) GetLicense(id, xid *string) (*models.License, error)
 	ctx := context.Background()
 	getLicense, err := dr.client.GetLicense(ctx, id, xid)
 	if err != nil {
-		return nil, repository.NewRepoErrorWrap(err, errGetLicenseStr).
-			AddIfNotNil("licenseId", id).AddIfNotNil("licenseXid", xid)
+		return nil, repository.WrapRepoError(err, errGetLicenseStr).
+			Add("licenseId", id).Add("licenseXid", xid)
+	}
 	}
 	license := &models.License{ID: *id}
 	if err = copier.CopyWithOption(license, getLicense.GetLicense, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
@@ -35,7 +36,7 @@ func (dr *DgraphRepository) GetLicenses(filter *models.LicenseFilter, order *mod
 	ctx := context.Background()
 	getLicenses, err := dr.client.GetLicenses(ctx, filter, order, first, offset)
 	if err != nil {
-		return nil, repository.NewRepoErrorWrap(err, errGetLicenseStr)
+		return nil, repository.WrapRepoError(err, errGetLicenseStr)
 	}
 	licenses := make([]*models.License, 0, len(getLicenses.QueryLicense))
 	for _, x := range getLicenses.QueryLicense {
@@ -59,7 +60,7 @@ func (dr *DgraphRepository) SaveLicense(license *models.License) (err error) {
 	err = dr.SaveLicenses([]*models.License{license})
 	if aerr, ok := err.(errors.ContextAdder); ok {
 		// enrich error context
-		aerr.AddIfNotNil("licenseId", license.ID).AddIfNotNil("licenseXid", license.Xid)
+		aerr.Add("licenseId", license.ID).Add("licenseXid", license.Xid)
 	}
 	return
 }
@@ -73,17 +74,15 @@ func (dr *DgraphRepository) SaveLicenses(licenses []*models.License) error {
 			continue
 		}
 		license := &models.AddLicenseInput{}
-		if err := copier.CopyWithOption(license, x,
-			copier.Option{Converters: dr.convertersForSave, DeepCopy: true, IgnoreEmpty: true}); err != nil {
-			return repository.NewRepoErrorWrap(err, errSaveLicenseStr).
-				AddIfNotNil("licenseId", x.ID).AddIfNotNil("licenseXid", x.Xid)
+			return repository.WrapRepoError(err, errSaveLicenseStr).
+				Add("licenseId", x.ID).Add("licenseXid", x.Xid)
 		}
 		reqData = append(reqData, license)
 	}
 	ctx := context.Background()
 	respData, err := dr.client.SaveLicenses(ctx, reqData)
 	if err != nil {
-		return repository.NewRepoErrorWrap(err, errSaveLicenseStr)
+		return repository.WrapRepoError(err, errSaveLicenseStr)
 	}
 	// save ID from response
 	for i, x := range licenses {
@@ -104,8 +103,8 @@ func (dr *DgraphRepository) DeleteLicense(id, xid *string) error {
 	}
 	_, err := dr.client.DeleteLicense(ctx, delFilter)
 	if err != nil {
-		return repository.NewRepoErrorWrap(err, errDeleteLicenseStr).
-			AddIfNotNil("licenseId", id).AddIfNotNil("licenseXid", xid)
+		return repository.WrapRepoError(err, errDeleteLicenseStr).
+			Add("licenseId", id).Add("licenseXid", xid)
 	}
 	return nil
 }

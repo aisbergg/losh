@@ -20,8 +20,9 @@ func (dr *DgraphRepository) GetCategory(id, xid *string) (*models.Category, erro
 	ctx := context.Background()
 	getCategory, err := dr.client.GetCategory(ctx, id, xid)
 	if err != nil {
-		return nil, repository.NewRepoErrorWrap(err, errGetCategoryStr).
-			AddIfNotNil("categoryId", id).AddIfNotNil("categoryXid", xid)
+		return nil, repository.WrapRepoError(err, errGetCategoryStr).
+			Add("categoryId", id).Add("categoryXid", xid)
+	}
 	}
 	category := &models.Category{ID: *id}
 	if err = copier.CopyWithOption(category, getCategory.GetCategory, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
@@ -35,7 +36,7 @@ func (dr *DgraphRepository) GetCategories(filter *models.CategoryFilter, order *
 	ctx := context.Background()
 	getCategories, err := dr.client.GetCategories(ctx, filter, order, first, offset)
 	if err != nil {
-		return nil, repository.NewRepoErrorWrap(err, errGetCategoryStr)
+		return nil, repository.WrapRepoError(err, errGetCategoryStr)
 	}
 	categories := make([]*models.Category, 0, len(getCategories.QueryCategory))
 	for _, x := range getCategories.QueryCategory {
@@ -59,7 +60,7 @@ func (dr *DgraphRepository) SaveCategory(category *models.Category) (err error) 
 	err = dr.SaveCategories([]*models.Category{category})
 	if aerr, ok := err.(errors.ContextAdder); ok {
 		// enrich error context
-		aerr.AddIfNotNil("categoryId", category.ID).AddIfNotNil("categoryXid", category.Xid)
+		aerr.Add("categoryId", category.ID).Add("categoryXid", category.Xid)
 	}
 	return
 }
@@ -73,17 +74,15 @@ func (dr *DgraphRepository) SaveCategories(categories []*models.Category) error 
 			continue
 		}
 		category := &models.AddCategoryInput{}
-		if err := copier.CopyWithOption(category, x,
-			copier.Option{Converters: dr.convertersForSave, DeepCopy: true, IgnoreEmpty: true}); err != nil {
-			return repository.NewRepoErrorWrap(err, errSaveCategoryStr).
-				AddIfNotNil("categoryId", x.ID).AddIfNotNil("categoryXid", x.Xid)
+			return repository.WrapRepoError(err, errSaveCategoryStr).
+				Add("categoryId", x.ID).Add("categoryXid", x.Xid)
 		}
 		reqData = append(reqData, category)
 	}
 	ctx := context.Background()
 	respData, err := dr.client.SaveCategories(ctx, reqData)
 	if err != nil {
-		return repository.NewRepoErrorWrap(err, errSaveCategoryStr)
+		return repository.WrapRepoError(err, errSaveCategoryStr)
 	}
 	// save ID from response
 	for i, x := range categories {
@@ -104,8 +103,8 @@ func (dr *DgraphRepository) DeleteCategory(id, xid *string) error {
 	}
 	_, err := dr.client.DeleteCategory(ctx, delFilter)
 	if err != nil {
-		return repository.NewRepoErrorWrap(err, errDeleteCategoryStr).
-			AddIfNotNil("categoryId", id).AddIfNotNil("categoryXid", xid)
+		return repository.WrapRepoError(err, errDeleteCategoryStr).
+			Add("categoryId", id).Add("categoryXid", xid)
 	}
 	return nil
 }

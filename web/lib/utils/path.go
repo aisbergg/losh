@@ -3,7 +3,7 @@ package utils
 import (
 	"os"
 
-	"github.com/chigopher/pathlib"
+	"github.com/aisbergg/go-errors/pkg/errors"
 	"github.com/rotisserie/eris"
 )
 

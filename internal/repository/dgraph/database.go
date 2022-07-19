@@ -14,7 +14,7 @@ func (dr *DgraphRepository) GetDatabaseInfo(id string) (*models.Database, error)
 	ctx := context.Background()
 	getDatabaseInfo, err := dr.client.GetDatabaseInfo(ctx)
 	if err != nil {
-		return nil, repository.NewRepoErrorWrap(err, "failed to get database information")
+		return nil, repository.WrapRepoError(err, "failed to get database information")
 	}
 	if len(getDatabaseInfo.QueryDatabase) == 0 {
 		return nil, nil
@@ -39,7 +39,7 @@ func (dr *DgraphRepository) SaveDatabaseInfo(database *models.Database) (err err
 	ctx := context.Background()
 	respData, err := dr.client.SaveDatabaseInfo(ctx, reqData)
 	if err != nil {
-		return repository.NewRepoErrorWrap(err, "failed to save database information")
+		return repository.WrapRepoError(err, "failed to save database information")
 	}
 	// save ID from response
 	database.ID = respData.AddDatabase.Database[0].ID

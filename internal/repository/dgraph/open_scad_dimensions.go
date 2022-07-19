@@ -20,8 +20,9 @@ func (dr *DgraphRepository) GetOpenSCADDimensions(id string) (*models.OpenSCADDi
 	ctx := context.Background()
 	getOpenSCADDimensions, err := dr.client.GetOpenSCADDimensions(ctx, id)
 	if err != nil {
-		return nil, repository.NewRepoErrorWrap(err, errGetOpenSCADDimensionsStr).
-			AddIfNotNil("osdId", id)
+		return nil, repository.WrapRepoError(err, errGetOpenSCADDimensionsStr).
+			Add("osdId", id)
+	}
 	}
 	osd := &models.OpenSCADDimensions{ID: id}
 	if err = copier.CopyWithOption(osd, getOpenSCADDimensions.GetOpenSCADDimensions, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
@@ -35,7 +36,7 @@ func (dr *DgraphRepository) GetOpenSCADDimensionss(filter *models.OpenSCADDimens
 	ctx := context.Background()
 	getOpenSCADDimensionss, err := dr.client.GetOpenSCADDimensionss(ctx, filter, order, first, offset)
 	if err != nil {
-		return nil, repository.NewRepoErrorWrap(err, errGetOpenSCADDimensionsStr)
+		return nil, repository.WrapRepoError(err, errGetOpenSCADDimensionsStr)
 	}
 	osds := make([]*models.OpenSCADDimensions, 0, len(getOpenSCADDimensionss.QueryOpenSCADDimensions))
 	for _, x := range getOpenSCADDimensionss.QueryOpenSCADDimensions {
@@ -59,7 +60,7 @@ func (dr *DgraphRepository) SaveOpenSCADDimensions(osd *models.OpenSCADDimension
 	err = dr.SaveOpenSCADDimensionss([]*models.OpenSCADDimensions{osd})
 	if aerr, ok := err.(errors.ContextAdder); ok {
 		// enrich error context
-		aerr.AddIfNotNil("osdId", osd.ID)
+		aerr.Add("osdId", osd.ID)
 	}
 	return
 }
@@ -73,17 +74,15 @@ func (dr *DgraphRepository) SaveOpenSCADDimensionss(osds []*models.OpenSCADDimen
 			continue
 		}
 		osd := &models.AddOpenSCADDimensionsInput{}
-		if err := copier.CopyWithOption(osd, x,
-			copier.Option{Converters: dr.convertersForSave, DeepCopy: true, IgnoreEmpty: true}); err != nil {
-			return repository.NewRepoErrorWrap(err, errSaveOpenSCADDimensionsStr).
-				AddIfNotNil("osdId", x.ID)
+			return repository.WrapRepoError(err, errSaveOpenSCADDimensionsStr).
+				Add("osdId", x.ID)
 		}
 		reqData = append(reqData, osd)
 	}
 	ctx := context.Background()
 	respData, err := dr.client.SaveOpenSCADDimensionss(ctx, reqData, []string{})
 	if err != nil {
-		return repository.NewRepoErrorWrap(err, errSaveOpenSCADDimensionsStr)
+		return repository.WrapRepoError(err, errSaveOpenSCADDimensionsStr)
 	}
 	// save ID from response
 	for i, x := range osds {
@@ -101,8 +100,8 @@ func (dr *DgraphRepository) DeleteOpenSCADDimensions(id *string) error {
 	}
 	_, err := dr.client.DeleteOpenSCADDimensionss(ctx, delFilter)
 	if err != nil {
-		return repository.NewRepoErrorWrap(err, errDeleteOpenSCADDimensionsStr).
-			AddIfNotNil("osdId", id)
+		return repository.WrapRepoError(err, errDeleteOpenSCADDimensionsStr).
+			Add("osdId", id)
 	}
 	return nil
 }

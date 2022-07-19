@@ -20,8 +20,9 @@ func (dr *DgraphRepository) GetKeyValue(id string) (*models.KeyValue, error) {
 	ctx := context.Background()
 	getKeyValue, err := dr.client.GetKeyValue(ctx, id)
 	if err != nil {
-		return nil, repository.NewRepoErrorWrap(err, errGetKeyValueStr).
-			AddIfNotNil("keyValueId", id)
+		return nil, repository.WrapRepoError(err, errGetKeyValueStr).
+			Add("keyValueId", id)
+	}
 	}
 	keyValue := &models.KeyValue{ID: id}
 	if err = copier.CopyWithOption(keyValue, getKeyValue.GetKeyValue, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
@@ -35,7 +36,7 @@ func (dr *DgraphRepository) GetKeyValues(filter *models.KeyValueFilter, order *m
 	ctx := context.Background()
 	getKeyValues, err := dr.client.GetKeyValues(ctx, filter, order, first, offset)
 	if err != nil {
-		return nil, repository.NewRepoErrorWrap(err, errGetKeyValueStr)
+		return nil, repository.WrapRepoError(err, errGetKeyValueStr)
 	}
 	keyValues := make([]*models.KeyValue, 0, len(getKeyValues.QueryKeyValue))
 	for _, x := range getKeyValues.QueryKeyValue {
@@ -59,7 +60,7 @@ func (dr *DgraphRepository) SaveKeyValue(keyValue *models.KeyValue) (err error) 
 	err = dr.SaveKeyValues([]*models.KeyValue{keyValue})
 	if aerr, ok := err.(errors.ContextAdder); ok {
 		// enrich error context
-		aerr.AddIfNotNil("keyValueId", keyValue.ID)
+		aerr.Add("keyValueId", keyValue.ID)
 	}
 	return
 }
@@ -73,17 +74,15 @@ func (dr *DgraphRepository) SaveKeyValues(keyValues []*models.KeyValue) error {
 			continue
 		}
 		keyValue := &models.AddKeyValueInput{}
-		if err := copier.CopyWithOption(keyValue, x,
-			copier.Option{Converters: dr.convertersForSave, DeepCopy: true, IgnoreEmpty: true}); err != nil {
-			return repository.NewRepoErrorWrap(err, errSaveKeyValueStr).
-				AddIfNotNil("keyValueId", x.ID)
+			return repository.WrapRepoError(err, errSaveKeyValueStr).
+				Add("keyValueId", x.ID)
 		}
 		reqData = append(reqData, keyValue)
 	}
 	ctx := context.Background()
 	respData, err := dr.client.SaveKeyValues(ctx, reqData)
 	if err != nil {
-		return repository.NewRepoErrorWrap(err, errSaveKeyValueStr)
+		return repository.WrapRepoError(err, errSaveKeyValueStr)
 	}
 	// save ID from response
 	for i, x := range keyValues {
@@ -101,8 +100,8 @@ func (dr *DgraphRepository) DeleteKeyValue(id *string) error {
 	}
 	_, err := dr.client.DeleteKeyValue(ctx, delFilter)
 	if err != nil {
-		return repository.NewRepoErrorWrap(err, errDeleteKeyValueStr).
-			AddIfNotNil("keyValueId", id)
+		return repository.WrapRepoError(err, errDeleteKeyValueStr).
+			Add("keyValueId", id)
 	}
 	return nil
 }

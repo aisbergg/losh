@@ -18,8 +18,9 @@ func (dr *DgraphRepository) GetProduct(id, xid *string) (*models.Product, error)
 	ctx := context.Background()
 	getProduct, err := dr.client.GetProduct(ctx, id, xid)
 	if err != nil {
-		return nil, repository.NewRepoErrorWrap(err, errGetProductStr).
-			AddIfNotNil("productId", id).AddIfNotNil("productXid", xid)
+		return nil, repository.WrapRepoError(err, errGetProductStr).
+			Add("productId", id).Add("productXid", xid)
+	}
 	}
 	product := &models.Product{ID: *id}
 	if err = copier.CopyWithOption(product, getProduct.GetProduct, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
@@ -33,7 +34,7 @@ func (dr *DgraphRepository) GetProducts(filter *models.ProductFilter, order *mod
 	ctx := context.Background()
 	getProducts, err := dr.client.GetProducts(ctx, filter, order, first, offset)
 	if err != nil {
-		return nil, repository.NewRepoErrorWrap(err, errGetProductStr)
+		return nil, repository.WrapRepoError(err, errGetProductStr)
 	}
 	products := make([]*models.Product, 0, len(getProducts.QueryProduct))
 	for _, x := range getProducts.QueryProduct {
@@ -57,7 +58,7 @@ func (dr *DgraphRepository) SaveProduct(product *models.Product) (err error) {
 	err = dr.SaveProducts([]*models.Product{product})
 	if aerr, ok := err.(errors.ContextAdder); ok {
 		// enrich error context
-		aerr.AddIfNotNil("productId", product.ID).AddIfNotNil("productXid", product.Xid)
+		aerr.Add("productId", product.ID).Add("productXid", product.Xid)
 	}
 	return
 }
@@ -71,17 +72,15 @@ func (dr *DgraphRepository) SaveProducts(products []*models.Product) error {
 			continue
 		}
 		product := &models.AddProductInput{}
-		if err := copier.CopyWithOption(product, x,
-			copier.Option{Converters: dr.convertersForSave, DeepCopy: true, IgnoreEmpty: true}); err != nil {
-			return repository.NewRepoErrorWrap(err, errSaveProductStr).
-				AddIfNotNil("productId", x.ID).AddIfNotNil("productXid", x.Xid)
+			return repository.WrapRepoError(err, errSaveProductStr).
+				Add("productId", x.ID).Add("productXid", x.Xid)
 		}
 		reqData = append(reqData, product)
 	}
 	ctx := context.Background()
 	respData, err := dr.client.SaveProducts(ctx, reqData)
 	if err != nil {
-		return repository.NewRepoErrorWrap(err, errSaveProductStr)
+		return repository.WrapRepoError(err, errSaveProductStr)
 	}
 	// save ID from response
 	for i, x := range products {
@@ -102,8 +101,8 @@ func (dr *DgraphRepository) DeleteProduct(id, xid *string) error {
 	}
 	_, err := dr.client.DeleteProduct(ctx, delFilter)
 	if err != nil {
-		return repository.NewRepoErrorWrap(err, errDeleteProductStr).
-			AddIfNotNil("productId", id).AddIfNotNil("productXid", xid)
+		return repository.WrapRepoError(err, errDeleteProductStr).
+			Add("productId", id).Add("productXid", xid)
 	}
 	return nil
 }

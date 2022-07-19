@@ -20,8 +20,9 @@ func (dr *DgraphRepository) GetTechnologySpecificDocumentationCriteria(id, xid *
 	ctx := context.Background()
 	getTechnologySpecificDocumentationCriteria, err := dr.client.GetTechnologySpecificDocumentationCriteria(ctx, id, xid)
 	if err != nil {
-		return nil, repository.NewRepoErrorWrap(err, errGetTechnologySpecificDocumentationCriteriaStr).
-			AddIfNotNil("tsdcId", id).AddIfNotNil("tsdcXid", xid)
+		return nil, repository.WrapRepoError(err, errGetTechnologySpecificDocumentationCriteriaStr).
+			Add("tsdcId", id).Add("tsdcXid", xid)
+	}
 	}
 	tsdc := &models.TechnologySpecificDocumentationCriteria{ID: *id}
 	if err = copier.CopyWithOption(tsdc, getTechnologySpecificDocumentationCriteria.GetTechnologySpecificDocumentationCriteria, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
@@ -35,7 +36,7 @@ func (dr *DgraphRepository) GetTechnologySpecificDocumentationCriterias(filter *
 	ctx := context.Background()
 	getTechnologySpecificDocumentationCriterias, err := dr.client.GetTechnologySpecificDocumentationCriterias(ctx, filter, order, first, offset)
 	if err != nil {
-		return nil, repository.NewRepoErrorWrap(err, errGetTechnologySpecificDocumentationCriteriaStr)
+		return nil, repository.WrapRepoError(err, errGetTechnologySpecificDocumentationCriteriaStr)
 	}
 	tsdcs := make([]*models.TechnologySpecificDocumentationCriteria, 0, len(getTechnologySpecificDocumentationCriterias.QueryTechnologySpecificDocumentationCriteria))
 	for _, x := range getTechnologySpecificDocumentationCriterias.QueryTechnologySpecificDocumentationCriteria {
@@ -59,7 +60,7 @@ func (dr *DgraphRepository) SaveTechnologySpecificDocumentationCriteria(tsdc *mo
 	err = dr.SaveTechnologySpecificDocumentationCriterias([]*models.TechnologySpecificDocumentationCriteria{tsdc})
 	if aerr, ok := err.(errors.ContextAdder); ok {
 		// enrich error context
-		aerr.AddIfNotNil("tsdcId", tsdc.ID).AddIfNotNil("tsdcXid", tsdc.Xid)
+		aerr.Add("tsdcId", tsdc.ID).Add("tsdcXid", tsdc.Xid)
 	}
 	return
 }
@@ -73,17 +74,15 @@ func (dr *DgraphRepository) SaveTechnologySpecificDocumentationCriterias(tsdcs [
 			continue
 		}
 		tsdc := &models.AddTechnologySpecificDocumentationCriteriaInput{}
-		if err := copier.CopyWithOption(tsdc, x,
-			copier.Option{Converters: dr.convertersForSave, DeepCopy: true, IgnoreEmpty: true}); err != nil {
-			return repository.NewRepoErrorWrap(err, errSaveTechnologySpecificDocumentationCriteriaStr).
-				AddIfNotNil("tsdcId", x.ID).AddIfNotNil("tsdcXid", x.Xid)
+			return repository.WrapRepoError(err, errSaveTechnologySpecificDocumentationCriteriaStr).
+				Add("tsdcId", x.ID).Add("tsdcXid", x.Xid)
 		}
 		reqData = append(reqData, tsdc)
 	}
 	ctx := context.Background()
 	respData, err := dr.client.SaveTechnologySpecificDocumentationCriterias(ctx, reqData)
 	if err != nil {
-		return repository.NewRepoErrorWrap(err, errSaveTechnologySpecificDocumentationCriteriaStr)
+		return repository.WrapRepoError(err, errSaveTechnologySpecificDocumentationCriteriaStr)
 	}
 	// save ID from response
 	for i, x := range tsdcs {
@@ -104,8 +103,8 @@ func (dr *DgraphRepository) DeleteTechnologySpecificDocumentationCriteria(id, xi
 	}
 	_, err := dr.client.DeleteTechnologySpecificDocumentationCriteria(ctx, delFilter)
 	if err != nil {
-		return repository.NewRepoErrorWrap(err, errDeleteTechnologySpecificDocumentationCriteriaStr).
-			AddIfNotNil("tsdcId", id).AddIfNotNil("tsdcXid", xid)
+		return repository.WrapRepoError(err, errDeleteTechnologySpecificDocumentationCriteriaStr).
+			Add("tsdcId", id).Add("tsdcXid", xid)
 	}
 	return nil
 }

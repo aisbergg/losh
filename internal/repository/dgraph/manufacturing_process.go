@@ -20,8 +20,9 @@ func (dr *DgraphRepository) GetManufacturingProcess(id string) (*models.Manufact
 	ctx := context.Background()
 	getManufacturingProcess, err := dr.client.GetManufacturingProcess(ctx, id)
 	if err != nil {
-		return nil, repository.NewRepoErrorWrap(err, errGetManufacturingProcessStr).
-			AddIfNotNil("manufacturingProcessId", id)
+		return nil, repository.WrapRepoError(err, errGetManufacturingProcessStr).
+			Add("manufacturingProcessId", id)
+	}
 	}
 	manufacturingProcess := &models.ManufacturingProcess{ID: id}
 	if err = copier.CopyWithOption(manufacturingProcess, getManufacturingProcess.GetManufacturingProcess, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
@@ -35,7 +36,7 @@ func (dr *DgraphRepository) GetManufacturingProcesss(filter *models.Manufacturin
 	ctx := context.Background()
 	getManufacturingProcesss, err := dr.client.GetManufacturingProcesses(ctx, filter, order, first, offset)
 	if err != nil {
-		return nil, repository.NewRepoErrorWrap(err, errGetManufacturingProcessStr)
+		return nil, repository.WrapRepoError(err, errGetManufacturingProcessStr)
 	}
 	manufacturingProcesss := make([]*models.ManufacturingProcess, 0, len(getManufacturingProcesss.QueryManufacturingProcess))
 	for _, x := range getManufacturingProcesss.QueryManufacturingProcess {
@@ -59,7 +60,7 @@ func (dr *DgraphRepository) SaveManufacturingProcess(manufacturingProcess *model
 	err = dr.SaveManufacturingProcesss([]*models.ManufacturingProcess{manufacturingProcess})
 	if aerr, ok := err.(errors.ContextAdder); ok {
 		// enrich error context
-		aerr.AddIfNotNil("manufacturingProcessId", manufacturingProcess.ID)
+		aerr.Add("manufacturingProcessId", manufacturingProcess.ID)
 	}
 	return
 }
@@ -73,17 +74,15 @@ func (dr *DgraphRepository) SaveManufacturingProcesss(manufacturingProcesss []*m
 			continue
 		}
 		manufacturingProcess := &models.AddManufacturingProcessInput{}
-		if err := copier.CopyWithOption(manufacturingProcess, x,
-			copier.Option{Converters: dr.convertersForSave, DeepCopy: true, IgnoreEmpty: true}); err != nil {
-			return repository.NewRepoErrorWrap(err, errSaveManufacturingProcessStr).
-				AddIfNotNil("manufacturingProcessId", x.ID)
+			return repository.WrapRepoError(err, errSaveManufacturingProcessStr).
+				Add("manufacturingProcessId", x.ID)
 		}
 		reqData = append(reqData, manufacturingProcess)
 	}
 	ctx := context.Background()
 	respData, err := dr.client.SaveManufacturingProcesses(ctx, reqData, []string{})
 	if err != nil {
-		return repository.NewRepoErrorWrap(err, errSaveManufacturingProcessStr)
+		return repository.WrapRepoError(err, errSaveManufacturingProcessStr)
 	}
 	// save ID from response
 	for i, x := range manufacturingProcesss {
@@ -101,8 +100,8 @@ func (dr *DgraphRepository) DeleteManufacturingProcess(id *string) error {
 	}
 	_, err := dr.client.DeleteManufacturingProcesses(ctx, delFilter)
 	if err != nil {
-		return repository.NewRepoErrorWrap(err, errDeleteManufacturingProcessStr).
-			AddIfNotNil("manufacturingProcessId", id)
+		return repository.WrapRepoError(err, errDeleteManufacturingProcessStr).
+			Add("manufacturingProcessId", id)
 	}
 	return nil
 }

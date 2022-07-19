@@ -20,8 +20,9 @@ func (dr *DgraphRepository) GetHost(id, domain *string) (*models.Host, error) {
 	ctx := context.Background()
 	getHost, err := dr.client.GetHost(ctx, id, domain)
 	if err != nil {
-		return nil, repository.NewRepoErrorWrap(err, errGetHostStr).
-			AddIfNotNil("hostId", id).AddIfNotNil("hostDomain", domain)
+		return nil, repository.WrapRepoError(err, errGetHostStr).
+			Add("hostId", id).Add("hostDomain", domain)
+	}
 	}
 	host := &models.Host{ID: *id}
 	if err = copier.CopyWithOption(host, getHost.GetHost, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
@@ -35,7 +36,7 @@ func (dr *DgraphRepository) GetHosts(filter *models.HostFilter, order *models.Ho
 	ctx := context.Background()
 	getHosts, err := dr.client.GetHosts(ctx, filter, order, first, offset)
 	if err != nil {
-		return nil, repository.NewRepoErrorWrap(err, errGetHostStr)
+		return nil, repository.WrapRepoError(err, errGetHostStr)
 	}
 	hosts := make([]*models.Host, 0, len(getHosts.QueryHost))
 	for _, x := range getHosts.QueryHost {
@@ -59,7 +60,7 @@ func (dr *DgraphRepository) SaveHost(host *models.Host) (err error) {
 	err = dr.SaveHosts([]*models.Host{host})
 	if aerr, ok := err.(errors.ContextAdder); ok {
 		// enrich error context
-		aerr.AddIfNotNil("hostId", host.ID).AddIfNotNil("hostDomain", host.Domain)
+		aerr.Add("hostId", host.ID).Add("hostDomain", host.Domain)
 	}
 	return
 }
@@ -73,17 +74,15 @@ func (dr *DgraphRepository) SaveHosts(hosts []*models.Host) error {
 			continue
 		}
 		host := &models.AddHostInput{}
-		if err := copier.CopyWithOption(host, x,
-			copier.Option{Converters: dr.convertersForSave, DeepCopy: true, IgnoreEmpty: true}); err != nil {
-			return repository.NewRepoErrorWrap(err, errSaveHostStr).
-				AddIfNotNil("hostId", x.ID).AddIfNotNil("hostDomain", x.Domain)
+			return repository.WrapRepoError(err, errSaveHostStr).
+				Add("hostId", x.ID).Add("hostDomain", x.Domain)
 		}
 		reqData = append(reqData, host)
 	}
 	ctx := context.Background()
 	respData, err := dr.client.SaveHosts(ctx, reqData)
 	if err != nil {
-		return repository.NewRepoErrorWrap(err, errSaveHostStr)
+		return repository.WrapRepoError(err, errSaveHostStr)
 	}
 	// save ID from response
 	for i, x := range hosts {
@@ -104,8 +103,8 @@ func (dr *DgraphRepository) DeleteHost(id, domain *string) error {
 	}
 	_, err := dr.client.DeleteHost(ctx, delFilter)
 	if err != nil {
-		return repository.NewRepoErrorWrap(err, errDeleteHostStr).
-			AddIfNotNil("hostId", id).AddIfNotNil("hostDomain", domain)
+		return repository.WrapRepoError(err, errDeleteHostStr).
+			Add("hostId", id).Add("hostDomain", domain)
 	}
 	return nil
 }

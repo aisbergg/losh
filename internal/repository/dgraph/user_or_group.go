@@ -30,8 +30,9 @@ func (dr *DgraphRepository) GetUser(id, xid *string) (*models.User, error) {
 	ctx := context.Background()
 	getUser, err := dr.client.GetUser(ctx, id, xid)
 	if err != nil {
-		return nil, repository.NewRepoErrorWrap(err, errGetUserStr).
-			AddIfNotNil("userId", id).AddIfNotNil("userXid", xid)
+		return nil, repository.WrapRepoError(err, errGetUserStr).
+			Add("userId", id).Add("userXid", xid)
+	}
 	}
 	user := &models.User{ID: *id}
 	if err = copier.CopyWithOption(user, getUser.GetUser, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
@@ -45,7 +46,7 @@ func (dr *DgraphRepository) GetUsers(filter *models.UserFilter, order *models.Us
 	ctx := context.Background()
 	getUsers, err := dr.client.GetUsers(ctx, filter, order, first, offset)
 	if err != nil {
-		return nil, repository.NewRepoErrorWrap(err, errGetUserStr)
+		return nil, repository.WrapRepoError(err, errGetUserStr)
 	}
 	users := make([]*models.User, 0, len(getUsers.QueryUser))
 	for _, x := range getUsers.QueryUser {
@@ -69,7 +70,7 @@ func (dr *DgraphRepository) SaveUser(user *models.User) (err error) {
 	err = dr.SaveUsers([]*models.User{user})
 	if aerr, ok := err.(errors.ContextAdder); ok {
 		// enrich error context
-		aerr.AddIfNotNil("userId", user.ID).AddIfNotNil("userXid", user.Xid)
+		aerr.Add("userId", user.ID).Add("userXid", user.Xid)
 	}
 	return
 }
@@ -83,17 +84,15 @@ func (dr *DgraphRepository) SaveUsers(users []*models.User) error {
 			continue
 		}
 		user := &models.AddUserInput{}
-		if err := copier.CopyWithOption(user, x,
-			copier.Option{Converters: dr.convertersForSave, DeepCopy: true, IgnoreEmpty: true}); err != nil {
-			return repository.NewRepoErrorWrap(err, errSaveUserStr).
-				AddIfNotNil("userId", x.ID).AddIfNotNil("userXid", x.Xid)
+			return repository.WrapRepoError(err, errSaveUserStr).
+				Add("userId", x.ID).Add("userXid", x.Xid)
 		}
 		reqData = append(reqData, user)
 	}
 	ctx := context.Background()
 	respData, err := dr.client.SaveUsers(ctx, reqData)
 	if err != nil {
-		return repository.NewRepoErrorWrap(err, errSaveUserStr)
+		return repository.WrapRepoError(err, errSaveUserStr)
 	}
 	// save ID from response
 	for i, x := range users {
@@ -114,8 +113,8 @@ func (dr *DgraphRepository) DeleteUser(id, xid *string) error {
 	}
 	_, err := dr.client.DeleteUser(ctx, delFilter)
 	if err != nil {
-		return repository.NewRepoErrorWrap(err, errDeleteUserStr).
-			AddIfNotNil("userId", id).AddIfNotNil("userXid", xid)
+		return repository.WrapRepoError(err, errDeleteUserStr).
+			Add("userId", id).Add("userXid", xid)
 	}
 	return nil
 }
@@ -136,8 +135,9 @@ func (dr *DgraphRepository) GetGroup(id, xid *string) (*models.Group, error) {
 	ctx := context.Background()
 	getGroup, err := dr.client.GetGroup(ctx, id, xid)
 	if err != nil {
-		return nil, repository.NewRepoErrorWrap(err, errGetGroupStr).
-			AddIfNotNil("groupId", id).AddIfNotNil("groupXid", xid)
+		return nil, repository.WrapRepoError(err, errGetGroupStr).
+			Add("groupId", id).Add("groupXid", xid)
+	}
 	}
 	group := &models.Group{ID: *id}
 	if err = copier.CopyWithOption(group, getGroup.GetGroup, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
@@ -151,7 +151,7 @@ func (dr *DgraphRepository) GetGroups(filter *models.GroupFilter, order *models.
 	ctx := context.Background()
 	getGroups, err := dr.client.GetGroups(ctx, filter, order, first, offset)
 	if err != nil {
-		return nil, repository.NewRepoErrorWrap(err, errGetGroupStr)
+		return nil, repository.WrapRepoError(err, errGetGroupStr)
 	}
 	groups := make([]*models.Group, 0, len(getGroups.QueryGroup))
 	for _, x := range getGroups.QueryGroup {
@@ -175,7 +175,7 @@ func (dr *DgraphRepository) SaveGroup(group *models.Group) (err error) {
 	err = dr.SaveGroups([]*models.Group{group})
 	if aerr, ok := err.(errors.ContextAdder); ok {
 		// enrich error context
-		aerr.AddIfNotNil("groupId", group.ID).AddIfNotNil("groupXid", group.Xid)
+		aerr.Add("groupId", group.ID).Add("groupXid", group.Xid)
 	}
 	return
 }
@@ -189,17 +189,15 @@ func (dr *DgraphRepository) SaveGroups(groups []*models.Group) error {
 			continue
 		}
 		group := &models.AddGroupInput{}
-		if err := copier.CopyWithOption(group, x,
-			copier.Option{Converters: dr.convertersForSave, DeepCopy: true, IgnoreEmpty: true}); err != nil {
-			return repository.NewRepoErrorWrap(err, errSaveGroupStr).
-				AddIfNotNil("groupId", x.ID).AddIfNotNil("groupXid", x.Xid)
+			return repository.WrapRepoError(err, errSaveGroupStr).
+				Add("groupId", x.ID).Add("groupXid", x.Xid)
 		}
 		reqData = append(reqData, group)
 	}
 	ctx := context.Background()
 	respData, err := dr.client.SaveGroups(ctx, reqData)
 	if err != nil {
-		return repository.NewRepoErrorWrap(err, errSaveGroupStr)
+		return repository.WrapRepoError(err, errSaveGroupStr)
 	}
 	// save ID from response
 	for i, x := range groups {
@@ -220,8 +218,8 @@ func (dr *DgraphRepository) DeleteGroup(id, xid *string) error {
 	}
 	_, err := dr.client.DeleteGroup(ctx, delFilter)
 	if err != nil {
-		return repository.NewRepoErrorWrap(err, errDeleteGroupStr).
-			AddIfNotNil("groupId", id).AddIfNotNil("groupXid", xid)
+		return repository.WrapRepoError(err, errDeleteGroupStr).
+			Add("groupId", id).Add("groupXid", xid)
 	}
 	return nil
 }

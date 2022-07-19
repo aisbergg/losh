@@ -20,8 +20,9 @@ func (dr *DgraphRepository) GetComponent(id, xid *string) (*models.Component, er
 	ctx := context.Background()
 	getComponent, err := dr.client.GetComponent(ctx, id, xid)
 	if err != nil {
-		return nil, repository.NewRepoErrorWrap(err, errGetComponentStr).
-			AddIfNotNil("componentId", id).AddIfNotNil("componentXid", xid)
+		return nil, repository.WrapRepoError(err, errGetComponentStr).
+			Add("componentId", id).Add("componentXid", xid)
+	}
 	}
 	component := &models.Component{ID: *id}
 	if err = copier.CopyWithOption(component, getComponent.GetComponent, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
@@ -35,7 +36,7 @@ func (dr *DgraphRepository) GetComponents(filter *models.ComponentFilter, order 
 	ctx := context.Background()
 	getComponents, err := dr.client.GetComponents(ctx, filter, order, first, offset)
 	if err != nil {
-		return nil, repository.NewRepoErrorWrap(err, errGetComponentStr)
+		return nil, repository.WrapRepoError(err, errGetComponentStr)
 	}
 	components := make([]*models.Component, 0, len(getComponents.QueryComponent))
 	for _, x := range getComponents.QueryComponent {
@@ -59,7 +60,7 @@ func (dr *DgraphRepository) SaveComponent(component *models.Component) (err erro
 	err = dr.SaveComponents([]*models.Component{component})
 	if aerr, ok := err.(errors.ContextAdder); ok {
 		// enrich error context
-		aerr.AddIfNotNil("componentId", component.ID).AddIfNotNil("componentXid", component.Xid)
+		aerr.Add("componentId", component.ID).Add("componentXid", component.Xid)
 	}
 	return
 }
@@ -73,17 +74,15 @@ func (dr *DgraphRepository) SaveComponents(components []*models.Component) error
 			continue
 		}
 		component := &models.AddComponentInput{}
-		if err := copier.CopyWithOption(component, x,
-			copier.Option{Converters: dr.convertersForSave, DeepCopy: true, IgnoreEmpty: true}); err != nil {
-			return repository.NewRepoErrorWrap(err, errSaveComponentStr).
-				AddIfNotNil("componentId", x.ID).AddIfNotNil("componentXid", x.Xid)
+			return repository.WrapRepoError(err, errSaveComponentStr).
+				Add("componentId", x.ID).Add("componentXid", x.Xid)
 		}
 		reqData = append(reqData, component)
 	}
 	ctx := context.Background()
 	respData, err := dr.client.SaveComponents(ctx, reqData)
 	if err != nil {
-		return repository.NewRepoErrorWrap(err, errSaveComponentStr)
+		return repository.WrapRepoError(err, errSaveComponentStr)
 	}
 	// save ID from response
 	for i, x := range components {
@@ -104,8 +103,8 @@ func (dr *DgraphRepository) DeleteComponent(id, xid *string) error {
 	}
 	_, err := dr.client.DeleteComponent(ctx, delFilter)
 	if err != nil {
-		return repository.NewRepoErrorWrap(err, errDeleteComponentStr).
-			AddIfNotNil("componentId", id).AddIfNotNil("componentXid", xid)
+		return repository.WrapRepoError(err, errDeleteComponentStr).
+			Add("componentId", id).Add("componentXid", xid)
 	}
 	return nil
 }

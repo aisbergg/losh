@@ -120,7 +120,7 @@ func (dr *DgraphRepository) initializeConverters() {
 				for _, x := range srcList {
 					ref, err := dr.saveComponentIfNecessary(x)
 					if err != nil {
-						return nil, repository.NewRepoErrorWrap(err, errSaveComponentStr)
+						return nil, repository.WrapRepoError(err, errSaveComponentStr)
 					}
 					dstList = append(dstList, ref)
 				}
@@ -172,7 +172,7 @@ func (dr *DgraphRepository) initializeConverters() {
 				for _, x := range srcList {
 					ref, err := dr.saveProductIfNecessary(x)
 					if err != nil {
-						return nil, repository.NewRepoErrorWrap(err, errSaveProductStr)
+						return nil, repository.WrapRepoError(err, errSaveProductStr)
 					}
 					dstList = append(dstList, ref)
 				}
@@ -197,8 +197,8 @@ func (dr *DgraphRepository) initializeConverters() {
 				for _, x := range srcList {
 					ref, err := dr.saveUserIfNecessary(x)
 					if err != nil {
-						return nil, repository.NewRepoErrorWrap(err, errSaveUserStr).
-							AddIfNotNil("userId", x.ID).AddIfNotNil("userXid", x.Xid)
+						return nil, repository.WrapRepoError(err, errSaveUserStr).
+							Add("userId", x.ID).Add("userXid", x.Xid)
 					}
 					dstList = append(dstList, ref)
 				}
@@ -223,8 +223,8 @@ func (dr *DgraphRepository) initializeConverters() {
 				for _, x := range srcList {
 					ref, err := dr.saveGroupIfNecessary(x)
 					if err != nil {
-						return nil, repository.NewRepoErrorWrap(err, errSaveGroupStr).
-							AddIfNotNil("groupId", x.ID).AddIfNotNil("groupXid", x.Xid)
+						return nil, repository.WrapRepoError(err, errSaveGroupStr).
+							Add("groupId", x.ID).Add("groupXid", x.Xid)
 					}
 					dstList = append(dstList, ref)
 				}
@@ -251,9 +251,9 @@ func (dr *DgraphRepository) initializeConverters() {
 					if err != nil {
 						switch x.(type) {
 						case *models.User:
-							return nil, repository.NewRepoErrorWrap(err, errSaveUserStr)
+							return nil, repository.WrapRepoError(err, errSaveUserStr)
 						case *models.Group:
-							return nil, repository.NewRepoErrorWrap(err, errSaveGroupStr)
+							return nil, repository.WrapRepoError(err, errSaveGroupStr)
 						}
 						panic(fmt.Errorf("implementation error: unknown UserOrGroup type: %T", x))
 					}

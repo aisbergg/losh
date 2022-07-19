@@ -20,8 +20,9 @@ func (dr *DgraphRepository) GetSoftware(id string) (*models.Software, error) {
 	ctx := context.Background()
 	getSoftware, err := dr.client.GetSoftware(ctx, id)
 	if err != nil {
-		return nil, repository.NewRepoErrorWrap(err, errGetSoftwareStr).
-			AddIfNotNil("softwareId", id)
+		return nil, repository.WrapRepoError(err, errGetSoftwareStr).
+			Add("softwareId", id)
+	}
 	}
 	software := &models.Software{ID: id}
 	if err = copier.CopyWithOption(software, getSoftware.GetSoftware, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
@@ -35,7 +36,7 @@ func (dr *DgraphRepository) GetSoftwares(filter *models.SoftwareFilter, order *m
 	ctx := context.Background()
 	getSoftwares, err := dr.client.GetSoftwares(ctx, filter, order, first, offset)
 	if err != nil {
-		return nil, repository.NewRepoErrorWrap(err, errGetSoftwareStr)
+		return nil, repository.WrapRepoError(err, errGetSoftwareStr)
 	}
 	softwares := make([]*models.Software, 0, len(getSoftwares.QuerySoftware))
 	for _, x := range getSoftwares.QuerySoftware {
@@ -59,7 +60,7 @@ func (dr *DgraphRepository) SaveSoftware(software *models.Software) (err error) 
 	err = dr.SaveSoftwares([]*models.Software{software})
 	if aerr, ok := err.(errors.ContextAdder); ok {
 		// enrich error context
-		aerr.AddIfNotNil("softwareId", software.ID)
+		aerr.Add("softwareId", software.ID)
 	}
 	return
 }
@@ -73,17 +74,15 @@ func (dr *DgraphRepository) SaveSoftwares(softwares []*models.Software) error {
 			continue
 		}
 		software := &models.AddSoftwareInput{}
-		if err := copier.CopyWithOption(software, x,
-			copier.Option{Converters: dr.convertersForSave, DeepCopy: true, IgnoreEmpty: true}); err != nil {
-			return repository.NewRepoErrorWrap(err, errSaveSoftwareStr).
-				AddIfNotNil("softwareId", x.ID)
+			return repository.WrapRepoError(err, errSaveSoftwareStr).
+				Add("softwareId", x.ID)
 		}
 		reqData = append(reqData, software)
 	}
 	ctx := context.Background()
 	respData, err := dr.client.SaveSoftwares(ctx, reqData, []string{})
 	if err != nil {
-		return repository.NewRepoErrorWrap(err, errSaveSoftwareStr)
+		return repository.WrapRepoError(err, errSaveSoftwareStr)
 	}
 	// save ID from response
 	for i, x := range softwares {
@@ -101,8 +100,8 @@ func (dr *DgraphRepository) DeleteSoftware(id *string) error {
 	}
 	_, err := dr.client.DeleteSoftware(ctx, delFilter)
 	if err != nil {
-		return repository.NewRepoErrorWrap(err, errDeleteSoftwareStr).
-			AddIfNotNil("softwareId", id)
+		return repository.WrapRepoError(err, errDeleteSoftwareStr).
+			Add("softwareId", id)
 	}
 	return nil
 }

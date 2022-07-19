@@ -18,8 +18,9 @@ func (dr *DgraphRepository) GetFile(id string) (*models.File, error) {
 	ctx := context.Background()
 	getFile, err := dr.client.GetFile(ctx, id)
 	if err != nil {
-		return nil, repository.NewRepoErrorWrap(err, errGetFileStr).
-			AddIfNotNil("fileId", id)
+		return nil, repository.WrapRepoError(err, errGetFileStr).
+			Add("fileId", id)
+	}
 	}
 	file := &models.File{ID: id}
 	if err = copier.CopyWithOption(file, getFile.GetFile, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
@@ -33,7 +34,7 @@ func (dr *DgraphRepository) GetFiles(filter *models.FileFilter, order *models.Fi
 	ctx := context.Background()
 	getFiles, err := dr.client.GetFiles(ctx, filter, order, first, offset)
 	if err != nil {
-		return nil, repository.NewRepoErrorWrap(err, errGetFileStr)
+		return nil, repository.WrapRepoError(err, errGetFileStr)
 	}
 	files := make([]*models.File, 0, len(getFiles.QueryFile))
 	for _, x := range getFiles.QueryFile {
@@ -57,7 +58,7 @@ func (dr *DgraphRepository) SaveFile(file *models.File) (err error) {
 	err = dr.SaveFiles([]*models.File{file})
 	if aerr, ok := err.(errors.ContextAdder); ok {
 		// enrich error context
-		aerr.AddIfNotNil("fileId", file.ID)
+		aerr.Add("fileId", file.ID)
 	}
 	return
 }
@@ -71,17 +72,15 @@ func (dr *DgraphRepository) SaveFiles(files []*models.File) error {
 			continue
 		}
 		file := &models.AddFileInput{}
-		if err := copier.CopyWithOption(file, x,
-			copier.Option{Converters: dr.convertersForSave, DeepCopy: true, IgnoreEmpty: true}); err != nil {
-			return repository.NewRepoErrorWrap(err, errSaveFileStr).
-				AddIfNotNil("fileId", x.ID)
+			return repository.WrapRepoError(err, errSaveFileStr).
+				Add("fileId", x.ID)
 		}
 		reqData = append(reqData, file)
 	}
 	ctx := context.Background()
 	respData, err := dr.client.SaveFiles(ctx, reqData, []string{})
 	if err != nil {
-		return repository.NewRepoErrorWrap(err, errSaveFileStr)
+		return repository.WrapRepoError(err, errSaveFileStr)
 	}
 	// save ID from response
 	for i, x := range files {
@@ -99,8 +98,8 @@ func (dr *DgraphRepository) DeleteFile(id *string) error {
 	}
 	_, err := dr.client.DeleteFile(ctx, delFilter)
 	if err != nil {
-		return repository.NewRepoErrorWrap(err, errDeleteFileStr).
-			AddIfNotNil("fileId", id)
+		return repository.WrapRepoError(err, errDeleteFileStr).
+			Add("fileId", id)
 	}
 	return nil
 }

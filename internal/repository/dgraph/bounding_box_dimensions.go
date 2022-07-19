@@ -20,8 +20,9 @@ func (dr *DgraphRepository) GetBoundingBoxDimensions(id string) (*models.Boundin
 	ctx := context.Background()
 	getBoundingBoxDimensions, err := dr.client.GetBoundingBoxDimensions(ctx, id)
 	if err != nil {
-		return nil, repository.NewRepoErrorWrap(err, errGetBoundingBoxDimensionsStr).
-			AddIfNotNil("bbdId", id)
+		return nil, repository.WrapRepoError(err, errGetBoundingBoxDimensionsStr).
+			Add("bbdId", id)
+	}
 	}
 	bbd := &models.BoundingBoxDimensions{ID: id}
 	if err = copier.CopyWithOption(bbd, getBoundingBoxDimensions.GetBoundingBoxDimensions, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
@@ -35,7 +36,7 @@ func (dr *DgraphRepository) GetBoundingBoxDimensionss(filter *models.BoundingBox
 	ctx := context.Background()
 	getBoundingBoxDimensionss, err := dr.client.GetBoundingBoxDimensionss(ctx, filter, order, first, offset)
 	if err != nil {
-		return nil, repository.NewRepoErrorWrap(err, errGetBoundingBoxDimensionsStr)
+		return nil, repository.WrapRepoError(err, errGetBoundingBoxDimensionsStr)
 	}
 	bbds := make([]*models.BoundingBoxDimensions, 0, len(getBoundingBoxDimensionss.QueryBoundingBoxDimensions))
 	for _, x := range getBoundingBoxDimensionss.QueryBoundingBoxDimensions {
@@ -59,7 +60,7 @@ func (dr *DgraphRepository) SaveBoundingBoxDimensions(bbd *models.BoundingBoxDim
 	err = dr.SaveBoundingBoxDimensionss([]*models.BoundingBoxDimensions{bbd})
 	if aerr, ok := err.(errors.ContextAdder); ok {
 		// enrich error context
-		aerr.AddIfNotNil("bbdId", bbd.ID)
+		aerr.Add("bbdId", bbd.ID)
 	}
 	return
 }
@@ -73,17 +74,15 @@ func (dr *DgraphRepository) SaveBoundingBoxDimensionss(bbds []*models.BoundingBo
 			continue
 		}
 		bbd := &models.AddBoundingBoxDimensionsInput{}
-		if err := copier.CopyWithOption(bbd, x,
-			copier.Option{Converters: dr.convertersForSave, DeepCopy: true, IgnoreEmpty: true}); err != nil {
-			return repository.NewRepoErrorWrap(err, errSaveBoundingBoxDimensionsStr).
-				AddIfNotNil("bbdId", x.ID)
+			return repository.WrapRepoError(err, errSaveBoundingBoxDimensionsStr).
+				Add("bbdId", x.ID)
 		}
 		reqData = append(reqData, bbd)
 	}
 	ctx := context.Background()
 	respData, err := dr.client.SaveBoundingBoxDimensionss(ctx, reqData, []string{})
 	if err != nil {
-		return repository.NewRepoErrorWrap(err, errSaveBoundingBoxDimensionsStr)
+		return repository.WrapRepoError(err, errSaveBoundingBoxDimensionsStr)
 	}
 	// save ID from response
 	for i, x := range bbds {
@@ -101,8 +100,8 @@ func (dr *DgraphRepository) DeleteBoundingBoxDimensions(id *string) error {
 	}
 	_, err := dr.client.DeleteBoundingBoxDimensions(ctx, delFilter)
 	if err != nil {
-		return repository.NewRepoErrorWrap(err, errDeleteBoundingBoxDimensionsStr).
-			AddIfNotNil("bbdId", id)
+		return repository.WrapRepoError(err, errDeleteBoundingBoxDimensionsStr).
+			Add("bbdId", id)
 	}
 	return nil
 }

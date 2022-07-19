@@ -18,11 +18,12 @@ func (dr *DgraphRepository) GetTag(id, xid *string) (*models.Tag, error) {
 	ctx := context.Background()
 	getTag, err := dr.client.GetTag(ctx, id, xid)
 	if err != nil {
-		return nil, repository.NewRepoErrorWrap(err, errGetTagStr).
-			AddIfNotNil("tagId", id).AddIfNotNil("tagXid", xid)
+		return nil, repository.WrapRepoError(err, errGetTagStr).
+			Add("tagId", id).Add("tagXid", xid)
+	}
 	}
 	tag := &models.Tag{ID: *id}
-	if err = copier.CopyWithOption(tag, getTag.GetTag, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
+	if err = dr.dataCopier.CopyTo(getTag.GetTag, tag); err != nil {
 		panic(err)
 	}
 	return tag, nil
@@ -33,7 +34,7 @@ func (dr *DgraphRepository) GetTags(filter *models.TagFilter, order *models.TagO
 	ctx := context.Background()
 	getTags, err := dr.client.GetTags(ctx, filter, order, first, offset)
 	if err != nil {
-		return nil, repository.NewRepoErrorWrap(err, errGetTagStr)
+		return nil, repository.WrapRepoError(err, errGetTagStr)
 	}
 	tags := make([]*models.Tag, 0, len(getTags.QueryTag))
 	for _, x := range getTags.QueryTag {
@@ -57,7 +58,7 @@ func (dr *DgraphRepository) SaveTag(tag *models.Tag) (err error) {
 	err = dr.SaveTags([]*models.Tag{tag})
 	if aerr, ok := err.(errors.ContextAdder); ok {
 		// enrich error context
-		aerr.AddIfNotNil("tagId", tag.ID).AddIfNotNil("tagXid", tag.Xid)
+		aerr.Add("tagId", tag.ID).Add("tagXid", tag.Xid)
 	}
 	return
 }
@@ -71,17 +72,15 @@ func (dr *DgraphRepository) SaveTags(tags []*models.Tag) error {
 			continue
 		}
 		tag := &models.AddTagInput{}
-		if err := copier.CopyWithOption(tag, x,
-			copier.Option{Converters: dr.convertersForSave, DeepCopy: true, IgnoreEmpty: true}); err != nil {
-			return repository.NewRepoErrorWrap(err, errSaveTagStr).
-				AddIfNotNil("tagId", x.ID).AddIfNotNil("tagXid", x.Xid)
+			return repository.WrapRepoError(err, errSaveTagStr).
+				Add("tagId", x.ID).Add("tagXid", x.Xid)
 		}
 		reqData = append(reqData, tag)
 	}
 	ctx := context.Background()
 	respData, err := dr.client.SaveTags(ctx, reqData)
 	if err != nil {
-		return repository.NewRepoErrorWrap(err, errSaveTagStr)
+		return repository.WrapRepoError(err, errSaveTagStr)
 	}
 	// save ID from response
 	for i, x := range tags {
@@ -102,8 +101,8 @@ func (dr *DgraphRepository) DeleteTag(id, xid *string) error {
 	}
 	_, err := dr.client.DeleteTag(ctx, delFilter)
 	if err != nil {
-		return repository.NewRepoErrorWrap(err, errDeleteTagStr).
-			AddIfNotNil("tagId", id).AddIfNotNil("tagXid", xid)
+		return repository.WrapRepoError(err, errDeleteTagStr).
+			Add("tagId", id).Add("tagXid", xid)
 	}
 	return nil
 }

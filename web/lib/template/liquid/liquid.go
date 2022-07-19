@@ -1,14 +1,14 @@
 package liquid
 
 import (
-	"errors"
-	"fmt"
 	"io"
 	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
 	"sync"
+
+	losherrors "losh/internal/errors"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/utils"
@@ -100,7 +100,7 @@ func (e *Engine) Load() error {
 		// get the relative file path, e.g: ./views/html/index.tmpl -> index.tmpl
 		rel, err := filepath.Rel(e.directory, path)
 		if err != nil {
-			return NewLoadError(path, errors.New("failed make relative file path"), nil)
+			return NewLoadError(path, losherrors.NewAppError("failed make relative file path"), nil)
 		}
 		// reverse slashes '\' -> '/'
 		name := filepath.ToSlash(rel)
@@ -139,7 +139,7 @@ func getLiquidBinding(binding interface{}) (liquid.Bindings, error) {
 				liqBinding[key] = value
 			}
 		default:
-			return liqBinding, errors.New("invalid binding")
+			return liqBinding, losherrors.NewAppError("invalid binding")
 		}
 	}
 	// for capture_global tag
@@ -158,7 +158,7 @@ func (e *Engine) getTemplate(name string) (*liquid.Template, error) {
 	if ok {
 		return tmpl, nil
 	}
-	return nil, fmt.Errorf("template %s does not exist", name)
+	return nil, losherrors.NewAppError("template %s does not exist", name)
 }
 
 // Render will render the template by name

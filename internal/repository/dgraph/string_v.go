@@ -20,8 +20,9 @@ func (dr *DgraphRepository) GetStringV(id string) (*models.StringV, error) {
 	ctx := context.Background()
 	getStringV, err := dr.client.GetStringV(ctx, id)
 	if err != nil {
-		return nil, repository.NewRepoErrorWrap(err, errGetStringVStr).
-			AddIfNotNil("stringVId", id)
+		return nil, repository.WrapRepoError(err, errGetStringVStr).
+			Add("stringVId", id)
+	}
 	}
 	stringV := &models.StringV{ID: id}
 	if err = copier.CopyWithOption(stringV, getStringV.GetStringV, copier.Option{DeepCopy: true, IgnoreEmpty: true}); err != nil {
@@ -35,7 +36,7 @@ func (dr *DgraphRepository) GetStringVs(filter *models.StringVFilter, order *mod
 	ctx := context.Background()
 	getStringVs, err := dr.client.GetStringVs(ctx, filter, order, first, offset)
 	if err != nil {
-		return nil, repository.NewRepoErrorWrap(err, errGetStringVStr)
+		return nil, repository.WrapRepoError(err, errGetStringVStr)
 	}
 	stringVs := make([]*models.StringV, 0, len(getStringVs.QueryStringV))
 	for _, x := range getStringVs.QueryStringV {
@@ -59,7 +60,7 @@ func (dr *DgraphRepository) SaveStringV(stringV *models.StringV) (err error) {
 	err = dr.SaveStringVs([]*models.StringV{stringV})
 	if aerr, ok := err.(errors.ContextAdder); ok {
 		// enrich error context
-		aerr.AddIfNotNil("stringVId", stringV.ID)
+		aerr.Add("stringVId", stringV.ID)
 	}
 	return
 }
@@ -73,17 +74,15 @@ func (dr *DgraphRepository) SaveStringVs(stringVs []*models.StringV) error {
 			continue
 		}
 		stringV := &models.AddStringVInput{}
-		if err := copier.CopyWithOption(stringV, x,
-			copier.Option{Converters: dr.convertersForSave, DeepCopy: true, IgnoreEmpty: true}); err != nil {
-			return repository.NewRepoErrorWrap(err, errSaveStringVStr).
-				AddIfNotNil("stringVId", x.ID)
+			return repository.WrapRepoError(err, errSaveStringVStr).
+				Add("stringVId", x.ID)
 		}
 		reqData = append(reqData, stringV)
 	}
 	ctx := context.Background()
 	respData, err := dr.client.SaveStringVs(ctx, reqData, []string{})
 	if err != nil {
-		return repository.NewRepoErrorWrap(err, errSaveStringVStr)
+		return repository.WrapRepoError(err, errSaveStringVStr)
 	}
 	// save ID from response
 	for i, x := range stringVs {
@@ -101,8 +100,8 @@ func (dr *DgraphRepository) DeleteStringV(id *string) error {
 	}
 	_, err := dr.client.DeleteStringVs(ctx, delFilter)
 	if err != nil {
-		return repository.NewRepoErrorWrap(err, errDeleteStringVStr).
-			AddIfNotNil("stringVId", id)
+		return repository.WrapRepoError(err, errDeleteStringVStr).
+			Add("stringVId", id)
 	}
 	return nil
 }
