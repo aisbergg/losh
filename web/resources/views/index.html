@@ -1,0 +1,26 @@
+<div class="row g-3 align-items-center justify-content-center">
+	<img src="{{ site.base }}/static/img/logo{% if include.dark %}-white{% endif %}.png" alt="{{ site.title }}" class="col-12 w-auto">
+
+	<form name="search" class="col-12" onSubmit="return handleSearch();">
+		<div class="input-group input-group-lg mb-2">
+			<input type="text" name="q" class="form-control" placeholder="Search Product…">
+			{% include ui/button.html element="button" type="submit" icon="search" size="lg" height="lg" icon-only=true color="blue" %}
+		</div>
+	</form>
+
+</div>
+
+<script>
+	function handleSearch(event) {
+		// turn form data into a query string
+		const form = document.forms.search;
+		const formData = new FormData(form);
+		const searchQuery = new URLSearchParams(formData).toString();
+
+		// change target location to search page
+		location = '/search?' + searchQuery;
+
+		// cancel submit event
+		return false;
+	}
+</script>
