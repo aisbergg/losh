@@ -8,7 +8,7 @@ require (
 	github.com/abadojack/whatlanggo v1.0.1
 	github.com/aisbergg/go-copier v0.0.0-20220719150757-87f748b479c0
 	github.com/aisbergg/go-errors v0.0.0-20220713173946-6fef60b496f0
-	github.com/aisbergg/go-pathlib v0.12.1-0.20220717203945-9b2c4f6e078d
+	github.com/aisbergg/go-pathlib v0.12.1-0.20220720080820-6840c871ef28
 	github.com/alecthomas/chroma v0.10.0
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/gofiber/fiber/v2 v2.32.0
@@ -67,7 +67,7 @@ require (
 )
 
 replace (
-	github.com/sethvargo/go-retry => github.com/aisbergg/go-retry v0.2.4-0.20220608144822-87d55adc1c0c
 	github.com/osteele/liquid => github.com/aisbergg/go-liquid v1.3.1-0.20220719205958-08f515a337ef
+	github.com/sethvargo/go-retry => github.com/aisbergg/go-retry v0.2.4-0.20220608144822-87d55adc1c0c
 	github.com/wk8/go-ordered-map => github.com/aisbergg/go-orderedmap v1.0.1-0.20220718132943-bb550a985f23
 )

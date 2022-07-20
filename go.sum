@@ -80,6 +80,8 @@ github.com/aisbergg/go-orderedmap v1.0.1-0.20220718132943-bb550a985f23 h1:B6nXMR
 github.com/aisbergg/go-orderedmap v1.0.1-0.20220718132943-bb550a985f23/go.mod h1:9ZIbRunKbuvfPKyBP1SIKLcXNlv74YCOZ3t3VTS6gRk=
 github.com/aisbergg/go-pathlib v0.12.1-0.20220717203945-9b2c4f6e078d h1:8phTYS+WvDOL5j4SMOsaTCAGxQIYfaAmDRdrkYewW8U=
 github.com/aisbergg/go-pathlib v0.12.1-0.20220717203945-9b2c4f6e078d/go.mod h1:aHd1stGy8mCvDEsGIa6JyvfGA8sFNRzbmZ187+CRFnc=
+github.com/aisbergg/go-pathlib v0.12.1-0.20220720080820-6840c871ef28 h1:4SYvCRb71duaD8II03OBBpUfNFetfFgG+96+F/m1W4Y=
+github.com/aisbergg/go-pathlib v0.12.1-0.20220720080820-6840c871ef28/go.mod h1:aHd1stGy8mCvDEsGIa6JyvfGA8sFNRzbmZ187+CRFnc=
 github.com/aisbergg/go-retry v0.2.4-0.20220608144822-87d55adc1c0c h1:UDSazXm7Z/mspboXZm9CsVtXlyYZWyDiUvyY6hh4G7s=
 github.com/aisbergg/go-retry v0.2.4-0.20220608144822-87d55adc1c0c/go.mod h1:1afjQuvh7s4gflMObvjLPaWgluLLyhA1wmVZ6KLpICw=
 github.com/alecthomas/chroma v0.10.0 h1:7XDcGkCQopCNKjZHfYrNLraA+M7e0fMiJ/Mfikbfjek=
