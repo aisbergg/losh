@@ -1,3 +1,0 @@
-[submodule "lib/vendor/github.com/aisbergg/go-liquid"]
-	path = internal/vendor/github.com/aisbergg/go-liquid
-	url = https://github.com/aisbergg/go-liquid.git
