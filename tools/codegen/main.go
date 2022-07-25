@@ -184,9 +184,9 @@ func generateFile(tplPth, dstPth pathlib.Path, ctx map[string]interface{}, force
 }
 
 var additionalTemplateFuncs = map[string]interface{}{
-	"escapeHtml": escapeHtml,
+	"escapeHTML": escapeHTML,
 }
 
-func escapeHtml(name string) string {
+func escapeHTML(name string) string {
 	return html.EscapeString(name)
 }
