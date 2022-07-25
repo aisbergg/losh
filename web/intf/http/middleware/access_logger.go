@@ -1,10 +1,11 @@
 package middleware
 
 import (
-	"losh/internal/lib/log"
-	"losh/web/core/config"
 	"strconv"
 	"strings"
+
+	"losh/internal/lib/log"
+	"losh/web/core/config"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gookit/event"

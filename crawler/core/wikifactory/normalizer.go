@@ -2,13 +2,14 @@ package wikifactory
 
 import (
 	"fmt"
+	"path/filepath"
+	"strings"
+	"time"
+
 	"losh/crawler/core/wikifactory/wfclient"
 	"losh/internal/core/product/models"
 	"losh/internal/lib/fileformats"
 	"losh/internal/license"
-	"path/filepath"
-	"strings"
-	"time"
 
 	"github.com/abadojack/whatlanggo"
 	"github.com/aisbergg/go-pathlib/pkg/pathlib"

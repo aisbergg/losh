@@ -3,6 +3,7 @@ package download
 import (
 	"errors"
 	"io"
+
 	"losh/internal/lib/unit"
 )
 

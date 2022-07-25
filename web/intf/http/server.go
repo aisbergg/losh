@@ -1,6 +1,9 @@
 package app
 
 import (
+	"strings"
+	"time"
+
 	"losh/internal/infra/dgraph"
 	"losh/internal/lib/log"
 	"losh/web/build/assets"
@@ -9,8 +12,6 @@ import (
 	"losh/web/intf/http/controllers/binding"
 	"losh/web/intf/http/middleware"
 	"losh/web/lib/template/liquid"
-	"strings"
-	"time"
 
 	"github.com/aisbergg/go-errors/pkg/errors"
 	"github.com/gofiber/fiber/v2"

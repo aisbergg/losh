@@ -6,13 +6,14 @@ import (
 	"context"
 	"embed"
 	"encoding/json"
+	"net/http"
+	"strings"
+
 	"losh/internal/core/product/models"
 	"losh/internal/lib/log"
 	"losh/internal/lib/net/download"
 	"losh/internal/lib/net/request"
 	"losh/internal/lib/util/stringutil"
-	"net/http"
-	"strings"
 
 	"github.com/aisbergg/go-errors/pkg/errors"
 	"go.uber.org/zap"

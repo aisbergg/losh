@@ -2,9 +2,10 @@ package request
 
 import (
 	"context"
+	"time"
+
 	losherrors "losh/internal/lib/errors"
 	"losh/internal/lib/net/ratelimit"
-	"time"
 )
 
 // Default values for retry parameters.

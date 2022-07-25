@@ -4,6 +4,7 @@ package licensefile
 
 import (
 	"encoding/json"
+
 	"losh/internal/core/product/models"
 
 	"github.com/aisbergg/go-errors/pkg/errors"

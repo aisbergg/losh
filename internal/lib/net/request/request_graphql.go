@@ -2,8 +2,9 @@ package request
 
 import (
 	"context"
-	"losh/internal/lib/net/ratelimit"
 	"time"
+
+	"losh/internal/lib/net/ratelimit"
 
 	gql "github.com/Yamashou/gqlgenc/clientv2"
 	"github.com/sethvargo/go-retry"

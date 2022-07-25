@@ -2,9 +2,10 @@ package request
 
 import (
 	"context"
-	"losh/internal/lib/net/ratelimit"
 	gourl "net/url"
 	"time"
+
+	"losh/internal/lib/net/ratelimit"
 
 	"github.com/go-resty/resty/v2"
 	"github.com/sethvargo/go-retry"

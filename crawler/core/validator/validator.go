@@ -1,9 +1,9 @@
 package validator
 
 import (
-	"losh/internal/core/product/models"
-	"losh/internal/license"
 	"strings"
+
+	"losh/internal/core/product/models"
 
 	"github.com/gookit/validate"
 	"golang.org/x/text/language"

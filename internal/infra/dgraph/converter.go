@@ -2,6 +2,7 @@ package dgraph
 
 import (
 	"fmt"
+
 	"losh/internal/core/product/models"
 	"losh/internal/repository"
 

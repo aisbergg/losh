@@ -6,11 +6,12 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"losh/internal/lib/unit"
 	"net/http"
 	"os"
 	"strings"
 	"time"
+
+	"losh/internal/lib/unit"
 
 	n "losh/internal/lib/net"
 	"losh/internal/lib/net/request"

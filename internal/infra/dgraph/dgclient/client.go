@@ -4,9 +4,10 @@ package dgclient
 
 import (
 	"context"
+	"time"
+
 	"losh/internal/core/product/models"
 	"losh/internal/lib/net/request"
-	"time"
 )
 
 type DgraphGraphQLClient interface {

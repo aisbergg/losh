@@ -2,9 +2,10 @@ package request
 
 import (
 	"context"
-	"losh/internal/lib/net/ratelimit"
 	"net/http"
 	"time"
+
+	"losh/internal/lib/net/ratelimit"
 
 	"github.com/sethvargo/go-retry"
 	"go.uber.org/zap"

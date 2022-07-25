@@ -4,14 +4,15 @@ import (
 	"context"
 	"crypto/tls"
 	"crypto/x509"
-	"losh/internal/infra/dgraph/dgclient"
-	"losh/internal/lib/net"
-	"losh/internal/lib/net/request"
-	"losh/internal/lib/util/pathutil"
 	"net/http"
 	"strconv"
 	"strings"
 	"time"
+
+	"losh/internal/infra/dgraph/dgclient"
+	"losh/internal/lib/net"
+	"losh/internal/lib/net/request"
+	"losh/internal/lib/util/pathutil"
 
 	"github.com/aisbergg/go-errors/pkg/errors"
 

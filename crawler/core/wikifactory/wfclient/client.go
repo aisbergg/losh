@@ -4,8 +4,9 @@ package wfclient
 
 import (
 	"context"
-	"losh/internal/lib/net/request"
 	"time"
+
+	"losh/internal/lib/net/request"
 )
 
 type WikifactoryGraphQLClient interface {
