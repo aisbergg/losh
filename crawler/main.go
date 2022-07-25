@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"losh/crawler/cmd"
-	"losh/internal/errors"
+	"losh/crawler/intf/cmd"
+	"losh/internal/lib/errors"
 
 	"github.com/gookit/gcli/v3"
 )
@@ -20,6 +20,7 @@ func main() {
 	app.On(gcli.EvtAppRunError, errorHandler)
 
 	// register commands
+	app.Add(cmd.DevCommand)
 	app.Add(cmd.ConfigCommand)
 	app.Add(cmd.ManageCommand)
 

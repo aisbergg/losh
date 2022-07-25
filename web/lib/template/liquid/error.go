@@ -3,7 +3,7 @@ package liquid
 import (
 	"fmt"
 
-	losherrors "losh/internal/errors"
+	"losh/internal/lib/errors"
 
 	"github.com/osteele/liquid"
 )
@@ -17,7 +17,7 @@ type TemplatingError interface {
 }
 
 type templatingError struct {
-	losherrors.AppError
+	errors.AppError
 	filePath string
 	binding  interface{}
 }
@@ -38,7 +38,7 @@ func (e *templatingError) Error() string {
 func NewLoadError(filePath string, cause error, binding interface{}) TemplatingError {
 	err := &loadError{
 		templatingError: templatingError{
-			AppError: *losherrors.NewAppErrorWrap(cause, ""),
+			AppError: *errors.NewAppErrorWrap(cause, ""),
 			filePath: filePath,
 		},
 	}
@@ -58,7 +58,7 @@ func (e *loadError) Error() string {
 func NewRenderError(filePath string, cause error, binding interface{}) TemplatingError {
 	err := &renderError{
 		templatingError: templatingError{
-			AppError: *losherrors.NewAppErrorWrap(cause, ""),
+			AppError: *errors.NewAppErrorWrap(cause, ""),
 			filePath: filePath,
 		},
 	}

@@ -8,7 +8,7 @@ import (
 	"strings"
 	"sync"
 
-	losherrors "losh/internal/errors"
+	losherrors "losh/internal/lib/errors"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/utils"

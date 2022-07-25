@@ -1,0 +1,742 @@
+"""
+Meta data concerning the database itself.
+"""
+type Database implements Node {
+  """
+  The version of the database schema.
+  """
+  version: String!
+}
+
+"""
+An object with an ID.
+"""
+interface Node {
+  """
+  The identifier of the object.
+  """
+  id: ID!
+}
+
+"""
+A set of meta data collected and used by the crawler.
+"""
+interface CrawlerMeta {
+  """
+  The date and time the object was discovered.
+  """
+  discoveredAt: DateTime! @search
+
+  """
+  The date and time the object was last updated.
+  """
+  lastIndexedAt: DateTime! @search
+
+  """
+  The source where the object was discovered.
+  """
+  dataSource: Repository!
+}
+
+"""
+A product is a tangible object with a name, description, website representation and at least one release.
+"""
+type Product implements Node & CrawlerMeta {
+  """
+  The unique human readable identifier of the product in the format: `domain.tld/owner/repo/file-path`. For example:
+	- `github.com/aisbergg/foobar/okh.yml`
+	- `wikifactory.com/aisbergg/foobar/-`
+	- `oshwa.org/-/-/us000000.html`
+	"""
+  xid: String! @id
+
+  """
+  The name of the product.
+  """
+  name: String! @search(by: [hash, fulltext, regexp])
+
+  # TODO: product ID? repository, path....
+
+  """
+  The owner of the product.
+  """
+  owner: UserOrGroup!
+
+  """
+  The short description of the product.
+  """
+  description: String! @search(by: [fulltext, regexp])
+
+  """
+  The product website URL, if any.
+  """
+  website: String @search(by: [hash, fulltext, regexp])
+
+  """
+  The latest version of the product.
+  """
+  version: String! @search
+
+  """
+  The latest release of the product.
+  """
+  release: Component!
+
+  """
+  A list of all releases of the product.
+  """
+  releases: [Component!]! @hasInverse(field: product)
+
+  """
+  The new name of the product. If not set, the product was never renamed.
+  """
+  renamedTo: Product @hasInverse(field: renamedFrom)
+
+  """
+  The previous name of the product. If not set, the product was never renamed.
+  """
+  renamedFrom: Product
+
+  """
+  The original product that this product is based on.
+  """
+  forkOf: Product
+
+  """
+  A list of products that are based on this product.
+  """
+  forks: [Product!]! @hasInverse(field: forkOf)
+
+  """
+  A list of all tags associated with the product.
+  """
+  tags: [Tag!]!
+
+  """
+  The category of the product.
+  """
+  category: Category
+}
+
+"""
+A component is a tangible object that can be a module or a part. It has a name, a description, legal information, documentation and other information and can exist in multiple versions.
+"""
+type Component implements Node & CrawlerMeta {
+	"""
+  The unique human readable identifier of the component in the format: `domain.tld/owner/repo/file-path/component-name/version`. For example:
+	- `github.com/aisbergg/foobar/okh.yml/baz/1.0.0`
+	- `wikifactory.com/aisbergg/foobar/-/baz/1.0.0`
+	- `oshwa.org/-/-/us000000.html/baz/1.0.0`
+	"""
+	xid: String! @id
+
+  """
+  The name of the component.
+  """
+  name: String! @search(by: [hash, fulltext, regexp])
+
+  """
+  The short description of the component.
+  """
+  description: String! @search(by: [fulltext, regexp])
+
+  """
+  The owner of the component.
+  """
+  owner: UserOrGroup!
+
+  """
+  The version string of the release.
+  """
+  version: String! @search
+
+  """
+  The date and time when the release was created.
+  """
+  createdAt: DateTime! @search
+
+  """
+  A list of all releases of the component.
+  """
+  releases: [Component!]! @hasInverse(field: releases)
+
+  """
+  Indicates if this release is the latest release of the component.
+  """
+  isLatest: Boolean! @search
+
+  """
+  The repository that this component is developed in.
+  """
+  repository: Repository!
+
+  """
+  The license used for the component.
+  """
+  license: License!
+
+  """
+  The additional licenses used for the documentation and other assets, if any.
+  """
+  additionalLicenses: [License!]!
+
+  """
+  The license holder of the component.
+  """
+  licensor: UserOrGroup!
+
+  """
+  The language in which the documentation is written.
+  """
+  documentationLanguage: String! @search(by: [hash])
+
+  """
+  The OSH technology readiness level (OTRL) of the component. For information see:
+  https://github.com/OPEN-NEXT/OKH-LOSH/blob/master/OTRL.md
+  """
+  technologyReadinessLevel: TechnologyReadinessLevel
+
+  """
+  The OSH documentation readiness level (ODRL) of the component. For information see:
+  https://github.com/OPEN-NEXT/OKH-LOSH/blob/master/OTRL.md
+  """
+  documentationReadinessLevel: DocumentationReadinessLevel
+
+  """
+  The permanent URL to evidence of compliance (OSHWA, FSF, DIN SPEC 3105).
+  """
+  attestation: String @search(by: [hash])
+
+  """
+  The scientific publication (DOI) in which the component has been peer reviewed.
+  """
+  # TODO: should be a dedicated type
+  publication: String @search(by: [hash])
+
+	# TODO: issues URL
+	issues: String  @search(by: [hash])
+
+  """
+  The technical standard that the component complies with.
+  """
+  compliesWith: TechnicalStandard
+
+  """
+  The international patent classification (IPC) of the component.
+  """
+  # TODO: should be a dedicated type
+  cpcPatentClass: String @search(by: [hash])
+
+  """
+  The identifier for the applying "Technology-specific Documentation Criteria"
+  according to DIN SPEC 3105-1. For example: `3DP`
+  See: https://gitlab.com/OSEGermany/oh-tsdc/-/blob/master/OH-TsDC.md
+  """
+  tsdc: TechnologySpecificDocumentationCriteria
+
+  """
+  A list of sub components.
+  """
+  components: [Component!]! @hasInverse(field: components)
+
+  """
+  A list of software (including firmware) that is reuqired to run and use the component.
+  """
+  software: [Software!]!
+
+  """
+  An image of the component if any is available.
+  """
+  image: File
+
+  """
+  A readme document of the component if any is available.
+  """
+  readme: File
+
+  """
+  A contribution guide document of the component if any is available.
+  """
+  contributionGuide: File
+
+  """
+  A bill of materials document of the component if any is available.
+  """
+  bom: File
+
+  """
+  A manufacturing instructions document of the component if any is available.
+  """
+  manufacturingInstructions: File
+
+  """
+  An user manual document of the component if any is available.
+  """
+  userManual: File
+
+  """
+  The product this component belongs to.
+  """
+  product: Product!
+
+  """
+  A list of components that use this component.
+  """
+  usedIn: [Component!]!
+
+  """
+  The source file that makes the component.
+  """
+  source: File
+
+  """
+  A list of files exported from the source file.
+  """
+  export: [File!]!
+
+  """
+  A list of auxiliary files.
+  """
+  auxiliary: [File!]!
+
+  # TODO: needed? Represented as UserOrGroup?
+  organization: Group
+
+  """
+  The mass of the component.
+  """
+  mass: Float @search
+
+  """
+  The outer dimensions of the component.
+  """
+  outerDimensions: OuterDimensions
+
+  """
+  The material the part is made of. Components do not have a material.
+  """
+  material: Material
+
+  """
+  The process used to produce the component.
+  """
+  manufacturingProcess: ManufacturingProcess
+
+  """
+  A list of additional production metadata such as tolerances, surface roughness, etc.
+  """
+  productionMetadata: [KeyValue!]!
+}
+
+# TODO: needs to be defined
+type Software implements Node & CrawlerMeta {
+  release: String
+  installationGuide: File
+  documentationLanguage: String
+  license: License
+  licensor: String
+}
+
+type Repository implements Node {
+  """
+  The human readable identifier of the object.
+  """
+  xid: String! @id @search(by: [hash])
+
+  """
+  The repository URL where the component was discoverd from or is developed in.
+  """
+  url: String!
+
+	"""
+  The URL to specific release version of the component.
+  """
+  permaUrl: String!
+
+  """
+  The host platform of the repository.
+  """
+  host: Host!
+
+  """
+  The owner (user or group) of the repository.
+  """
+  owner: UserOrGroup
+
+  """
+  The name of the repository.
+  """
+  name: String @search(by: [hash, fulltext, regexp])
+
+  """
+  The tag of the repository, if any. (might be a Git tag or branch name)
+  """
+  tag: String
+
+  """
+  The path of the manifest file or other resource inside the repository, if any.
+  """
+  path: String
+}
+
+"""
+A host is a platform that is accessible over the network.
+"""
+type Host implements Node {
+	"""
+  The domain name of the host.
+  """
+  domain: String! @id @search(by: [hash, regexp])
+
+	"""
+  The nice name of the host.
+  """
+  name: String! @search(by: [hash, term, regexp])
+}
+
+"""
+A license is a legal document that is used to protect the rights of a product.
+"""
+type License implements Node {
+  """
+  The human readable ID of the license. If the license is a SPDX license, the ID is the SPDX ID.
+  """
+  xid: String! @id @search(by: [hash])
+
+  """
+  The full name of the license.
+  """
+  name: String! @search(by: [fulltext, regexp])
+
+  """
+  The full text of the license.
+  """
+  text: String
+
+  """
+  The full text of the license formatted as HTML.
+  """
+  textHTML: String
+
+  """
+  The reference URL of the license with more information.
+  """
+  referenceURL: String
+
+  """
+  The details URL of the license with information in machine readable format.
+  """
+  detailsURL: String
+
+  """
+  The type (strength) of the license.
+  """
+  type: LicenseType!
+
+  """
+  Indicates if the license is a standard license.
+  """
+  isSpdx: Boolean! @search
+
+  """
+  Indicates if the license identifier is deprecated in favor of another license identifier and should no longer be used.
+  """
+  isDeprecated: Boolean! @search
+
+  """
+  Indicates if the license is OSI approved.
+  """
+  isOsiApproved: Boolean! @search
+
+  """
+  Indicates if the license is FSF approved.
+  """
+  isFsfLibre: Boolean! @search
+
+  """
+  Indicates if the license is considered a LOSH unapproved license.
+  """
+  isBlocked: Boolean! @search
+}
+
+"""
+The types (strength) of a licenses.
+"""
+enum LicenseType {
+  UNKNOWN
+  STRONG
+  WEAK
+  PERMISSIVE
+}
+
+"""
+The technology readiness levels of components.
+"""
+enum TechnologyReadinessLevel {
+  OTRL_1
+  OTRL_2
+  OTRL_3
+  OTRL_4
+  OTRL_5
+}
+
+"""
+The documentation readiness levels of components.
+"""
+enum DocumentationReadinessLevel {
+  ODRL_1
+  ODRL_2
+  ODRL_3
+  ODRL_4
+  ODRL_5
+}
+
+"""
+The technology specific documentation criteria (TSDC) specifies the requirements for the technical documentation
+of Open Source Hardware (OSH). See: https://gitlab.com/OSEGermany/oh-tsdc/-/blob/master/README.md
+"""
+type TechnologySpecificDocumentationCriteria implements Node {
+	"""
+  The human readable identifier of the standard (lowercased name). For example: "mec".
+  """
+  xid: String! @id @search(by: [hash])
+
+  """
+  The nice name of the criteria. For example: "MEC".
+  """
+  name: String! @search(by: [term, regexp])
+
+  """
+  An optional comment for the criteria.
+  """
+  comment: String
+
+  """
+  The URI to a document stating the corresponding requirements.
+  """
+  requirementsUri: String
+
+  """
+  A list of components that meet the criteria.
+  """
+  components: [Component!]! @hasInverse(field: tsdc)
+}
+
+"""
+The technical standard used to create a component. For example: "ISO/IEC", "DIN", etc.
+"""
+type TechnicalStandard implements Node {
+	"""
+  The human readable identifier of the standard (lowercased name). For example: "din en 1335".
+  """
+  xid: String! @id @search(by: [hash])
+
+  """
+  The name of the standard. For example: "DIN EN 1335".
+  """
+  name: String! @search(by: [fulltext, regexp])
+
+  """
+  The description for the standard.
+  """
+  description: String
+
+  """
+  A list of components that meet the standard.
+  """
+  components: [Component!]! @hasInverse(field: compliesWith)
+}
+
+interface UserOrGroup {
+	"""
+  ID of the object.
+  """
+  id: ID!
+
+	"""
+  The unique human readable identifier of the owner. For example: `github.com/aisbergg`
+	"""
+  xid: String! @id(interface: true) @search(by: [hash]) # shall be unique across all implementing
+  host: Host!
+  name: String! @search(by: [hash])
+  email: String
+  avatar: File
+  url: String
+  memberOf: [Group!]!
+  products: [Product!] @hasInverse(field: owner)
+}
+
+type Group implements Node & UserOrGroup {
+  members: [UserOrGroup!]!
+}
+
+type User implements Node & UserOrGroup {
+  fullName: String
+  locale: String
+}
+
+type File implements Node & CrawlerMeta {
+	"""
+	The name of the file (without parent path).
+	"""
+  name: String! @search(by: [hash, fulltext, regexp])
+
+	"""
+	The path of the file within the repository.
+	"""
+  path: String! @search(by: [hash, fulltext, regexp])
+
+	"""
+	The mimetype of the file.
+	"""
+	mimeType: String @search(by: [hash])
+
+	"""
+	The download URL of the file.
+	"""
+	url: String!
+
+  """
+  The date and time when the file was created.
+  """
+  createdAt: DateTime @search
+}
+
+
+
+# ------------------------------------------------------------------------------
+# Production Metadata
+# ------------------------------------------------------------------------------
+
+type KeyValue implements Node {
+  key: String
+  value: StringOrFloat
+}
+
+union StringOrFloat = StringV | FloatV
+
+type StringV implements Node {
+  value: String
+}
+
+type FloatV implements Node {
+  value: Float
+}
+
+
+# TODO: needs to be defined
+type Material implements Node {
+  """
+  The name of the material.
+  """
+  name: String! @search(by: [fulltext])
+
+  """
+  The description of the material.
+  """
+  description: String
+}
+
+# TODO: needs to be defined
+type ManufacturingProcess implements Node {
+  """
+  The name of the manufacturing process.
+  """
+  name: String! @search(by: [fulltext, regexp])
+
+  """
+  The description of the manufacturing process.
+  """
+  description: String
+}
+
+union OuterDimensions = BoundingBoxDimensions | OpenSCADDimensions
+
+"""
+A type of dimension in form of a box. Unit: m
+"""
+type BoundingBoxDimensions implements Node {
+  height: Float
+  width: Float
+  depth: Float
+}
+
+"""
+A type of dimension in form of a box. Unit: m
+"""
+type OpenSCADDimensions implements Node {
+  openscad: String
+  unit: String
+}
+
+
+
+# ------------------------------------------------------------------------------
+# Categorization
+# ------------------------------------------------------------------------------
+
+"""
+A category is a classification of products.
+"""
+type Category implements Node {
+	"""
+  The human readable identifier of the category (lowercased fullName). For example: `hardware/cpu`
+  """
+  xid: String! @id @search(by: [hash])
+
+	"""
+  Full name of the category including the names of all parent categories. For example: `Hardware/CPU`.
+  """
+  fullName: String! @search(by: [fulltext, regexp])
+
+  """
+  Name of this category. For example: `CPU`.
+  """
+  name: String! @search(by: [fulltext, regexp])
+
+  """
+  A short description of the category.
+  """
+  description: String!
+
+  """
+  The parent category of this category.
+  """
+  parent: Category
+
+  """
+  List of all subcategories of this category.
+  """
+  children: [Category!]! @hasInverse(field: parent)
+
+  """
+  List of all products, that are categorized under this category.
+  """
+  products: [Product!]! @hasInverse(field: category)
+}
+
+
+"""
+A tag is a keyword or fulltext used to describe a product.
+"""
+type Tag implements Node {
+	"""
+  The human readable identifier of the tag.
+  """
+  xid: String! @id @search(by: [hash])
+
+  """
+  The name of the tag.
+  """
+  name: String! @search(by: [fulltext, regexp])
+
+  """
+  List of alliases of the tag.
+  """
+  aliases: [Tag!]! @hasInverse(field: aliases)
+
+  """
+  List of related tags.
+  """
+  related: [Tag!]! @hasInverse(field: related)
+}

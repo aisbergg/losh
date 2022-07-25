@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"losh/internal/errors"
-	"losh/web/cmd"
+	"losh/internal/lib/errors"
+	"losh/web/intf/cmd"
 
 	"github.com/gookit/gcli/v3"
 )

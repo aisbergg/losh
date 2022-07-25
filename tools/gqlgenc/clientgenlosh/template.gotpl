@@ -10,7 +10,7 @@
 	{{ reserveImport "path" }}
 	{{ reserveImport "time" }}
 
-	{{ reserveImport "losh/internal/net/request" }}
+	{{ reserveImport "losh/internal/lib/net/request" }}
 
 	{{ reserveImport "github.com/Yamashou/gqlgenc/graphqljson" }}
 

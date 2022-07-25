@@ -1,0 +1,157 @@
+fragment FileFragment on File {
+	filename
+	path
+	mimeType
+	url
+	permalink
+	dateCreated
+	lastUpdated
+	license
+}
+
+fragment ContributionFragment on Contribution {
+	title # like commit message
+	dateCreated
+	version
+	files {
+		dirname
+		file {
+			...FileFragment
+		}
+	}
+}
+
+# ProjectMandatoryFragment represents a set of mandatory project information.
+fragment ProjectMandatoryFragment on Project {
+	id
+	name
+	description
+	creator {
+		profile {
+			username
+		}
+	}
+	license {
+		abreviation # spelled wrong, but it is in the schema
+	}
+	contribution { # latest version
+		version
+	}
+}
+
+# ProjectFullFragment represents a full set of project information.
+fragment ProjectFullFragment on Project {
+	id
+	name
+	description
+	dateCreated
+	lastUpdated
+	followersCount
+	starCount
+	forkCount
+	creator {
+		id
+		profile {
+			fullName
+			username
+			email
+			locale
+			avatar {
+				...FileFragment
+			}
+		}
+	}
+	image {
+		...FileFragment
+	}
+	license {
+		abreviation # spelled wrong, but it is in the schema
+	}
+	contributions { # latest version
+		edges {
+			node {
+				...ContributionFragment
+			}
+		}
+	}
+	contributors {
+		edges {
+			node {
+				fullName
+				username
+				email
+			}
+		}
+	}
+	forkedFrom {
+		project {
+			parentSlug
+			slug
+		}
+	}
+	slug
+	parentSlug
+	parentContent {
+		type  # used to determine, if owner is an organization
+		title # nice name of organization
+	}
+}
+
+fragment PageInfoFragment on PageInfo {
+	hasNextPage
+	hasPreviousPage
+	startCursor
+	endCursor
+}
+
+# QueryProjects returns a batch Wikifactory projects with only mandatory information.
+query QueryProjects($batchSize: Int, $cursor: String) {
+	projects(first: $batchSize, after: $cursor) {
+		result {
+			pageInfo {
+				...PageInfoFragment
+			}
+			edges {
+				node {
+					...ProjectMandatoryFragment
+				}
+			}
+		}
+	}
+}
+
+# GetFullProjectByID returns a Wikifactory project with full information.
+query GetFullProjectByID($id: ID) {
+	project(id: $id) {
+		result {
+			...ProjectFullFragment
+		}
+	}
+}
+
+# GetFullProjectBySlug returns a Wikifactory project with full information.
+query GetFullProjectBySlug($space: String, $slug: String) {
+	project(space: $space, slug: $slug) {
+		result {
+			...ProjectFullFragment
+		}
+	}
+}
+
+# GetMandatoryProjectByID returns a Wikifactory project with mandatory information.
+query GetMandatoryProjectByID($id: ID) {
+	project(id: $id) {
+		result {
+			...ProjectMandatoryFragment
+		}
+	}
+}
+
+# GetMandatoryProjectBySlug returns a Wikifactory project with mandatory information.
+query GetMandatoryProjectBySlug($space: String, $slug: String) {
+	project(space: $space, slug: $slug) {
+		result {
+			...ProjectMandatoryFragment
+		}
+	}
+}
