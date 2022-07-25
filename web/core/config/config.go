@@ -1,9 +1,10 @@
 package config
 
 import (
+	"time"
+
 	"losh/internal/infra/dgraph"
 	"losh/internal/lib/log"
-	"time"
 )
 
 type Config struct {

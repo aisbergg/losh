@@ -4,25 +4,23 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
-	"strings"
 	"syscall"
 
 	"github.com/aisbergg/go-errors/pkg/errors"
-	"github.com/aisbergg/go-pathlib/pkg/pathlib"
 	"github.com/gookit/event"
 	"github.com/gookit/gcli/v3"
 
-	"losh/internal/logging"
-	"losh/internal/repository/dgraph"
-	"losh/internal/util/configutil"
-	loshapp "losh/web/app"
-	"losh/web/config"
+	"losh/internal/infra/dgraph"
+	"losh/internal/lib/log"
+	"losh/web/core/config"
+	loshapp "losh/web/intf/http"
 )
 
 var runOptions = struct {
 	Path string
 }{}
 
+// RunCommand is the CLI command to run the web application.
 var RunCommand = &gcli.Command{
 	Name: "run",
 	Desc: "Run the application",
@@ -31,29 +29,28 @@ var RunCommand = &gcli.Command{
 	},
 	Func: func(cmd *gcli.Command, args []string) error {
 		// configuration
-		path := pathlib.NewPath(strings.TrimSpace(configShowOptions.Path))
-		config := config.DefaultConfig()
-		err := configutil.Load(path, &config)
+		cfgSvc := config.NewService(configInitOptions.Output)
+		cfg, err := cfgSvc.Get()
 		if err != nil {
 			return errors.Wrap(err, "failed to load configuration")
 		}
 
 		// logging
-		err = logging.Initialize(config.Log)
+		err = log.Initialize(cfg.Log)
 		if err != nil {
 			return errors.Wrap(err, "failed to initialize logging")
 		}
 		// flush logs and close log file after server shutdown
 		event.On("server.stop", event.ListenerFunc(func(e event.Event) error {
-			return logging.Close()
+			return log.Close()
 		}))
 		// rotate logs on usr1 signal
 		event.On("signal.us1", event.ListenerFunc(func(e event.Event) error {
-			return logging.RotateLogFile()
+			return log.RotateLogFile()
 		}))
 
 		// database
-		db, err := dgraph.NewDgraphRepository(config.Database)
+		db, err := dgraph.NewDgraphRepository(cfg.Database)
 		if err != nil {
 			return errors.Wrap(err, "failed to initialize Dgraph database connection")
 		}
@@ -65,7 +62,7 @@ var RunCommand = &gcli.Command{
 		if err, _ = event.Fire("server.initialize", nil); err != nil {
 			return err
 		}
-		server, err := loshapp.NewServer(&config, db)
+		server, err := loshapp.NewServer(&cfg, db)
 		if err != nil {
 			return errors.Wrap(err, "failed to initialize server")
 		}
@@ -96,15 +93,15 @@ var RunCommand = &gcli.Command{
 		}()
 
 		// start listening on the specified address
-		listenOn := fmt.Sprintf("%s:%d", config.Server.Interface, config.Server.Port)
+		listenOn := fmt.Sprintf("%s:%d", cfg.Server.Interface, cfg.Server.Port)
 
 		if err := server.Listen(listenOn); err != nil {
 			shutdownErr = server.Shutdown()
-			logging.Close()
+			log.Close()
 			return err
 		}
 
-		err = logging.Close()
+		err = log.Close()
 		if shutdownErr != nil {
 			return errors.Wrap(err, "failed to shutdown server")
 		}

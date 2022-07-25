@@ -3,7 +3,8 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"losh/crawler/wikifactory"
+
+	"losh/crawler/core/wikifactory"
 	"losh/internal/core/product/models"
 	"losh/internal/license"
 
@@ -11,6 +12,8 @@ import (
 	"github.com/gookit/gcli/v3"
 )
 
+// DevCrawlProductCommand is the CLI command to crawl a bunch of products by
+// URL.
 var DevCrawlProductCommand = &gcli.Command{
 	Name: "crawl-product",
 	Desc: "Crawl a product from a given URL",

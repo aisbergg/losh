@@ -3,9 +3,10 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
+	"time"
+
 	"losh/internal/core/product/models"
 	"losh/internal/license"
-	"time"
 
 	"github.com/aisbergg/go-copier/pkg/copier"
 	"github.com/aisbergg/go-errors/pkg/errors"

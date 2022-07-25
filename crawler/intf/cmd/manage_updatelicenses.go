@@ -1,12 +1,13 @@
 package cmd
 
 import (
-	"losh/internal/provider/spdxorg"
+	"losh/internal/infra/spdxorg"
 
 	"github.com/aisbergg/go-errors/pkg/errors"
 	"github.com/gookit/gcli/v3"
 )
 
+// ManageUpdateLicensesCommand is the CLI command to update the licenses.
 var ManageUpdateLicensesCommand = &gcli.Command{
 	Name: "update-licenses",
 	Desc: "Download SPDX licenses and update the license database entries",
