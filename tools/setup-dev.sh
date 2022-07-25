@@ -16,6 +16,7 @@ go mod download
 
 # build custom GraphQL client generator
 go build -o ../bin/tools/gqlgenc ./gqlgenc/main.go
+go build -o ../bin/tools/codegen ./codegen/main.go
 
 # build dev tools
 export GOBIN"=$bin_dir"
