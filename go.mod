@@ -6,7 +6,7 @@ require (
 	github.com/99designs/gqlgen v0.17.2
 	github.com/Yamashou/gqlgenc v0.0.6
 	github.com/abadojack/whatlanggo v1.0.1
-	github.com/aisbergg/go-copier v0.0.0-20220719150757-87f748b479c0
+	github.com/aisbergg/go-copier v0.0.0-20220721165003-f7c0105f4fb8
 	github.com/aisbergg/go-errors v0.0.0-20220713173946-6fef60b496f0
 	github.com/aisbergg/go-pathlib v0.12.1-0.20220720080820-6840c871ef28
 	github.com/alecthomas/chroma v0.10.0
