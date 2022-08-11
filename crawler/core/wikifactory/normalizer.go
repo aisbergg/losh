@@ -485,7 +485,10 @@ func (wn *WikifactoryNormalizer) getSubComponents(files []*models.File, wfProjec
 }
 
 // stripHTMLTags removes HTML tags from the given string.
-func stripHTMLTags(html string) string {
+func stripHTMLTags(h string) string {
 	p := bluemonday.StrictPolicy()
-	return p.Sanitize(html)
+	h = p.Sanitize(h)
+	h = html.UnescapeString(h)
+	return h
+}
 }
