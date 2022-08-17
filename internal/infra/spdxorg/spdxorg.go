@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"losh/internal/core/product/models"
+	"losh/internal/infra/dgraph/dgclient"
 	"losh/internal/lib/log"
 	"losh/internal/lib/net/download"
 	"losh/internal/lib/net/request"
@@ -69,19 +70,19 @@ func NewSpdxOrgProvider(userAgent string) *SpdxOrgProvider {
 }
 
 // GetLicense returns the license with the given id.
-func (p *SpdxOrgProvider) GetLicense(_, spdxID *string) (*models.License, error) {
+func (p *SpdxOrgProvider) GetLicense(ctx context.Context, _, spdxID *string) (*models.License, error) {
 	p.log.Debug("downloading base license information")
-	licenses, err := p.getBaseLicenses()
+	licenses, err := p.getBaseLicenses(ctx)
 	if err != nil {
 		return nil, err
 	}
 
 	for _, l := range licenses {
-		if l.Xid == *spdxID {
+		if l.Xid == spdxID {
 			if l.DetailsURL != nil && *l.DetailsURL == "" {
 				return l, nil
 			}
-			text, textHTML, err := p.getLicenseText(*l.DetailsURL)
+			text, textHTML, err := p.getLicenseText(ctx, *l.DetailsURL)
 			if err != nil {
 				return nil, errors.Wrapf(err, "failed to get license text for %s", l.Xid)
 			}
@@ -96,9 +97,9 @@ func (p *SpdxOrgProvider) GetLicense(_, spdxID *string) (*models.License, error)
 }
 
 // GetAllLicenses returns a list of all licenses
-func (p *SpdxOrgProvider) GetAllLicenses() ([]*models.License, error) {
+func (p *SpdxOrgProvider) GetAllLicenses(ctx context.Context) ([]*models.License, error) {
 	p.log.Debug("downloading base license information")
-	incompleteLicenses, err := p.getBaseLicenses()
+	incompleteLicenses, err := p.getBaseLicenses(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -110,7 +111,7 @@ func (p *SpdxOrgProvider) GetAllLicenses() ([]*models.License, error) {
 			continue
 		}
 		p.log.Debugw("downloading license text", "spdxId", l.Xid)
-		text, textHTML, err := p.getLicenseText(*l.DetailsURL)
+		text, textHTML, err := p.getLicenseText(ctx, *l.DetailsURL)
 		if err != nil {
 			p.log.Errorw("failed to get license text", "spdxId", l.Xid)
 			continue
@@ -124,13 +125,12 @@ func (p *SpdxOrgProvider) GetAllLicenses() ([]*models.License, error) {
 }
 
 // getLicenseText returns the license text for the given url.
-func (p *SpdxOrgProvider) getLicenseText(url string) (text string, textHTML string, err error) {
+func (p *SpdxOrgProvider) getLicenseText(ctx context.Context, url string) (text string, textHTML string, err error) {
 	if url == "" {
 		return "", "", nil
 	}
 
 	// download the license details file
-	ctx := context.Background()
 	detailsContent, err := p.dowloader.DownloadContent(ctx, url)
 	if err != nil {
 		return "", "", errors.Wrap(err, "failed to download")
@@ -147,9 +147,8 @@ func (p *SpdxOrgProvider) getLicenseText(url string) (text string, textHTML stri
 }
 
 // getLicenses returns a list of all licenses without license text.
-func (p *SpdxOrgProvider) getBaseLicenses() ([]*models.License, error) {
+func (p *SpdxOrgProvider) getBaseLicenses(ctx context.Context) ([]*models.License, error) {
 	// download the license list
-	ctx := context.Background()
 	lcnt, err := p.dowloader.DownloadContent(ctx, p.licensesURL)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to download license list")
@@ -162,18 +161,20 @@ func (p *SpdxOrgProvider) getBaseLicenses() ([]*models.License, error) {
 		return nil, errors.Wrap(err, "failed to parse license file")
 	}
 	licenses := make([]*models.License, 0, len(licenseFile.Licenses))
+	isSPDX := true
+	lt := dgclient.LicenseTypeUnknown
 	for i := 0; i < len(licenseFile.Licenses); i++ {
 		l := licenseFile.Licenses[i]
 		licenses = append(licenses, &models.License{
-			Xid:           l.LicenseID,
-			Name:          l.Name,
+			Xid:           &l.LicenseID,
+			Name:          &l.Name,
 			ReferenceURL:  &l.Reference,
 			DetailsURL:    &l.DetailsURL,
-			IsSpdx:        true,
-			IsDeprecated:  l.IsDeprecatedLicenseID,
-			IsOsiApproved: l.IsOSIApproved,
-			IsFsfLibre:    l.IsFSFLibre,
-			Type:          models.LicenseTypeUnknown,
+			IsSpdx:        &isSPDX,
+			IsDeprecated:  &l.IsDeprecatedLicenseID,
+			IsOsiApproved: &l.IsOSIApproved,
+			IsFsfLibre:    &l.IsFSFLibre,
+			Type:          &lt,
 		})
 	}
 
@@ -190,15 +191,16 @@ func (p *SpdxOrgProvider) getBaseLicenses() ([]*models.License, error) {
 	licensesMap := make(map[string]*models.License, len(licenseExtraFile.Licenses))
 	for i := 0; i < len(licenses); i++ {
 		// copy ptr of license into map
-		licensesMap[licenses[i].Xid] = licenses[i]
+		licensesMap[*licenses[i].Xid] = licenses[i]
 	}
 	for _, lraw := range licenseExtraFile.Licenses {
 		l, ok := licensesMap[lraw.LicenseID]
 		if !ok {
 			continue
 		}
-		l.IsBlocked = lraw.IsBlocked
-		l.Type = models.AsLicenseType(lraw.Type)
+		l.IsBlocked = &lraw.IsBlocked
+		lt := models.AsLicenseType(lraw.Type)
+		l.Type = &lt
 	}
 
 	return licenses, nil

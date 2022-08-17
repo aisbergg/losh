@@ -3,6 +3,7 @@
 package licensefile
 
 import (
+	"context"
 	"encoding/json"
 
 	"losh/internal/core/product/models"
@@ -24,13 +25,13 @@ func NewFileRepository(path pathlib.Path) *FileRepository {
 }
 
 // GetLicense returns a license by its ID.
-func (fr *FileRepository) GetLicense(id string) (*models.License, error) {
-	licenses, err := fr.GetAllLicenses()
+func (fr *FileRepository) GetLicense(ctx context.Context, id string) (*models.License, error) {
+	licenses, err := fr.GetAllLicenses(ctx)
 	if err != nil {
 		return nil, err
 	}
 	for _, l := range licenses {
-		if l.Xid == id {
+		if l.Xid == &id {
 			return l, nil
 		}
 	}
@@ -38,7 +39,7 @@ func (fr *FileRepository) GetLicense(id string) (*models.License, error) {
 }
 
 // GetAllLicenses returns a list of all licenses
-func (fr *FileRepository) GetAllLicenses() ([]*models.License, error) {
+func (fr *FileRepository) GetAllLicenses(ctx context.Context) ([]*models.License, error) {
 	content, err := readFile(fr.Path)
 	if err != nil {
 		return nil, err
@@ -51,15 +52,16 @@ func (fr *FileRepository) GetAllLicenses() ([]*models.License, error) {
 
 	// remove Dgraph ID and normalize license type
 	for _, l := range licenses {
-		l.ID = ""
-		l.Type = models.AsLicenseType(string(l.Type))
+		l.ID = nil
+		lt := models.AsLicenseType(string(*l.Type))
+		l.Type = &lt
 	}
 
 	return licenses, nil
 }
 
 // SaveLicenses writes the licenses to the file.
-func (fr *FileRepository) SaveLicenses(licenses []*models.License) error {
+func (fr *FileRepository) SaveLicenses(ctx context.Context, licenses []*models.License) error {
 	b, err := json.Marshal(licenses)
 	if err != nil {
 		return errors.Wrap(err, "failed to marshal licenses")
@@ -67,7 +69,7 @@ func (fr *FileRepository) SaveLicenses(licenses []*models.License) error {
 
 	// remove Dgraph ID
 	for _, l := range licenses {
-		l.ID = ""
+		l.ID = nil
 	}
 
 	err = saveFile(fr.Path, b)
@@ -78,22 +80,22 @@ func (fr *FileRepository) SaveLicenses(licenses []*models.License) error {
 }
 
 // DeleteLicense implements the Repository interface.
-func (fr *FileRepository) DeleteLicense(id string) error {
-	licenses, err := fr.GetAllLicenses()
+func (fr *FileRepository) DeleteLicense(ctx context.Context, id string) error {
+	licenses, err := fr.GetAllLicenses(ctx)
 	if err != nil {
 		return err
 	}
 	for i, l := range licenses {
-		if l.Xid == id {
+		if l.Xid == &id {
 			licenses = append(licenses[:i], licenses[i+1:]...)
 			break
 		}
 	}
-	return fr.SaveLicenses(licenses)
+	return fr.SaveLicenses(ctx, licenses)
 }
 
 // DeleteAllLicenses implements the Repository interface.
-func (fr *FileRepository) DeleteAllLicenses() error {
+func (fr *FileRepository) DeleteAllLicenses(ctx context.Context) error {
 	return saveFile(fr.Path, []byte("{}"))
 }
 
