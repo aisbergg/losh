@@ -1,25 +1,27 @@
 package controllers
 
 import (
-	"regexp"
-	"strings"
+	"context"
+	"time"
 
 	"losh/internal/core/product/models"
-	"losh/internal/infra/dgraph"
+	"losh/internal/core/product/services"
 	"losh/web/intf/http/controllers/binding"
 
 	"github.com/gofiber/fiber/v2"
 )
 
+var dbTimeout = 30 * time.Second
+
 // DetailsController is the controller for the resource details page at '/details/:id'.
 type DetailsController struct {
-	db        *dgraph.DgraphRepository
+	prdSvc    *services.Service
 	tplBndPrv binding.TemplateBindingProvider
 }
 
 // NewDetailsController creates a new DetailsController.
-func NewDetailsController(db *dgraph.DgraphRepository, tplBndPrv binding.TemplateBindingProvider) DetailsController {
-	return DetailsController{db, tplBndPrv}
+func NewDetailsController(prdSvc *services.Service, tplBndPrv binding.TemplateBindingProvider) DetailsController {
+	return DetailsController{prdSvc, tplBndPrv}
 }
 
 // Register registers the controller with the given router.
@@ -30,7 +32,7 @@ func (c DetailsController) Register(router fiber.Router) {
 // Handle handles the request for the resource details page.
 func (c DetailsController) Handle(ctx *fiber.Ctx) error {
 	// parse request info including params
-	reqInfo := parseRequestInfo(ctx, parseParamNoop, c.parseParams)
+	reqInfo := parseRequestInfo(ctx, nil, c.parseParams)
 
 	// return 404 if params are invalid
 	params := reqInfo.Params.(DetailsParams)
@@ -39,7 +41,9 @@ func (c DetailsController) Handle(ctx *fiber.Ctx) error {
 	}
 
 	// retrieve the resource with given ID from the database
-	data, err := c.db.GetNode(params.ID)
+	svcCtx, cancel := context.WithTimeout(ctx.Context(), dbTimeout)
+	defer cancel()
+	data, err := c.prdSvc.GetNode(svcCtx, params.ID)
 	if err != nil {
 		return newControllerError(err, reqInfo, "failed to render details page")
 	}
@@ -84,16 +88,11 @@ func (c DetailsController) Handle(ctx *fiber.Ctx) error {
 	return nil
 }
 
-var idPattern = regexp.MustCompile(`^[a-z0-9]{1,16}$`)
-
 func (DetailsController) parseParams(ctx *fiber.Ctx) interface{} {
 	params := DetailsParams{}
 
 	// parse and check ID param
-	rawID := strings.ToLower(strings.TrimSpace(ctx.Params("id")))
-	if idPattern.MatchString(rawID) {
-		params.ID = "0x" + rawID
-	}
+	params.ID = parseHexID(ctx.Params("id"))
 
 	return params
 }

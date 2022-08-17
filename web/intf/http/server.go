@@ -4,6 +4,7 @@ import (
 	"strings"
 	"time"
 
+	"losh/internal/core/product/services"
 	"losh/internal/infra/dgraph"
 	"losh/internal/lib/log"
 	"losh/web/build/assets"
@@ -37,6 +38,7 @@ type Server struct {
 	*fiber.App
 	config    *config.Config
 	db        *dgraph.DgraphRepository
+	prdSvc    *services.Service
 	log       *zap.SugaredLogger
 	tplBndPrv binding.TemplateBindingProvider
 }
@@ -77,6 +79,7 @@ func (s *Server) Shutdown() error {
 // NewServer creates a new server instance.
 func NewServer(config *config.Config, db *dgraph.DgraphRepository) (*Server, error) {
 	log := log.NewLogger(logSelector)
+	prdSvc := services.NewService(db)
 	tplBndPrv := binding.NewTemplateBindingProvider(config)
 	fiberConfig, err := createFiberConfig(config, log, tplBndPrv)
 	if err != nil {
@@ -86,6 +89,7 @@ func NewServer(config *config.Config, db *dgraph.DgraphRepository) (*Server, err
 		App:       fiber.New(*fiberConfig),
 		config:    config,
 		db:        db,
+		prdSvc:    prdSvc,
 		log:       log,
 		tplBndPrv: tplBndPrv,
 	}
@@ -157,8 +161,9 @@ func (s *Server) registerRoutes() error {
 	web := s.Group("")
 	controllers.NewHomeController(tplBndPrv).Register(web)
 	controllers.NewSearchController(s.db, tplBndPrv).Register(web)
-	controllers.NewDetailsController(s.db, tplBndPrv).Register(web)
+	controllers.NewDetailsController(s.prdSvc, tplBndPrv).Register(web)
 	controllers.NewAboutController(tplBndPrv).Register(web)
+	controllers.NewRDFController(s.prdSvc, tplBndPrv).Register(web)
 
 	// api routes
 	// api := app.Group("/api")
