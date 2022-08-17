@@ -34,7 +34,24 @@
 		{% include layout/og.html %}
 	{% endif %}
 
-	{% include layout/css.html %}
+	{% assign libs = page.libs | default: layout.libs %}
+	{% if libs %}
+		{% for lib in site.data.libs.css %}
+			{% if libs contains lib[0] %}
+				{% for file in lib[1] %}
+					<link href="{% if file contains 'http://' or file contains 'https://' %}{{ file }}{% else %}{{ site.base }}/dist/libs/{{ file }}{% endif %}" rel="stylesheet"/>
+				{% endfor %}
+			{% endif %}
+		{% endfor %}
+	{% endif %}
+	<link href="{{ site.base }}/static/css/tabler.css" rel="stylesheet"/>
+
+	{% for plugin in site.tabler-css-plugins %}
+		<link href="{{ site.base }}/static/css/{{ plugin }}.css" rel="stylesheet"/>
+	{% endfor %}
+
+	<link href="{{ site.base }}/static/css/app.css" rel="stylesheet"/>
+
 </head>
 
 {% assign layout-dark = page.layout-dark | default: site.layout-dark %}
@@ -47,9 +64,21 @@
             {% include layout/sidebar.html dark=page.layout-sidebar-dark right=page.layout-sidebar-right transparent=page.layout-navbar-transparent breakpoint="lg" %}
         {% endif %}
 
-        {% unless page.layout-hide-topbar %}
-            {% include layout/navbar.html condensed=true overlap=page.layout-navbar-overlap dark=page.layout-navbar-dark hide-brand=page.layout-navbar-hide-brand hide-menu=page.layout-navbar-hide-menu sticky=page.layout-navbar-sticky transparent=page.layout-topbar-transparent class=page.layout-navbar-class %}
-        {% endunless %}
+		{% assign breakpoint = include.breakpoint | default: 'md' %}
+		<header class="navbar navbar-expand-{{ breakpoint }}{% if include.transparent %} navbar-transparent{% else %}{% if include.dark %} navbar-dark{% else %} navbar-light{% endif %}{% if include.background %} bg-{{ include.background }}{% endif %}{% endif %}{% if include.sticky %} sticky-top{% endif %}{% if include.overlap %} navbar-overlap{% endif %}{% if include.class %} {{ include.class }}{% endif %} d-print-none"{% if include.background-color %} style="background: {{ include.background-color }}"{% endif %}>
+			<div class="container-xl">
+				{% include layout/navbar-toggler.html target="navbar-menu" %}
+
+				{% include layout/navbar-logo.html dark=include.dark small-logo=include.small-logo hide-logo=include.hide-logo class="d-none-navbar-horizontal pe-0 pe-md-3" breakpoint=breakpoint show-title=include.show-title header=true %}
+
+				<div class="collapse navbar-collapse" id="navbar-menu">
+					<div class="d-flex flex-column flex-md-row flex-fill align-items-stretch align-items-md-center">
+						{% include layout/navbar-menu.html hide-icons=include.hide-icons %}
+					</div>
+				</div>
+			</div>
+		</header>
+
 
         <div class="page-wrapper{% if page.layout-wrapper-full %} page-wrapper-full{% endif %}">
             <div class="container-xl">
