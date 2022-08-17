@@ -8,13 +8,6 @@ import (
 	orderedmap "github.com/wk8/go-ordered-map"
 )
 
-type MenuItem struct {
-	URL      string                 `json:"url" liquid:"url"`
-	Icon     string                 `json:"icon" liquid:"icon"`
-	Title    string                 `json:"title" liquid:"title"`
-	Children *orderedmap.OrderedMap `json:"children" liquid:"children"`
-}
-
 type ColorsItem struct {
 	Class string `json:"class" liquid:"class"`
 	Hex   string `json:"hex" liquid:"hex"`
@@ -68,24 +61,24 @@ func newSiteBinding(config *config.Config) *Site {
 		TablerCSSPlugins: []interface{}{},
 		Data: map[string]interface{}{
 			"menu": orderedmap.NewWithPairs(
-				"search", MenuItem{
-					URL:   "search",
-					Icon:  "search",
-					Title: "Search",
+				"search", map[string]interface{}{
+					"url":   "search",
+					"icon":  "search",
+					"title": "Search",
 				},
-				"about", MenuItem{
-					Icon:  "info-circle",
-					Title: "About",
-					Children: orderedmap.NewWithPairs(
-						"project", MenuItem{
-							URL:   "about/project",
-							Title: "The Project",
-							Icon:  "dna-2",
+				"about", map[string]interface{}{
+					"icon":  "info-circle",
+					"title": "About",
+					"children": orderedmap.NewWithPairs(
+						"project", map[string]interface{}{
+							"url":   "about/project",
+							"title": "The Project",
+							"icon":  "dna-2",
 						},
-						"faq", MenuItem{
-							URL:   "about/faq",
-							Title: "FAQ",
-							Icon:  "question-mark",
+						"faq", map[string]interface{}{
+							"url":   "about/faq",
+							"title": "FAQ",
+							"icon":  "question-mark",
 						},
 					),
 				}),
