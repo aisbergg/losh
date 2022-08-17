@@ -2,6 +2,7 @@ package liquid
 
 import (
 	"fmt"
+	"losh/internal/lib/util/reflectutil"
 	"math"
 	gourl "net/url"
 	"regexp"
@@ -29,6 +30,7 @@ func addFilters(e *liquid.Engine) {
 	e.RegisterFilter("first_letter", firstLetterFilter)
 	e.RegisterFilter("first_letters", firstLettersFilter)
 	e.RegisterFilter("replace_regex", replaceRegexFilter)
+	e.RegisterFilter("idhex", idhexFilter)
 
 	// number filters
 	e.RegisterFilter("min", minFilter)
@@ -47,6 +49,7 @@ func addFilters(e *liquid.Engine) {
 
 	// other
 	e.RegisterFilter("ternary", ternaryFilter)
+	e.RegisterFilter("is_nil", isNilFilter)
 
 }
 
@@ -102,6 +105,14 @@ func formatNumberFilter(input interface{}) string {
 	p := message.NewPrinter(language.English)
 	n := number.Decimal(input)
 	return p.Sprintf("%v", n)
+}
+
+func idhexFilter(input string) string {
+	return strings.TrimPrefix(strings.TrimSpace(input), "0x")
+}
+
+func isNilFilter(value interface{}) bool {
+	return reflectutil.IsNil(value)
 }
 
 func minFilter(arg1 interface{}, argN ...interface{}) (min interface{}) {

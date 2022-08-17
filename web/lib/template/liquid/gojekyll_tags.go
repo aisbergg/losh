@@ -60,19 +60,6 @@ type tagContext struct {
 	templates map[string]*liquid.Template
 }
 
-// CreateUnimplementedTag creates a tag definition that prints a warning the first
-// time it's rendered, and otherwise does nothing.
-func CreateUnimplementedTag() liquid.Renderer {
-	warned := false
-	return func(rc render.Context) (string, error) {
-		if !warned {
-			fmt.Printf("The %q tag has not been implemented. It is being ignored.\n", rc.TagName())
-			warned = true
-		}
-		return "", nil
-	}
-}
-
 // -----------------------------------------------------------------------------
 //
 // https://github.com/osteele/gojekyll/blob/5ff68e140697bcb30660f083ad42dc328578b16f/tags/highlight.go

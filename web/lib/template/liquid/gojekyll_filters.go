@@ -33,6 +33,8 @@ import (
 	"strings"
 	"time"
 
+	"losh/internal/lib/util/stringutil"
+
 	"github.com/osteele/liquid"
 	"github.com/osteele/liquid/evaluator"
 	"github.com/osteele/liquid/expressions"
@@ -109,19 +111,32 @@ func addJekyllFilters(e *liquid.Engine) {
 		wsPattern := regexp.MustCompile(`(?s:[\s\n]+)`)
 		return wsPattern.ReplaceAllString(s, " ")
 	})
+	rawPattern := regexp.MustCompile(`\s+`)
+	defaultPattern := regexp.MustCompile(`[^[:alnum:]]+`)
+	prettyPattern := regexp.MustCompile(`[^[:alnum:]\._~!$&'()+,;=@]+`)
+	dupSeparatorPattern := regexp.MustCompile(`-{2,}`)
 	e.RegisterFilter("slugify", func(s, mode string) string {
-		if mode == "" {
-			mode = "default"
+		replFunc := func(s string, pattern *regexp.Regexp) string {
+			s = pattern.ReplaceAllString(s, "-")
+			s = dupSeparatorPattern.ReplaceAllString(s, "-")
+			s = strings.Trim(s, "-")
+			s = strings.ToLower(s)
+			return s
 		}
-		p := map[string]string{
-			"raw":     `\s+`,
-			"default": `[^[:alnum:]]+`,
-			"pretty":  `[^[:alnum:]\._~!$&'()+,;=@]+`,
-		}[mode]
-		if p != "" {
-			s = regexp.MustCompile(p).ReplaceAllString(s, "-")
+		switch mode {
+		case "none":
+			return s
+		case "raw":
+			return replFunc(s, rawPattern)
+		case "pretty":
+			return replFunc(s, prettyPattern)
+		case "latin":
+			return stringutil.Slugify(s)
+		case "default":
+			fallthrough
+		default:
+			return replFunc(s, defaultPattern)
 		}
-		return strings.ToLower(s)
 	})
 	e.RegisterFilter("to_integer", func(n int) int { return n })
 	e.RegisterFilter("number_of_words", func(s string) int {
