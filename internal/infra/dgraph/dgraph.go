@@ -10,14 +10,15 @@ import (
 	"time"
 
 	"losh/internal/infra/dgraph/dgclient"
+	"losh/internal/lib/log"
 	"losh/internal/lib/net"
 	"losh/internal/lib/net/request"
 	"losh/internal/lib/util/pathutil"
 
+	"github.com/aisbergg/go-copier/pkg/copier"
 	"github.com/aisbergg/go-errors/pkg/errors"
 
 	gql "github.com/Yamashou/gqlgenc/clientv2"
-	"github.com/aisbergg/go-copier/pkg/copier"
 	"go.uber.org/zap"
 )
 
@@ -28,21 +29,16 @@ type DgraphRepository struct {
 
 	// used internally
 	httpClient *http.Client
-	client     dgclient.DgraphGraphQLClient
-	log        *zap.SugaredLogger
-
-	dataCopier *copier.Copier
-
-	// Type converters are used in conjunction with copier to convert between
-	// Dgraph input/output models and regular data models. Using copier saves me
-	// a lot of manual coding and duplicated code.
-	convertersForGet  []copier.TypeConverter
-	convertersForSave []copier.TypeConverter
+	requester  *request.GraphQLRequester
+	client     *dgclient.Client
+	copier     *copier.Copier
+	// copierFull *copier.Copier
+	log *zap.SugaredLogger
 }
 
 // NewDgraphRepository creates a new DgraphRepository.
 func NewDgraphRepository(dbConfig Config) (*DgraphRepository, error) {
-	log := logging.NewLogger("repo-dgraph")
+	log := log.NewLogger("repo-dgraph")
 	timeout := 30 * time.Second
 
 	// create HTTP client
@@ -99,15 +95,32 @@ func NewDgraphRepository(dbConfig Config) (*DgraphRepository, error) {
 	graphQLRequester := request.NewGraphQLRequester(gqlClient).
 		SetRetryCount(5).
 		SetMaxWaitTime(timeout)
-	client := dgclient.NewClient(graphQLRequester)
-	dgraphRepo := &DgraphRepository{
-		client:     client,
-		httpClient: httpClient,
-		address:    address,
-		log:        log,
-		dataCopier: copier.New(copier.Options{AutoConvert: true, IgnoreEmpty: true}),
+	// client := dgclient.NewClient(graphQLRequester)
+	client := &dgclient.Client{
+		Requester: graphQLRequester,
 	}
-	dgraphRepo.initializeConverters()
+	// copierFull := copier.New(copier.Options{
+	// 	AutoConvert:    true,
+	// 	CopyUnexported: true,
+	// 	IgnoreEmpty:    false,
+	// 	Converters:     copierConverters(),
+	// })
+	copier := copier.New(copier.Options{
+		AutoConvert:    true,
+		CopyUnexported: true,
+		IgnoreEmpty:    false,
+		Converters:     copierConverters(),
+	})
+
+	dgraphRepo := &DgraphRepository{
+		httpClient: httpClient,
+		requester:  graphQLRequester,
+		client:     client,
+		copier:     copier,
+		// copierFull: copierFull,
+		address: address,
+		log:     log,
+	}
 	return dgraphRepo, nil
 }
 

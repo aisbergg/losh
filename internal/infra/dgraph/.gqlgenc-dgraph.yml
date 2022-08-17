@@ -1,5 +1,5 @@
 model:
-  filename: ./../../models/gen.go
+  filename: ./dgclient/models.go
 client:
   filename: ./dgclient/client.go
 models:

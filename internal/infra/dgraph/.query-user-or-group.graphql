@@ -1,37 +1,78 @@
 fragment UserOrGroupFragment on UserOrGroup {
 	__typename
-	... on User {id}
-	... on Group {id}
+	id
 	xid
-	host {id}
+	host {
+		id
+		name
+	}
 	name
+	fullName
 	email
-	avatar {id}
+	avatar {
+		id
+		path
+	}
 	url
-	memberOf {id}
-	products {id}
+	memberOf {
+		id
+		fullName
+	}
+	products {
+		id
+		name
+	}
+}
+
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
 }
 
 fragment UserFragment on User {
-	...NodeFragment
 	...UserOrGroupFragment
-	fullName
 	locale
 }
 
 fragment GroupFragment on Group {
-	...NodeFragment
 	...UserOrGroupFragment
 	members {
-		... on User {id}
-		... on Group {id}
+		__typename
+		id
 	}
 }
+
+fragment UserOrGroupFullFragment on UserOrGroup {
+	__typename
+	... on User {...UserFragment}
+	... on Group {...GroupFragment}
+}
+
 
 # ------------------------------------------------------------------------------
 
-query GetUserOrGroup($id: ID, $xid: String) {
-	getUserOrGroup(id: $id, xid: $xid) {
+query GetUserOrGroupByID($id: ID!) {
+	getUserOrGroup(id: $id) {
+		... on User {...UserFragment}
+		... on Group {...GroupFragment}
+	}
+}
+
+query GetUserOrGroupByXid($xid: String!) {
+	getUserOrGroup(xid: $xid) {
+		... on User {...UserFragment}
+		... on Group {...GroupFragment}
+	}
+}
+
+query GetUserOrGroupID($xid: String!) {
+	getUserOrGroup(xid: $xid) {id}
+}
+
+query GetUserOrGroups($getFilter: UserOrGroupFilter, $order: UserOrGroupOrder, $first: Int, $offset: Int) {
+	queryUserOrGroup(filter: $getFilter, order: $order, first: $first, offset: $offset) {
 		... on User {
 			...UserFragment
 		}
@@ -39,59 +80,71 @@ query GetUserOrGroup($id: ID, $xid: String) {
 			...GroupFragment
 		}
 	}
+	aggregateUserOrGroup(filter: $getFilter) {count}
 }
 
-query GetUserOrGroups($filter: UserOrGroupFilter, $order: UserOrGroupOrder, $first: Int, $offset: Int) {
-	queryUserOrGroup(filter: $filter, order: $order, first: $first, offset: $offset) {
-		... on User {
-			...UserFragment
-		}
-		... on Group {
-			...GroupFragment
-		}
-	}
+mutation UpdateUserOrGroups($updateInput: UpdateUserOrGroupInput!) {
+	updateUserOrGroup(input: $updateInput) {userOrGroup {id}}
 }
 
-mutation DeleteUserOrGroup($filter: UserOrGroupFilter!) {
-	deleteUserOrGroup(filter: $filter) {userOrGroup {id}}
+mutation DeleteUserOrGroups($delFilter: UserOrGroupFilter!) {
+	deleteUserOrGroup(filter: $delFilter) {userOrGroup {id}}
 }
 
-query GetUser($id: ID, $xid: String) {
-	getUser(id: $id, xid: $xid) {
-		...UserFragment
-	}
+query GetUserByID($id: ID!) {
+	getUser(id: $id) {...UserFragment}
 }
 
-query GetUsers($filter: UserFilter, $order: UserOrder, $first: Int, $offset: Int) {
-	queryUser(filter: $filter, order: $order, first: $first, offset: $offset) {
-		...UserFragment
-	}
+query GetUserByXid($xid: String!) {
+	getUser(xid: $xid) {...UserFragment}
 }
 
-mutation SaveUsers($input: [AddUserInput!]!) {
-	addUser(input: $input, upsert: true) {user {id}}
+query GetUserID($xid: String!) {
+	getUser(xid: $xid) {id}
 }
 
-mutation DeleteUser($filter: UserFilter!) {
-	deleteUser(filter: $filter) {user {id}}
+query GetUsers($getFilter: UserFilter, $order: UserOrder, $first: Int, $offset: Int) {
+	queryUser(filter: $getFilter, order: $order, first: $first, offset: $offset) {...UserFragment}
+	aggregateUser(filter: $getFilter) {count}
 }
 
-query GetGroup($id: ID, $xid: String) {
-	getGroup(id: $id, xid: $xid) {
-		...GroupFragment
-	}
+mutation CreateUsers($createInput: [AddUserInput!]!) {
+	addUser(input: $createInput, upsert: true) {user {id}}
 }
 
-query GetGroups($filter: GroupFilter, $order: GroupOrder, $first: Int, $offset: Int) {
-	queryGroup(filter: $filter, order: $order, first: $first, offset: $offset) {
-		...GroupFragment
-	}
+mutation UpdateUsers($updateInput: UpdateUserInput!) {
+	updateUser(input: $updateInput) {user {id}}
 }
 
-mutation SaveGroups($input: [AddGroupInput!]!) {
-	addGroup(input: $input, upsert: true) {group {id}}
+mutation DeleteUsers($delFilter: UserFilter!) {
+	deleteUser(filter: $delFilter) {user {id}}
 }
 
-mutation DeleteGroup($filter: GroupFilter!) {
-	deleteGroup(filter: $filter) {group {id}}
+query GetGroupByID($id: ID!) {
+	getGroup(id: $id) {...GroupFragment}
+}
+
+query GetGroupByXid($xid: String!) {
+	getGroup(xid: $xid) {...GroupFragment}
+}
+
+query GetGroupID($xid: String!) {
+	getGroup(xid: $xid) {id}
+}
+
+query GetGroups($getFilter: GroupFilter, $order: GroupOrder, $first: Int, $offset: Int) {
+	queryGroup(filter: $getFilter, order: $order, first: $first, offset: $offset) {...GroupFragment}
+	aggregateGroup(filter: $getFilter) {count}
+}
+
+mutation CreateGroups($createInput: [AddGroupInput!]!) {
+	addGroup(input: $createInput, upsert: true) {group {id}}
+}
+
+mutation UpdateGroups($updateInput: UpdateGroupInput!) {
+	updateGroup(input: $updateInput) {group {id}}
+}
+
+mutation DeleteGroups($delFilter: GroupFilter!) {
+	deleteGroup(filter: $delFilter) {group {id}}
 }

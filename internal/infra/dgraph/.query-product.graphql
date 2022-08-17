@@ -1,40 +1,147 @@
 fragment ProductFragment on Product {
-	...NodeFragment
 	...CrawlerMetaFragment
+	id
 	xid
 	name
-	owner {id}
 	description
-	website
+	documentationLanguage
 	version
-	release {id}
-	releases {id}
+	license {
+		id
+		xid
+	}
+	licensor {...UserOrGroupBasicFragment}
+	website
+	release {
+		id
+		name
+	}
+	releases {
+		id
+		name
+	}
+	renamedTo {
+		id
+		name
+	}
+	renamedFrom {
+		id
+		name
+	}
+	forkOf {
+		id
+		name
+	}
+	forks {
+		id
+		name
+	}
+	tags {
+		id
+		name
+	}
+	category {
+		id
+		fullName
+	}
+}
+
+fragment ProductSearchFragment on Product {
+	...CrawlerMetaFragment
+	id
+	xid
+	name
+	website
 	renamedTo {id}
 	renamedFrom {id}
-	forkOf {id}
+	forkOf {
+		id
+		release {
+			repository {
+				url
+			}
+		}
+	}
 	forks {id}
-	tags {id}
-	category {id}
+	tags {...TagFragment}
+	category {...CategoryFragment}
+
+	releases {id}
+	release {
+		id
+		xid
+		name
+		description
+		version
+		createdAt
+		releases {id}
+		isLatest
+		repository {...RepositoryFragment}
+		license {...LicenseFragmentBasic}
+		additionalLicenses {...LicenseFragmentBasic}
+		licensor {...UserOrGroupFullFragment}
+		documentationLanguage
+		technologyReadinessLevel
+		documentationReadinessLevel
+		attestation
+		publication
+		compliesWith {name}
+		cpcPatentClass
+		tsdc {id}
+		components {id}
+		software {id}
+		image {...FileFragment}
+		readme {...FileFragment}
+		contributionGuide {...FileFragment}
+		bom {...FileFragment}
+		manufacturingInstructions {...FileFragment}
+		userManual {...FileFragment}
+		product {id}
+		usedIn {id}
+		source {...FileFragment}
+		export {...FileFragment}
+		auxiliary {...FileFragment}
+		organization {id}
+		mass
+		outerDimensions {...OuterDimensionsFragment}
+		material {id}
+		manufacturingProcess {id}
+		productionMetadata {id}
+	}
 }
 
 # ------------------------------------------------------------------------------
 
-query GetProduct($id: ID, $xid: String) {
-	getProduct(id: $id, xid: $xid) {
-		...ProductFragment
-	}
+query GetProductByID($id: ID!) {
+	getProduct(id: $id) {...ProductFragment}
 }
 
-query GetProducts($filter: ProductFilter, $order: ProductOrder, $first: Int, $offset: Int) {
-	queryProduct(filter: $filter, order: $order, first: $first, offset: $offset) {
-		...ProductFragment
-	}
+query GetProductByXid($xid: String!) {
+	getProduct(xid: $xid) {...ProductFragment}
 }
 
-mutation SaveProducts($products: [AddProductInput!]!) {
-	addProduct(input: $products, upsert: true) {product {id}}
+query GetProductID($xid: String!) {
+	getProduct(xid: $xid) {id}
 }
 
-mutation DeleteProduct($filter: ProductFilter!) {
-	deleteProduct(filter: $filter) {product {id}}
+query GetProducts($getFilter: ProductFilter, $order: ProductOrder, $first: Int, $offset: Int) {
+	queryProduct(filter: $getFilter, order: $order, first: $first, offset: $offset) {...ProductFragment}
+	aggregateProduct(filter: $getFilter) {count}
+}
+
+query SearchProducts($getFilter: ProductFilter, $order: ProductOrder, $first: Int, $offset: Int) {
+	queryProduct(filter: $getFilter, order: $order, first: $first, offset: $offset) {...ProductSearchFragment}
+	aggregateProduct(filter: $getFilter) {count}
+}
+
+mutation CreateProducts($createInput: [AddProductInput!]!) {
+	addProduct(input: $createInput, upsert: true) {product {id}}
+}
+
+mutation UpdateProducts($updateInput: UpdateProductInput!) {
+	updateProduct(input: $updateInput) {product {id}}
+}
+
+mutation DeleteProducts($delFilter: ProductFilter!) {
+	deleteProduct(filter: $delFilter) {product {id}}
 }

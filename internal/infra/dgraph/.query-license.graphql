@@ -14,24 +14,48 @@ fragment LicenseFragment on License {
 	isBlocked
 }
 
+fragment LicenseFragmentBasic on License {
+	id
+	xid
+	name
+	isSpdx
+	isDeprecated
+	isOsiApproved
+	isFsfLibre
+	isBlocked
+}
+
 # ------------------------------------------------------------------------------
 
-query GetLicense($id: ID, $xid: String) {
-	getLicense(id: $id, xid: $xid) {
-		...LicenseFragment
-	}
+query GetLicenseByID($id: ID!) {
+	getLicense(id: $id) {...LicenseFragment}
 }
 
-query GetLicenses($filter: LicenseFilter, $order: LicenseOrder, $first: Int, $offset: Int) {
-	queryLicense(filter: $filter, order: $order, first: $first, offset: $offset) {
-		...LicenseFragment
-	}
+query GetLicenseByXid($xid: String!) {
+	getLicense(xid: $xid) {...LicenseFragment}
 }
 
-mutation SaveLicenses($licenses: [AddLicenseInput!]!) {
-	addLicense(input: $licenses, upsert: true) {license {id}}
+query GetLicenseID($xid: String!) {
+	getLicense(xid: $xid) {id}
 }
 
-mutation DeleteLicense($filter: LicenseFilter!) {
-	deleteLicense(filter: $filter) {license {id}}
+query GetLicenses($getFilter: LicenseFilter, $order: LicenseOrder, $first: Int, $offset: Int) {
+	queryLicense(filter: $getFilter, order: $order, first: $first, offset: $offset) {...LicenseFragment}
+	aggregateLicense(filter: $getFilter) {count}
+}
+
+query GetAllLicensesBasic() {
+	queryLicense {...LicenseFragmentBasic}
+}
+
+mutation CreateLicenses($createInput: [AddLicenseInput!]!) {
+	addLicense(input: $createInput, upsert: true) {license {id}}
+}
+
+mutation UpdateLicenses($updateInput: UpdateLicenseInput!) {
+	updateLicense(input: $updateInput) {license {id}}
+}
+
+mutation DeleteLicenses($delFilter: LicenseFilter!) {
+	deleteLicense(filter: $delFilter) {license {id}}
 }

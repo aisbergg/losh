@@ -1,32 +1,38 @@
 fragment SoftwareFragment on Software {
-	...NodeFragment
 	...CrawlerMetaFragment
+	id
 	release
-	installationGuide {id}
+	installationGuide {
+		id
+		path
+	}
 	documentationLanguage
-	license {id}
+	license {
+		id
+		xid
+	}
 	licensor
 }
 
 # ------------------------------------------------------------------------------
 
-query GetSoftware($id: ID!) {
-	getSoftware(id: $id) {
-		...SoftwareFragment
-	}
+query GetSoftwareByID($id: ID!) {
+	getSoftware(id: $id) {...SoftwareFragment}
 }
 
-query GetSoftwares($filter: SoftwareFilter, $order: SoftwareOrder, $first: Int, $offset: Int) {
-	querySoftware(filter: $filter, order: $order, first: $first, offset: $offset) {
-		...SoftwareFragment
-	}
+query GetSoftwares($getFilter: SoftwareFilter, $order: SoftwareOrder, $first: Int, $offset: Int) {
+	querySoftware(filter: $getFilter, order: $order, first: $first, offset: $offset) {...SoftwareFragment}
+	aggregateSoftware(filter: $getFilter) {count}
 }
 
-mutation SaveSoftwares($input: [AddSoftwareInput!]!, $deleteIds: [ID!]!) {
-	deleteSoftware(filter: {id: $deleteIds}) {software {id}}
-	addSoftware(input: $input) {software {id}}
+mutation CreateSoftwares($createInput: [AddSoftwareInput!]!) {
+	addSoftware(input: $createInput) {software {id}}
 }
 
-mutation DeleteSoftware($filter: SoftwareFilter!) {
-	deleteSoftware(filter: $filter) {software {id}}
+mutation UpdateSoftwares($updateInput: UpdateSoftwareInput!) {
+	updateSoftware(input: $updateInput) {software {id}}
+}
+
+mutation DeleteSoftwares($delFilter: SoftwareFilter!) {
+	deleteSoftware(filter: $delFilter) {software {id}}
 }

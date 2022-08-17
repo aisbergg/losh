@@ -1,27 +1,36 @@
 fragment HostFragment on Host {
-	...NodeFragment
+	id
 	domain
 	name
 }
 
 # ------------------------------------------------------------------------------
 
-query GetHost($id: ID, $domain: String) {
-	getHost(id: $id, domain: $domain) {
-		...HostFragment
-	}
+query GetHostByID($id: ID!) {
+	getHost(id: $id) {...HostFragment}
 }
 
-query GetHosts($filter: HostFilter, $order: HostOrder, $first: Int, $offset: Int) {
-	queryHost(filter: $filter, order: $order, first: $first, offset: $offset) {
-		...HostFragment
-	}
+query GetHostByDomain($domain: String!) {
+	getHost(domain: $domain) {...HostFragment}
 }
 
-mutation SaveHosts($hosts: [AddHostInput!]!) {
-	addHost(input: $hosts, upsert: true) {host {id}}
+query GetHostID($domain: String!) {
+	getHost(domain: $domain) {id}
 }
 
-mutation DeleteHost($filter: HostFilter!) {
-	deleteHost(filter: $filter) {host {id}}
+query GetHosts($getFilter: HostFilter, $order: HostOrder, $first: Int, $offset: Int) {
+	queryHost(filter: $getFilter, order: $order, first: $first, offset: $offset) {...HostFragment}
+	aggregateHost(filter: $getFilter) {count}
+}
+
+mutation CreateHosts($createInput: [AddHostInput!]!) {
+	addHost(input: $createInput, upsert: true) {host {id}}
+}
+
+mutation UpdateHosts($updateInput: UpdateHostInput!) {
+	updateHost(input: $updateInput) {host {id}}
+}
+
+mutation DeleteHosts($delFilter: HostFilter!) {
+	deleteHost(filter: $delFilter) {host {id}}
 }

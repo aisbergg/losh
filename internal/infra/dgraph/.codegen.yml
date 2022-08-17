@@ -1,0 +1,125 @@
+defaults:
+  src: .codegen.gotpl
+  vars:
+    hasXid: false
+    filter: StringHashFilter
+    extraIds: []
+
+generate:
+  - dest: database_gen.go
+    vars:
+      name: Database
+      namePlural: Databases
+
+  - dest: product_gen.go
+    vars:
+      name: Product
+      namePlural: Products
+      extraIds: ["xid"]
+
+  - dest: component_gen.go
+    vars:
+      name: Component
+      namePlural: Components
+      extraIds: ["xid"]
+
+  - dest: software_gen.go
+    vars:
+      name: Software
+      namePlural: Softwares
+
+  - dest: repository_gen.go
+    vars:
+      name: Repository
+      namePlural: Repositories
+      extraIds: ["xid"]
+
+  - dest: technology_specific_documentation_criteria_gen.go
+    vars:
+      name: TechnologySpecificDocumentationCriteria
+      namePlural: TechnologySpecificDocumentationCriterias
+      extraIds: ["xid"]
+
+  - dest: technical_standard_gen.go
+    vars:
+      name: TechnicalStandard
+      namePlural: TechnicalStandards
+      extraIds: ["xid"]
+
+  - dest: user_gen.go
+    vars:
+      name: User
+      namePlural: Users
+      extraIds: ["xid"]
+
+  - dest: group_gen.go
+    vars:
+      name: Group
+      namePlural: Groups
+      extraIds: ["xid"]
+
+  - dest: file_gen.go
+    vars:
+      name: File
+      namePlural: Files
+      extraIds: ["xid"]
+
+  - dest: key_value_gen.go
+    vars:
+      name: KeyValue
+      namePlural: KeyValues
+
+  - dest: string_v_gen.go
+    vars:
+      name: StringV
+      namePlural: StringVs
+
+  - dest: float_v_gen.go
+    vars:
+      name: FloatV
+      namePlural: FloatVs
+
+  - dest: material_gen.go
+    vars:
+      name: Material
+      namePlural: Materials
+
+  - dest: manufacturing_process_gen.go
+    vars:
+      name: ManufacturingProcess
+      namePlural: ManufacturingProcesses
+
+  - dest: bounding_box_dimensions_gen.go
+    vars:
+      name: BoundingBoxDimensions
+      namePlural: BoundingBoxDimensionss
+
+  - dest: open_scad_dimensions_gen.go
+    vars:
+      name: OpenSCADDimensions
+      namePlural: OpenSCADDimensionss
+
+  - dest: category_gen.go
+    vars:
+      name: Category
+      namePlural: Categories
+      extraIds: ["xid"]
+
+  - dest: tag_gen.go
+    vars:
+      name: Tag
+      namePlural: Tags
+      extraIds: ["xid"]
+
+  - dest: license_gen.go
+    vars:
+      name: License
+      namePlural: Licenses
+      extraIds: ["xid"]
+
+  - dest: host_gen.go
+    vars:
+      name: Host
+      namePlural: Hosts
+      extraIds: ["domain"]
+      filter: StringHashFilterStringRegExpFilter

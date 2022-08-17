@@ -1,28 +1,28 @@
 fragment MaterialFragment on Material {
-	...NodeFragment
+	id
 	name
 	description
 }
 
 # ------------------------------------------------------------------------------
 
-query GetMaterial($id: ID!) {
-	getMaterial(id: $id) {
-		...MaterialFragment
-	}
+query GetMaterialByID($id: ID!) {
+	getMaterial(id: $id) {...MaterialFragment}
 }
 
-query GetMaterials($filter: MaterialFilter, $order: MaterialOrder, $first: Int, $offset: Int) {
-	queryMaterial(filter: $filter, order: $order, first: $first, offset: $offset) {
-		...MaterialFragment
-	}
+query GetMaterials($getFilter: MaterialFilter, $order: MaterialOrder, $first: Int, $offset: Int) {
+	queryMaterial(filter: $getFilter, order: $order, first: $first, offset: $offset) {...MaterialFragment}
+	aggregateMaterial(filter: $getFilter) {count}
 }
 
-mutation SaveMaterials($input: [AddMaterialInput!]!, $deleteIds: [ID!]!) {
-	deleteMaterial(filter: {id: $deleteIds}) {material {id}}
-	addMaterial(input: $input) {material {id}}
+mutation CreateMaterials($createInput: [AddMaterialInput!]!) {
+	addMaterial(input: $createInput) {material {id}}
 }
 
-mutation DeleteMaterials($filter: MaterialFilter!) {
-	deleteMaterial(filter: $filter) {material {id}}
+mutation UpdateMaterials($updateInput: UpdateMaterialInput!) {
+	updateMaterial(input: $updateInput) {material {id}}
+}
+
+mutation DeleteMaterials($delFilter: MaterialFilter!) {
+	deleteMaterial(filter: $delFilter) {material {id}}
 }

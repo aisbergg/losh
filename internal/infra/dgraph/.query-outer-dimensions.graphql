@@ -1,0 +1,66 @@
+fragment OuterDimensionsFragment on OuterDimensions {
+	__typename
+	... on BoundingBoxDimensions {...BoundingBoxDimensionsFragment}
+	... on OpenSCADDimensions {...OpenSCADDimensionsFragment}
+}
+
+fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
+	id
+	height
+	width
+	depth
+}
+
+fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
+	id
+	openscad
+	unit
+}
+
+# ------------------------------------------------------------------------------
+
+query GetBoundingBoxDimensionsByID($id: ID!) {
+	getBoundingBoxDimensions(id: $id) {...BoundingBoxDimensionsFragment}
+}
+
+query GetBoundingBoxDimensionss($getFilter: BoundingBoxDimensionsFilter, $order: BoundingBoxDimensionsOrder, $first: Int, $offset: Int) {
+	queryBoundingBoxDimensions(filter: $getFilter, order: $order, first: $first, offset: $offset) {...BoundingBoxDimensionsFragment}
+	aggregateBoundingBoxDimensions(filter: $getFilter) {count}
+}
+
+mutation CreateBoundingBoxDimensionss($createInput: [AddBoundingBoxDimensionsInput!]!) {
+	addBoundingBoxDimensions(input: $createInput) {boundingBoxDimensions {id}}
+}
+
+mutation UpdateBoundingBoxDimensionss($updateInput: UpdateBoundingBoxDimensionsInput!) {
+	updateBoundingBoxDimensions(input: $updateInput) {boundingBoxDimensions {id}}
+}
+
+mutation DeleteBoundingBoxDimensionss($delFilter: BoundingBoxDimensionsFilter!) {
+	deleteBoundingBoxDimensions(filter: $delFilter) {boundingBoxDimensions {id}}
+}
+
+# ------------------------------------------------------------------------------
+
+query GetOpenSCADDimensionsByID($id: ID!) {
+	getOpenSCADDimensions(id: $id) {...OpenSCADDimensionsFragment}
+}
+
+query GetOpenSCADDimensionss($getFilter: OpenSCADDimensionsFilter, $order: OpenSCADDimensionsOrder, $first: Int, $offset: Int) {
+	queryOpenSCADDimensions(filter: $getFilter, order: $order, first: $first, offset: $offset) {...OpenSCADDimensionsFragment}
+	aggregateOpenSCADDimensions(filter: $getFilter) {count}
+}
+
+mutation CreateOpenSCADDimensionss($createInput: [AddOpenSCADDimensionsInput!]!) {
+	addOpenSCADDimensions(input: $createInput) {openSCADDimensions {id}}
+}
+
+mutation UpdateOpenSCADDimensionss($updateInput: UpdateOpenSCADDimensionsInput!) {
+	updateOpenSCADDimensions(input: $updateInput) {openSCADDimensions {id}}
+}
+
+mutation DeleteOpenSCADDimensionss($delFilter: OpenSCADDimensionsFilter!) {
+	deleteOpenSCADDimensions(filter: $delFilter) {openSCADDimensions {id}}
+}
+
+

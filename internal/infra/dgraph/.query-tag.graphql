@@ -2,28 +2,43 @@ fragment TagFragment on Tag {
 	id
 	xid
 	name
-	aliases {id}
-	related {id}
+	aliases {
+		id
+		name
+	}
+	related {
+		id
+		name
+	}
 }
 
 # ------------------------------------------------------------------------------
 
-query GetTag($id: ID, $xid: String) {
-	getTag(id: $id, xid: $xid) {
-		...TagFragment
-	}
+query GetTagByID($id: ID!) {
+	getTag(id: $id) {...TagFragment}
 }
 
-query GetTags($filter: TagFilter, $order: TagOrder, $first: Int, $offset: Int) {
-	queryTag(filter: $filter, order: $order, first: $first, offset: $offset) {
-		...TagFragment
-	}
+query GetTagByXid($xid: String!) {
+	getTag(xid: $xid) {...TagFragment}
 }
 
-mutation SaveTags($input: [AddTagInput!]!) {
-	addTag(input: $input, upsert: true) {tag {id}}
+query GetTagID($xid: String!) {
+	getTag(xid: $xid) {id}
 }
 
-mutation DeleteTag($filter: TagFilter!) {
-	deleteTag(filter: $filter) {tag {id}}
+query GetTags($getFilter: TagFilter, $order: TagOrder, $first: Int, $offset: Int) {
+	queryTag(filter: $getFilter, order: $order, first: $first, offset: $offset) {...TagFragment}
+	aggregateTag(filter: $getFilter) {count}
+}
+
+mutation CreateTags($createInput: [AddTagInput!]!) {
+	addTag(input: $createInput, upsert: true) {tag {id}}
+}
+
+mutation UpdateTags($updateInput: UpdateTagInput!) {
+	updateTag(input: $updateInput) {tag {id}}
+}
+
+mutation DeleteTags($delFilter: TagFilter!) {
+	deleteTag(filter: $delFilter) {tag {id}}
 }

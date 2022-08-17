@@ -1,29 +1,41 @@
 fragment TechnicalStandardFragment on TechnicalStandard {
-	...NodeFragment
+	id
 	xid
 	name
 	description
-	components {id}
+	components {
+		id
+		name
+	}
 }
 
 # ------------------------------------------------------------------------------
 
-query GetTechnicalStandard($id: ID, $xid: String) {
-	getTechnicalStandard(id: $id, xid: $xid) {
-		...TechnicalStandardFragment
-	}
+query GetTechnicalStandardByID($id: ID!) {
+	getTechnicalStandard(id: $id) {...TechnicalStandardFragment}
 }
 
-query GetTechnicalStandards($filter: TechnicalStandardFilter, $order: TechnicalStandardOrder, $first: Int, $offset: Int) {
-	queryTechnicalStandard(filter: $filter, order: $order, first: $first, offset: $offset) {
-		...TechnicalStandardFragment
-	}
+query GetTechnicalStandardByXid($xid: String!) {
+	getTechnicalStandard(xid: $xid) {...TechnicalStandardFragment}
 }
 
-mutation SaveTechnicalStandards($input: [AddTechnicalStandardInput!]!) {
-	addTechnicalStandard(input: $input, upsert: true) {technicalStandard {id}}
+query GetTechnicalStandardID($xid: String!) {
+	getTechnicalStandard(xid: $xid) {id}
 }
 
-mutation DeleteTechnicalStandard($filter: TechnicalStandardFilter!) {
-	deleteTechnicalStandard(filter: $filter) {technicalStandard {id}}
+query GetTechnicalStandards($getFilter: TechnicalStandardFilter, $order: TechnicalStandardOrder, $first: Int, $offset: Int) {
+	queryTechnicalStandard(filter: $getFilter, order: $order, first: $first, offset: $offset) {...TechnicalStandardFragment}
+	aggregateTechnicalStandard(filter: $getFilter) {count}
+}
+
+mutation CreateTechnicalStandards($createInput: [AddTechnicalStandardInput!]!) {
+	addTechnicalStandard(input: $createInput, upsert: true) {technicalStandard {id}}
+}
+
+mutation UpdateTechnicalStandards($updateInput: UpdateTechnicalStandardInput!) {
+	updateTechnicalStandard(input: $updateInput) {technicalStandard {id}}
+}
+
+mutation DeleteTechnicalStandards($delFilter: TechnicalStandardFilter!) {
+	deleteTechnicalStandard(filter: $delFilter) {technicalStandard {id}}
 }

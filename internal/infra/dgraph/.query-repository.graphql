@@ -1,0 +1,45 @@
+fragment RepositoryFragment on Repository {
+	id
+	xid
+	url
+	permaUrl
+	host {
+		id
+		name
+	}
+	owner {...UserOrGroupBasicFragment}
+	name
+	reference
+	path
+}
+
+# ------------------------------------------------------------------------------
+
+query GetRepositoryByID($id: ID!) {
+	getRepository(id: $id) {...RepositoryFragment}
+}
+
+query GetRepositoryByXid($xid: String!) {
+	getRepository(xid: $xid) {...RepositoryFragment}
+}
+
+query GetRepositoryID($xid: String!) {
+	getRepository(xid: $xid) {id}
+}
+
+query GetRepositories($getFilter: RepositoryFilter, $order: RepositoryOrder, $first: Int, $offset: Int) {
+	queryRepository(filter: $getFilter, order: $order, first: $first, offset: $offset) {...RepositoryFragment}
+	aggregateRepository(filter: $getFilter) {count}
+}
+
+mutation CreateRepositories($createInput: [AddRepositoryInput!]!) {
+	addRepository(input: $createInput, upsert: true) {repository {id}}
+}
+
+mutation UpdateRepositories($updateInput: UpdateRepositoryInput!) {
+	updateRepository(input: $updateInput) {repository {id}}
+}
+
+mutation DeleteRepositories($delFilter: RepositoryFilter!) {
+	deleteRepository(filter: $delFilter) {repository {id}}
+}

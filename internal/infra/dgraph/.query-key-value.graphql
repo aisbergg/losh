@@ -1,5 +1,5 @@
 fragment KeyValueFragment on KeyValue {
-	...NodeFragment
+	id
 	key
 	value {
 		... on StringV {id, stringValue: value}
@@ -7,24 +7,81 @@ fragment KeyValueFragment on KeyValue {
 	}
 }
 
+fragment FloatVFragment on FloatV {
+	id
+	value
+}
+
+fragment StringVFragment on StringV {
+	id
+	value
+}
+
 # ------------------------------------------------------------------------------
 
-query GetKeyValue($id: ID!) {
-	getKeyValue(id: $id) {
-		...KeyValueFragment
-	}
+query GetStringVByID($id: ID!) {
+	getStringV(id: $id) {...StringVFragment}
 }
 
-query GetKeyValues($filter: KeyValueFilter, $order: KeyValueOrder, $first: Int, $offset: Int) {
-	queryKeyValue(filter: $filter, order: $order, first: $first, offset: $offset) {
-		...KeyValueFragment
-	}
+query GetStringVs($getFilter: StringVFilter, $order: StringVOrder, $first: Int, $offset: Int) {
+	queryStringV(filter: $getFilter, order: $order, first: $first, offset: $offset) {...StringVFragment}
+	aggregateStringV(filter: $getFilter) {count}
 }
 
-mutation SaveKeyValues($keyValues: [AddKeyValueInput!]!) {
-	addKeyValue(input: $keyValues) {keyValue {id}}
+mutation CreateStringVs($createInput: [AddStringVInput!]!) {
+	addStringV(input: $createInput) {stringV {id}}
 }
 
-mutation DeleteKeyValue($filter: KeyValueFilter!) {
-	deleteKeyValue(filter: $filter) {keyValue {id}}
+mutation UpdateStringVs($updateInput: UpdateStringVInput!) {
+	updateStringV(input: $updateInput) {stringV {id}}
+}
+
+mutation DeleteStringVs($delFilter: StringVFilter!) {
+	deleteStringV(filter: $delFilter) {stringV {id}}
+}
+
+# ------------------------------------------------------------------------------
+
+query GetFloatVByID($id: ID!) {
+	getFloatV(id: $id) {...FloatVFragment}
+}
+
+query GetFloatVs($getFilter: FloatVFilter, $order: FloatVOrder, $first: Int, $offset: Int) {
+	queryFloatV(filter: $getFilter, order: $order, first: $first, offset: $offset) {...FloatVFragment}
+	aggregateFloatV(filter: $getFilter) {count}
+}
+
+mutation CreateFloatVs($createInput: [AddFloatVInput!]!) {
+	addFloatV(input: $createInput) {floatV {id}}
+}
+
+mutation UpdateFloatVs($updateInput: UpdateFloatVInput!) {
+	updateFloatV(input: $updateInput) {floatV {id}}
+}
+
+mutation DeleteFloatVs($delFilter: FloatVFilter!) {
+	deleteFloatV(filter: $delFilter) {floatV {id}}
+}
+
+# ------------------------------------------------------------------------------
+
+query GetKeyValueByID($id: ID!) {
+	getKeyValue(id: $id) {...KeyValueFragment}
+}
+
+query GetKeyValues($getFilter: KeyValueFilter, $order: KeyValueOrder, $first: Int, $offset: Int) {
+	queryKeyValue(filter: $getFilter, order: $order, first: $first, offset: $offset) {...KeyValueFragment}
+	aggregateKeyValue(filter: $getFilter) {count}
+}
+
+mutation CreateKeyValues($createInput: [AddKeyValueInput!]!) {
+	addKeyValue(input: $createInput) {keyValue {id}}
+}
+
+mutation UpdateKeyValues($updateInput: UpdateKeyValueInput!) {
+	updateKeyValue(input: $updateInput) {keyValue {id}}
+}
+
+mutation DeleteKeyValues($delFilter: KeyValueFilter!) {
+	deleteKeyValue(filter: $delFilter) {keyValue {id}}
 }

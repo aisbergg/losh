@@ -5,15 +5,37 @@ fragment DatabaseFragment on Database {
 
 # ------------------------------------------------------------------------------
 
-query GetDatabaseInfo() {
-	queryDatabase(first: 1) {
-		...DatabaseFragment
-	}
+# query GetDatabaseInfo() {
+# 	queryDatabase(first: 1) {
+# 		...DatabaseFragment
+# 	}
+# }
+
+# mutation CreateDatabaseInfo($input: [AddDatabaseInput!]!) {
+# 	# delete old information first
+# 	deleteDatabase(filter: {}) {database {id}}
+# 	# save new information
+# 	addDatabase(input: $input) {database {id}}
+# }
+
+
+query GetDatabaseByID($id: ID!) {
+	getDatabase(id: $id) {...DatabaseFragment}
 }
 
-mutation SaveDatabaseInfo($dbInfo: [AddDatabaseInput!]!) {
-	# delete old information first
-	deleteDatabase(filter: {}) {database {id}}
-	# save new information
-	addDatabase(input: $dbInfo) {database {id}}
+query GetDatabases($getFilter: DatabaseFilter, $order: DatabaseOrder, $first: Int, $offset: Int) {
+	queryDatabase(filter: $getFilter, order: $order, first: $first, offset: $offset) {...DatabaseFragment}
+	aggregateDatabase(filter: $getFilter) {count}
+}
+
+mutation CreateDatabases($createInput: [AddDatabaseInput!]!) {
+	addDatabase(input: $createInput) {database {id}}
+}
+
+mutation UpdateDatabases($updateInput: UpdateDatabaseInput!) {
+	updateDatabase(input: $updateInput) {database {id}}
+}
+
+mutation DeleteDatabases($delFilter: DatabaseFilter!) {
+	deleteDatabase(filter: $delFilter) {database {id}}
 }

@@ -3,65 +3,133 @@ fragment ComponentFragment on Component {
 	xid
 	name
 	description
-	owner {id}
 	version
 	createdAt
-	releases {id}
+	releases {
+		id
+		name
+	}
 	isLatest
-	repository {id}
-	license {id}
-	additionalLicenses {id}
-	licensor {id}
+	repository {
+		id
+		name
+	}
+	license {
+		id
+		xid
+	}
+	additionalLicenses {
+		id
+		xid
+	}
+	licensor {...UserOrGroupBasicFragment}
 	documentationLanguage
 	technologyReadinessLevel
 	documentationReadinessLevel
 	attestation
 	publication
-	compliesWith {id}
+	compliesWith {
+		id
+		name
+	}
 	cpcPatentClass
-	tsdc {id}
-	components {id}
+	tsdc {
+		id
+		name
+	}
+	components {
+		id
+		name
+	}
 	software {id}
-	image {id}
-	readme {id}
-	contributionGuide {id}
-	bom {id}
-	manufacturingInstructions {id}
-	userManual {id}
-	product {id}
-	usedIn {id}
-	source {id}
-	export {id}
-	auxiliary {id}
-	organization {id}
+	image {
+		id
+		path
+	}
+	readme {
+		id
+		path
+	}
+	contributionGuide {
+		id
+		path
+	}
+	bom {
+		id
+		path
+	}
+	manufacturingInstructions {
+		id
+		path
+	}
+	userManual {
+		id
+		path
+	}
+	product {
+		id
+		name
+	}
+	usedIn {
+		id
+		name
+	}
+	source {
+		id
+		path
+	}
+	export {
+		id
+		path
+	}
+	auxiliary {
+		id
+		path
+	}
+	organization {
+		id
+		name
+	}
 	mass
-	outerDimensions {
-    ... on BoundingBoxDimensions {id}
-    ... on OpenSCADDimensions {id}
-  }
-	material {id}
-	manufacturingProcess {id}
-	productionMetadata {id}
+	outerDimensions {...OuterDimensionsFragment}
+	material {
+		id
+		name
+	}
+	manufacturingProcess {
+		id
+		name
+	}
+	productionMetadata {...KeyValueFragment}
 }
 
 # ------------------------------------------------------------------------------
 
-query GetComponent($id: ID, $xid: String) {
-	getComponent(id: $id, xid: $xid) {
-		...ComponentFragment
-	}
+query GetComponentByID($id: ID!) {
+	getComponent(id: $id) {...ComponentFragment}
 }
 
-query GetComponents($filter: ComponentFilter, $order: ComponentOrder, $first: Int, $offset: Int) {
-	queryComponent(filter: $filter, order: $order, first: $first, offset: $offset) {
-		...ComponentFragment
-	}
+query GetComponentByXid($xid: String!) {
+	getComponent(xid: $xid) {...ComponentFragment}
 }
 
-mutation SaveComponents($input: [AddComponentInput!]!) {
-	addComponent(input: $input, upsert: true) {component {id}}
+query GetComponentID($xid: String!) {
+	getComponent(xid: $xid) {id}
 }
 
-mutation DeleteComponent($filter: ComponentFilter!) {
-	deleteComponent(filter: $filter) {component {id}}
+query GetComponents($getFilter: ComponentFilter, $order: ComponentOrder, $first: Int, $offset: Int) {
+	queryComponent(filter: $getFilter, order: $order, first: $first, offset: $offset) {...ComponentFragment}
+	aggregateComponent(filter: $getFilter) {count}
+}
+
+mutation CreateComponents($createInput: [AddComponentInput!]!) {
+	addComponent(input: $createInput, upsert: true) {component {id}}
+}
+
+mutation UpdateComponents($updateInput: UpdateComponentInput!) {
+	updateComponent(input: $updateInput) {component {id}}
+}
+
+mutation DeleteComponents($delFilter: ComponentFilter!) {
+	deleteComponent(filter: $delFilter) {component {id}}
 }

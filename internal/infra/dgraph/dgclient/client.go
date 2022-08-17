@@ -4,102 +4,154 @@ package dgclient
 
 import (
 	"context"
-	"time"
-
-	"losh/internal/core/product/models"
 	"losh/internal/lib/net/request"
+	"time"
 )
 
 type DgraphGraphQLClient interface {
-	GetBoundingBoxDimensions(ctx context.Context, id string) (*GetBoundingBoxDimensions, error)
-	GetBoundingBoxDimensionss(ctx context.Context, filter *models.BoundingBoxDimensionsFilter, order *models.BoundingBoxDimensionsOrder, first *int64, offset *int64) (*GetBoundingBoxDimensionss, error)
-	SaveBoundingBoxDimensionss(ctx context.Context, input []*models.AddBoundingBoxDimensionsInput, deleteIds []string) (*SaveBoundingBoxDimensionss, error)
-	DeleteBoundingBoxDimensions(ctx context.Context, filter models.BoundingBoxDimensionsFilter) (*DeleteBoundingBoxDimensions, error)
-	GetCategory(ctx context.Context, id *string, xid *string) (*GetCategory, error)
-	GetCategories(ctx context.Context, filter *models.CategoryFilter, order *models.CategoryOrder, first *int64, offset *int64) (*GetCategories, error)
-	SaveCategories(ctx context.Context, input []*models.AddCategoryInput) (*SaveCategories, error)
-	DeleteCategory(ctx context.Context, filter models.CategoryFilter) (*DeleteCategory, error)
-	GetComponentSource(ctx context.Context, id *string, xid *string) (*GetComponentSource, error)
-	GetComponentSources(ctx context.Context, filter *models.ComponentSourceFilter, order *models.ComponentSourceOrder, first *int64, offset *int64) (*GetComponentSources, error)
-	SaveComponentSources(ctx context.Context, input []*models.AddComponentSourceInput) (*SaveComponentSources, error)
-	DeleteComponentSource(ctx context.Context, filter models.ComponentSourceFilter) (*DeleteComponentSource, error)
-	GetComponent(ctx context.Context, id *string, xid *string) (*GetComponent, error)
-	GetComponents(ctx context.Context, filter *models.ComponentFilter, order *models.ComponentOrder, first *int64, offset *int64) (*GetComponents, error)
-	SaveComponents(ctx context.Context, input []*models.AddComponentInput) (*SaveComponents, error)
-	DeleteComponent(ctx context.Context, filter models.ComponentFilter) (*DeleteComponent, error)
-	GetDatabaseInfo(ctx context.Context) (*GetDatabaseInfo, error)
-	SaveDatabaseInfo(ctx context.Context, dbInfo []*models.AddDatabaseInput) (*SaveDatabaseInfo, error)
-	GetFile(ctx context.Context, id string) (*GetFile, error)
-	GetFiles(ctx context.Context, filter *models.FileFilter, order *models.FileOrder, first *int64, offset *int64) (*GetFiles, error)
-	SaveFiles(ctx context.Context, input []*models.AddFileInput, deleteIds []string) (*SaveFiles, error)
-	DeleteFile(ctx context.Context, filter models.FileFilter) (*DeleteFile, error)
-	GetFloatV(ctx context.Context, id string) (*GetFloatV, error)
-	GetFloatVs(ctx context.Context, filter *models.FloatVFilter, order *models.FloatVOrder, first *int64, offset *int64) (*GetFloatVs, error)
-	SaveFloatVs(ctx context.Context, input []*models.AddFloatVInput, deleteIds []string) (*SaveFloatVs, error)
-	DeleteFloatVs(ctx context.Context, filter models.FloatVFilter) (*DeleteFloatVs, error)
-	GetHost(ctx context.Context, id *string, domain *string) (*GetHost, error)
-	GetHosts(ctx context.Context, filter *models.HostFilter, order *models.HostOrder, first *int64, offset *int64) (*GetHosts, error)
-	SaveHosts(ctx context.Context, hosts []*models.AddHostInput) (*SaveHosts, error)
-	DeleteHost(ctx context.Context, filter models.HostFilter) (*DeleteHost, error)
-	GetKeyValue(ctx context.Context, id string) (*GetKeyValue, error)
-	GetKeyValues(ctx context.Context, filter *models.KeyValueFilter, order *models.KeyValueOrder, first *int64, offset *int64) (*GetKeyValues, error)
-	SaveKeyValues(ctx context.Context, keyValues []*models.AddKeyValueInput) (*SaveKeyValues, error)
-	DeleteKeyValue(ctx context.Context, filter models.KeyValueFilter) (*DeleteKeyValue, error)
-	GetLicense(ctx context.Context, id *string, xid *string) (*GetLicense, error)
-	GetLicenses(ctx context.Context, filter *models.LicenseFilter, order *models.LicenseOrder, first *int64, offset *int64) (*GetLicenses, error)
-	SaveLicenses(ctx context.Context, licenses []*models.AddLicenseInput) (*SaveLicenses, error)
-	DeleteLicense(ctx context.Context, filter models.LicenseFilter) (*DeleteLicense, error)
-	GetManufacturingProcess(ctx context.Context, id string) (*GetManufacturingProcess, error)
-	GetManufacturingProcesses(ctx context.Context, filter *models.ManufacturingProcessFilter, order *models.ManufacturingProcessOrder, first *int64, offset *int64) (*GetManufacturingProcesses, error)
-	SaveManufacturingProcesses(ctx context.Context, input []*models.AddManufacturingProcessInput, deleteIds []string) (*SaveManufacturingProcesses, error)
-	DeleteManufacturingProcesses(ctx context.Context, filter models.ManufacturingProcessFilter) (*DeleteManufacturingProcesses, error)
-	GetMaterial(ctx context.Context, id string) (*GetMaterial, error)
-	GetMaterials(ctx context.Context, filter *models.MaterialFilter, order *models.MaterialOrder, first *int64, offset *int64) (*GetMaterials, error)
-	SaveMaterials(ctx context.Context, input []*models.AddMaterialInput, deleteIds []string) (*SaveMaterials, error)
-	DeleteMaterials(ctx context.Context, filter models.MaterialFilter) (*DeleteMaterials, error)
-	GetNode(ctx context.Context, id string) (*GetNode, error)
-	GetNodes(ctx context.Context, filter *models.NodeFilter, first *int64, offset *int64) (*GetNodes, error)
-	DeleteNode(ctx context.Context, filter models.NodeFilter) (*DeleteNode, error)
-	GetOpenSCADDimensions(ctx context.Context, id string) (*GetOpenSCADDimensions, error)
-	GetOpenSCADDimensionss(ctx context.Context, filter *models.OpenSCADDimensionsFilter, order *models.OpenSCADDimensionsOrder, first *int64, offset *int64) (*GetOpenSCADDimensionss, error)
-	SaveOpenSCADDimensionss(ctx context.Context, input []*models.AddOpenSCADDimensionsInput, deleteIds []string) (*SaveOpenSCADDimensionss, error)
-	DeleteOpenSCADDimensionss(ctx context.Context, filter models.OpenSCADDimensionsFilter) (*DeleteOpenSCADDimensionss, error)
-	GetProduct(ctx context.Context, id *string, xid *string) (*GetProduct, error)
-	GetProducts(ctx context.Context, filter *models.ProductFilter, order *models.ProductOrder, first *int64, offset *int64) (*GetProducts, error)
-	SaveProducts(ctx context.Context, products []*models.AddProductInput) (*SaveProducts, error)
-	DeleteProduct(ctx context.Context, filter models.ProductFilter) (*DeleteProduct, error)
-	GetSoftware(ctx context.Context, id string) (*GetSoftware, error)
-	GetSoftwares(ctx context.Context, filter *models.SoftwareFilter, order *models.SoftwareOrder, first *int64, offset *int64) (*GetSoftwares, error)
-	SaveSoftwares(ctx context.Context, input []*models.AddSoftwareInput, deleteIds []string) (*SaveSoftwares, error)
-	DeleteSoftware(ctx context.Context, filter models.SoftwareFilter) (*DeleteSoftware, error)
-	GetStringV(ctx context.Context, id string) (*GetStringV, error)
-	GetStringVs(ctx context.Context, filter *models.StringVFilter, order *models.StringVOrder, first *int64, offset *int64) (*GetStringVs, error)
-	SaveStringVs(ctx context.Context, input []*models.AddStringVInput, deleteIds []string) (*SaveStringVs, error)
-	DeleteStringVs(ctx context.Context, filter models.StringVFilter) (*DeleteStringVs, error)
-	GetTag(ctx context.Context, id *string, xid *string) (*GetTag, error)
-	GetTags(ctx context.Context, filter *models.TagFilter, order *models.TagOrder, first *int64, offset *int64) (*GetTags, error)
-	SaveTags(ctx context.Context, input []*models.AddTagInput) (*SaveTags, error)
-	DeleteTag(ctx context.Context, filter models.TagFilter) (*DeleteTag, error)
-	GetTechnicalStandard(ctx context.Context, id *string, xid *string) (*GetTechnicalStandard, error)
-	GetTechnicalStandards(ctx context.Context, filter *models.TechnicalStandardFilter, order *models.TechnicalStandardOrder, first *int64, offset *int64) (*GetTechnicalStandards, error)
-	SaveTechnicalStandards(ctx context.Context, input []*models.AddTechnicalStandardInput) (*SaveTechnicalStandards, error)
-	DeleteTechnicalStandard(ctx context.Context, filter models.TechnicalStandardFilter) (*DeleteTechnicalStandard, error)
-	GetTechnologySpecificDocumentationCriteria(ctx context.Context, id *string, xid *string) (*GetTechnologySpecificDocumentationCriteria, error)
-	GetTechnologySpecificDocumentationCriterias(ctx context.Context, filter *models.TechnologySpecificDocumentationCriteriaFilter, order *models.TechnologySpecificDocumentationCriteriaOrder, first *int64, offset *int64) (*GetTechnologySpecificDocumentationCriterias, error)
-	SaveTechnologySpecificDocumentationCriterias(ctx context.Context, input []*models.AddTechnologySpecificDocumentationCriteriaInput) (*SaveTechnologySpecificDocumentationCriterias, error)
-	DeleteTechnologySpecificDocumentationCriteria(ctx context.Context, filter models.TechnologySpecificDocumentationCriteriaFilter) (*DeleteTechnologySpecificDocumentationCriteria, error)
+	GetCategoryByID(ctx context.Context, id string) (*GetCategoryByID, error)
+	GetCategoryByXid(ctx context.Context, xid string) (*GetCategoryByXid, error)
+	GetCategoryID(ctx context.Context, xid string) (*GetCategoryID, error)
+	GetCategories(ctx context.Context, getFilter *CategoryFilter, order *CategoryOrder, first *int64, offset *int64) (*GetCategories, error)
+	CreateCategories(ctx context.Context, createInput []*AddCategoryInput) (*CreateCategories, error)
+	UpdateCategories(ctx context.Context, updateInput UpdateCategoryInput) (*UpdateCategories, error)
+	DeleteCategories(ctx context.Context, delFilter CategoryFilter) (*DeleteCategories, error)
+	GetComponentByID(ctx context.Context, id string) (*GetComponentByID, error)
+	GetComponentByXid(ctx context.Context, xid string) (*GetComponentByXid, error)
+	GetComponentID(ctx context.Context, xid string) (*GetComponentID, error)
+	GetComponents(ctx context.Context, getFilter *ComponentFilter, order *ComponentOrder, first *int64, offset *int64) (*GetComponents, error)
+	CreateComponents(ctx context.Context, createInput []*AddComponentInput) (*CreateComponents, error)
+	UpdateComponents(ctx context.Context, updateInput UpdateComponentInput) (*UpdateComponents, error)
+	DeleteComponents(ctx context.Context, delFilter ComponentFilter) (*DeleteComponents, error)
+	GetDatabaseByID(ctx context.Context, id string) (*GetDatabaseByID, error)
+	GetDatabases(ctx context.Context, getFilter *DatabaseFilter, order *DatabaseOrder, first *int64, offset *int64) (*GetDatabases, error)
+	CreateDatabases(ctx context.Context, createInput []*AddDatabaseInput) (*CreateDatabases, error)
+	UpdateDatabases(ctx context.Context, updateInput UpdateDatabaseInput) (*UpdateDatabases, error)
+	DeleteDatabases(ctx context.Context, delFilter DatabaseFilter) (*DeleteDatabases, error)
+	GetFileByID(ctx context.Context, id string) (*GetFileByID, error)
+	GetFileByXid(ctx context.Context, xid string) (*GetFileByXid, error)
+	GetFileID(ctx context.Context, xid string) (*GetFileID, error)
+	GetFiles(ctx context.Context, getFilter *FileFilter, order *FileOrder, first *int64, offset *int64) (*GetFiles, error)
+	CreateFiles(ctx context.Context, createInput []*AddFileInput) (*CreateFiles, error)
+	UpdateFiles(ctx context.Context, updateInput UpdateFileInput) (*UpdateFiles, error)
+	DeleteFiles(ctx context.Context, delFilter FileFilter) (*DeleteFiles, error)
+	GetHostByID(ctx context.Context, id string) (*GetHostByID, error)
+	GetHostByDomain(ctx context.Context, domain string) (*GetHostByDomain, error)
+	GetHostID(ctx context.Context, domain string) (*GetHostID, error)
+	GetHosts(ctx context.Context, getFilter *HostFilter, order *HostOrder, first *int64, offset *int64) (*GetHosts, error)
+	CreateHosts(ctx context.Context, createInput []*AddHostInput) (*CreateHosts, error)
+	UpdateHosts(ctx context.Context, updateInput UpdateHostInput) (*UpdateHosts, error)
+	DeleteHosts(ctx context.Context, delFilter HostFilter) (*DeleteHosts, error)
+	GetStringVByID(ctx context.Context, id string) (*GetStringVByID, error)
+	GetStringVs(ctx context.Context, getFilter *StringVFilter, order *StringVOrder, first *int64, offset *int64) (*GetStringVs, error)
+	CreateStringVs(ctx context.Context, createInput []*AddStringVInput) (*CreateStringVs, error)
+	UpdateStringVs(ctx context.Context, updateInput UpdateStringVInput) (*UpdateStringVs, error)
+	DeleteStringVs(ctx context.Context, delFilter StringVFilter) (*DeleteStringVs, error)
+	GetFloatVByID(ctx context.Context, id string) (*GetFloatVByID, error)
+	GetFloatVs(ctx context.Context, getFilter *FloatVFilter, order *FloatVOrder, first *int64, offset *int64) (*GetFloatVs, error)
+	CreateFloatVs(ctx context.Context, createInput []*AddFloatVInput) (*CreateFloatVs, error)
+	UpdateFloatVs(ctx context.Context, updateInput UpdateFloatVInput) (*UpdateFloatVs, error)
+	DeleteFloatVs(ctx context.Context, delFilter FloatVFilter) (*DeleteFloatVs, error)
+	GetKeyValueByID(ctx context.Context, id string) (*GetKeyValueByID, error)
+	GetKeyValues(ctx context.Context, getFilter *KeyValueFilter, order *KeyValueOrder, first *int64, offset *int64) (*GetKeyValues, error)
+	CreateKeyValues(ctx context.Context, createInput []*AddKeyValueInput) (*CreateKeyValues, error)
+	UpdateKeyValues(ctx context.Context, updateInput UpdateKeyValueInput) (*UpdateKeyValues, error)
+	DeleteKeyValues(ctx context.Context, delFilter KeyValueFilter) (*DeleteKeyValues, error)
+	GetLicenseByID(ctx context.Context, id string) (*GetLicenseByID, error)
+	GetLicenseByXid(ctx context.Context, xid string) (*GetLicenseByXid, error)
+	GetLicenseID(ctx context.Context, xid string) (*GetLicenseID, error)
+	GetLicenses(ctx context.Context, getFilter *LicenseFilter, order *LicenseOrder, first *int64, offset *int64) (*GetLicenses, error)
+	GetAllLicensesBasic(ctx context.Context) (*GetAllLicensesBasic, error)
+	CreateLicenses(ctx context.Context, createInput []*AddLicenseInput) (*CreateLicenses, error)
+	UpdateLicenses(ctx context.Context, updateInput UpdateLicenseInput) (*UpdateLicenses, error)
+	DeleteLicenses(ctx context.Context, delFilter LicenseFilter) (*DeleteLicenses, error)
+	GetManufacturingProcessByID(ctx context.Context, id string) (*GetManufacturingProcessByID, error)
+	GetManufacturingProcesses(ctx context.Context, getFilter *ManufacturingProcessFilter, order *ManufacturingProcessOrder, first *int64, offset *int64) (*GetManufacturingProcesses, error)
+	CreateManufacturingProcesses(ctx context.Context, createInput []*AddManufacturingProcessInput) (*CreateManufacturingProcesses, error)
+	UpdateManufacturingProcesses(ctx context.Context, updateInput UpdateManufacturingProcessInput) (*UpdateManufacturingProcesses, error)
+	DeleteManufacturingProcesses(ctx context.Context, delFilter ManufacturingProcessFilter) (*DeleteManufacturingProcesses, error)
+	GetMaterialByID(ctx context.Context, id string) (*GetMaterialByID, error)
+	GetMaterials(ctx context.Context, getFilter *MaterialFilter, order *MaterialOrder, first *int64, offset *int64) (*GetMaterials, error)
+	CreateMaterials(ctx context.Context, createInput []*AddMaterialInput) (*CreateMaterials, error)
+	UpdateMaterials(ctx context.Context, updateInput UpdateMaterialInput) (*UpdateMaterials, error)
+	DeleteMaterials(ctx context.Context, delFilter MaterialFilter) (*DeleteMaterials, error)
+	CheckNode(ctx context.Context, id string) (*CheckNode, error)
+	GetNodeDetails(ctx context.Context, id string) (*GetNodeDetails, error)
+	GetNodeByID(ctx context.Context, id string) (*GetNodeByID, error)
+	GetNodes(ctx context.Context, getFilter *NodeFilter, first *int64, offset *int64) (*GetNodes, error)
+	DeleteNodes(ctx context.Context, delFilter NodeFilter) (*DeleteNodes, error)
+	GetBoundingBoxDimensionsByID(ctx context.Context, id string) (*GetBoundingBoxDimensionsByID, error)
+	GetBoundingBoxDimensionss(ctx context.Context, getFilter *BoundingBoxDimensionsFilter, order *BoundingBoxDimensionsOrder, first *int64, offset *int64) (*GetBoundingBoxDimensionss, error)
+	CreateBoundingBoxDimensionss(ctx context.Context, createInput []*AddBoundingBoxDimensionsInput) (*CreateBoundingBoxDimensionss, error)
+	UpdateBoundingBoxDimensionss(ctx context.Context, updateInput UpdateBoundingBoxDimensionsInput) (*UpdateBoundingBoxDimensionss, error)
+	DeleteBoundingBoxDimensionss(ctx context.Context, delFilter BoundingBoxDimensionsFilter) (*DeleteBoundingBoxDimensionss, error)
+	GetOpenSCADDimensionsByID(ctx context.Context, id string) (*GetOpenSCADDimensionsByID, error)
+	GetOpenSCADDimensionss(ctx context.Context, getFilter *OpenSCADDimensionsFilter, order *OpenSCADDimensionsOrder, first *int64, offset *int64) (*GetOpenSCADDimensionss, error)
+	CreateOpenSCADDimensionss(ctx context.Context, createInput []*AddOpenSCADDimensionsInput) (*CreateOpenSCADDimensionss, error)
+	UpdateOpenSCADDimensionss(ctx context.Context, updateInput UpdateOpenSCADDimensionsInput) (*UpdateOpenSCADDimensionss, error)
+	DeleteOpenSCADDimensionss(ctx context.Context, delFilter OpenSCADDimensionsFilter) (*DeleteOpenSCADDimensionss, error)
+	GetProductByID(ctx context.Context, id string) (*GetProductByID, error)
+	GetProductByXid(ctx context.Context, xid string) (*GetProductByXid, error)
+	GetProductID(ctx context.Context, xid string) (*GetProductID, error)
+	GetProducts(ctx context.Context, getFilter *ProductFilter, order *ProductOrder, first *int64, offset *int64) (*GetProducts, error)
+	SearchProducts(ctx context.Context, getFilter *ProductFilter, order *ProductOrder, first *int64, offset *int64) (*SearchProducts, error)
+	CreateProducts(ctx context.Context, createInput []*AddProductInput) (*CreateProducts, error)
+	UpdateProducts(ctx context.Context, updateInput UpdateProductInput) (*UpdateProducts, error)
+	DeleteProducts(ctx context.Context, delFilter ProductFilter) (*DeleteProducts, error)
+	GetRepositoryByID(ctx context.Context, id string) (*GetRepositoryByID, error)
+	GetRepositoryByXid(ctx context.Context, xid string) (*GetRepositoryByXid, error)
+	GetRepositoryID(ctx context.Context, xid string) (*GetRepositoryID, error)
+	GetRepositories(ctx context.Context, getFilter *RepositoryFilter, order *RepositoryOrder, first *int64, offset *int64) (*GetRepositories, error)
+	CreateRepositories(ctx context.Context, createInput []*AddRepositoryInput) (*CreateRepositories, error)
+	UpdateRepositories(ctx context.Context, updateInput UpdateRepositoryInput) (*UpdateRepositories, error)
+	DeleteRepositories(ctx context.Context, delFilter RepositoryFilter) (*DeleteRepositories, error)
+	GetSoftwareByID(ctx context.Context, id string) (*GetSoftwareByID, error)
+	GetSoftwares(ctx context.Context, getFilter *SoftwareFilter, order *SoftwareOrder, first *int64, offset *int64) (*GetSoftwares, error)
+	CreateSoftwares(ctx context.Context, createInput []*AddSoftwareInput) (*CreateSoftwares, error)
+	UpdateSoftwares(ctx context.Context, updateInput UpdateSoftwareInput) (*UpdateSoftwares, error)
+	DeleteSoftwares(ctx context.Context, delFilter SoftwareFilter) (*DeleteSoftwares, error)
+	GetTagByID(ctx context.Context, id string) (*GetTagByID, error)
+	GetTagByXid(ctx context.Context, xid string) (*GetTagByXid, error)
+	GetTagID(ctx context.Context, xid string) (*GetTagID, error)
+	GetTags(ctx context.Context, getFilter *TagFilter, order *TagOrder, first *int64, offset *int64) (*GetTags, error)
+	CreateTags(ctx context.Context, createInput []*AddTagInput) (*CreateTags, error)
+	UpdateTags(ctx context.Context, updateInput UpdateTagInput) (*UpdateTags, error)
+	DeleteTags(ctx context.Context, delFilter TagFilter) (*DeleteTags, error)
+	GetTechnicalStandardByID(ctx context.Context, id string) (*GetTechnicalStandardByID, error)
+	GetTechnicalStandardByXid(ctx context.Context, xid string) (*GetTechnicalStandardByXid, error)
+	GetTechnicalStandardID(ctx context.Context, xid string) (*GetTechnicalStandardID, error)
+	GetTechnicalStandards(ctx context.Context, getFilter *TechnicalStandardFilter, order *TechnicalStandardOrder, first *int64, offset *int64) (*GetTechnicalStandards, error)
+	CreateTechnicalStandards(ctx context.Context, createInput []*AddTechnicalStandardInput) (*CreateTechnicalStandards, error)
+	UpdateTechnicalStandards(ctx context.Context, updateInput UpdateTechnicalStandardInput) (*UpdateTechnicalStandards, error)
+	DeleteTechnicalStandards(ctx context.Context, delFilter TechnicalStandardFilter) (*DeleteTechnicalStandards, error)
+	GetTechnologySpecificDocumentationCriteriaByID(ctx context.Context, id string) (*GetTechnologySpecificDocumentationCriteriaByID, error)
+	GetTechnologySpecificDocumentationCriteriaByXid(ctx context.Context, xid string) (*GetTechnologySpecificDocumentationCriteriaByXid, error)
+	GetTechnologySpecificDocumentationCriteriaID(ctx context.Context, xid string) (*GetTechnologySpecificDocumentationCriteriaID, error)
+	GetTechnologySpecificDocumentationCriterias(ctx context.Context, getFilter *TechnologySpecificDocumentationCriteriaFilter, order *TechnologySpecificDocumentationCriteriaOrder, first *int64, offset *int64) (*GetTechnologySpecificDocumentationCriterias, error)
+	CreateTechnologySpecificDocumentationCriterias(ctx context.Context, createInput []*AddTechnologySpecificDocumentationCriteriaInput) (*CreateTechnologySpecificDocumentationCriterias, error)
+	UpdateTechnologySpecificDocumentationCriterias(ctx context.Context, updateInput UpdateTechnologySpecificDocumentationCriteriaInput) (*UpdateTechnologySpecificDocumentationCriterias, error)
+	DeleteTechnologySpecificDocumentationCriterias(ctx context.Context, delFilter TechnologySpecificDocumentationCriteriaFilter) (*DeleteTechnologySpecificDocumentationCriterias, error)
 	TestConnection(ctx context.Context) (*TestConnection, error)
-	GetUserOrGroup(ctx context.Context, id *string, xid *string) (*GetUserOrGroup, error)
-	GetUserOrGroups(ctx context.Context, filter *models.UserOrGroupFilter, order *models.UserOrGroupOrder, first *int64, offset *int64) (*GetUserOrGroups, error)
-	DeleteUserOrGroup(ctx context.Context, filter models.UserOrGroupFilter) (*DeleteUserOrGroup, error)
-	GetUser(ctx context.Context, id *string, xid *string) (*GetUser, error)
-	GetUsers(ctx context.Context, filter *models.UserFilter, order *models.UserOrder, first *int64, offset *int64) (*GetUsers, error)
-	SaveUsers(ctx context.Context, input []*models.AddUserInput) (*SaveUsers, error)
-	DeleteUser(ctx context.Context, filter models.UserFilter) (*DeleteUser, error)
-	GetGroup(ctx context.Context, id *string, xid *string) (*GetGroup, error)
-	GetGroups(ctx context.Context, filter *models.GroupFilter, order *models.GroupOrder, first *int64, offset *int64) (*GetGroups, error)
-	SaveGroups(ctx context.Context, input []*models.AddGroupInput) (*SaveGroups, error)
-	DeleteGroup(ctx context.Context, filter models.GroupFilter) (*DeleteGroup, error)
+	GetUserOrGroupByID(ctx context.Context, id string) (*GetUserOrGroupByID, error)
+	GetUserOrGroupByXid(ctx context.Context, xid string) (*GetUserOrGroupByXid, error)
+	GetUserOrGroupID(ctx context.Context, xid string) (*GetUserOrGroupID, error)
+	GetUserOrGroups(ctx context.Context, getFilter *UserOrGroupFilter, order *UserOrGroupOrder, first *int64, offset *int64) (*GetUserOrGroups, error)
+	UpdateUserOrGroups(ctx context.Context, updateInput UpdateUserOrGroupInput) (*UpdateUserOrGroups, error)
+	DeleteUserOrGroups(ctx context.Context, delFilter UserOrGroupFilter) (*DeleteUserOrGroups, error)
+	GetUserByID(ctx context.Context, id string) (*GetUserByID, error)
+	GetUserByXid(ctx context.Context, xid string) (*GetUserByXid, error)
+	GetUserID(ctx context.Context, xid string) (*GetUserID, error)
+	GetUsers(ctx context.Context, getFilter *UserFilter, order *UserOrder, first *int64, offset *int64) (*GetUsers, error)
+	CreateUsers(ctx context.Context, createInput []*AddUserInput) (*CreateUsers, error)
+	UpdateUsers(ctx context.Context, updateInput UpdateUserInput) (*UpdateUsers, error)
+	DeleteUsers(ctx context.Context, delFilter UserFilter) (*DeleteUsers, error)
+	GetGroupByID(ctx context.Context, id string) (*GetGroupByID, error)
+	GetGroupByXid(ctx context.Context, xid string) (*GetGroupByXid, error)
+	GetGroupID(ctx context.Context, xid string) (*GetGroupID, error)
+	GetGroups(ctx context.Context, getFilter *GroupFilter, order *GroupOrder, first *int64, offset *int64) (*GetGroups, error)
+	CreateGroups(ctx context.Context, createInput []*AddGroupInput) (*CreateGroups, error)
+	UpdateGroups(ctx context.Context, updateInput UpdateGroupInput) (*UpdateGroups, error)
+	DeleteGroups(ctx context.Context, delFilter GroupFilter) (*DeleteGroups, error)
 }
 
 type Client struct {
@@ -113,185 +165,181 @@ func NewClient(requester *request.GraphQLRequester) DgraphGraphQLClient {
 }
 
 type Query struct {
-	GetDatabase                                      *models.Database                                               "json:\"getDatabase,omitempty\" graphql:\"getDatabase\""
-	QueryDatabase                                    []*models.Database                                             "json:\"queryDatabase,omitempty\" graphql:\"queryDatabase\""
-	AggregateDatabase                                *models.DatabaseAggregateResult                                "json:\"aggregateDatabase,omitempty\" graphql:\"aggregateDatabase\""
-	GetNode                                          models.Node                                                    "json:\"getNode,omitempty\" graphql:\"getNode\""
-	QueryNode                                        []models.Node                                                  "json:\"queryNode,omitempty\" graphql:\"queryNode\""
-	AggregateNode                                    *models.NodeAggregateResult                                    "json:\"aggregateNode,omitempty\" graphql:\"aggregateNode\""
-	QueryCrawlerMeta                                 []models.CrawlerMeta                                           "json:\"queryCrawlerMeta,omitempty\" graphql:\"queryCrawlerMeta\""
-	AggregateCrawlerMeta                             *models.CrawlerMetaAggregateResult                             "json:\"aggregateCrawlerMeta,omitempty\" graphql:\"aggregateCrawlerMeta\""
-	GetProduct                                       *models.Product                                                "json:\"getProduct,omitempty\" graphql:\"getProduct\""
-	QueryProduct                                     []*models.Product                                              "json:\"queryProduct,omitempty\" graphql:\"queryProduct\""
-	AggregateProduct                                 *models.ProductAggregateResult                                 "json:\"aggregateProduct,omitempty\" graphql:\"aggregateProduct\""
-	GetComponent                                     *models.Component                                              "json:\"getComponent,omitempty\" graphql:\"getComponent\""
-	QueryComponent                                   []*models.Component                                            "json:\"queryComponent,omitempty\" graphql:\"queryComponent\""
-	AggregateComponent                               *models.ComponentAggregateResult                               "json:\"aggregateComponent,omitempty\" graphql:\"aggregateComponent\""
-	GetSoftware                                      *models.Software                                               "json:\"getSoftware,omitempty\" graphql:\"getSoftware\""
-	QuerySoftware                                    []*models.Software                                             "json:\"querySoftware,omitempty\" graphql:\"querySoftware\""
-	AggregateSoftware                                *models.SoftwareAggregateResult                                "json:\"aggregateSoftware,omitempty\" graphql:\"aggregateSoftware\""
-	GetComponentSource                               *models.ComponentSource                                        "json:\"getComponentSource,omitempty\" graphql:\"getComponentSource\""
-	QueryComponentSource                             []*models.ComponentSource                                      "json:\"queryComponentSource,omitempty\" graphql:\"queryComponentSource\""
-	AggregateComponentSource                         *models.ComponentSourceAggregateResult                         "json:\"aggregateComponentSource,omitempty\" graphql:\"aggregateComponentSource\""
-	GetHost                                          *models.Host                                                   "json:\"getHost,omitempty\" graphql:\"getHost\""
-	QueryHost                                        []*models.Host                                                 "json:\"queryHost,omitempty\" graphql:\"queryHost\""
-	AggregateHost                                    *models.HostAggregateResult                                    "json:\"aggregateHost,omitempty\" graphql:\"aggregateHost\""
-	GetLicense                                       *models.License                                                "json:\"getLicense,omitempty\" graphql:\"getLicense\""
-	QueryLicense                                     []*models.License                                              "json:\"queryLicense,omitempty\" graphql:\"queryLicense\""
-	AggregateLicense                                 *models.LicenseAggregateResult                                 "json:\"aggregateLicense,omitempty\" graphql:\"aggregateLicense\""
-	GetTechnologySpecificDocumentationCriteria       *models.TechnologySpecificDocumentationCriteria                "json:\"getTechnologySpecificDocumentationCriteria,omitempty\" graphql:\"getTechnologySpecificDocumentationCriteria\""
-	QueryTechnologySpecificDocumentationCriteria     []*models.TechnologySpecificDocumentationCriteria              "json:\"queryTechnologySpecificDocumentationCriteria,omitempty\" graphql:\"queryTechnologySpecificDocumentationCriteria\""
-	AggregateTechnologySpecificDocumentationCriteria *models.TechnologySpecificDocumentationCriteriaAggregateResult "json:\"aggregateTechnologySpecificDocumentationCriteria,omitempty\" graphql:\"aggregateTechnologySpecificDocumentationCriteria\""
-	GetTechnicalStandard                             *models.TechnicalStandard                                      "json:\"getTechnicalStandard,omitempty\" graphql:\"getTechnicalStandard\""
-	QueryTechnicalStandard                           []*models.TechnicalStandard                                    "json:\"queryTechnicalStandard,omitempty\" graphql:\"queryTechnicalStandard\""
-	AggregateTechnicalStandard                       *models.TechnicalStandardAggregateResult                       "json:\"aggregateTechnicalStandard,omitempty\" graphql:\"aggregateTechnicalStandard\""
-	GetUserOrGroup                                   models.UserOrGroup                                             "json:\"getUserOrGroup,omitempty\" graphql:\"getUserOrGroup\""
-	QueryUserOrGroup                                 []models.UserOrGroup                                           "json:\"queryUserOrGroup,omitempty\" graphql:\"queryUserOrGroup\""
-	AggregateUserOrGroup                             *models.UserOrGroupAggregateResult                             "json:\"aggregateUserOrGroup,omitempty\" graphql:\"aggregateUserOrGroup\""
-	GetGroup                                         *models.Group                                                  "json:\"getGroup,omitempty\" graphql:\"getGroup\""
-	QueryGroup                                       []*models.Group                                                "json:\"queryGroup,omitempty\" graphql:\"queryGroup\""
-	AggregateGroup                                   *models.GroupAggregateResult                                   "json:\"aggregateGroup,omitempty\" graphql:\"aggregateGroup\""
-	GetUser                                          *models.User                                                   "json:\"getUser,omitempty\" graphql:\"getUser\""
-	QueryUser                                        []*models.User                                                 "json:\"queryUser,omitempty\" graphql:\"queryUser\""
-	AggregateUser                                    *models.UserAggregateResult                                    "json:\"aggregateUser,omitempty\" graphql:\"aggregateUser\""
-	GetFile                                          *models.File                                                   "json:\"getFile,omitempty\" graphql:\"getFile\""
-	QueryFile                                        []*models.File                                                 "json:\"queryFile,omitempty\" graphql:\"queryFile\""
-	AggregateFile                                    *models.FileAggregateResult                                    "json:\"aggregateFile,omitempty\" graphql:\"aggregateFile\""
-	GetKeyValue                                      *models.KeyValue                                               "json:\"getKeyValue,omitempty\" graphql:\"getKeyValue\""
-	QueryKeyValue                                    []*models.KeyValue                                             "json:\"queryKeyValue,omitempty\" graphql:\"queryKeyValue\""
-	AggregateKeyValue                                *models.KeyValueAggregateResult                                "json:\"aggregateKeyValue,omitempty\" graphql:\"aggregateKeyValue\""
-	GetStringV                                       *models.StringV                                                "json:\"getStringV,omitempty\" graphql:\"getStringV\""
-	QueryStringV                                     []*models.StringV                                              "json:\"queryStringV,omitempty\" graphql:\"queryStringV\""
-	AggregateStringV                                 *models.StringVAggregateResult                                 "json:\"aggregateStringV,omitempty\" graphql:\"aggregateStringV\""
-	GetFloatV                                        *models.FloatV                                                 "json:\"getFloatV,omitempty\" graphql:\"getFloatV\""
-	QueryFloatV                                      []*models.FloatV                                               "json:\"queryFloatV,omitempty\" graphql:\"queryFloatV\""
-	AggregateFloatV                                  *models.FloatVAggregateResult                                  "json:\"aggregateFloatV,omitempty\" graphql:\"aggregateFloatV\""
-	GetMaterial                                      *models.Material                                               "json:\"getMaterial,omitempty\" graphql:\"getMaterial\""
-	QueryMaterial                                    []*models.Material                                             "json:\"queryMaterial,omitempty\" graphql:\"queryMaterial\""
-	AggregateMaterial                                *models.MaterialAggregateResult                                "json:\"aggregateMaterial,omitempty\" graphql:\"aggregateMaterial\""
-	GetManufacturingProcess                          *models.ManufacturingProcess                                   "json:\"getManufacturingProcess,omitempty\" graphql:\"getManufacturingProcess\""
-	QueryManufacturingProcess                        []*models.ManufacturingProcess                                 "json:\"queryManufacturingProcess,omitempty\" graphql:\"queryManufacturingProcess\""
-	AggregateManufacturingProcess                    *models.ManufacturingProcessAggregateResult                    "json:\"aggregateManufacturingProcess,omitempty\" graphql:\"aggregateManufacturingProcess\""
-	GetBoundingBoxDimensions                         *models.BoundingBoxDimensions                                  "json:\"getBoundingBoxDimensions,omitempty\" graphql:\"getBoundingBoxDimensions\""
-	QueryBoundingBoxDimensions                       []*models.BoundingBoxDimensions                                "json:\"queryBoundingBoxDimensions,omitempty\" graphql:\"queryBoundingBoxDimensions\""
-	AggregateBoundingBoxDimensions                   *models.BoundingBoxDimensionsAggregateResult                   "json:\"aggregateBoundingBoxDimensions,omitempty\" graphql:\"aggregateBoundingBoxDimensions\""
-	GetOpenSCADDimensions                            *models.OpenSCADDimensions                                     "json:\"getOpenSCADDimensions,omitempty\" graphql:\"getOpenSCADDimensions\""
-	QueryOpenSCADDimensions                          []*models.OpenSCADDimensions                                   "json:\"queryOpenSCADDimensions,omitempty\" graphql:\"queryOpenSCADDimensions\""
-	AggregateOpenSCADDimensions                      *models.OpenSCADDimensionsAggregateResult                      "json:\"aggregateOpenSCADDimensions,omitempty\" graphql:\"aggregateOpenSCADDimensions\""
-	GetCategory                                      *models.Category                                               "json:\"getCategory,omitempty\" graphql:\"getCategory\""
-	QueryCategory                                    []*models.Category                                             "json:\"queryCategory,omitempty\" graphql:\"queryCategory\""
-	AggregateCategory                                *models.CategoryAggregateResult                                "json:\"aggregateCategory,omitempty\" graphql:\"aggregateCategory\""
-	GetTag                                           *models.Tag                                                    "json:\"getTag,omitempty\" graphql:\"getTag\""
-	QueryTag                                         []*models.Tag                                                  "json:\"queryTag,omitempty\" graphql:\"queryTag\""
-	AggregateTag                                     *models.TagAggregateResult                                     "json:\"aggregateTag,omitempty\" graphql:\"aggregateTag\""
+	GetTestObject                                    *TestObject                                             "json:\"getTestObject,omitempty\" graphql:\"getTestObject\""
+	QueryTestObject                                  []*TestObject                                           "json:\"queryTestObject,omitempty\" graphql:\"queryTestObject\""
+	AggregateTestObject                              *TestObjectAggregateResult                              "json:\"aggregateTestObject,omitempty\" graphql:\"aggregateTestObject\""
+	GetTestObject2                                   *TestObject2                                            "json:\"getTestObject2,omitempty\" graphql:\"getTestObject2\""
+	QueryTestObject2                                 []*TestObject2                                          "json:\"queryTestObject2,omitempty\" graphql:\"queryTestObject2\""
+	AggregateTestObject2                             *TestObject2AggregateResult                             "json:\"aggregateTestObject2,omitempty\" graphql:\"aggregateTestObject2\""
+	GetTestObject3                                   *TestObject3                                            "json:\"getTestObject3,omitempty\" graphql:\"getTestObject3\""
+	QueryTestObject3                                 []*TestObject3                                          "json:\"queryTestObject3,omitempty\" graphql:\"queryTestObject3\""
+	AggregateTestObject3                             *TestObject3AggregateResult                             "json:\"aggregateTestObject3,omitempty\" graphql:\"aggregateTestObject3\""
+	GetDatabase                                      *Database                                               "json:\"getDatabase,omitempty\" graphql:\"getDatabase\""
+	QueryDatabase                                    []*Database                                             "json:\"queryDatabase,omitempty\" graphql:\"queryDatabase\""
+	AggregateDatabase                                *DatabaseAggregateResult                                "json:\"aggregateDatabase,omitempty\" graphql:\"aggregateDatabase\""
+	GetNode                                          Node                                                    "json:\"getNode,omitempty\" graphql:\"getNode\""
+	QueryNode                                        []Node                                                  "json:\"queryNode,omitempty\" graphql:\"queryNode\""
+	AggregateNode                                    *NodeAggregateResult                                    "json:\"aggregateNode,omitempty\" graphql:\"aggregateNode\""
+	QueryCrawlerMeta                                 []CrawlerMeta                                           "json:\"queryCrawlerMeta,omitempty\" graphql:\"queryCrawlerMeta\""
+	AggregateCrawlerMeta                             *CrawlerMetaAggregateResult                             "json:\"aggregateCrawlerMeta,omitempty\" graphql:\"aggregateCrawlerMeta\""
+	GetProduct                                       *Product                                                "json:\"getProduct,omitempty\" graphql:\"getProduct\""
+	QueryProduct                                     []*Product                                              "json:\"queryProduct,omitempty\" graphql:\"queryProduct\""
+	AggregateProduct                                 *ProductAggregateResult                                 "json:\"aggregateProduct,omitempty\" graphql:\"aggregateProduct\""
+	GetComponent                                     *Component                                              "json:\"getComponent,omitempty\" graphql:\"getComponent\""
+	QueryComponent                                   []*Component                                            "json:\"queryComponent,omitempty\" graphql:\"queryComponent\""
+	AggregateComponent                               *ComponentAggregateResult                               "json:\"aggregateComponent,omitempty\" graphql:\"aggregateComponent\""
+	GetSoftware                                      *Software                                               "json:\"getSoftware,omitempty\" graphql:\"getSoftware\""
+	QuerySoftware                                    []*Software                                             "json:\"querySoftware,omitempty\" graphql:\"querySoftware\""
+	AggregateSoftware                                *SoftwareAggregateResult                                "json:\"aggregateSoftware,omitempty\" graphql:\"aggregateSoftware\""
+	GetRepository                                    *Repository                                             "json:\"getRepository,omitempty\" graphql:\"getRepository\""
+	QueryRepository                                  []*Repository                                           "json:\"queryRepository,omitempty\" graphql:\"queryRepository\""
+	AggregateRepository                              *RepositoryAggregateResult                              "json:\"aggregateRepository,omitempty\" graphql:\"aggregateRepository\""
+	GetHost                                          *Host                                                   "json:\"getHost,omitempty\" graphql:\"getHost\""
+	QueryHost                                        []*Host                                                 "json:\"queryHost,omitempty\" graphql:\"queryHost\""
+	AggregateHost                                    *HostAggregateResult                                    "json:\"aggregateHost,omitempty\" graphql:\"aggregateHost\""
+	GetLicense                                       *License                                                "json:\"getLicense,omitempty\" graphql:\"getLicense\""
+	QueryLicense                                     []*License                                              "json:\"queryLicense,omitempty\" graphql:\"queryLicense\""
+	AggregateLicense                                 *LicenseAggregateResult                                 "json:\"aggregateLicense,omitempty\" graphql:\"aggregateLicense\""
+	GetTechnologySpecificDocumentationCriteria       *TechnologySpecificDocumentationCriteria                "json:\"getTechnologySpecificDocumentationCriteria,omitempty\" graphql:\"getTechnologySpecificDocumentationCriteria\""
+	QueryTechnologySpecificDocumentationCriteria     []*TechnologySpecificDocumentationCriteria              "json:\"queryTechnologySpecificDocumentationCriteria,omitempty\" graphql:\"queryTechnologySpecificDocumentationCriteria\""
+	AggregateTechnologySpecificDocumentationCriteria *TechnologySpecificDocumentationCriteriaAggregateResult "json:\"aggregateTechnologySpecificDocumentationCriteria,omitempty\" graphql:\"aggregateTechnologySpecificDocumentationCriteria\""
+	GetTechnicalStandard                             *TechnicalStandard                                      "json:\"getTechnicalStandard,omitempty\" graphql:\"getTechnicalStandard\""
+	QueryTechnicalStandard                           []*TechnicalStandard                                    "json:\"queryTechnicalStandard,omitempty\" graphql:\"queryTechnicalStandard\""
+	AggregateTechnicalStandard                       *TechnicalStandardAggregateResult                       "json:\"aggregateTechnicalStandard,omitempty\" graphql:\"aggregateTechnicalStandard\""
+	GetUserOrGroup                                   UserOrGroup                                             "json:\"getUserOrGroup,omitempty\" graphql:\"getUserOrGroup\""
+	QueryUserOrGroup                                 []UserOrGroup                                           "json:\"queryUserOrGroup,omitempty\" graphql:\"queryUserOrGroup\""
+	AggregateUserOrGroup                             *UserOrGroupAggregateResult                             "json:\"aggregateUserOrGroup,omitempty\" graphql:\"aggregateUserOrGroup\""
+	GetUser                                          *User                                                   "json:\"getUser,omitempty\" graphql:\"getUser\""
+	QueryUser                                        []*User                                                 "json:\"queryUser,omitempty\" graphql:\"queryUser\""
+	AggregateUser                                    *UserAggregateResult                                    "json:\"aggregateUser,omitempty\" graphql:\"aggregateUser\""
+	GetGroup                                         *Group                                                  "json:\"getGroup,omitempty\" graphql:\"getGroup\""
+	QueryGroup                                       []*Group                                                "json:\"queryGroup,omitempty\" graphql:\"queryGroup\""
+	AggregateGroup                                   *GroupAggregateResult                                   "json:\"aggregateGroup,omitempty\" graphql:\"aggregateGroup\""
+	GetFile                                          *File                                                   "json:\"getFile,omitempty\" graphql:\"getFile\""
+	QueryFile                                        []*File                                                 "json:\"queryFile,omitempty\" graphql:\"queryFile\""
+	AggregateFile                                    *FileAggregateResult                                    "json:\"aggregateFile,omitempty\" graphql:\"aggregateFile\""
+	GetKeyValue                                      *KeyValue                                               "json:\"getKeyValue,omitempty\" graphql:\"getKeyValue\""
+	QueryKeyValue                                    []*KeyValue                                             "json:\"queryKeyValue,omitempty\" graphql:\"queryKeyValue\""
+	AggregateKeyValue                                *KeyValueAggregateResult                                "json:\"aggregateKeyValue,omitempty\" graphql:\"aggregateKeyValue\""
+	GetStringV                                       *StringV                                                "json:\"getStringV,omitempty\" graphql:\"getStringV\""
+	QueryStringV                                     []*StringV                                              "json:\"queryStringV,omitempty\" graphql:\"queryStringV\""
+	AggregateStringV                                 *StringVAggregateResult                                 "json:\"aggregateStringV,omitempty\" graphql:\"aggregateStringV\""
+	GetFloatV                                        *FloatV                                                 "json:\"getFloatV,omitempty\" graphql:\"getFloatV\""
+	QueryFloatV                                      []*FloatV                                               "json:\"queryFloatV,omitempty\" graphql:\"queryFloatV\""
+	AggregateFloatV                                  *FloatVAggregateResult                                  "json:\"aggregateFloatV,omitempty\" graphql:\"aggregateFloatV\""
+	GetMaterial                                      *Material                                               "json:\"getMaterial,omitempty\" graphql:\"getMaterial\""
+	QueryMaterial                                    []*Material                                             "json:\"queryMaterial,omitempty\" graphql:\"queryMaterial\""
+	AggregateMaterial                                *MaterialAggregateResult                                "json:\"aggregateMaterial,omitempty\" graphql:\"aggregateMaterial\""
+	GetManufacturingProcess                          *ManufacturingProcess                                   "json:\"getManufacturingProcess,omitempty\" graphql:\"getManufacturingProcess\""
+	QueryManufacturingProcess                        []*ManufacturingProcess                                 "json:\"queryManufacturingProcess,omitempty\" graphql:\"queryManufacturingProcess\""
+	AggregateManufacturingProcess                    *ManufacturingProcessAggregateResult                    "json:\"aggregateManufacturingProcess,omitempty\" graphql:\"aggregateManufacturingProcess\""
+	GetBoundingBoxDimensions                         *BoundingBoxDimensions                                  "json:\"getBoundingBoxDimensions,omitempty\" graphql:\"getBoundingBoxDimensions\""
+	QueryBoundingBoxDimensions                       []*BoundingBoxDimensions                                "json:\"queryBoundingBoxDimensions,omitempty\" graphql:\"queryBoundingBoxDimensions\""
+	AggregateBoundingBoxDimensions                   *BoundingBoxDimensionsAggregateResult                   "json:\"aggregateBoundingBoxDimensions,omitempty\" graphql:\"aggregateBoundingBoxDimensions\""
+	GetOpenSCADDimensions                            *OpenSCADDimensions                                     "json:\"getOpenSCADDimensions,omitempty\" graphql:\"getOpenSCADDimensions\""
+	QueryOpenSCADDimensions                          []*OpenSCADDimensions                                   "json:\"queryOpenSCADDimensions,omitempty\" graphql:\"queryOpenSCADDimensions\""
+	AggregateOpenSCADDimensions                      *OpenSCADDimensionsAggregateResult                      "json:\"aggregateOpenSCADDimensions,omitempty\" graphql:\"aggregateOpenSCADDimensions\""
+	GetCategory                                      *Category                                               "json:\"getCategory,omitempty\" graphql:\"getCategory\""
+	QueryCategory                                    []*Category                                             "json:\"queryCategory,omitempty\" graphql:\"queryCategory\""
+	AggregateCategory                                *CategoryAggregateResult                                "json:\"aggregateCategory,omitempty\" graphql:\"aggregateCategory\""
+	GetTag                                           *Tag                                                    "json:\"getTag,omitempty\" graphql:\"getTag\""
+	QueryTag                                         []*Tag                                                  "json:\"queryTag,omitempty\" graphql:\"queryTag\""
+	AggregateTag                                     *TagAggregateResult                                     "json:\"aggregateTag,omitempty\" graphql:\"aggregateTag\""
 }
 type Mutation struct {
-	AddDatabase                                   *models.AddDatabasePayload                                   "json:\"addDatabase,omitempty\" graphql:\"addDatabase\""
-	UpdateDatabase                                *models.UpdateDatabasePayload                                "json:\"updateDatabase,omitempty\" graphql:\"updateDatabase\""
-	DeleteDatabase                                *models.DeleteDatabasePayload                                "json:\"deleteDatabase,omitempty\" graphql:\"deleteDatabase\""
-	DeleteNode                                    *models.DeleteNodePayload                                    "json:\"deleteNode,omitempty\" graphql:\"deleteNode\""
-	UpdateCrawlerMeta                             *models.UpdateCrawlerMetaPayload                             "json:\"updateCrawlerMeta,omitempty\" graphql:\"updateCrawlerMeta\""
-	DeleteCrawlerMeta                             *models.DeleteCrawlerMetaPayload                             "json:\"deleteCrawlerMeta,omitempty\" graphql:\"deleteCrawlerMeta\""
-	AddProduct                                    *models.AddProductPayload                                    "json:\"addProduct,omitempty\" graphql:\"addProduct\""
-	UpdateProduct                                 *models.UpdateProductPayload                                 "json:\"updateProduct,omitempty\" graphql:\"updateProduct\""
-	DeleteProduct                                 *models.DeleteProductPayload                                 "json:\"deleteProduct,omitempty\" graphql:\"deleteProduct\""
-	AddComponent                                  *models.AddComponentPayload                                  "json:\"addComponent,omitempty\" graphql:\"addComponent\""
-	UpdateComponent                               *models.UpdateComponentPayload                               "json:\"updateComponent,omitempty\" graphql:\"updateComponent\""
-	DeleteComponent                               *models.DeleteComponentPayload                               "json:\"deleteComponent,omitempty\" graphql:\"deleteComponent\""
-	AddSoftware                                   *models.AddSoftwarePayload                                   "json:\"addSoftware,omitempty\" graphql:\"addSoftware\""
-	UpdateSoftware                                *models.UpdateSoftwarePayload                                "json:\"updateSoftware,omitempty\" graphql:\"updateSoftware\""
-	DeleteSoftware                                *models.DeleteSoftwarePayload                                "json:\"deleteSoftware,omitempty\" graphql:\"deleteSoftware\""
-	AddComponentSource                            *models.AddComponentSourcePayload                            "json:\"addComponentSource,omitempty\" graphql:\"addComponentSource\""
-	UpdateComponentSource                         *models.UpdateComponentSourcePayload                         "json:\"updateComponentSource,omitempty\" graphql:\"updateComponentSource\""
-	DeleteComponentSource                         *models.DeleteComponentSourcePayload                         "json:\"deleteComponentSource,omitempty\" graphql:\"deleteComponentSource\""
-	AddHost                                       *models.AddHostPayload                                       "json:\"addHost,omitempty\" graphql:\"addHost\""
-	UpdateHost                                    *models.UpdateHostPayload                                    "json:\"updateHost,omitempty\" graphql:\"updateHost\""
-	DeleteHost                                    *models.DeleteHostPayload                                    "json:\"deleteHost,omitempty\" graphql:\"deleteHost\""
-	AddLicense                                    *models.AddLicensePayload                                    "json:\"addLicense,omitempty\" graphql:\"addLicense\""
-	UpdateLicense                                 *models.UpdateLicensePayload                                 "json:\"updateLicense,omitempty\" graphql:\"updateLicense\""
-	DeleteLicense                                 *models.DeleteLicensePayload                                 "json:\"deleteLicense,omitempty\" graphql:\"deleteLicense\""
-	AddTechnologySpecificDocumentationCriteria    *models.AddTechnologySpecificDocumentationCriteriaPayload    "json:\"addTechnologySpecificDocumentationCriteria,omitempty\" graphql:\"addTechnologySpecificDocumentationCriteria\""
-	UpdateTechnologySpecificDocumentationCriteria *models.UpdateTechnologySpecificDocumentationCriteriaPayload "json:\"updateTechnologySpecificDocumentationCriteria,omitempty\" graphql:\"updateTechnologySpecificDocumentationCriteria\""
-	DeleteTechnologySpecificDocumentationCriteria *models.DeleteTechnologySpecificDocumentationCriteriaPayload "json:\"deleteTechnologySpecificDocumentationCriteria,omitempty\" graphql:\"deleteTechnologySpecificDocumentationCriteria\""
-	AddTechnicalStandard                          *models.AddTechnicalStandardPayload                          "json:\"addTechnicalStandard,omitempty\" graphql:\"addTechnicalStandard\""
-	UpdateTechnicalStandard                       *models.UpdateTechnicalStandardPayload                       "json:\"updateTechnicalStandard,omitempty\" graphql:\"updateTechnicalStandard\""
-	DeleteTechnicalStandard                       *models.DeleteTechnicalStandardPayload                       "json:\"deleteTechnicalStandard,omitempty\" graphql:\"deleteTechnicalStandard\""
-	UpdateUserOrGroup                             *models.UpdateUserOrGroupPayload                             "json:\"updateUserOrGroup,omitempty\" graphql:\"updateUserOrGroup\""
-	DeleteUserOrGroup                             *models.DeleteUserOrGroupPayload                             "json:\"deleteUserOrGroup,omitempty\" graphql:\"deleteUserOrGroup\""
-	AddGroup                                      *models.AddGroupPayload                                      "json:\"addGroup,omitempty\" graphql:\"addGroup\""
-	UpdateGroup                                   *models.UpdateGroupPayload                                   "json:\"updateGroup,omitempty\" graphql:\"updateGroup\""
-	DeleteGroup                                   *models.DeleteGroupPayload                                   "json:\"deleteGroup,omitempty\" graphql:\"deleteGroup\""
-	AddUser                                       *models.AddUserPayload                                       "json:\"addUser,omitempty\" graphql:\"addUser\""
-	UpdateUser                                    *models.UpdateUserPayload                                    "json:\"updateUser,omitempty\" graphql:\"updateUser\""
-	DeleteUser                                    *models.DeleteUserPayload                                    "json:\"deleteUser,omitempty\" graphql:\"deleteUser\""
-	AddFile                                       *models.AddFilePayload                                       "json:\"addFile,omitempty\" graphql:\"addFile\""
-	UpdateFile                                    *models.UpdateFilePayload                                    "json:\"updateFile,omitempty\" graphql:\"updateFile\""
-	DeleteFile                                    *models.DeleteFilePayload                                    "json:\"deleteFile,omitempty\" graphql:\"deleteFile\""
-	AddKeyValue                                   *models.AddKeyValuePayload                                   "json:\"addKeyValue,omitempty\" graphql:\"addKeyValue\""
-	UpdateKeyValue                                *models.UpdateKeyValuePayload                                "json:\"updateKeyValue,omitempty\" graphql:\"updateKeyValue\""
-	DeleteKeyValue                                *models.DeleteKeyValuePayload                                "json:\"deleteKeyValue,omitempty\" graphql:\"deleteKeyValue\""
-	AddStringV                                    *models.AddStringVPayload                                    "json:\"addStringV,omitempty\" graphql:\"addStringV\""
-	UpdateStringV                                 *models.UpdateStringVPayload                                 "json:\"updateStringV,omitempty\" graphql:\"updateStringV\""
-	DeleteStringV                                 *models.DeleteStringVPayload                                 "json:\"deleteStringV,omitempty\" graphql:\"deleteStringV\""
-	AddFloatV                                     *models.AddFloatVPayload                                     "json:\"addFloatV,omitempty\" graphql:\"addFloatV\""
-	UpdateFloatV                                  *models.UpdateFloatVPayload                                  "json:\"updateFloatV,omitempty\" graphql:\"updateFloatV\""
-	DeleteFloatV                                  *models.DeleteFloatVPayload                                  "json:\"deleteFloatV,omitempty\" graphql:\"deleteFloatV\""
-	AddMaterial                                   *models.AddMaterialPayload                                   "json:\"addMaterial,omitempty\" graphql:\"addMaterial\""
-	UpdateMaterial                                *models.UpdateMaterialPayload                                "json:\"updateMaterial,omitempty\" graphql:\"updateMaterial\""
-	DeleteMaterial                                *models.DeleteMaterialPayload                                "json:\"deleteMaterial,omitempty\" graphql:\"deleteMaterial\""
-	AddManufacturingProcess                       *models.AddManufacturingProcessPayload                       "json:\"addManufacturingProcess,omitempty\" graphql:\"addManufacturingProcess\""
-	UpdateManufacturingProcess                    *models.UpdateManufacturingProcessPayload                    "json:\"updateManufacturingProcess,omitempty\" graphql:\"updateManufacturingProcess\""
-	DeleteManufacturingProcess                    *models.DeleteManufacturingProcessPayload                    "json:\"deleteManufacturingProcess,omitempty\" graphql:\"deleteManufacturingProcess\""
-	AddBoundingBoxDimensions                      *models.AddBoundingBoxDimensionsPayload                      "json:\"addBoundingBoxDimensions,omitempty\" graphql:\"addBoundingBoxDimensions\""
-	UpdateBoundingBoxDimensions                   *models.UpdateBoundingBoxDimensionsPayload                   "json:\"updateBoundingBoxDimensions,omitempty\" graphql:\"updateBoundingBoxDimensions\""
-	DeleteBoundingBoxDimensions                   *models.DeleteBoundingBoxDimensionsPayload                   "json:\"deleteBoundingBoxDimensions,omitempty\" graphql:\"deleteBoundingBoxDimensions\""
-	AddOpenSCADDimensions                         *models.AddOpenSCADDimensionsPayload                         "json:\"addOpenSCADDimensions,omitempty\" graphql:\"addOpenSCADDimensions\""
-	UpdateOpenSCADDimensions                      *models.UpdateOpenSCADDimensionsPayload                      "json:\"updateOpenSCADDimensions,omitempty\" graphql:\"updateOpenSCADDimensions\""
-	DeleteOpenSCADDimensions                      *models.DeleteOpenSCADDimensionsPayload                      "json:\"deleteOpenSCADDimensions,omitempty\" graphql:\"deleteOpenSCADDimensions\""
-	AddCategory                                   *models.AddCategoryPayload                                   "json:\"addCategory,omitempty\" graphql:\"addCategory\""
-	UpdateCategory                                *models.UpdateCategoryPayload                                "json:\"updateCategory,omitempty\" graphql:\"updateCategory\""
-	DeleteCategory                                *models.DeleteCategoryPayload                                "json:\"deleteCategory,omitempty\" graphql:\"deleteCategory\""
-	AddTag                                        *models.AddTagPayload                                        "json:\"addTag,omitempty\" graphql:\"addTag\""
-	UpdateTag                                     *models.UpdateTagPayload                                     "json:\"updateTag,omitempty\" graphql:\"updateTag\""
-	DeleteTag                                     *models.DeleteTagPayload                                     "json:\"deleteTag,omitempty\" graphql:\"deleteTag\""
-}
-type CrawlerMetaFragment struct {
-	DiscoveredAt  time.Time "json:\"discoveredAt\" graphql:\"discoveredAt\""
-	LastIndexedAt time.Time "json:\"lastIndexedAt\" graphql:\"lastIndexedAt\""
-}
-type BoundingBoxDimensionsFragment struct {
-	ID     string   "json:\"id\" graphql:\"id\""
-	Height *float64 "json:\"height\" graphql:\"height\""
-	Width  *float64 "json:\"width\" graphql:\"width\""
-	Depth  *float64 "json:\"depth\" graphql:\"depth\""
+	AddTestObject                                 *AddTestObjectPayload                                 "json:\"addTestObject,omitempty\" graphql:\"addTestObject\""
+	UpdateTestObject                              *UpdateTestObjectPayload                              "json:\"updateTestObject,omitempty\" graphql:\"updateTestObject\""
+	DeleteTestObject                              *DeleteTestObjectPayload                              "json:\"deleteTestObject,omitempty\" graphql:\"deleteTestObject\""
+	AddTestObject2                                *AddTestObject2Payload                                "json:\"addTestObject2,omitempty\" graphql:\"addTestObject2\""
+	UpdateTestObject2                             *UpdateTestObject2Payload                             "json:\"updateTestObject2,omitempty\" graphql:\"updateTestObject2\""
+	DeleteTestObject2                             *DeleteTestObject2Payload                             "json:\"deleteTestObject2,omitempty\" graphql:\"deleteTestObject2\""
+	AddTestObject3                                *AddTestObject3Payload                                "json:\"addTestObject3,omitempty\" graphql:\"addTestObject3\""
+	UpdateTestObject3                             *UpdateTestObject3Payload                             "json:\"updateTestObject3,omitempty\" graphql:\"updateTestObject3\""
+	DeleteTestObject3                             *DeleteTestObject3Payload                             "json:\"deleteTestObject3,omitempty\" graphql:\"deleteTestObject3\""
+	AddDatabase                                   *AddDatabasePayload                                   "json:\"addDatabase,omitempty\" graphql:\"addDatabase\""
+	UpdateDatabase                                *UpdateDatabasePayload                                "json:\"updateDatabase,omitempty\" graphql:\"updateDatabase\""
+	DeleteDatabase                                *DeleteDatabasePayload                                "json:\"deleteDatabase,omitempty\" graphql:\"deleteDatabase\""
+	DeleteNode                                    *DeleteNodePayload                                    "json:\"deleteNode,omitempty\" graphql:\"deleteNode\""
+	UpdateCrawlerMeta                             *UpdateCrawlerMetaPayload                             "json:\"updateCrawlerMeta,omitempty\" graphql:\"updateCrawlerMeta\""
+	DeleteCrawlerMeta                             *DeleteCrawlerMetaPayload                             "json:\"deleteCrawlerMeta,omitempty\" graphql:\"deleteCrawlerMeta\""
+	AddProduct                                    *AddProductPayload                                    "json:\"addProduct,omitempty\" graphql:\"addProduct\""
+	UpdateProduct                                 *UpdateProductPayload                                 "json:\"updateProduct,omitempty\" graphql:\"updateProduct\""
+	DeleteProduct                                 *DeleteProductPayload                                 "json:\"deleteProduct,omitempty\" graphql:\"deleteProduct\""
+	AddComponent                                  *AddComponentPayload                                  "json:\"addComponent,omitempty\" graphql:\"addComponent\""
+	UpdateComponent                               *UpdateComponentPayload                               "json:\"updateComponent,omitempty\" graphql:\"updateComponent\""
+	DeleteComponent                               *DeleteComponentPayload                               "json:\"deleteComponent,omitempty\" graphql:\"deleteComponent\""
+	AddSoftware                                   *AddSoftwarePayload                                   "json:\"addSoftware,omitempty\" graphql:\"addSoftware\""
+	UpdateSoftware                                *UpdateSoftwarePayload                                "json:\"updateSoftware,omitempty\" graphql:\"updateSoftware\""
+	DeleteSoftware                                *DeleteSoftwarePayload                                "json:\"deleteSoftware,omitempty\" graphql:\"deleteSoftware\""
+	AddRepository                                 *AddRepositoryPayload                                 "json:\"addRepository,omitempty\" graphql:\"addRepository\""
+	UpdateRepository                              *UpdateRepositoryPayload                              "json:\"updateRepository,omitempty\" graphql:\"updateRepository\""
+	DeleteRepository                              *DeleteRepositoryPayload                              "json:\"deleteRepository,omitempty\" graphql:\"deleteRepository\""
+	AddHost                                       *AddHostPayload                                       "json:\"addHost,omitempty\" graphql:\"addHost\""
+	UpdateHost                                    *UpdateHostPayload                                    "json:\"updateHost,omitempty\" graphql:\"updateHost\""
+	DeleteHost                                    *DeleteHostPayload                                    "json:\"deleteHost,omitempty\" graphql:\"deleteHost\""
+	AddLicense                                    *AddLicensePayload                                    "json:\"addLicense,omitempty\" graphql:\"addLicense\""
+	UpdateLicense                                 *UpdateLicensePayload                                 "json:\"updateLicense,omitempty\" graphql:\"updateLicense\""
+	DeleteLicense                                 *DeleteLicensePayload                                 "json:\"deleteLicense,omitempty\" graphql:\"deleteLicense\""
+	AddTechnologySpecificDocumentationCriteria    *AddTechnologySpecificDocumentationCriteriaPayload    "json:\"addTechnologySpecificDocumentationCriteria,omitempty\" graphql:\"addTechnologySpecificDocumentationCriteria\""
+	UpdateTechnologySpecificDocumentationCriteria *UpdateTechnologySpecificDocumentationCriteriaPayload "json:\"updateTechnologySpecificDocumentationCriteria,omitempty\" graphql:\"updateTechnologySpecificDocumentationCriteria\""
+	DeleteTechnologySpecificDocumentationCriteria *DeleteTechnologySpecificDocumentationCriteriaPayload "json:\"deleteTechnologySpecificDocumentationCriteria,omitempty\" graphql:\"deleteTechnologySpecificDocumentationCriteria\""
+	AddTechnicalStandard                          *AddTechnicalStandardPayload                          "json:\"addTechnicalStandard,omitempty\" graphql:\"addTechnicalStandard\""
+	UpdateTechnicalStandard                       *UpdateTechnicalStandardPayload                       "json:\"updateTechnicalStandard,omitempty\" graphql:\"updateTechnicalStandard\""
+	DeleteTechnicalStandard                       *DeleteTechnicalStandardPayload                       "json:\"deleteTechnicalStandard,omitempty\" graphql:\"deleteTechnicalStandard\""
+	UpdateUserOrGroup                             *UpdateUserOrGroupPayload                             "json:\"updateUserOrGroup,omitempty\" graphql:\"updateUserOrGroup\""
+	DeleteUserOrGroup                             *DeleteUserOrGroupPayload                             "json:\"deleteUserOrGroup,omitempty\" graphql:\"deleteUserOrGroup\""
+	AddUser                                       *AddUserPayload                                       "json:\"addUser,omitempty\" graphql:\"addUser\""
+	UpdateUser                                    *UpdateUserPayload                                    "json:\"updateUser,omitempty\" graphql:\"updateUser\""
+	DeleteUser                                    *DeleteUserPayload                                    "json:\"deleteUser,omitempty\" graphql:\"deleteUser\""
+	AddGroup                                      *AddGroupPayload                                      "json:\"addGroup,omitempty\" graphql:\"addGroup\""
+	UpdateGroup                                   *UpdateGroupPayload                                   "json:\"updateGroup,omitempty\" graphql:\"updateGroup\""
+	DeleteGroup                                   *DeleteGroupPayload                                   "json:\"deleteGroup,omitempty\" graphql:\"deleteGroup\""
+	AddFile                                       *AddFilePayload                                       "json:\"addFile,omitempty\" graphql:\"addFile\""
+	UpdateFile                                    *UpdateFilePayload                                    "json:\"updateFile,omitempty\" graphql:\"updateFile\""
+	DeleteFile                                    *DeleteFilePayload                                    "json:\"deleteFile,omitempty\" graphql:\"deleteFile\""
+	AddKeyValue                                   *AddKeyValuePayload                                   "json:\"addKeyValue,omitempty\" graphql:\"addKeyValue\""
+	UpdateKeyValue                                *UpdateKeyValuePayload                                "json:\"updateKeyValue,omitempty\" graphql:\"updateKeyValue\""
+	DeleteKeyValue                                *DeleteKeyValuePayload                                "json:\"deleteKeyValue,omitempty\" graphql:\"deleteKeyValue\""
+	AddStringV                                    *AddStringVPayload                                    "json:\"addStringV,omitempty\" graphql:\"addStringV\""
+	UpdateStringV                                 *UpdateStringVPayload                                 "json:\"updateStringV,omitempty\" graphql:\"updateStringV\""
+	DeleteStringV                                 *DeleteStringVPayload                                 "json:\"deleteStringV,omitempty\" graphql:\"deleteStringV\""
+	AddFloatV                                     *AddFloatVPayload                                     "json:\"addFloatV,omitempty\" graphql:\"addFloatV\""
+	UpdateFloatV                                  *UpdateFloatVPayload                                  "json:\"updateFloatV,omitempty\" graphql:\"updateFloatV\""
+	DeleteFloatV                                  *DeleteFloatVPayload                                  "json:\"deleteFloatV,omitempty\" graphql:\"deleteFloatV\""
+	AddMaterial                                   *AddMaterialPayload                                   "json:\"addMaterial,omitempty\" graphql:\"addMaterial\""
+	UpdateMaterial                                *UpdateMaterialPayload                                "json:\"updateMaterial,omitempty\" graphql:\"updateMaterial\""
+	DeleteMaterial                                *DeleteMaterialPayload                                "json:\"deleteMaterial,omitempty\" graphql:\"deleteMaterial\""
+	AddManufacturingProcess                       *AddManufacturingProcessPayload                       "json:\"addManufacturingProcess,omitempty\" graphql:\"addManufacturingProcess\""
+	UpdateManufacturingProcess                    *UpdateManufacturingProcessPayload                    "json:\"updateManufacturingProcess,omitempty\" graphql:\"updateManufacturingProcess\""
+	DeleteManufacturingProcess                    *DeleteManufacturingProcessPayload                    "json:\"deleteManufacturingProcess,omitempty\" graphql:\"deleteManufacturingProcess\""
+	AddBoundingBoxDimensions                      *AddBoundingBoxDimensionsPayload                      "json:\"addBoundingBoxDimensions,omitempty\" graphql:\"addBoundingBoxDimensions\""
+	UpdateBoundingBoxDimensions                   *UpdateBoundingBoxDimensionsPayload                   "json:\"updateBoundingBoxDimensions,omitempty\" graphql:\"updateBoundingBoxDimensions\""
+	DeleteBoundingBoxDimensions                   *DeleteBoundingBoxDimensionsPayload                   "json:\"deleteBoundingBoxDimensions,omitempty\" graphql:\"deleteBoundingBoxDimensions\""
+	AddOpenSCADDimensions                         *AddOpenSCADDimensionsPayload                         "json:\"addOpenSCADDimensions,omitempty\" graphql:\"addOpenSCADDimensions\""
+	UpdateOpenSCADDimensions                      *UpdateOpenSCADDimensionsPayload                      "json:\"updateOpenSCADDimensions,omitempty\" graphql:\"updateOpenSCADDimensions\""
+	DeleteOpenSCADDimensions                      *DeleteOpenSCADDimensionsPayload                      "json:\"deleteOpenSCADDimensions,omitempty\" graphql:\"deleteOpenSCADDimensions\""
+	AddCategory                                   *AddCategoryPayload                                   "json:\"addCategory,omitempty\" graphql:\"addCategory\""
+	UpdateCategory                                *UpdateCategoryPayload                                "json:\"updateCategory,omitempty\" graphql:\"updateCategory\""
+	DeleteCategory                                *DeleteCategoryPayload                                "json:\"deleteCategory,omitempty\" graphql:\"deleteCategory\""
+	AddTag                                        *AddTagPayload                                        "json:\"addTag,omitempty\" graphql:\"addTag\""
+	UpdateTag                                     *UpdateTagPayload                                     "json:\"updateTag,omitempty\" graphql:\"updateTag\""
+	DeleteTag                                     *DeleteTagPayload                                     "json:\"deleteTag,omitempty\" graphql:\"deleteTag\""
 }
 type CategoryFragment struct {
 	ID          string                       "json:\"id\" graphql:\"id\""
 	Xid         string                       "json:\"xid\" graphql:\"xid\""
 	FullName    string                       "json:\"fullName\" graphql:\"fullName\""
 	Name        string                       "json:\"name\" graphql:\"name\""
-	Description string                       "json:\"description\" graphql:\"description\""
+	Description *string                      "json:\"description\" graphql:\"description\""
 	Parent      *CategoryFragment_Parent     "json:\"parent\" graphql:\"parent\""
 	Children    []*CategoryFragment_Children "json:\"children\" graphql:\"children\""
 	Products    []*CategoryFragment_Products "json:\"products\" graphql:\"products\""
-}
-type ComponentSourceFragment struct {
-	ID       string                        "json:\"id\" graphql:\"id\""
-	Xid      string                        "json:\"xid\" graphql:\"xid\""
-	URL      string                        "json:\"url\" graphql:\"url\""
-	PermaURL string                        "json:\"permaUrl\" graphql:\"permaUrl\""
-	Host     ComponentSourceFragment_Host  "json:\"host\" graphql:\"host\""
-	Owner    ComponentSourceFragment_Owner "json:\"owner\" graphql:\"owner\""
-	Name     string                        "json:\"name\" graphql:\"name\""
-	Tag      *string                       "json:\"tag\" graphql:\"tag\""
-	Path     string                        "json:\"path\" graphql:\"path\""
 }
 type ComponentFragment struct {
 	ID                          string                                       "json:\"id\" graphql:\"id\""
 	Xid                         string                                       "json:\"xid\" graphql:\"xid\""
 	Name                        string                                       "json:\"name\" graphql:\"name\""
 	Description                 string                                       "json:\"description\" graphql:\"description\""
-	Owner                       ComponentFragment_Owner                      "json:\"owner\" graphql:\"owner\""
 	Version                     string                                       "json:\"version\" graphql:\"version\""
 	CreatedAt                   time.Time                                    "json:\"createdAt\" graphql:\"createdAt\""
 	Releases                    []*ComponentFragment_Releases                "json:\"releases\" graphql:\"releases\""
@@ -299,10 +347,10 @@ type ComponentFragment struct {
 	Repository                  ComponentFragment_Repository                 "json:\"repository\" graphql:\"repository\""
 	License                     ComponentFragment_License                    "json:\"license\" graphql:\"license\""
 	AdditionalLicenses          []*ComponentFragment_AdditionalLicenses      "json:\"additionalLicenses\" graphql:\"additionalLicenses\""
-	Licensor                    ComponentFragment_Licensor                   "json:\"licensor\" graphql:\"licensor\""
-	DocumentationLanguage       *string                                      "json:\"documentationLanguage\" graphql:\"documentationLanguage\""
-	TechnologyReadinessLevel    *models.TechnologyReadinessLevel             "json:\"technologyReadinessLevel\" graphql:\"technologyReadinessLevel\""
-	DocumentationReadinessLevel *models.DocumentationReadinessLevel          "json:\"documentationReadinessLevel\" graphql:\"documentationReadinessLevel\""
+	Licensor                    *UserOrGroupBasicFragment                    "json:\"licensor\" graphql:\"licensor\""
+	DocumentationLanguage       string                                       "json:\"documentationLanguage\" graphql:\"documentationLanguage\""
+	TechnologyReadinessLevel    TechnologyReadinessLevel                     "json:\"technologyReadinessLevel\" graphql:\"technologyReadinessLevel\""
+	DocumentationReadinessLevel DocumentationReadinessLevel                  "json:\"documentationReadinessLevel\" graphql:\"documentationReadinessLevel\""
 	Attestation                 *string                                      "json:\"attestation\" graphql:\"attestation\""
 	Publication                 *string                                      "json:\"publication\" graphql:\"publication\""
 	CompliesWith                *ComponentFragment_CompliesWith              "json:\"compliesWith\" graphql:\"compliesWith\""
@@ -316,35 +364,31 @@ type ComponentFragment struct {
 	Bom                         *ComponentFragment_Bom                       "json:\"bom\" graphql:\"bom\""
 	ManufacturingInstructions   *ComponentFragment_ManufacturingInstructions "json:\"manufacturingInstructions\" graphql:\"manufacturingInstructions\""
 	UserManual                  *ComponentFragment_UserManual                "json:\"userManual\" graphql:\"userManual\""
-	Product                     ComponentFragment_Product                    "json:\"product\" graphql:\"product\""
+	Product                     *ComponentFragment_Product                   "json:\"product\" graphql:\"product\""
 	UsedIn                      []*ComponentFragment_UsedIn                  "json:\"usedIn\" graphql:\"usedIn\""
 	Source                      *ComponentFragment_Source                    "json:\"source\" graphql:\"source\""
 	Export                      []*ComponentFragment_Export                  "json:\"export\" graphql:\"export\""
 	Auxiliary                   []*ComponentFragment_Auxiliary               "json:\"auxiliary\" graphql:\"auxiliary\""
 	Organization                *ComponentFragment_Organization              "json:\"organization\" graphql:\"organization\""
 	Mass                        *float64                                     "json:\"mass\" graphql:\"mass\""
-	OuterDimensions             *ComponentFragment_OuterDimensions           "json:\"outerDimensions\" graphql:\"outerDimensions\""
+	OuterDimensions             *OuterDimensionsFragment                     "json:\"outerDimensions\" graphql:\"outerDimensions\""
 	Material                    *ComponentFragment_Material                  "json:\"material\" graphql:\"material\""
 	ManufacturingProcess        *ComponentFragment_ManufacturingProcess      "json:\"manufacturingProcess\" graphql:\"manufacturingProcess\""
-	ProductionMetadata          []*ComponentFragment_ProductionMetadata      "json:\"productionMetadata\" graphql:\"productionMetadata\""
+	ProductionMetadata          []*KeyValueFragment                          "json:\"productionMetadata\" graphql:\"productionMetadata\""
 }
 type DatabaseFragment struct {
 	ID      string "json:\"id\" graphql:\"id\""
 	Version string "json:\"version\" graphql:\"version\""
 }
 type FileFragment struct {
-	ID            string     "json:\"id\" graphql:\"id\""
 	DiscoveredAt  time.Time  "json:\"discoveredAt\" graphql:\"discoveredAt\""
 	LastIndexedAt time.Time  "json:\"lastIndexedAt\" graphql:\"lastIndexedAt\""
+	ID            string     "json:\"id\" graphql:\"id\""
 	Name          string     "json:\"name\" graphql:\"name\""
 	Path          string     "json:\"path\" graphql:\"path\""
 	MimeType      *string    "json:\"mimeType\" graphql:\"mimeType\""
 	URL           string     "json:\"url\" graphql:\"url\""
 	CreatedAt     *time.Time "json:\"createdAt\" graphql:\"createdAt\""
-}
-type FloatVFragment struct {
-	ID    string   "json:\"id\" graphql:\"id\""
-	Value *float64 "json:\"value\" graphql:\"value\""
 }
 type HostFragment struct {
 	ID     string "json:\"id\" graphql:\"id\""
@@ -352,24 +396,42 @@ type HostFragment struct {
 	Name   string "json:\"name\" graphql:\"name\""
 }
 type KeyValueFragment struct {
-	ID    string                  "json:\"id\" graphql:\"id\""
-	Key   *string                 "json:\"key\" graphql:\"key\""
-	Value *KeyValueFragment_Value "json:\"value\" graphql:\"value\""
+	ID    string                 "json:\"id\" graphql:\"id\""
+	Key   string                 "json:\"key\" graphql:\"key\""
+	Value KeyValueFragment_Value "json:\"value\" graphql:\"value\""
+}
+type FloatVFragment struct {
+	ID    string  "json:\"id\" graphql:\"id\""
+	Value float64 "json:\"value\" graphql:\"value\""
+}
+type StringVFragment struct {
+	ID    string "json:\"id\" graphql:\"id\""
+	Value string "json:\"value\" graphql:\"value\""
 }
 type LicenseFragment struct {
-	ID            string             "json:\"id\" graphql:\"id\""
-	Xid           string             "json:\"xid\" graphql:\"xid\""
-	Name          string             "json:\"name\" graphql:\"name\""
-	Text          *string            "json:\"text\" graphql:\"text\""
-	TextHTML      *string            "json:\"textHTML\" graphql:\"textHTML\""
-	ReferenceURL  *string            "json:\"referenceURL\" graphql:\"referenceURL\""
-	DetailsURL    *string            "json:\"detailsURL\" graphql:\"detailsURL\""
-	Type          models.LicenseType "json:\"type\" graphql:\"type\""
-	IsSpdx        bool               "json:\"isSpdx\" graphql:\"isSpdx\""
-	IsDeprecated  bool               "json:\"isDeprecated\" graphql:\"isDeprecated\""
-	IsOsiApproved bool               "json:\"isOsiApproved\" graphql:\"isOsiApproved\""
-	IsFsfLibre    bool               "json:\"isFsfLibre\" graphql:\"isFsfLibre\""
-	IsBlocked     bool               "json:\"isBlocked\" graphql:\"isBlocked\""
+	ID            string      "json:\"id\" graphql:\"id\""
+	Xid           string      "json:\"xid\" graphql:\"xid\""
+	Name          string      "json:\"name\" graphql:\"name\""
+	Text          *string     "json:\"text\" graphql:\"text\""
+	TextHTML      *string     "json:\"textHTML\" graphql:\"textHTML\""
+	ReferenceURL  *string     "json:\"referenceURL\" graphql:\"referenceURL\""
+	DetailsURL    *string     "json:\"detailsURL\" graphql:\"detailsURL\""
+	Type          LicenseType "json:\"type\" graphql:\"type\""
+	IsSpdx        bool        "json:\"isSpdx\" graphql:\"isSpdx\""
+	IsDeprecated  bool        "json:\"isDeprecated\" graphql:\"isDeprecated\""
+	IsOsiApproved bool        "json:\"isOsiApproved\" graphql:\"isOsiApproved\""
+	IsFsfLibre    bool        "json:\"isFsfLibre\" graphql:\"isFsfLibre\""
+	IsBlocked     bool        "json:\"isBlocked\" graphql:\"isBlocked\""
+}
+type LicenseFragmentBasic struct {
+	ID            string "json:\"id\" graphql:\"id\""
+	Xid           string "json:\"xid\" graphql:\"xid\""
+	Name          string "json:\"name\" graphql:\"name\""
+	IsSpdx        bool   "json:\"isSpdx\" graphql:\"isSpdx\""
+	IsDeprecated  bool   "json:\"isDeprecated\" graphql:\"isDeprecated\""
+	IsOsiApproved bool   "json:\"isOsiApproved\" graphql:\"isOsiApproved\""
+	IsFsfLibre    bool   "json:\"isFsfLibre\" graphql:\"isFsfLibre\""
+	IsBlocked     bool   "json:\"isBlocked\" graphql:\"isBlocked\""
 }
 type ManufacturingProcessFragment struct {
 	ID          string  "json:\"id\" graphql:\"id\""
@@ -382,45 +444,86 @@ type MaterialFragment struct {
 	Description *string "json:\"description\" graphql:\"description\""
 }
 type NodeFragment struct {
-	ID string "json:\"id\" graphql:\"id\""
+	Typename *string "json:\"__typename\" graphql:\"__typename\""
+	ID       string  "json:\"id\" graphql:\"id\""
+}
+type CrawlerMetaFragment struct {
+	DiscoveredAt  time.Time "json:\"discoveredAt\" graphql:\"discoveredAt\""
+	LastIndexedAt time.Time "json:\"lastIndexedAt\" graphql:\"lastIndexedAt\""
+}
+type OuterDimensionsFragment struct {
+	Typename              *string                       "json:\"__typename\" graphql:\"__typename\""
+	BoundingBoxDimensions BoundingBoxDimensionsFragment "graphql:\"... on BoundingBoxDimensions\""
+	OpenSCADDimensions    OpenSCADDimensionsFragment    "graphql:\"... on OpenSCADDimensions\""
+}
+type BoundingBoxDimensionsFragment struct {
+	ID     string  "json:\"id\" graphql:\"id\""
+	Height float64 "json:\"height\" graphql:\"height\""
+	Width  float64 "json:\"width\" graphql:\"width\""
+	Depth  float64 "json:\"depth\" graphql:\"depth\""
 }
 type OpenSCADDimensionsFragment struct {
-	ID       string  "json:\"id\" graphql:\"id\""
-	Openscad *string "json:\"openscad\" graphql:\"openscad\""
-	Unit     *string "json:\"unit\" graphql:\"unit\""
+	ID       string "json:\"id\" graphql:\"id\""
+	Openscad string "json:\"openscad\" graphql:\"openscad\""
+	Unit     string "json:\"unit\" graphql:\"unit\""
 }
 type ProductFragment struct {
-	ID            string                       "json:\"id\" graphql:\"id\""
-	DiscoveredAt  time.Time                    "json:\"discoveredAt\" graphql:\"discoveredAt\""
-	LastIndexedAt time.Time                    "json:\"lastIndexedAt\" graphql:\"lastIndexedAt\""
-	Xid           string                       "json:\"xid\" graphql:\"xid\""
-	Name          string                       "json:\"name\" graphql:\"name\""
-	Owner         ProductFragment_Owner        "json:\"owner\" graphql:\"owner\""
-	Description   string                       "json:\"description\" graphql:\"description\""
-	Website       *string                      "json:\"website\" graphql:\"website\""
-	Version       string                       "json:\"version\" graphql:\"version\""
-	Release       ProductFragment_Release      "json:\"release\" graphql:\"release\""
-	Releases      []*ProductFragment_Releases  "json:\"releases\" graphql:\"releases\""
-	RenamedTo     *ProductFragment_RenamedTo   "json:\"renamedTo\" graphql:\"renamedTo\""
-	RenamedFrom   *ProductFragment_RenamedFrom "json:\"renamedFrom\" graphql:\"renamedFrom\""
-	ForkOf        *ProductFragment_ForkOf      "json:\"forkOf\" graphql:\"forkOf\""
-	Forks         []*ProductFragment_Forks     "json:\"forks\" graphql:\"forks\""
-	Tags          []*ProductFragment_Tags      "json:\"tags\" graphql:\"tags\""
-	Category      *ProductFragment_Category    "json:\"category\" graphql:\"category\""
+	DiscoveredAt          time.Time                    "json:\"discoveredAt\" graphql:\"discoveredAt\""
+	LastIndexedAt         time.Time                    "json:\"lastIndexedAt\" graphql:\"lastIndexedAt\""
+	ID                    string                       "json:\"id\" graphql:\"id\""
+	Xid                   string                       "json:\"xid\" graphql:\"xid\""
+	Name                  string                       "json:\"name\" graphql:\"name\""
+	Description           string                       "json:\"description\" graphql:\"description\""
+	DocumentationLanguage string                       "json:\"documentationLanguage\" graphql:\"documentationLanguage\""
+	Version               string                       "json:\"version\" graphql:\"version\""
+	License               ProductFragment_License      "json:\"license\" graphql:\"license\""
+	Licensor              *UserOrGroupBasicFragment    "json:\"licensor\" graphql:\"licensor\""
+	Website               *string                      "json:\"website\" graphql:\"website\""
+	Release               ProductFragment_Release      "json:\"release\" graphql:\"release\""
+	Releases              []*ProductFragment_Releases  "json:\"releases\" graphql:\"releases\""
+	RenamedTo             *ProductFragment_RenamedTo   "json:\"renamedTo\" graphql:\"renamedTo\""
+	RenamedFrom           *ProductFragment_RenamedFrom "json:\"renamedFrom\" graphql:\"renamedFrom\""
+	ForkOf                *ProductFragment_ForkOf      "json:\"forkOf\" graphql:\"forkOf\""
+	Forks                 []*ProductFragment_Forks     "json:\"forks\" graphql:\"forks\""
+	Tags                  []*ProductFragment_Tags      "json:\"tags\" graphql:\"tags\""
+	Category              *ProductFragment_Category    "json:\"category\" graphql:\"category\""
+}
+type ProductSearchFragment struct {
+	DiscoveredAt  time.Time                          "json:\"discoveredAt\" graphql:\"discoveredAt\""
+	LastIndexedAt time.Time                          "json:\"lastIndexedAt\" graphql:\"lastIndexedAt\""
+	ID            string                             "json:\"id\" graphql:\"id\""
+	Xid           string                             "json:\"xid\" graphql:\"xid\""
+	Name          string                             "json:\"name\" graphql:\"name\""
+	Website       *string                            "json:\"website\" graphql:\"website\""
+	RenamedTo     *ProductSearchFragment_RenamedTo   "json:\"renamedTo\" graphql:\"renamedTo\""
+	RenamedFrom   *ProductSearchFragment_RenamedFrom "json:\"renamedFrom\" graphql:\"renamedFrom\""
+	ForkOf        *ProductSearchFragment_ForkOf      "json:\"forkOf\" graphql:\"forkOf\""
+	Forks         []*ProductSearchFragment_Forks     "json:\"forks\" graphql:\"forks\""
+	Tags          []*TagFragment                     "json:\"tags\" graphql:\"tags\""
+	Category      *CategoryFragment                  "json:\"category\" graphql:\"category\""
+	Releases      []*ProductSearchFragment_Releases  "json:\"releases\" graphql:\"releases\""
+	Release       ProductSearchFragment_Release      "json:\"release\" graphql:\"release\""
+}
+type RepositoryFragment struct {
+	ID        string                    "json:\"id\" graphql:\"id\""
+	Xid       string                    "json:\"xid\" graphql:\"xid\""
+	URL       string                    "json:\"url\" graphql:\"url\""
+	PermaURL  string                    "json:\"permaUrl\" graphql:\"permaUrl\""
+	Host      RepositoryFragment_Host   "json:\"host\" graphql:\"host\""
+	Owner     *UserOrGroupBasicFragment "json:\"owner\" graphql:\"owner\""
+	Name      *string                   "json:\"name\" graphql:\"name\""
+	Reference *string                   "json:\"reference\" graphql:\"reference\""
+	Path      *string                   "json:\"path\" graphql:\"path\""
 }
 type SoftwareFragment struct {
-	ID                    string                              "json:\"id\" graphql:\"id\""
 	DiscoveredAt          time.Time                           "json:\"discoveredAt\" graphql:\"discoveredAt\""
 	LastIndexedAt         time.Time                           "json:\"lastIndexedAt\" graphql:\"lastIndexedAt\""
+	ID                    string                              "json:\"id\" graphql:\"id\""
 	Release               *string                             "json:\"release\" graphql:\"release\""
 	InstallationGuide     *SoftwareFragment_InstallationGuide "json:\"installationGuide\" graphql:\"installationGuide\""
 	DocumentationLanguage *string                             "json:\"documentationLanguage\" graphql:\"documentationLanguage\""
 	License               *SoftwareFragment_License           "json:\"license\" graphql:\"license\""
 	Licensor              *string                             "json:\"licensor\" graphql:\"licensor\""
-}
-type StringVFragment struct {
-	ID    string  "json:\"id\" graphql:\"id\""
-	Value *string "json:\"value\" graphql:\"value\""
 }
 type TagFragment struct {
 	ID      string                 "json:\"id\" graphql:\"id\""
@@ -446,41 +549,44 @@ type TechnologySpecificDocumentationCriteriaFragment struct {
 }
 type UserOrGroupFragment struct {
 	Typename *string                         "json:\"__typename\" graphql:\"__typename\""
-	User     UserOrGroupFragment_User        "graphql:\"... on User\""
-	Group    UserOrGroupFragment_Group       "graphql:\"... on Group\""
+	ID       string                          "json:\"id\" graphql:\"id\""
 	Xid      string                          "json:\"xid\" graphql:\"xid\""
 	Host     UserOrGroupFragment_Host        "json:\"host\" graphql:\"host\""
 	Name     string                          "json:\"name\" graphql:\"name\""
+	FullName *string                         "json:\"fullName\" graphql:\"fullName\""
 	Email    *string                         "json:\"email\" graphql:\"email\""
 	Avatar   *UserOrGroupFragment_Avatar     "json:\"avatar\" graphql:\"avatar\""
 	URL      *string                         "json:\"url\" graphql:\"url\""
 	MemberOf []*UserOrGroupFragment_MemberOf "json:\"memberOf\" graphql:\"memberOf\""
 	Products []*UserOrGroupFragment_Products "json:\"products\" graphql:\"products\""
 }
+type UserOrGroupBasicFragment struct {
+	Typename *string "json:\"__typename\" graphql:\"__typename\""
+	Name     string  "json:\"name\" graphql:\"name\""
+	FullName *string "json:\"fullName\" graphql:\"fullName\""
+	ID       string  "json:\"id\" graphql:\"id\""
+}
 type UserFragment struct {
-	ID       string                                       "json:\"id\" graphql:\"id\""
 	Typename *string                                      "json:\"__typename\" graphql:\"__typename\""
-	User     UserFragment_UserOrGroupFragment_User        "graphql:\"... on User\""
-	Group    UserFragment_UserOrGroupFragment_Group       "graphql:\"... on Group\""
+	ID       string                                       "json:\"id\" graphql:\"id\""
 	Xid      string                                       "json:\"xid\" graphql:\"xid\""
 	Host     UserFragment_UserOrGroupFragment_Host        "json:\"host\" graphql:\"host\""
 	Name     string                                       "json:\"name\" graphql:\"name\""
+	FullName *string                                      "json:\"fullName\" graphql:\"fullName\""
 	Email    *string                                      "json:\"email\" graphql:\"email\""
 	Avatar   *UserFragment_UserOrGroupFragment_Avatar     "json:\"avatar\" graphql:\"avatar\""
 	URL      *string                                      "json:\"url\" graphql:\"url\""
 	MemberOf []*UserFragment_UserOrGroupFragment_MemberOf "json:\"memberOf\" graphql:\"memberOf\""
 	Products []*UserFragment_UserOrGroupFragment_Products "json:\"products\" graphql:\"products\""
-	FullName *string                                      "json:\"fullName\" graphql:\"fullName\""
 	Locale   *string                                      "json:\"locale\" graphql:\"locale\""
 }
 type GroupFragment struct {
-	ID       string                                        "json:\"id\" graphql:\"id\""
 	Typename *string                                       "json:\"__typename\" graphql:\"__typename\""
-	User     GroupFragment_UserOrGroupFragment_User        "graphql:\"... on User\""
-	Group    GroupFragment_UserOrGroupFragment_Group       "graphql:\"... on Group\""
+	ID       string                                        "json:\"id\" graphql:\"id\""
 	Xid      string                                        "json:\"xid\" graphql:\"xid\""
 	Host     GroupFragment_UserOrGroupFragment_Host        "json:\"host\" graphql:\"host\""
 	Name     string                                        "json:\"name\" graphql:\"name\""
+	FullName *string                                       "json:\"fullName\" graphql:\"fullName\""
 	Email    *string                                       "json:\"email\" graphql:\"email\""
 	Avatar   *GroupFragment_UserOrGroupFragment_Avatar     "json:\"avatar\" graphql:\"avatar\""
 	URL      *string                                       "json:\"url\" graphql:\"url\""
@@ -488,926 +594,906 @@ type GroupFragment struct {
 	Products []*GroupFragment_UserOrGroupFragment_Products "json:\"products\" graphql:\"products\""
 	Members  []*GroupFragment_Members                      "json:\"members\" graphql:\"members\""
 }
+type UserOrGroupFullFragment struct {
+	Typename *string       "json:\"__typename\" graphql:\"__typename\""
+	User     UserFragment  "graphql:\"... on User\""
+	Group    GroupFragment "graphql:\"... on Group\""
+}
 type CategoryFragment_Parent struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID       string "json:\"id\" graphql:\"id\""
+	FullName string "json:\"fullName\" graphql:\"fullName\""
 }
 type CategoryFragment_Children struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID       string "json:\"id\" graphql:\"id\""
+	FullName string "json:\"fullName\" graphql:\"fullName\""
 }
 type CategoryFragment_Products struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type ComponentSourceFragment_Host struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type ComponentSourceFragment_Owner struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type ComponentFragment_Owner struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type ComponentFragment_Releases struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type ComponentFragment_Repository struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string  "json:\"id\" graphql:\"id\""
+	Name *string "json:\"name\" graphql:\"name\""
 }
 type ComponentFragment_License struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID  string "json:\"id\" graphql:\"id\""
+	Xid string "json:\"xid\" graphql:\"xid\""
 }
 type ComponentFragment_AdditionalLicenses struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type ComponentFragment_Licensor struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID  string "json:\"id\" graphql:\"id\""
+	Xid string "json:\"xid\" graphql:\"xid\""
 }
 type ComponentFragment_CompliesWith struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type ComponentFragment_Tsdc struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type ComponentFragment_Components struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type ComponentFragment_Software struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
 type ComponentFragment_Image struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
 }
 type ComponentFragment_Readme struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
 }
 type ComponentFragment_ContributionGuide struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
 }
 type ComponentFragment_Bom struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
 }
 type ComponentFragment_ManufacturingInstructions struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
 }
 type ComponentFragment_UserManual struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
 }
 type ComponentFragment_Product struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type ComponentFragment_UsedIn struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type ComponentFragment_Source struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
 }
 type ComponentFragment_Export struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
 }
 type ComponentFragment_Auxiliary struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
 }
 type ComponentFragment_Organization struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type ComponentFragment_OuterDimensions_BoundingBoxDimensions struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type ComponentFragment_OuterDimensions_OpenSCADDimensions struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type ComponentFragment_OuterDimensions struct {
-	BoundingBoxDimensions ComponentFragment_OuterDimensions_BoundingBoxDimensions "graphql:\"... on BoundingBoxDimensions\""
-	OpenSCADDimensions    ComponentFragment_OuterDimensions_OpenSCADDimensions    "graphql:\"... on OpenSCADDimensions\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type ComponentFragment_Material struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type ComponentFragment_ManufacturingProcess struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
-type ComponentFragment_ProductionMetadata struct {
-	ID string "json:\"id\" graphql:\"id\""
+type ComponentFragment_ProductionMetadata_KeyValueFragment_Value_StringV struct {
+	ID          string "json:\"id\" graphql:\"id\""
+	StringValue string "json:\"stringValue\" graphql:\"stringValue\""
+}
+type ComponentFragment_ProductionMetadata_KeyValueFragment_Value_FloatV struct {
+	ID         string  "json:\"id\" graphql:\"id\""
+	FloatValue float64 "json:\"floatValue\" graphql:\"floatValue\""
+}
+type ComponentFragment_ProductionMetadata_KeyValueFragment_Value struct {
+	StringV ComponentFragment_ProductionMetadata_KeyValueFragment_Value_StringV "graphql:\"... on StringV\""
+	FloatV  ComponentFragment_ProductionMetadata_KeyValueFragment_Value_FloatV  "graphql:\"... on FloatV\""
 }
 type KeyValueFragment_Value_StringV struct {
-	ID          string  "json:\"id\" graphql:\"id\""
-	StringValue *string "json:\"stringValue\" graphql:\"stringValue\""
+	ID          string "json:\"id\" graphql:\"id\""
+	StringValue string "json:\"stringValue\" graphql:\"stringValue\""
 }
 type KeyValueFragment_Value_FloatV struct {
-	ID         string   "json:\"id\" graphql:\"id\""
-	FloatValue *float64 "json:\"floatValue\" graphql:\"floatValue\""
+	ID         string  "json:\"id\" graphql:\"id\""
+	FloatValue float64 "json:\"floatValue\" graphql:\"floatValue\""
 }
 type KeyValueFragment_Value struct {
 	StringV KeyValueFragment_Value_StringV "graphql:\"... on StringV\""
 	FloatV  KeyValueFragment_Value_FloatV  "graphql:\"... on FloatV\""
 }
-type ProductFragment_Owner struct {
-	ID string "json:\"id\" graphql:\"id\""
+type ProductFragment_License struct {
+	ID  string "json:\"id\" graphql:\"id\""
+	Xid string "json:\"xid\" graphql:\"xid\""
 }
 type ProductFragment_Release struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type ProductFragment_Releases struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type ProductFragment_RenamedTo struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type ProductFragment_RenamedFrom struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type ProductFragment_ForkOf struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type ProductFragment_Forks struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type ProductFragment_Tags struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type ProductFragment_Category struct {
+	ID       string "json:\"id\" graphql:\"id\""
+	FullName string "json:\"fullName\" graphql:\"fullName\""
+}
+type ProductSearchFragment_RenamedTo struct {
 	ID string "json:\"id\" graphql:\"id\""
+}
+type ProductSearchFragment_RenamedFrom struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type ProductSearchFragment_ForkOf_Release_Repository struct {
+	URL string "json:\"url\" graphql:\"url\""
+}
+type ProductSearchFragment_ForkOf_Release struct {
+	Repository ProductSearchFragment_ForkOf_Release_Repository "json:\"repository\" graphql:\"repository\""
+}
+type ProductSearchFragment_ForkOf struct {
+	ID      string                               "json:\"id\" graphql:\"id\""
+	Release ProductSearchFragment_ForkOf_Release "json:\"release\" graphql:\"release\""
+}
+type ProductSearchFragment_Forks struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type ProductSearchFragment_Tags_TagFragment_Aliases struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductSearchFragment_Tags_TagFragment_Related struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductSearchFragment_Category_CategoryFragment_Parent struct {
+	ID       string "json:\"id\" graphql:\"id\""
+	FullName string "json:\"fullName\" graphql:\"fullName\""
+}
+type ProductSearchFragment_Category_CategoryFragment_Children struct {
+	ID       string "json:\"id\" graphql:\"id\""
+	FullName string "json:\"fullName\" graphql:\"fullName\""
+}
+type ProductSearchFragment_Category_CategoryFragment_Products struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductSearchFragment_Releases struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type ProductSearchFragment_Release_Releases struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type ProductSearchFragment_Release_Repository_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Avatar struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
+}
+type ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_MemberOf struct {
+	ID       string  "json:\"id\" graphql:\"id\""
+	FullName *string "json:\"fullName\" graphql:\"fullName\""
+}
+type ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Products struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Avatar struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
+}
+type ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_MemberOf struct {
+	ID       string  "json:\"id\" graphql:\"id\""
+	FullName *string "json:\"fullName\" graphql:\"fullName\""
+}
+type ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Products struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_Group_GroupFragment_Members struct {
+	Typename *string "json:\"__typename\" graphql:\"__typename\""
+	ID       string  "json:\"id\" graphql:\"id\""
+}
+type ProductSearchFragment_Release_CompliesWith struct {
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductSearchFragment_Release_Tsdc struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type ProductSearchFragment_Release_Components struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type ProductSearchFragment_Release_Software struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type ProductSearchFragment_Release_Product struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type ProductSearchFragment_Release_UsedIn struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type ProductSearchFragment_Release_Organization struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type ProductSearchFragment_Release_Material struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type ProductSearchFragment_Release_ManufacturingProcess struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type ProductSearchFragment_Release_ProductionMetadata struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type ProductSearchFragment_Release struct {
+	ID                          string                                              "json:\"id\" graphql:\"id\""
+	Xid                         string                                              "json:\"xid\" graphql:\"xid\""
+	Name                        string                                              "json:\"name\" graphql:\"name\""
+	Description                 string                                              "json:\"description\" graphql:\"description\""
+	Version                     string                                              "json:\"version\" graphql:\"version\""
+	CreatedAt                   time.Time                                           "json:\"createdAt\" graphql:\"createdAt\""
+	Releases                    []*ProductSearchFragment_Release_Releases           "json:\"releases\" graphql:\"releases\""
+	IsLatest                    bool                                                "json:\"isLatest\" graphql:\"isLatest\""
+	Repository                  *RepositoryFragment                                 "json:\"repository\" graphql:\"repository\""
+	License                     *LicenseFragmentBasic                               "json:\"license\" graphql:\"license\""
+	AdditionalLicenses          []*LicenseFragmentBasic                             "json:\"additionalLicenses\" graphql:\"additionalLicenses\""
+	Licensor                    *UserOrGroupFullFragment                            "json:\"licensor\" graphql:\"licensor\""
+	DocumentationLanguage       string                                              "json:\"documentationLanguage\" graphql:\"documentationLanguage\""
+	TechnologyReadinessLevel    TechnologyReadinessLevel                            "json:\"technologyReadinessLevel\" graphql:\"technologyReadinessLevel\""
+	DocumentationReadinessLevel DocumentationReadinessLevel                         "json:\"documentationReadinessLevel\" graphql:\"documentationReadinessLevel\""
+	Attestation                 *string                                             "json:\"attestation\" graphql:\"attestation\""
+	Publication                 *string                                             "json:\"publication\" graphql:\"publication\""
+	CompliesWith                *ProductSearchFragment_Release_CompliesWith         "json:\"compliesWith\" graphql:\"compliesWith\""
+	CpcPatentClass              *string                                             "json:\"cpcPatentClass\" graphql:\"cpcPatentClass\""
+	Tsdc                        *ProductSearchFragment_Release_Tsdc                 "json:\"tsdc\" graphql:\"tsdc\""
+	Components                  []*ProductSearchFragment_Release_Components         "json:\"components\" graphql:\"components\""
+	Software                    []*ProductSearchFragment_Release_Software           "json:\"software\" graphql:\"software\""
+	Image                       *FileFragment                                       "json:\"image\" graphql:\"image\""
+	Readme                      *FileFragment                                       "json:\"readme\" graphql:\"readme\""
+	ContributionGuide           *FileFragment                                       "json:\"contributionGuide\" graphql:\"contributionGuide\""
+	Bom                         *FileFragment                                       "json:\"bom\" graphql:\"bom\""
+	ManufacturingInstructions   *FileFragment                                       "json:\"manufacturingInstructions\" graphql:\"manufacturingInstructions\""
+	UserManual                  *FileFragment                                       "json:\"userManual\" graphql:\"userManual\""
+	Product                     *ProductSearchFragment_Release_Product              "json:\"product\" graphql:\"product\""
+	UsedIn                      []*ProductSearchFragment_Release_UsedIn             "json:\"usedIn\" graphql:\"usedIn\""
+	Source                      *FileFragment                                       "json:\"source\" graphql:\"source\""
+	Export                      []*FileFragment                                     "json:\"export\" graphql:\"export\""
+	Auxiliary                   []*FileFragment                                     "json:\"auxiliary\" graphql:\"auxiliary\""
+	Organization                *ProductSearchFragment_Release_Organization         "json:\"organization\" graphql:\"organization\""
+	Mass                        *float64                                            "json:\"mass\" graphql:\"mass\""
+	OuterDimensions             *OuterDimensionsFragment                            "json:\"outerDimensions\" graphql:\"outerDimensions\""
+	Material                    *ProductSearchFragment_Release_Material             "json:\"material\" graphql:\"material\""
+	ManufacturingProcess        *ProductSearchFragment_Release_ManufacturingProcess "json:\"manufacturingProcess\" graphql:\"manufacturingProcess\""
+	ProductionMetadata          []*ProductSearchFragment_Release_ProductionMetadata "json:\"productionMetadata\" graphql:\"productionMetadata\""
+}
+type RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type SoftwareFragment_InstallationGuide struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
 }
 type SoftwareFragment_License struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID  string "json:\"id\" graphql:\"id\""
+	Xid string "json:\"xid\" graphql:\"xid\""
 }
 type TagFragment_Aliases struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type TagFragment_Related struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type TechnicalStandardFragment_Components struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type TechnologySpecificDocumentationCriteriaFragment_Components struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type UserOrGroupFragment_User struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type UserOrGroupFragment_Group struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type UserOrGroupFragment_Host struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type UserOrGroupFragment_Avatar struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
 }
 type UserOrGroupFragment_MemberOf struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID       string  "json:\"id\" graphql:\"id\""
+	FullName *string "json:\"fullName\" graphql:\"fullName\""
 }
 type UserOrGroupFragment_Products struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type UserFragment_UserOrGroupFragment_User struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type UserFragment_UserOrGroupFragment_Group struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type UserFragment_UserOrGroupFragment_Host struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type UserFragment_UserOrGroupFragment_Avatar struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
 }
 type UserFragment_UserOrGroupFragment_MemberOf struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID       string  "json:\"id\" graphql:\"id\""
+	FullName *string "json:\"fullName\" graphql:\"fullName\""
 }
 type UserFragment_UserOrGroupFragment_Products struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GroupFragment_UserOrGroupFragment_User struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GroupFragment_UserOrGroupFragment_Group struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GroupFragment_UserOrGroupFragment_Host struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GroupFragment_UserOrGroupFragment_Avatar struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
 }
 type GroupFragment_UserOrGroupFragment_MemberOf struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID       string  "json:\"id\" graphql:\"id\""
+	FullName *string "json:\"fullName\" graphql:\"fullName\""
 }
 type GroupFragment_UserOrGroupFragment_Products struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GroupFragment_Members_User struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GroupFragment_Members_Group struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GroupFragment_Members struct {
-	User  GroupFragment_Members_User  "graphql:\"... on User\""
-	Group GroupFragment_Members_Group "graphql:\"... on Group\""
+	Typename *string "json:\"__typename\" graphql:\"__typename\""
+	ID       string  "json:\"id\" graphql:\"id\""
 }
-type SaveBoundingBoxDimensionss_DeleteBoundingBoxDimensions_BoundingBoxDimensions struct {
-	ID string "json:\"id\" graphql:\"id\""
+type UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
-type SaveBoundingBoxDimensionss_DeleteBoundingBoxDimensions struct {
-	BoundingBoxDimensions []*SaveBoundingBoxDimensionss_DeleteBoundingBoxDimensions_BoundingBoxDimensions "json:\"boundingBoxDimensions\" graphql:\"boundingBoxDimensions\""
+type UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Avatar struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
 }
-type SaveBoundingBoxDimensionss_AddBoundingBoxDimensions_BoundingBoxDimensions struct {
-	ID string "json:\"id\" graphql:\"id\""
+type UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_MemberOf struct {
+	ID       string  "json:\"id\" graphql:\"id\""
+	FullName *string "json:\"fullName\" graphql:\"fullName\""
 }
-type SaveBoundingBoxDimensionss_AddBoundingBoxDimensions struct {
-	BoundingBoxDimensions []*SaveBoundingBoxDimensionss_AddBoundingBoxDimensions_BoundingBoxDimensions "json:\"boundingBoxDimensions\" graphql:\"boundingBoxDimensions\""
+type UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Products struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
-type DeleteBoundingBoxDimensions_DeleteBoundingBoxDimensions_BoundingBoxDimensions struct {
-	ID string "json:\"id\" graphql:\"id\""
+type UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
-type DeleteBoundingBoxDimensions_DeleteBoundingBoxDimensions struct {
-	BoundingBoxDimensions []*DeleteBoundingBoxDimensions_DeleteBoundingBoxDimensions_BoundingBoxDimensions "json:\"boundingBoxDimensions\" graphql:\"boundingBoxDimensions\""
+type UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Avatar struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
 }
-type GetCategory_GetCategory_CategoryFragment_Parent struct {
-	ID string "json:\"id\" graphql:\"id\""
+type UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_MemberOf struct {
+	ID       string  "json:\"id\" graphql:\"id\""
+	FullName *string "json:\"fullName\" graphql:\"fullName\""
 }
-type GetCategory_GetCategory_CategoryFragment_Children struct {
-	ID string "json:\"id\" graphql:\"id\""
+type UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Products struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
-type GetCategory_GetCategory_CategoryFragment_Products struct {
+type UserOrGroupFullFragment_Group_GroupFragment_Members struct {
+	Typename *string "json:\"__typename\" graphql:\"__typename\""
+	ID       string  "json:\"id\" graphql:\"id\""
+}
+type GetCategoryByID_GetCategory_CategoryFragment_Parent struct {
+	ID       string "json:\"id\" graphql:\"id\""
+	FullName string "json:\"fullName\" graphql:\"fullName\""
+}
+type GetCategoryByID_GetCategory_CategoryFragment_Children struct {
+	ID       string "json:\"id\" graphql:\"id\""
+	FullName string "json:\"fullName\" graphql:\"fullName\""
+}
+type GetCategoryByID_GetCategory_CategoryFragment_Products struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetCategoryByXid_GetCategory_CategoryFragment_Parent struct {
+	ID       string "json:\"id\" graphql:\"id\""
+	FullName string "json:\"fullName\" graphql:\"fullName\""
+}
+type GetCategoryByXid_GetCategory_CategoryFragment_Children struct {
+	ID       string "json:\"id\" graphql:\"id\""
+	FullName string "json:\"fullName\" graphql:\"fullName\""
+}
+type GetCategoryByXid_GetCategory_CategoryFragment_Products struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetCategoryID_GetCategory struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
 type GetCategories_QueryCategory_CategoryFragment_Parent struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID       string "json:\"id\" graphql:\"id\""
+	FullName string "json:\"fullName\" graphql:\"fullName\""
 }
 type GetCategories_QueryCategory_CategoryFragment_Children struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID       string "json:\"id\" graphql:\"id\""
+	FullName string "json:\"fullName\" graphql:\"fullName\""
 }
 type GetCategories_QueryCategory_CategoryFragment_Products struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetCategories_AggregateCategory struct {
+	Count *int64 "json:\"count\" graphql:\"count\""
+}
+type CreateCategories_AddCategory_Category struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type SaveCategories_AddCategory_Category struct {
+type CreateCategories_AddCategory struct {
+	Category []*CreateCategories_AddCategory_Category "json:\"category\" graphql:\"category\""
+}
+type UpdateCategories_UpdateCategory_Category struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type SaveCategories_AddCategory struct {
-	Category []*SaveCategories_AddCategory_Category "json:\"category\" graphql:\"category\""
+type UpdateCategories_UpdateCategory struct {
+	Category []*UpdateCategories_UpdateCategory_Category "json:\"category\" graphql:\"category\""
 }
-type DeleteCategory_DeleteCategory_Category struct {
+type DeleteCategories_DeleteCategory_Category struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type DeleteCategory_DeleteCategory struct {
-	Category []*DeleteCategory_DeleteCategory_Category "json:\"category\" graphql:\"category\""
+type DeleteCategories_DeleteCategory struct {
+	Category []*DeleteCategories_DeleteCategory_Category "json:\"category\" graphql:\"category\""
 }
-type GetComponentSource_GetComponentSource_ComponentSourceFragment_Host struct {
+type GetComponentByID_GetComponent_ComponentFragment_Releases struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetComponentByID_GetComponent_ComponentFragment_Repository struct {
+	ID   string  "json:\"id\" graphql:\"id\""
+	Name *string "json:\"name\" graphql:\"name\""
+}
+type GetComponentByID_GetComponent_ComponentFragment_License struct {
+	ID  string "json:\"id\" graphql:\"id\""
+	Xid string "json:\"xid\" graphql:\"xid\""
+}
+type GetComponentByID_GetComponent_ComponentFragment_AdditionalLicenses struct {
+	ID  string "json:\"id\" graphql:\"id\""
+	Xid string "json:\"xid\" graphql:\"xid\""
+}
+type GetComponentByID_GetComponent_ComponentFragment_CompliesWith struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetComponentByID_GetComponent_ComponentFragment_Tsdc struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetComponentByID_GetComponent_ComponentFragment_Components struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetComponentByID_GetComponent_ComponentFragment_Software struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type GetComponentSource_GetComponentSource_ComponentSourceFragment_Owner struct {
+type GetComponentByID_GetComponent_ComponentFragment_Image struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
+}
+type GetComponentByID_GetComponent_ComponentFragment_Readme struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
+}
+type GetComponentByID_GetComponent_ComponentFragment_ContributionGuide struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
+}
+type GetComponentByID_GetComponent_ComponentFragment_Bom struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
+}
+type GetComponentByID_GetComponent_ComponentFragment_ManufacturingInstructions struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
+}
+type GetComponentByID_GetComponent_ComponentFragment_UserManual struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
+}
+type GetComponentByID_GetComponent_ComponentFragment_Product struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetComponentByID_GetComponent_ComponentFragment_UsedIn struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetComponentByID_GetComponent_ComponentFragment_Source struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
+}
+type GetComponentByID_GetComponent_ComponentFragment_Export struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
+}
+type GetComponentByID_GetComponent_ComponentFragment_Auxiliary struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
+}
+type GetComponentByID_GetComponent_ComponentFragment_Organization struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetComponentByID_GetComponent_ComponentFragment_Material struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetComponentByID_GetComponent_ComponentFragment_ManufacturingProcess struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetComponentByID_GetComponent_ComponentFragment_ProductionMetadata_KeyValueFragment_Value_StringV struct {
+	ID          string "json:\"id\" graphql:\"id\""
+	StringValue string "json:\"stringValue\" graphql:\"stringValue\""
+}
+type GetComponentByID_GetComponent_ComponentFragment_ProductionMetadata_KeyValueFragment_Value_FloatV struct {
+	ID         string  "json:\"id\" graphql:\"id\""
+	FloatValue float64 "json:\"floatValue\" graphql:\"floatValue\""
+}
+type GetComponentByID_GetComponent_ComponentFragment_ProductionMetadata_KeyValueFragment_Value struct {
+	StringV GetComponentByID_GetComponent_ComponentFragment_ProductionMetadata_KeyValueFragment_Value_StringV "graphql:\"... on StringV\""
+	FloatV  GetComponentByID_GetComponent_ComponentFragment_ProductionMetadata_KeyValueFragment_Value_FloatV  "graphql:\"... on FloatV\""
+}
+type GetComponentByXid_GetComponent_ComponentFragment_Releases struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetComponentByXid_GetComponent_ComponentFragment_Repository struct {
+	ID   string  "json:\"id\" graphql:\"id\""
+	Name *string "json:\"name\" graphql:\"name\""
+}
+type GetComponentByXid_GetComponent_ComponentFragment_License struct {
+	ID  string "json:\"id\" graphql:\"id\""
+	Xid string "json:\"xid\" graphql:\"xid\""
+}
+type GetComponentByXid_GetComponent_ComponentFragment_AdditionalLicenses struct {
+	ID  string "json:\"id\" graphql:\"id\""
+	Xid string "json:\"xid\" graphql:\"xid\""
+}
+type GetComponentByXid_GetComponent_ComponentFragment_CompliesWith struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetComponentByXid_GetComponent_ComponentFragment_Tsdc struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetComponentByXid_GetComponent_ComponentFragment_Components struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetComponentByXid_GetComponent_ComponentFragment_Software struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type GetComponentSources_QueryComponentSource_ComponentSourceFragment_Host struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetComponentByXid_GetComponent_ComponentFragment_Image struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
 }
-type GetComponentSources_QueryComponentSource_ComponentSourceFragment_Owner struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetComponentByXid_GetComponent_ComponentFragment_Readme struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
 }
-type SaveComponentSources_AddComponentSource_ComponentSource struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetComponentByXid_GetComponent_ComponentFragment_ContributionGuide struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
 }
-type SaveComponentSources_AddComponentSource struct {
-	ComponentSource []*SaveComponentSources_AddComponentSource_ComponentSource "json:\"componentSource\" graphql:\"componentSource\""
+type GetComponentByXid_GetComponent_ComponentFragment_Bom struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
 }
-type DeleteComponentSource_DeleteComponentSource_ComponentSource struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetComponentByXid_GetComponent_ComponentFragment_ManufacturingInstructions struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
 }
-type DeleteComponentSource_DeleteComponentSource struct {
-	ComponentSource []*DeleteComponentSource_DeleteComponentSource_ComponentSource "json:\"componentSource\" graphql:\"componentSource\""
+type GetComponentByXid_GetComponent_ComponentFragment_UserManual struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
 }
-type GetComponent_GetComponent_ComponentFragment_Owner struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetComponentByXid_GetComponent_ComponentFragment_Product struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
-type GetComponent_GetComponent_ComponentFragment_Releases struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetComponentByXid_GetComponent_ComponentFragment_UsedIn struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
-type GetComponent_GetComponent_ComponentFragment_Repository struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetComponentByXid_GetComponent_ComponentFragment_Source struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
 }
-type GetComponent_GetComponent_ComponentFragment_License struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetComponentByXid_GetComponent_ComponentFragment_Export struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
 }
-type GetComponent_GetComponent_ComponentFragment_AdditionalLicenses struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetComponentByXid_GetComponent_ComponentFragment_Auxiliary struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
 }
-type GetComponent_GetComponent_ComponentFragment_Licensor struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetComponentByXid_GetComponent_ComponentFragment_Organization struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
-type GetComponent_GetComponent_ComponentFragment_CompliesWith struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetComponentByXid_GetComponent_ComponentFragment_Material struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
-type GetComponent_GetComponent_ComponentFragment_Tsdc struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetComponentByXid_GetComponent_ComponentFragment_ManufacturingProcess struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
-type GetComponent_GetComponent_ComponentFragment_Components struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetComponentByXid_GetComponent_ComponentFragment_ProductionMetadata_KeyValueFragment_Value_StringV struct {
+	ID          string "json:\"id\" graphql:\"id\""
+	StringValue string "json:\"stringValue\" graphql:\"stringValue\""
 }
-type GetComponent_GetComponent_ComponentFragment_Software struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetComponentByXid_GetComponent_ComponentFragment_ProductionMetadata_KeyValueFragment_Value_FloatV struct {
+	ID         string  "json:\"id\" graphql:\"id\""
+	FloatValue float64 "json:\"floatValue\" graphql:\"floatValue\""
 }
-type GetComponent_GetComponent_ComponentFragment_Image struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetComponentByXid_GetComponent_ComponentFragment_ProductionMetadata_KeyValueFragment_Value struct {
+	StringV GetComponentByXid_GetComponent_ComponentFragment_ProductionMetadata_KeyValueFragment_Value_StringV "graphql:\"... on StringV\""
+	FloatV  GetComponentByXid_GetComponent_ComponentFragment_ProductionMetadata_KeyValueFragment_Value_FloatV  "graphql:\"... on FloatV\""
 }
-type GetComponent_GetComponent_ComponentFragment_Readme struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetComponent_GetComponent_ComponentFragment_ContributionGuide struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetComponent_GetComponent_ComponentFragment_Bom struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetComponent_GetComponent_ComponentFragment_ManufacturingInstructions struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetComponent_GetComponent_ComponentFragment_UserManual struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetComponent_GetComponent_ComponentFragment_Product struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetComponent_GetComponent_ComponentFragment_UsedIn struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetComponent_GetComponent_ComponentFragment_Source struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetComponent_GetComponent_ComponentFragment_Export struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetComponent_GetComponent_ComponentFragment_Auxiliary struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetComponent_GetComponent_ComponentFragment_Organization struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetComponent_GetComponent_ComponentFragment_OuterDimensions_BoundingBoxDimensions struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetComponent_GetComponent_ComponentFragment_OuterDimensions_OpenSCADDimensions struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetComponent_GetComponent_ComponentFragment_OuterDimensions struct {
-	BoundingBoxDimensions GetComponent_GetComponent_ComponentFragment_OuterDimensions_BoundingBoxDimensions "graphql:\"... on BoundingBoxDimensions\""
-	OpenSCADDimensions    GetComponent_GetComponent_ComponentFragment_OuterDimensions_OpenSCADDimensions    "graphql:\"... on OpenSCADDimensions\""
-}
-type GetComponent_GetComponent_ComponentFragment_Material struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetComponent_GetComponent_ComponentFragment_ManufacturingProcess struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetComponent_GetComponent_ComponentFragment_ProductionMetadata struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetComponents_QueryComponent_ComponentFragment_Owner struct {
+type GetComponentID_GetComponent struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
 type GetComponents_QueryComponent_ComponentFragment_Releases struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetComponents_QueryComponent_ComponentFragment_Repository struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string  "json:\"id\" graphql:\"id\""
+	Name *string "json:\"name\" graphql:\"name\""
 }
 type GetComponents_QueryComponent_ComponentFragment_License struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID  string "json:\"id\" graphql:\"id\""
+	Xid string "json:\"xid\" graphql:\"xid\""
 }
 type GetComponents_QueryComponent_ComponentFragment_AdditionalLicenses struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetComponents_QueryComponent_ComponentFragment_Licensor struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID  string "json:\"id\" graphql:\"id\""
+	Xid string "json:\"xid\" graphql:\"xid\""
 }
 type GetComponents_QueryComponent_ComponentFragment_CompliesWith struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetComponents_QueryComponent_ComponentFragment_Tsdc struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetComponents_QueryComponent_ComponentFragment_Components struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetComponents_QueryComponent_ComponentFragment_Software struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
 type GetComponents_QueryComponent_ComponentFragment_Image struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
 }
 type GetComponents_QueryComponent_ComponentFragment_Readme struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
 }
 type GetComponents_QueryComponent_ComponentFragment_ContributionGuide struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
 }
 type GetComponents_QueryComponent_ComponentFragment_Bom struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
 }
 type GetComponents_QueryComponent_ComponentFragment_ManufacturingInstructions struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
 }
 type GetComponents_QueryComponent_ComponentFragment_UserManual struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
 }
 type GetComponents_QueryComponent_ComponentFragment_Product struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetComponents_QueryComponent_ComponentFragment_UsedIn struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetComponents_QueryComponent_ComponentFragment_Source struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
 }
 type GetComponents_QueryComponent_ComponentFragment_Export struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
 }
 type GetComponents_QueryComponent_ComponentFragment_Auxiliary struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
 }
 type GetComponents_QueryComponent_ComponentFragment_Organization struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetComponents_QueryComponent_ComponentFragment_OuterDimensions_BoundingBoxDimensions struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetComponents_QueryComponent_ComponentFragment_OuterDimensions_OpenSCADDimensions struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetComponents_QueryComponent_ComponentFragment_OuterDimensions struct {
-	BoundingBoxDimensions GetComponents_QueryComponent_ComponentFragment_OuterDimensions_BoundingBoxDimensions "graphql:\"... on BoundingBoxDimensions\""
-	OpenSCADDimensions    GetComponents_QueryComponent_ComponentFragment_OuterDimensions_OpenSCADDimensions    "graphql:\"... on OpenSCADDimensions\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetComponents_QueryComponent_ComponentFragment_Material struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetComponents_QueryComponent_ComponentFragment_ManufacturingProcess struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetComponents_QueryComponent_ComponentFragment_ProductionMetadata struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type SaveComponents_AddComponent_Component struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type SaveComponents_AddComponent struct {
-	Component []*SaveComponents_AddComponent_Component "json:\"component\" graphql:\"component\""
-}
-type DeleteComponent_DeleteComponent_Component struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type DeleteComponent_DeleteComponent struct {
-	Component []*DeleteComponent_DeleteComponent_Component "json:\"component\" graphql:\"component\""
-}
-type SaveDatabaseInfo_DeleteDatabase_Database struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type SaveDatabaseInfo_DeleteDatabase struct {
-	Database []*SaveDatabaseInfo_DeleteDatabase_Database "json:\"database\" graphql:\"database\""
-}
-type SaveDatabaseInfo_AddDatabase_Database struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type SaveDatabaseInfo_AddDatabase struct {
-	Database []*SaveDatabaseInfo_AddDatabase_Database "json:\"database\" graphql:\"database\""
-}
-type SaveFiles_DeleteFile_File struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type SaveFiles_DeleteFile struct {
-	File []*SaveFiles_DeleteFile_File "json:\"file\" graphql:\"file\""
-}
-type SaveFiles_AddFile_File struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type SaveFiles_AddFile struct {
-	File []*SaveFiles_AddFile_File "json:\"file\" graphql:\"file\""
-}
-type DeleteFile_DeleteFile_File struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type DeleteFile_DeleteFile struct {
-	File []*DeleteFile_DeleteFile_File "json:\"file\" graphql:\"file\""
-}
-type SaveFloatVs_DeleteFloatV_FloatV struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type SaveFloatVs_DeleteFloatV struct {
-	FloatV []*SaveFloatVs_DeleteFloatV_FloatV "json:\"floatV\" graphql:\"floatV\""
-}
-type SaveFloatVs_AddFloatV_FloatV struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type SaveFloatVs_AddFloatV struct {
-	FloatV []*SaveFloatVs_AddFloatV_FloatV "json:\"floatV\" graphql:\"floatV\""
-}
-type DeleteFloatVs_DeleteFloatV_FloatV struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type DeleteFloatVs_DeleteFloatV struct {
-	FloatV []*DeleteFloatVs_DeleteFloatV_FloatV "json:\"floatV\" graphql:\"floatV\""
-}
-type SaveHosts_AddHost_Host struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type SaveHosts_AddHost struct {
-	Host []*SaveHosts_AddHost_Host "json:\"host\" graphql:\"host\""
-}
-type DeleteHost_DeleteHost_Host struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type DeleteHost_DeleteHost struct {
-	Host []*DeleteHost_DeleteHost_Host "json:\"host\" graphql:\"host\""
-}
-type GetKeyValue_GetKeyValue_KeyValueFragment_Value_StringV struct {
-	ID          string  "json:\"id\" graphql:\"id\""
-	StringValue *string "json:\"stringValue\" graphql:\"stringValue\""
-}
-type GetKeyValue_GetKeyValue_KeyValueFragment_Value_FloatV struct {
-	ID         string   "json:\"id\" graphql:\"id\""
-	FloatValue *float64 "json:\"floatValue\" graphql:\"floatValue\""
-}
-type GetKeyValue_GetKeyValue_KeyValueFragment_Value struct {
-	StringV GetKeyValue_GetKeyValue_KeyValueFragment_Value_StringV "graphql:\"... on StringV\""
-	FloatV  GetKeyValue_GetKeyValue_KeyValueFragment_Value_FloatV  "graphql:\"... on FloatV\""
-}
-type GetKeyValues_QueryKeyValue_KeyValueFragment_Value_StringV struct {
-	ID          string  "json:\"id\" graphql:\"id\""
-	StringValue *string "json:\"stringValue\" graphql:\"stringValue\""
-}
-type GetKeyValues_QueryKeyValue_KeyValueFragment_Value_FloatV struct {
-	ID         string   "json:\"id\" graphql:\"id\""
-	FloatValue *float64 "json:\"floatValue\" graphql:\"floatValue\""
-}
-type GetKeyValues_QueryKeyValue_KeyValueFragment_Value struct {
-	StringV GetKeyValues_QueryKeyValue_KeyValueFragment_Value_StringV "graphql:\"... on StringV\""
-	FloatV  GetKeyValues_QueryKeyValue_KeyValueFragment_Value_FloatV  "graphql:\"... on FloatV\""
-}
-type SaveKeyValues_AddKeyValue_KeyValue struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type SaveKeyValues_AddKeyValue struct {
-	KeyValue []*SaveKeyValues_AddKeyValue_KeyValue "json:\"keyValue\" graphql:\"keyValue\""
-}
-type DeleteKeyValue_DeleteKeyValue_KeyValue struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type DeleteKeyValue_DeleteKeyValue struct {
-	KeyValue []*DeleteKeyValue_DeleteKeyValue_KeyValue "json:\"keyValue\" graphql:\"keyValue\""
-}
-type SaveLicenses_AddLicense_License struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type SaveLicenses_AddLicense struct {
-	License []*SaveLicenses_AddLicense_License "json:\"license\" graphql:\"license\""
-}
-type DeleteLicense_DeleteLicense_License struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type DeleteLicense_DeleteLicense struct {
-	License []*DeleteLicense_DeleteLicense_License "json:\"license\" graphql:\"license\""
-}
-type SaveManufacturingProcesses_DeleteManufacturingProcess_ManufacturingProcess struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type SaveManufacturingProcesses_DeleteManufacturingProcess struct {
-	ManufacturingProcess []*SaveManufacturingProcesses_DeleteManufacturingProcess_ManufacturingProcess "json:\"manufacturingProcess\" graphql:\"manufacturingProcess\""
-}
-type SaveManufacturingProcesses_AddManufacturingProcess_ManufacturingProcess struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type SaveManufacturingProcesses_AddManufacturingProcess struct {
-	ManufacturingProcess []*SaveManufacturingProcesses_AddManufacturingProcess_ManufacturingProcess "json:\"manufacturingProcess\" graphql:\"manufacturingProcess\""
-}
-type DeleteManufacturingProcesses_DeleteManufacturingProcess_ManufacturingProcess struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type DeleteManufacturingProcesses_DeleteManufacturingProcess struct {
-	ManufacturingProcess []*DeleteManufacturingProcesses_DeleteManufacturingProcess_ManufacturingProcess "json:\"manufacturingProcess\" graphql:\"manufacturingProcess\""
-}
-type SaveMaterials_DeleteMaterial_Material struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type SaveMaterials_DeleteMaterial struct {
-	Material []*SaveMaterials_DeleteMaterial_Material "json:\"material\" graphql:\"material\""
-}
-type SaveMaterials_AddMaterial_Material struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type SaveMaterials_AddMaterial struct {
-	Material []*SaveMaterials_AddMaterial_Material "json:\"material\" graphql:\"material\""
-}
-type DeleteMaterials_DeleteMaterial_Material struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type DeleteMaterials_DeleteMaterial struct {
-	Material []*DeleteMaterials_DeleteMaterial_Material "json:\"material\" graphql:\"material\""
-}
-type GetNode_GetNode_Product_ProductFragment_Owner struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_Product_ProductFragment_Release struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_Product_ProductFragment_Releases struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_Product_ProductFragment_RenamedTo struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_Product_ProductFragment_RenamedFrom struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_Product_ProductFragment_ForkOf struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_Product_ProductFragment_Forks struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_Product_ProductFragment_Tags struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_Product_ProductFragment_Category struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_Component_ComponentFragment_Owner struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_Component_ComponentFragment_Releases struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_Component_ComponentFragment_Repository struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_Component_ComponentFragment_License struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
-type GetNode_GetNode_Component_ComponentFragment_AdditionalLicenses struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_Component_ComponentFragment_Licensor struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_Component_ComponentFragment_CompliesWith struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_Component_ComponentFragment_Tsdc struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_Component_ComponentFragment_Components struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_Component_ComponentFragment_Software struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_Component_ComponentFragment_Image struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_Component_ComponentFragment_Readme struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_Component_ComponentFragment_ContributionGuide struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_Component_ComponentFragment_Bom struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_Component_ComponentFragment_ManufacturingInstructions struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_Component_ComponentFragment_UserManual struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_Component_ComponentFragment_Product struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_Component_ComponentFragment_UsedIn struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_Component_ComponentFragment_Source struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_Component_ComponentFragment_Export struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_Component_ComponentFragment_Auxiliary struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_Component_ComponentFragment_Organization struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_Component_ComponentFragment_OuterDimensions_BoundingBoxDimensions struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_Component_ComponentFragment_OuterDimensions_OpenSCADDimensions struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_Component_ComponentFragment_OuterDimensions struct {
-	BoundingBoxDimensions GetNode_GetNode_Component_ComponentFragment_OuterDimensions_BoundingBoxDimensions "graphql:\"... on BoundingBoxDimensions\""
-	OpenSCADDimensions    GetNode_GetNode_Component_ComponentFragment_OuterDimensions_OpenSCADDimensions    "graphql:\"... on OpenSCADDimensions\""
-}
-type GetNode_GetNode_Component_ComponentFragment_Material struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_Component_ComponentFragment_ManufacturingProcess struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_Component_ComponentFragment_ProductionMetadata struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_User_UserFragment_UserOrGroupFragment_User struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_User_UserFragment_UserOrGroupFragment_Group struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_User_UserFragment_UserOrGroupFragment_Host struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_User_UserFragment_UserOrGroupFragment_Avatar struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_User_UserFragment_UserOrGroupFragment_MemberOf struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_User_UserFragment_UserOrGroupFragment_Products struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_Group_GroupFragment_UserOrGroupFragment_User struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_Group_GroupFragment_UserOrGroupFragment_Group struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_Group_GroupFragment_UserOrGroupFragment_Host struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_Group_GroupFragment_UserOrGroupFragment_Avatar struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_Group_GroupFragment_UserOrGroupFragment_MemberOf struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_Group_GroupFragment_UserOrGroupFragment_Products struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_Group_GroupFragment_Members_User struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_Group_GroupFragment_Members_Group struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetNode_GetNode_Group_GroupFragment_Members struct {
-	User  GetNode_GetNode_Group_GroupFragment_Members_User  "graphql:\"... on User\""
-	Group GetNode_GetNode_Group_GroupFragment_Members_Group "graphql:\"... on Group\""
-}
-type GetNode_GetNode struct {
-	Typename  *string           "json:\"__typename\" graphql:\"__typename\""
-	ID        string            "json:\"id\" graphql:\"id\""
-	Product   ProductFragment   "graphql:\"... on Product\""
-	Component ComponentFragment "graphql:\"... on Component\""
-	License   LicenseFragment   "graphql:\"... on License\""
-	User      UserFragment      "graphql:\"... on User\""
-	Group     GroupFragment     "graphql:\"... on Group\""
+type GetComponents_QueryComponent_ComponentFragment_ProductionMetadata_KeyValueFragment_Value_StringV struct {
+	ID          string "json:\"id\" graphql:\"id\""
+	StringValue string "json:\"stringValue\" graphql:\"stringValue\""
 }
-type GetNodes_QueryNode struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type DeleteNode_DeleteNode_Node struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type DeleteNode_DeleteNode struct {
-	Node []*DeleteNode_DeleteNode_Node "json:\"node\" graphql:\"node\""
-}
-type SaveOpenSCADDimensionss_DeleteOpenSCADDimensions_OpenSCADDimensions struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetComponents_QueryComponent_ComponentFragment_ProductionMetadata_KeyValueFragment_Value_FloatV struct {
+	ID         string  "json:\"id\" graphql:\"id\""
+	FloatValue float64 "json:\"floatValue\" graphql:\"floatValue\""
 }
-type SaveOpenSCADDimensionss_DeleteOpenSCADDimensions struct {
-	OpenSCADDimensions []*SaveOpenSCADDimensionss_DeleteOpenSCADDimensions_OpenSCADDimensions "json:\"openSCADDimensions\" graphql:\"openSCADDimensions\""
+type GetComponents_QueryComponent_ComponentFragment_ProductionMetadata_KeyValueFragment_Value struct {
+	StringV GetComponents_QueryComponent_ComponentFragment_ProductionMetadata_KeyValueFragment_Value_StringV "graphql:\"... on StringV\""
+	FloatV  GetComponents_QueryComponent_ComponentFragment_ProductionMetadata_KeyValueFragment_Value_FloatV  "graphql:\"... on FloatV\""
 }
-type SaveOpenSCADDimensionss_AddOpenSCADDimensions_OpenSCADDimensions struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type SaveOpenSCADDimensionss_AddOpenSCADDimensions struct {
-	OpenSCADDimensions []*SaveOpenSCADDimensionss_AddOpenSCADDimensions_OpenSCADDimensions "json:\"openSCADDimensions\" graphql:\"openSCADDimensions\""
-}
-type DeleteOpenSCADDimensionss_DeleteOpenSCADDimensions_OpenSCADDimensions struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type DeleteOpenSCADDimensionss_DeleteOpenSCADDimensions struct {
-	OpenSCADDimensions []*DeleteOpenSCADDimensionss_DeleteOpenSCADDimensions_OpenSCADDimensions "json:\"openSCADDimensions\" graphql:\"openSCADDimensions\""
-}
-type GetProduct_GetProduct_ProductFragment_Owner struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetComponents_AggregateComponent struct {
+	Count *int64 "json:\"count\" graphql:\"count\""
 }
-type GetProduct_GetProduct_ProductFragment_Release struct {
+type CreateComponents_AddComponent_Component struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type GetProduct_GetProduct_ProductFragment_Releases struct {
-	ID string "json:\"id\" graphql:\"id\""
+type CreateComponents_AddComponent struct {
+	Component []*CreateComponents_AddComponent_Component "json:\"component\" graphql:\"component\""
 }
-type GetProduct_GetProduct_ProductFragment_RenamedTo struct {
+type UpdateComponents_UpdateComponent_Component struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type GetProduct_GetProduct_ProductFragment_RenamedFrom struct {
-	ID string "json:\"id\" graphql:\"id\""
+type UpdateComponents_UpdateComponent struct {
+	Component []*UpdateComponents_UpdateComponent_Component "json:\"component\" graphql:\"component\""
 }
-type GetProduct_GetProduct_ProductFragment_ForkOf struct {
+type DeleteComponents_DeleteComponent_Component struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type GetProduct_GetProduct_ProductFragment_Forks struct {
-	ID string "json:\"id\" graphql:\"id\""
+type DeleteComponents_DeleteComponent struct {
+	Component []*DeleteComponents_DeleteComponent_Component "json:\"component\" graphql:\"component\""
 }
-type GetProduct_GetProduct_ProductFragment_Tags struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetDatabases_AggregateDatabase struct {
+	Count *int64 "json:\"count\" graphql:\"count\""
 }
-type GetProduct_GetProduct_ProductFragment_Category struct {
+type CreateDatabases_AddDatabase_Database struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type GetProducts_QueryProduct_ProductFragment_Owner struct {
-	ID string "json:\"id\" graphql:\"id\""
+type CreateDatabases_AddDatabase struct {
+	Database []*CreateDatabases_AddDatabase_Database "json:\"database\" graphql:\"database\""
 }
-type GetProducts_QueryProduct_ProductFragment_Release struct {
+type UpdateDatabases_UpdateDatabase_Database struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type GetProducts_QueryProduct_ProductFragment_Releases struct {
-	ID string "json:\"id\" graphql:\"id\""
+type UpdateDatabases_UpdateDatabase struct {
+	Database []*UpdateDatabases_UpdateDatabase_Database "json:\"database\" graphql:\"database\""
 }
-type GetProducts_QueryProduct_ProductFragment_RenamedTo struct {
+type DeleteDatabases_DeleteDatabase_Database struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type GetProducts_QueryProduct_ProductFragment_RenamedFrom struct {
-	ID string "json:\"id\" graphql:\"id\""
+type DeleteDatabases_DeleteDatabase struct {
+	Database []*DeleteDatabases_DeleteDatabase_Database "json:\"database\" graphql:\"database\""
 }
-type GetProducts_QueryProduct_ProductFragment_ForkOf struct {
+type GetFileID_GetFile struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type GetProducts_QueryProduct_ProductFragment_Forks struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetFiles_AggregateFile struct {
+	Count *int64 "json:\"count\" graphql:\"count\""
 }
-type GetProducts_QueryProduct_ProductFragment_Tags struct {
+type CreateFiles_AddFile_File struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type GetProducts_QueryProduct_ProductFragment_Category struct {
-	ID string "json:\"id\" graphql:\"id\""
+type CreateFiles_AddFile struct {
+	File []*CreateFiles_AddFile_File "json:\"file\" graphql:\"file\""
 }
-type SaveProducts_AddProduct_Product struct {
+type UpdateFiles_UpdateFile_File struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type SaveProducts_AddProduct struct {
-	Product []*SaveProducts_AddProduct_Product "json:\"product\" graphql:\"product\""
+type UpdateFiles_UpdateFile struct {
+	File []*UpdateFiles_UpdateFile_File "json:\"file\" graphql:\"file\""
 }
-type DeleteProduct_DeleteProduct_Product struct {
+type DeleteFiles_DeleteFile_File struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type DeleteProduct_DeleteProduct struct {
-	Product []*DeleteProduct_DeleteProduct_Product "json:\"product\" graphql:\"product\""
+type DeleteFiles_DeleteFile struct {
+	File []*DeleteFiles_DeleteFile_File "json:\"file\" graphql:\"file\""
 }
-type GetSoftware_GetSoftware_SoftwareFragment_InstallationGuide struct {
+type GetHostID_GetHost struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type GetSoftware_GetSoftware_SoftwareFragment_License struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetHosts_AggregateHost struct {
+	Count *int64 "json:\"count\" graphql:\"count\""
 }
-type GetSoftwares_QuerySoftware_SoftwareFragment_InstallationGuide struct {
+type CreateHosts_AddHost_Host struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type GetSoftwares_QuerySoftware_SoftwareFragment_License struct {
-	ID string "json:\"id\" graphql:\"id\""
+type CreateHosts_AddHost struct {
+	Host []*CreateHosts_AddHost_Host "json:\"host\" graphql:\"host\""
 }
-type SaveSoftwares_DeleteSoftware_Software struct {
+type UpdateHosts_UpdateHost_Host struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type SaveSoftwares_DeleteSoftware struct {
-	Software []*SaveSoftwares_DeleteSoftware_Software "json:\"software\" graphql:\"software\""
+type UpdateHosts_UpdateHost struct {
+	Host []*UpdateHosts_UpdateHost_Host "json:\"host\" graphql:\"host\""
 }
-type SaveSoftwares_AddSoftware_Software struct {
+type DeleteHosts_DeleteHost_Host struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type SaveSoftwares_AddSoftware struct {
-	Software []*SaveSoftwares_AddSoftware_Software "json:\"software\" graphql:\"software\""
-}
-type DeleteSoftware_DeleteSoftware_Software struct {
-	ID string "json:\"id\" graphql:\"id\""
+type DeleteHosts_DeleteHost struct {
+	Host []*DeleteHosts_DeleteHost_Host "json:\"host\" graphql:\"host\""
 }
-type DeleteSoftware_DeleteSoftware struct {
-	Software []*DeleteSoftware_DeleteSoftware_Software "json:\"software\" graphql:\"software\""
+type GetStringVs_AggregateStringV struct {
+	Count *int64 "json:\"count\" graphql:\"count\""
 }
-type SaveStringVs_DeleteStringV_StringV struct {
+type CreateStringVs_AddStringV_StringV struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type SaveStringVs_DeleteStringV struct {
-	StringV []*SaveStringVs_DeleteStringV_StringV "json:\"stringV\" graphql:\"stringV\""
+type CreateStringVs_AddStringV struct {
+	StringV []*CreateStringVs_AddStringV_StringV "json:\"stringV\" graphql:\"stringV\""
 }
-type SaveStringVs_AddStringV_StringV struct {
+type UpdateStringVs_UpdateStringV_StringV struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type SaveStringVs_AddStringV struct {
-	StringV []*SaveStringVs_AddStringV_StringV "json:\"stringV\" graphql:\"stringV\""
+type UpdateStringVs_UpdateStringV struct {
+	StringV []*UpdateStringVs_UpdateStringV_StringV "json:\"stringV\" graphql:\"stringV\""
 }
 type DeleteStringVs_DeleteStringV_StringV struct {
 	ID string "json:\"id\" graphql:\"id\""
@@ -1415,65 +1501,672 @@ type DeleteStringVs_DeleteStringV_StringV struct {
 type DeleteStringVs_DeleteStringV struct {
 	StringV []*DeleteStringVs_DeleteStringV_StringV "json:\"stringV\" graphql:\"stringV\""
 }
-type GetTag_GetTag_TagFragment_Aliases struct {
+type GetFloatVs_AggregateFloatV struct {
+	Count *int64 "json:\"count\" graphql:\"count\""
+}
+type CreateFloatVs_AddFloatV_FloatV struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type GetTag_GetTag_TagFragment_Related struct {
+type CreateFloatVs_AddFloatV struct {
+	FloatV []*CreateFloatVs_AddFloatV_FloatV "json:\"floatV\" graphql:\"floatV\""
+}
+type UpdateFloatVs_UpdateFloatV_FloatV struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type UpdateFloatVs_UpdateFloatV struct {
+	FloatV []*UpdateFloatVs_UpdateFloatV_FloatV "json:\"floatV\" graphql:\"floatV\""
+}
+type DeleteFloatVs_DeleteFloatV_FloatV struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type DeleteFloatVs_DeleteFloatV struct {
+	FloatV []*DeleteFloatVs_DeleteFloatV_FloatV "json:\"floatV\" graphql:\"floatV\""
+}
+type GetKeyValueByID_GetKeyValue_KeyValueFragment_Value_StringV struct {
+	ID          string "json:\"id\" graphql:\"id\""
+	StringValue string "json:\"stringValue\" graphql:\"stringValue\""
+}
+type GetKeyValueByID_GetKeyValue_KeyValueFragment_Value_FloatV struct {
+	ID         string  "json:\"id\" graphql:\"id\""
+	FloatValue float64 "json:\"floatValue\" graphql:\"floatValue\""
+}
+type GetKeyValueByID_GetKeyValue_KeyValueFragment_Value struct {
+	StringV GetKeyValueByID_GetKeyValue_KeyValueFragment_Value_StringV "graphql:\"... on StringV\""
+	FloatV  GetKeyValueByID_GetKeyValue_KeyValueFragment_Value_FloatV  "graphql:\"... on FloatV\""
+}
+type GetKeyValues_QueryKeyValue_KeyValueFragment_Value_StringV struct {
+	ID          string "json:\"id\" graphql:\"id\""
+	StringValue string "json:\"stringValue\" graphql:\"stringValue\""
+}
+type GetKeyValues_QueryKeyValue_KeyValueFragment_Value_FloatV struct {
+	ID         string  "json:\"id\" graphql:\"id\""
+	FloatValue float64 "json:\"floatValue\" graphql:\"floatValue\""
+}
+type GetKeyValues_QueryKeyValue_KeyValueFragment_Value struct {
+	StringV GetKeyValues_QueryKeyValue_KeyValueFragment_Value_StringV "graphql:\"... on StringV\""
+	FloatV  GetKeyValues_QueryKeyValue_KeyValueFragment_Value_FloatV  "graphql:\"... on FloatV\""
+}
+type GetKeyValues_AggregateKeyValue struct {
+	Count *int64 "json:\"count\" graphql:\"count\""
+}
+type CreateKeyValues_AddKeyValue_KeyValue struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type CreateKeyValues_AddKeyValue struct {
+	KeyValue []*CreateKeyValues_AddKeyValue_KeyValue "json:\"keyValue\" graphql:\"keyValue\""
+}
+type UpdateKeyValues_UpdateKeyValue_KeyValue struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type UpdateKeyValues_UpdateKeyValue struct {
+	KeyValue []*UpdateKeyValues_UpdateKeyValue_KeyValue "json:\"keyValue\" graphql:\"keyValue\""
+}
+type DeleteKeyValues_DeleteKeyValue_KeyValue struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type DeleteKeyValues_DeleteKeyValue struct {
+	KeyValue []*DeleteKeyValues_DeleteKeyValue_KeyValue "json:\"keyValue\" graphql:\"keyValue\""
+}
+type GetLicenseID_GetLicense struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetLicenses_AggregateLicense struct {
+	Count *int64 "json:\"count\" graphql:\"count\""
+}
+type CreateLicenses_AddLicense_License struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type CreateLicenses_AddLicense struct {
+	License []*CreateLicenses_AddLicense_License "json:\"license\" graphql:\"license\""
+}
+type UpdateLicenses_UpdateLicense_License struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type UpdateLicenses_UpdateLicense struct {
+	License []*UpdateLicenses_UpdateLicense_License "json:\"license\" graphql:\"license\""
+}
+type DeleteLicenses_DeleteLicense_License struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type DeleteLicenses_DeleteLicense struct {
+	License []*DeleteLicenses_DeleteLicense_License "json:\"license\" graphql:\"license\""
+}
+type GetManufacturingProcesses_AggregateManufacturingProcess struct {
+	Count *int64 "json:\"count\" graphql:\"count\""
+}
+type CreateManufacturingProcesses_AddManufacturingProcess_ManufacturingProcess struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type CreateManufacturingProcesses_AddManufacturingProcess struct {
+	ManufacturingProcess []*CreateManufacturingProcesses_AddManufacturingProcess_ManufacturingProcess "json:\"manufacturingProcess\" graphql:\"manufacturingProcess\""
+}
+type UpdateManufacturingProcesses_UpdateManufacturingProcess_ManufacturingProcess struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type UpdateManufacturingProcesses_UpdateManufacturingProcess struct {
+	ManufacturingProcess []*UpdateManufacturingProcesses_UpdateManufacturingProcess_ManufacturingProcess "json:\"manufacturingProcess\" graphql:\"manufacturingProcess\""
+}
+type DeleteManufacturingProcesses_DeleteManufacturingProcess_ManufacturingProcess struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type DeleteManufacturingProcesses_DeleteManufacturingProcess struct {
+	ManufacturingProcess []*DeleteManufacturingProcesses_DeleteManufacturingProcess_ManufacturingProcess "json:\"manufacturingProcess\" graphql:\"manufacturingProcess\""
+}
+type GetMaterials_AggregateMaterial struct {
+	Count *int64 "json:\"count\" graphql:\"count\""
+}
+type CreateMaterials_AddMaterial_Material struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type CreateMaterials_AddMaterial struct {
+	Material []*CreateMaterials_AddMaterial_Material "json:\"material\" graphql:\"material\""
+}
+type UpdateMaterials_UpdateMaterial_Material struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type UpdateMaterials_UpdateMaterial struct {
+	Material []*UpdateMaterials_UpdateMaterial_Material "json:\"material\" graphql:\"material\""
+}
+type DeleteMaterials_DeleteMaterial_Material struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type DeleteMaterials_DeleteMaterial struct {
+	Material []*DeleteMaterials_DeleteMaterial_Material "json:\"material\" graphql:\"material\""
+}
+type GetNodes_AggregateNode struct {
+	Count *int64 "json:\"count\" graphql:\"count\""
+}
+type DeleteNodes_DeleteNode_Node struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type DeleteNodes_DeleteNode struct {
+	Node []*DeleteNodes_DeleteNode_Node "json:\"node\" graphql:\"node\""
+}
+type GetBoundingBoxDimensionss_AggregateBoundingBoxDimensions struct {
+	Count *int64 "json:\"count\" graphql:\"count\""
+}
+type CreateBoundingBoxDimensionss_AddBoundingBoxDimensions_BoundingBoxDimensions struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type CreateBoundingBoxDimensionss_AddBoundingBoxDimensions struct {
+	BoundingBoxDimensions []*CreateBoundingBoxDimensionss_AddBoundingBoxDimensions_BoundingBoxDimensions "json:\"boundingBoxDimensions\" graphql:\"boundingBoxDimensions\""
+}
+type UpdateBoundingBoxDimensionss_UpdateBoundingBoxDimensions_BoundingBoxDimensions struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type UpdateBoundingBoxDimensionss_UpdateBoundingBoxDimensions struct {
+	BoundingBoxDimensions []*UpdateBoundingBoxDimensionss_UpdateBoundingBoxDimensions_BoundingBoxDimensions "json:\"boundingBoxDimensions\" graphql:\"boundingBoxDimensions\""
+}
+type DeleteBoundingBoxDimensionss_DeleteBoundingBoxDimensions_BoundingBoxDimensions struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type DeleteBoundingBoxDimensionss_DeleteBoundingBoxDimensions struct {
+	BoundingBoxDimensions []*DeleteBoundingBoxDimensionss_DeleteBoundingBoxDimensions_BoundingBoxDimensions "json:\"boundingBoxDimensions\" graphql:\"boundingBoxDimensions\""
+}
+type GetOpenSCADDimensionss_AggregateOpenSCADDimensions struct {
+	Count *int64 "json:\"count\" graphql:\"count\""
+}
+type CreateOpenSCADDimensionss_AddOpenSCADDimensions_OpenSCADDimensions struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type CreateOpenSCADDimensionss_AddOpenSCADDimensions struct {
+	OpenSCADDimensions []*CreateOpenSCADDimensionss_AddOpenSCADDimensions_OpenSCADDimensions "json:\"openSCADDimensions\" graphql:\"openSCADDimensions\""
+}
+type UpdateOpenSCADDimensionss_UpdateOpenSCADDimensions_OpenSCADDimensions struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type UpdateOpenSCADDimensionss_UpdateOpenSCADDimensions struct {
+	OpenSCADDimensions []*UpdateOpenSCADDimensionss_UpdateOpenSCADDimensions_OpenSCADDimensions "json:\"openSCADDimensions\" graphql:\"openSCADDimensions\""
+}
+type DeleteOpenSCADDimensionss_DeleteOpenSCADDimensions_OpenSCADDimensions struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type DeleteOpenSCADDimensionss_DeleteOpenSCADDimensions struct {
+	OpenSCADDimensions []*DeleteOpenSCADDimensionss_DeleteOpenSCADDimensions_OpenSCADDimensions "json:\"openSCADDimensions\" graphql:\"openSCADDimensions\""
+}
+type GetProductByID_GetProduct_ProductFragment_License struct {
+	ID  string "json:\"id\" graphql:\"id\""
+	Xid string "json:\"xid\" graphql:\"xid\""
+}
+type GetProductByID_GetProduct_ProductFragment_Release struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByID_GetProduct_ProductFragment_Releases struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByID_GetProduct_ProductFragment_RenamedTo struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByID_GetProduct_ProductFragment_RenamedFrom struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByID_GetProduct_ProductFragment_ForkOf struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByID_GetProduct_ProductFragment_Forks struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByID_GetProduct_ProductFragment_Tags struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByID_GetProduct_ProductFragment_Category struct {
+	ID       string "json:\"id\" graphql:\"id\""
+	FullName string "json:\"fullName\" graphql:\"fullName\""
+}
+type GetProductByXid_GetProduct_ProductFragment_License struct {
+	ID  string "json:\"id\" graphql:\"id\""
+	Xid string "json:\"xid\" graphql:\"xid\""
+}
+type GetProductByXid_GetProduct_ProductFragment_Release struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByXid_GetProduct_ProductFragment_Releases struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByXid_GetProduct_ProductFragment_RenamedTo struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByXid_GetProduct_ProductFragment_RenamedFrom struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByXid_GetProduct_ProductFragment_ForkOf struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByXid_GetProduct_ProductFragment_Forks struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByXid_GetProduct_ProductFragment_Tags struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByXid_GetProduct_ProductFragment_Category struct {
+	ID       string "json:\"id\" graphql:\"id\""
+	FullName string "json:\"fullName\" graphql:\"fullName\""
+}
+type GetProductID_GetProduct struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProducts_QueryProduct_ProductFragment_License struct {
+	ID  string "json:\"id\" graphql:\"id\""
+	Xid string "json:\"xid\" graphql:\"xid\""
+}
+type GetProducts_QueryProduct_ProductFragment_Release struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProducts_QueryProduct_ProductFragment_Releases struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProducts_QueryProduct_ProductFragment_RenamedTo struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProducts_QueryProduct_ProductFragment_RenamedFrom struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProducts_QueryProduct_ProductFragment_ForkOf struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProducts_QueryProduct_ProductFragment_Forks struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProducts_QueryProduct_ProductFragment_Tags struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProducts_QueryProduct_ProductFragment_Category struct {
+	ID       string "json:\"id\" graphql:\"id\""
+	FullName string "json:\"fullName\" graphql:\"fullName\""
+}
+type GetProducts_AggregateProduct struct {
+	Count *int64 "json:\"count\" graphql:\"count\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_RenamedTo struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_RenamedFrom struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_ForkOf_Release_Repository struct {
+	URL string "json:\"url\" graphql:\"url\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_ForkOf_Release struct {
+	Repository SearchProducts_QueryProduct_ProductSearchFragment_ForkOf_Release_Repository "json:\"repository\" graphql:\"repository\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_ForkOf struct {
+	ID      string                                                           "json:\"id\" graphql:\"id\""
+	Release SearchProducts_QueryProduct_ProductSearchFragment_ForkOf_Release "json:\"release\" graphql:\"release\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_Forks struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_Tags_TagFragment_Aliases struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_Tags_TagFragment_Related struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_Category_CategoryFragment_Parent struct {
+	ID       string "json:\"id\" graphql:\"id\""
+	FullName string "json:\"fullName\" graphql:\"fullName\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_Category_CategoryFragment_Children struct {
+	ID       string "json:\"id\" graphql:\"id\""
+	FullName string "json:\"fullName\" graphql:\"fullName\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_Category_CategoryFragment_Products struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_Releases struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_Releases struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_Repository_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Avatar struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_MemberOf struct {
+	ID       string  "json:\"id\" graphql:\"id\""
+	FullName *string "json:\"fullName\" graphql:\"fullName\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Products struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Avatar struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_MemberOf struct {
+	ID       string  "json:\"id\" graphql:\"id\""
+	FullName *string "json:\"fullName\" graphql:\"fullName\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Products struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_Group_GroupFragment_Members struct {
+	Typename *string "json:\"__typename\" graphql:\"__typename\""
+	ID       string  "json:\"id\" graphql:\"id\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_CompliesWith struct {
+	Name string "json:\"name\" graphql:\"name\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_Tsdc struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_Components struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_Software struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_Product struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_UsedIn struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_Organization struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_Material struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_ManufacturingProcess struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_ProductionMetadata struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_Release struct {
+	ID                          string                                                                          "json:\"id\" graphql:\"id\""
+	Xid                         string                                                                          "json:\"xid\" graphql:\"xid\""
+	Name                        string                                                                          "json:\"name\" graphql:\"name\""
+	Description                 string                                                                          "json:\"description\" graphql:\"description\""
+	Version                     string                                                                          "json:\"version\" graphql:\"version\""
+	CreatedAt                   time.Time                                                                       "json:\"createdAt\" graphql:\"createdAt\""
+	Releases                    []*SearchProducts_QueryProduct_ProductSearchFragment_Release_Releases           "json:\"releases\" graphql:\"releases\""
+	IsLatest                    bool                                                                            "json:\"isLatest\" graphql:\"isLatest\""
+	Repository                  *RepositoryFragment                                                             "json:\"repository\" graphql:\"repository\""
+	License                     *LicenseFragmentBasic                                                           "json:\"license\" graphql:\"license\""
+	AdditionalLicenses          []*LicenseFragmentBasic                                                         "json:\"additionalLicenses\" graphql:\"additionalLicenses\""
+	Licensor                    *UserOrGroupFullFragment                                                        "json:\"licensor\" graphql:\"licensor\""
+	DocumentationLanguage       string                                                                          "json:\"documentationLanguage\" graphql:\"documentationLanguage\""
+	TechnologyReadinessLevel    TechnologyReadinessLevel                                                        "json:\"technologyReadinessLevel\" graphql:\"technologyReadinessLevel\""
+	DocumentationReadinessLevel DocumentationReadinessLevel                                                     "json:\"documentationReadinessLevel\" graphql:\"documentationReadinessLevel\""
+	Attestation                 *string                                                                         "json:\"attestation\" graphql:\"attestation\""
+	Publication                 *string                                                                         "json:\"publication\" graphql:\"publication\""
+	CompliesWith                *SearchProducts_QueryProduct_ProductSearchFragment_Release_CompliesWith         "json:\"compliesWith\" graphql:\"compliesWith\""
+	CpcPatentClass              *string                                                                         "json:\"cpcPatentClass\" graphql:\"cpcPatentClass\""
+	Tsdc                        *SearchProducts_QueryProduct_ProductSearchFragment_Release_Tsdc                 "json:\"tsdc\" graphql:\"tsdc\""
+	Components                  []*SearchProducts_QueryProduct_ProductSearchFragment_Release_Components         "json:\"components\" graphql:\"components\""
+	Software                    []*SearchProducts_QueryProduct_ProductSearchFragment_Release_Software           "json:\"software\" graphql:\"software\""
+	Image                       *FileFragment                                                                   "json:\"image\" graphql:\"image\""
+	Readme                      *FileFragment                                                                   "json:\"readme\" graphql:\"readme\""
+	ContributionGuide           *FileFragment                                                                   "json:\"contributionGuide\" graphql:\"contributionGuide\""
+	Bom                         *FileFragment                                                                   "json:\"bom\" graphql:\"bom\""
+	ManufacturingInstructions   *FileFragment                                                                   "json:\"manufacturingInstructions\" graphql:\"manufacturingInstructions\""
+	UserManual                  *FileFragment                                                                   "json:\"userManual\" graphql:\"userManual\""
+	Product                     *SearchProducts_QueryProduct_ProductSearchFragment_Release_Product              "json:\"product\" graphql:\"product\""
+	UsedIn                      []*SearchProducts_QueryProduct_ProductSearchFragment_Release_UsedIn             "json:\"usedIn\" graphql:\"usedIn\""
+	Source                      *FileFragment                                                                   "json:\"source\" graphql:\"source\""
+	Export                      []*FileFragment                                                                 "json:\"export\" graphql:\"export\""
+	Auxiliary                   []*FileFragment                                                                 "json:\"auxiliary\" graphql:\"auxiliary\""
+	Organization                *SearchProducts_QueryProduct_ProductSearchFragment_Release_Organization         "json:\"organization\" graphql:\"organization\""
+	Mass                        *float64                                                                        "json:\"mass\" graphql:\"mass\""
+	OuterDimensions             *OuterDimensionsFragment                                                        "json:\"outerDimensions\" graphql:\"outerDimensions\""
+	Material                    *SearchProducts_QueryProduct_ProductSearchFragment_Release_Material             "json:\"material\" graphql:\"material\""
+	ManufacturingProcess        *SearchProducts_QueryProduct_ProductSearchFragment_Release_ManufacturingProcess "json:\"manufacturingProcess\" graphql:\"manufacturingProcess\""
+	ProductionMetadata          []*SearchProducts_QueryProduct_ProductSearchFragment_Release_ProductionMetadata "json:\"productionMetadata\" graphql:\"productionMetadata\""
+}
+type SearchProducts_AggregateProduct struct {
+	Count *int64 "json:\"count\" graphql:\"count\""
+}
+type CreateProducts_AddProduct_Product struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type CreateProducts_AddProduct struct {
+	Product []*CreateProducts_AddProduct_Product "json:\"product\" graphql:\"product\""
+}
+type UpdateProducts_UpdateProduct_Product struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type UpdateProducts_UpdateProduct struct {
+	Product []*UpdateProducts_UpdateProduct_Product "json:\"product\" graphql:\"product\""
+}
+type DeleteProducts_DeleteProduct_Product struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type DeleteProducts_DeleteProduct struct {
+	Product []*DeleteProducts_DeleteProduct_Product "json:\"product\" graphql:\"product\""
+}
+type GetRepositoryByID_GetRepository_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetRepositoryByXid_GetRepository_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetRepositoryID_GetRepository struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetRepositories_QueryRepository_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetRepositories_AggregateRepository struct {
+	Count *int64 "json:\"count\" graphql:\"count\""
+}
+type CreateRepositories_AddRepository_Repository struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type CreateRepositories_AddRepository struct {
+	Repository []*CreateRepositories_AddRepository_Repository "json:\"repository\" graphql:\"repository\""
+}
+type UpdateRepositories_UpdateRepository_Repository struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type UpdateRepositories_UpdateRepository struct {
+	Repository []*UpdateRepositories_UpdateRepository_Repository "json:\"repository\" graphql:\"repository\""
+}
+type DeleteRepositories_DeleteRepository_Repository struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type DeleteRepositories_DeleteRepository struct {
+	Repository []*DeleteRepositories_DeleteRepository_Repository "json:\"repository\" graphql:\"repository\""
+}
+type GetSoftwareByID_GetSoftware_SoftwareFragment_InstallationGuide struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
+}
+type GetSoftwareByID_GetSoftware_SoftwareFragment_License struct {
+	ID  string "json:\"id\" graphql:\"id\""
+	Xid string "json:\"xid\" graphql:\"xid\""
+}
+type GetSoftwares_QuerySoftware_SoftwareFragment_InstallationGuide struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
+}
+type GetSoftwares_QuerySoftware_SoftwareFragment_License struct {
+	ID  string "json:\"id\" graphql:\"id\""
+	Xid string "json:\"xid\" graphql:\"xid\""
+}
+type GetSoftwares_AggregateSoftware struct {
+	Count *int64 "json:\"count\" graphql:\"count\""
+}
+type CreateSoftwares_AddSoftware_Software struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type CreateSoftwares_AddSoftware struct {
+	Software []*CreateSoftwares_AddSoftware_Software "json:\"software\" graphql:\"software\""
+}
+type UpdateSoftwares_UpdateSoftware_Software struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type UpdateSoftwares_UpdateSoftware struct {
+	Software []*UpdateSoftwares_UpdateSoftware_Software "json:\"software\" graphql:\"software\""
+}
+type DeleteSoftwares_DeleteSoftware_Software struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type DeleteSoftwares_DeleteSoftware struct {
+	Software []*DeleteSoftwares_DeleteSoftware_Software "json:\"software\" graphql:\"software\""
+}
+type GetTagByID_GetTag_TagFragment_Aliases struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetTagByID_GetTag_TagFragment_Related struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetTagByXid_GetTag_TagFragment_Aliases struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetTagByXid_GetTag_TagFragment_Related struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetTagID_GetTag struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
 type GetTags_QueryTag_TagFragment_Aliases struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetTags_QueryTag_TagFragment_Related struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetTags_AggregateTag struct {
+	Count *int64 "json:\"count\" graphql:\"count\""
+}
+type CreateTags_AddTag_Tag struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type SaveTags_AddTag_Tag struct {
+type CreateTags_AddTag struct {
+	Tag []*CreateTags_AddTag_Tag "json:\"tag\" graphql:\"tag\""
+}
+type UpdateTags_UpdateTag_Tag struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type SaveTags_AddTag struct {
-	Tag []*SaveTags_AddTag_Tag "json:\"tag\" graphql:\"tag\""
+type UpdateTags_UpdateTag struct {
+	Tag []*UpdateTags_UpdateTag_Tag "json:\"tag\" graphql:\"tag\""
 }
-type DeleteTag_DeleteTag_Tag struct {
+type DeleteTags_DeleteTag_Tag struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type DeleteTag_DeleteTag struct {
-	Tag []*DeleteTag_DeleteTag_Tag "json:\"tag\" graphql:\"tag\""
+type DeleteTags_DeleteTag struct {
+	Tag []*DeleteTags_DeleteTag_Tag "json:\"tag\" graphql:\"tag\""
 }
-type GetTechnicalStandard_GetTechnicalStandard_TechnicalStandardFragment_Components struct {
+type GetTechnicalStandardByID_GetTechnicalStandard_TechnicalStandardFragment_Components struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetTechnicalStandardByXid_GetTechnicalStandard_TechnicalStandardFragment_Components struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetTechnicalStandardID_GetTechnicalStandard struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
 type GetTechnicalStandards_QueryTechnicalStandard_TechnicalStandardFragment_Components struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetTechnicalStandards_AggregateTechnicalStandard struct {
+	Count *int64 "json:\"count\" graphql:\"count\""
+}
+type CreateTechnicalStandards_AddTechnicalStandard_TechnicalStandard struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type SaveTechnicalStandards_AddTechnicalStandard_TechnicalStandard struct {
+type CreateTechnicalStandards_AddTechnicalStandard struct {
+	TechnicalStandard []*CreateTechnicalStandards_AddTechnicalStandard_TechnicalStandard "json:\"technicalStandard\" graphql:\"technicalStandard\""
+}
+type UpdateTechnicalStandards_UpdateTechnicalStandard_TechnicalStandard struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type SaveTechnicalStandards_AddTechnicalStandard struct {
-	TechnicalStandard []*SaveTechnicalStandards_AddTechnicalStandard_TechnicalStandard "json:\"technicalStandard\" graphql:\"technicalStandard\""
+type UpdateTechnicalStandards_UpdateTechnicalStandard struct {
+	TechnicalStandard []*UpdateTechnicalStandards_UpdateTechnicalStandard_TechnicalStandard "json:\"technicalStandard\" graphql:\"technicalStandard\""
 }
-type DeleteTechnicalStandard_DeleteTechnicalStandard_TechnicalStandard struct {
+type DeleteTechnicalStandards_DeleteTechnicalStandard_TechnicalStandard struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type DeleteTechnicalStandard_DeleteTechnicalStandard struct {
-	TechnicalStandard []*DeleteTechnicalStandard_DeleteTechnicalStandard_TechnicalStandard "json:\"technicalStandard\" graphql:\"technicalStandard\""
+type DeleteTechnicalStandards_DeleteTechnicalStandard struct {
+	TechnicalStandard []*DeleteTechnicalStandards_DeleteTechnicalStandard_TechnicalStandard "json:\"technicalStandard\" graphql:\"technicalStandard\""
 }
-type GetTechnologySpecificDocumentationCriteria_GetTechnologySpecificDocumentationCriteria_TechnologySpecificDocumentationCriteriaFragment_Components struct {
+type GetTechnologySpecificDocumentationCriteriaByID_GetTechnologySpecificDocumentationCriteria_TechnologySpecificDocumentationCriteriaFragment_Components struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetTechnologySpecificDocumentationCriteriaByXid_GetTechnologySpecificDocumentationCriteria_TechnologySpecificDocumentationCriteriaFragment_Components struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetTechnologySpecificDocumentationCriteriaID_GetTechnologySpecificDocumentationCriteria struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
 type GetTechnologySpecificDocumentationCriterias_QueryTechnologySpecificDocumentationCriteria_TechnologySpecificDocumentationCriteriaFragment_Components struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetTechnologySpecificDocumentationCriterias_AggregateTechnologySpecificDocumentationCriteria struct {
+	Count *int64 "json:\"count\" graphql:\"count\""
+}
+type CreateTechnologySpecificDocumentationCriterias_AddTechnologySpecificDocumentationCriteria_TechnologySpecificDocumentationCriteria struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type SaveTechnologySpecificDocumentationCriterias_AddTechnologySpecificDocumentationCriteria_TechnologySpecificDocumentationCriteria struct {
+type CreateTechnologySpecificDocumentationCriterias_AddTechnologySpecificDocumentationCriteria struct {
+	TechnologySpecificDocumentationCriteria []*CreateTechnologySpecificDocumentationCriterias_AddTechnologySpecificDocumentationCriteria_TechnologySpecificDocumentationCriteria "json:\"technologySpecificDocumentationCriteria\" graphql:\"technologySpecificDocumentationCriteria\""
+}
+type UpdateTechnologySpecificDocumentationCriterias_UpdateTechnologySpecificDocumentationCriteria_TechnologySpecificDocumentationCriteria struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type SaveTechnologySpecificDocumentationCriterias_AddTechnologySpecificDocumentationCriteria struct {
-	TechnologySpecificDocumentationCriteria []*SaveTechnologySpecificDocumentationCriterias_AddTechnologySpecificDocumentationCriteria_TechnologySpecificDocumentationCriteria "json:\"technologySpecificDocumentationCriteria\" graphql:\"technologySpecificDocumentationCriteria\""
+type UpdateTechnologySpecificDocumentationCriterias_UpdateTechnologySpecificDocumentationCriteria struct {
+	TechnologySpecificDocumentationCriteria []*UpdateTechnologySpecificDocumentationCriterias_UpdateTechnologySpecificDocumentationCriteria_TechnologySpecificDocumentationCriteria "json:\"technologySpecificDocumentationCriteria\" graphql:\"technologySpecificDocumentationCriteria\""
 }
-type DeleteTechnologySpecificDocumentationCriteria_DeleteTechnologySpecificDocumentationCriteria_TechnologySpecificDocumentationCriteria struct {
+type DeleteTechnologySpecificDocumentationCriterias_DeleteTechnologySpecificDocumentationCriteria_TechnologySpecificDocumentationCriteria struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type DeleteTechnologySpecificDocumentationCriteria_DeleteTechnologySpecificDocumentationCriteria struct {
-	TechnologySpecificDocumentationCriteria []*DeleteTechnologySpecificDocumentationCriteria_DeleteTechnologySpecificDocumentationCriteria_TechnologySpecificDocumentationCriteria "json:\"technologySpecificDocumentationCriteria\" graphql:\"technologySpecificDocumentationCriteria\""
+type DeleteTechnologySpecificDocumentationCriterias_DeleteTechnologySpecificDocumentationCriteria struct {
+	TechnologySpecificDocumentationCriteria []*DeleteTechnologySpecificDocumentationCriterias_DeleteTechnologySpecificDocumentationCriteria_TechnologySpecificDocumentationCriteria "json:\"technologySpecificDocumentationCriteria\" graphql:\"technologySpecificDocumentationCriteria\""
 }
 type TestConnection_Schema_QueryType struct {
 	Name *string "json:\"name\" graphql:\"name\""
@@ -1481,506 +2174,4617 @@ type TestConnection_Schema_QueryType struct {
 type TestConnection_Schema struct {
 	QueryType TestConnection_Schema_QueryType "json:\"queryType\" graphql:\"queryType\""
 }
-type GetUserOrGroup_GetUserOrGroup_User_UserFragment_UserOrGroupFragment_User struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetUserOrGroupByID_GetUserOrGroup_User_UserFragment_UserOrGroupFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
-type GetUserOrGroup_GetUserOrGroup_User_UserFragment_UserOrGroupFragment_Group struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetUserOrGroupByID_GetUserOrGroup_User_UserFragment_UserOrGroupFragment_Avatar struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
 }
-type GetUserOrGroup_GetUserOrGroup_User_UserFragment_UserOrGroupFragment_Host struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetUserOrGroupByID_GetUserOrGroup_User_UserFragment_UserOrGroupFragment_MemberOf struct {
+	ID       string  "json:\"id\" graphql:\"id\""
+	FullName *string "json:\"fullName\" graphql:\"fullName\""
 }
-type GetUserOrGroup_GetUserOrGroup_User_UserFragment_UserOrGroupFragment_Avatar struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetUserOrGroupByID_GetUserOrGroup_User_UserFragment_UserOrGroupFragment_Products struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
-type GetUserOrGroup_GetUserOrGroup_User_UserFragment_UserOrGroupFragment_MemberOf struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetUserOrGroupByID_GetUserOrGroup_Group_GroupFragment_UserOrGroupFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
-type GetUserOrGroup_GetUserOrGroup_User_UserFragment_UserOrGroupFragment_Products struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetUserOrGroupByID_GetUserOrGroup_Group_GroupFragment_UserOrGroupFragment_Avatar struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
 }
-type GetUserOrGroup_GetUserOrGroup_Group_GroupFragment_UserOrGroupFragment_User struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetUserOrGroupByID_GetUserOrGroup_Group_GroupFragment_UserOrGroupFragment_MemberOf struct {
+	ID       string  "json:\"id\" graphql:\"id\""
+	FullName *string "json:\"fullName\" graphql:\"fullName\""
 }
-type GetUserOrGroup_GetUserOrGroup_Group_GroupFragment_UserOrGroupFragment_Group struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetUserOrGroupByID_GetUserOrGroup_Group_GroupFragment_UserOrGroupFragment_Products struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
-type GetUserOrGroup_GetUserOrGroup_Group_GroupFragment_UserOrGroupFragment_Host struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetUserOrGroupByID_GetUserOrGroup_Group_GroupFragment_Members struct {
+	Typename *string "json:\"__typename\" graphql:\"__typename\""
+	ID       string  "json:\"id\" graphql:\"id\""
 }
-type GetUserOrGroup_GetUserOrGroup_Group_GroupFragment_UserOrGroupFragment_Avatar struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetUserOrGroup_GetUserOrGroup_Group_GroupFragment_UserOrGroupFragment_MemberOf struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetUserOrGroup_GetUserOrGroup_Group_GroupFragment_UserOrGroupFragment_Products struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetUserOrGroup_GetUserOrGroup_Group_GroupFragment_Members_User struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetUserOrGroup_GetUserOrGroup_Group_GroupFragment_Members_Group struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetUserOrGroup_GetUserOrGroup_Group_GroupFragment_Members struct {
-	User  GetUserOrGroup_GetUserOrGroup_Group_GroupFragment_Members_User  "graphql:\"... on User\""
-	Group GetUserOrGroup_GetUserOrGroup_Group_GroupFragment_Members_Group "graphql:\"... on Group\""
-}
-type GetUserOrGroup_GetUserOrGroup struct {
+type GetUserOrGroupByID_GetUserOrGroup struct {
 	User  UserFragment  "graphql:\"... on User\""
 	Group GroupFragment "graphql:\"... on Group\""
 }
-type GetUserOrGroups_QueryUserOrGroup_User_UserFragment_UserOrGroupFragment_User struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetUserOrGroupByXid_GetUserOrGroup_User_UserFragment_UserOrGroupFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
-type GetUserOrGroups_QueryUserOrGroup_User_UserFragment_UserOrGroupFragment_Group struct {
+type GetUserOrGroupByXid_GetUserOrGroup_User_UserFragment_UserOrGroupFragment_Avatar struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
+}
+type GetUserOrGroupByXid_GetUserOrGroup_User_UserFragment_UserOrGroupFragment_MemberOf struct {
+	ID       string  "json:\"id\" graphql:\"id\""
+	FullName *string "json:\"fullName\" graphql:\"fullName\""
+}
+type GetUserOrGroupByXid_GetUserOrGroup_User_UserFragment_UserOrGroupFragment_Products struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetUserOrGroupByXid_GetUserOrGroup_Group_GroupFragment_UserOrGroupFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetUserOrGroupByXid_GetUserOrGroup_Group_GroupFragment_UserOrGroupFragment_Avatar struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
+}
+type GetUserOrGroupByXid_GetUserOrGroup_Group_GroupFragment_UserOrGroupFragment_MemberOf struct {
+	ID       string  "json:\"id\" graphql:\"id\""
+	FullName *string "json:\"fullName\" graphql:\"fullName\""
+}
+type GetUserOrGroupByXid_GetUserOrGroup_Group_GroupFragment_UserOrGroupFragment_Products struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetUserOrGroupByXid_GetUserOrGroup_Group_GroupFragment_Members struct {
+	Typename *string "json:\"__typename\" graphql:\"__typename\""
+	ID       string  "json:\"id\" graphql:\"id\""
+}
+type GetUserOrGroupByXid_GetUserOrGroup struct {
+	User  UserFragment  "graphql:\"... on User\""
+	Group GroupFragment "graphql:\"... on Group\""
+}
+type GetUserOrGroupID_GetUserOrGroup struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
 type GetUserOrGroups_QueryUserOrGroup_User_UserFragment_UserOrGroupFragment_Host struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetUserOrGroups_QueryUserOrGroup_User_UserFragment_UserOrGroupFragment_Avatar struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
 }
 type GetUserOrGroups_QueryUserOrGroup_User_UserFragment_UserOrGroupFragment_MemberOf struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID       string  "json:\"id\" graphql:\"id\""
+	FullName *string "json:\"fullName\" graphql:\"fullName\""
 }
 type GetUserOrGroups_QueryUserOrGroup_User_UserFragment_UserOrGroupFragment_Products struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetUserOrGroups_QueryUserOrGroup_Group_GroupFragment_UserOrGroupFragment_User struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetUserOrGroups_QueryUserOrGroup_Group_GroupFragment_UserOrGroupFragment_Group struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetUserOrGroups_QueryUserOrGroup_Group_GroupFragment_UserOrGroupFragment_Host struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetUserOrGroups_QueryUserOrGroup_Group_GroupFragment_UserOrGroupFragment_Avatar struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
 }
 type GetUserOrGroups_QueryUserOrGroup_Group_GroupFragment_UserOrGroupFragment_MemberOf struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID       string  "json:\"id\" graphql:\"id\""
+	FullName *string "json:\"fullName\" graphql:\"fullName\""
 }
 type GetUserOrGroups_QueryUserOrGroup_Group_GroupFragment_UserOrGroupFragment_Products struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetUserOrGroups_QueryUserOrGroup_Group_GroupFragment_Members_User struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetUserOrGroups_QueryUserOrGroup_Group_GroupFragment_Members_Group struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetUserOrGroups_QueryUserOrGroup_Group_GroupFragment_Members struct {
-	User  GetUserOrGroups_QueryUserOrGroup_Group_GroupFragment_Members_User  "graphql:\"... on User\""
-	Group GetUserOrGroups_QueryUserOrGroup_Group_GroupFragment_Members_Group "graphql:\"... on Group\""
+	Typename *string "json:\"__typename\" graphql:\"__typename\""
+	ID       string  "json:\"id\" graphql:\"id\""
 }
 type GetUserOrGroups_QueryUserOrGroup struct {
 	User  UserFragment  "graphql:\"... on User\""
 	Group GroupFragment "graphql:\"... on Group\""
 }
-type DeleteUserOrGroup_DeleteUserOrGroup_UserOrGroup struct {
+type GetUserOrGroups_AggregateUserOrGroup struct {
+	Count *int64 "json:\"count\" graphql:\"count\""
+}
+type UpdateUserOrGroups_UpdateUserOrGroup_UserOrGroup struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type DeleteUserOrGroup_DeleteUserOrGroup struct {
-	UserOrGroup []*DeleteUserOrGroup_DeleteUserOrGroup_UserOrGroup "json:\"userOrGroup\" graphql:\"userOrGroup\""
+type UpdateUserOrGroups_UpdateUserOrGroup struct {
+	UserOrGroup []*UpdateUserOrGroups_UpdateUserOrGroup_UserOrGroup "json:\"userOrGroup\" graphql:\"userOrGroup\""
 }
-type GetUser_GetUser_UserFragment_UserOrGroupFragment_User struct {
+type DeleteUserOrGroups_DeleteUserOrGroup_UserOrGroup struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type GetUser_GetUser_UserFragment_UserOrGroupFragment_Group struct {
-	ID string "json:\"id\" graphql:\"id\""
+type DeleteUserOrGroups_DeleteUserOrGroup struct {
+	UserOrGroup []*DeleteUserOrGroups_DeleteUserOrGroup_UserOrGroup "json:\"userOrGroup\" graphql:\"userOrGroup\""
 }
-type GetUser_GetUser_UserFragment_UserOrGroupFragment_Host struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetUserByID_GetUser_UserFragment_UserOrGroupFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
-type GetUser_GetUser_UserFragment_UserOrGroupFragment_Avatar struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetUserByID_GetUser_UserFragment_UserOrGroupFragment_Avatar struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
 }
-type GetUser_GetUser_UserFragment_UserOrGroupFragment_MemberOf struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetUserByID_GetUser_UserFragment_UserOrGroupFragment_MemberOf struct {
+	ID       string  "json:\"id\" graphql:\"id\""
+	FullName *string "json:\"fullName\" graphql:\"fullName\""
 }
-type GetUser_GetUser_UserFragment_UserOrGroupFragment_Products struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetUserByID_GetUser_UserFragment_UserOrGroupFragment_Products struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
-type GetUsers_QueryUser_UserFragment_UserOrGroupFragment_User struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetUserByXid_GetUser_UserFragment_UserOrGroupFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
-type GetUsers_QueryUser_UserFragment_UserOrGroupFragment_Group struct {
+type GetUserByXid_GetUser_UserFragment_UserOrGroupFragment_Avatar struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
+}
+type GetUserByXid_GetUser_UserFragment_UserOrGroupFragment_MemberOf struct {
+	ID       string  "json:\"id\" graphql:\"id\""
+	FullName *string "json:\"fullName\" graphql:\"fullName\""
+}
+type GetUserByXid_GetUser_UserFragment_UserOrGroupFragment_Products struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetUserID_GetUser struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
 type GetUsers_QueryUser_UserFragment_UserOrGroupFragment_Host struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetUsers_QueryUser_UserFragment_UserOrGroupFragment_Avatar struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
 }
 type GetUsers_QueryUser_UserFragment_UserOrGroupFragment_MemberOf struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID       string  "json:\"id\" graphql:\"id\""
+	FullName *string "json:\"fullName\" graphql:\"fullName\""
 }
 type GetUsers_QueryUser_UserFragment_UserOrGroupFragment_Products struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetUsers_AggregateUser struct {
+	Count *int64 "json:\"count\" graphql:\"count\""
+}
+type CreateUsers_AddUser_User struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type SaveUsers_AddUser_User struct {
+type CreateUsers_AddUser struct {
+	User []*CreateUsers_AddUser_User "json:\"user\" graphql:\"user\""
+}
+type UpdateUsers_UpdateUser_User struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type SaveUsers_AddUser struct {
-	User []*SaveUsers_AddUser_User "json:\"user\" graphql:\"user\""
+type UpdateUsers_UpdateUser struct {
+	User []*UpdateUsers_UpdateUser_User "json:\"user\" graphql:\"user\""
 }
-type DeleteUser_DeleteUser_User struct {
+type DeleteUsers_DeleteUser_User struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type DeleteUser_DeleteUser struct {
-	User []*DeleteUser_DeleteUser_User "json:\"user\" graphql:\"user\""
+type DeleteUsers_DeleteUser struct {
+	User []*DeleteUsers_DeleteUser_User "json:\"user\" graphql:\"user\""
 }
-type GetGroup_GetGroup_GroupFragment_UserOrGroupFragment_User struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetGroupByID_GetGroup_GroupFragment_UserOrGroupFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
-type GetGroup_GetGroup_GroupFragment_UserOrGroupFragment_Group struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetGroupByID_GetGroup_GroupFragment_UserOrGroupFragment_Avatar struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
 }
-type GetGroup_GetGroup_GroupFragment_UserOrGroupFragment_Host struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetGroupByID_GetGroup_GroupFragment_UserOrGroupFragment_MemberOf struct {
+	ID       string  "json:\"id\" graphql:\"id\""
+	FullName *string "json:\"fullName\" graphql:\"fullName\""
 }
-type GetGroup_GetGroup_GroupFragment_UserOrGroupFragment_Avatar struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetGroupByID_GetGroup_GroupFragment_UserOrGroupFragment_Products struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
-type GetGroup_GetGroup_GroupFragment_UserOrGroupFragment_MemberOf struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetGroupByID_GetGroup_GroupFragment_Members struct {
+	Typename *string "json:\"__typename\" graphql:\"__typename\""
+	ID       string  "json:\"id\" graphql:\"id\""
 }
-type GetGroup_GetGroup_GroupFragment_UserOrGroupFragment_Products struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetGroupByXid_GetGroup_GroupFragment_UserOrGroupFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
-type GetGroup_GetGroup_GroupFragment_Members_User struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetGroupByXid_GetGroup_GroupFragment_UserOrGroupFragment_Avatar struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
 }
-type GetGroup_GetGroup_GroupFragment_Members_Group struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetGroupByXid_GetGroup_GroupFragment_UserOrGroupFragment_MemberOf struct {
+	ID       string  "json:\"id\" graphql:\"id\""
+	FullName *string "json:\"fullName\" graphql:\"fullName\""
 }
-type GetGroup_GetGroup_GroupFragment_Members struct {
-	User  GetGroup_GetGroup_GroupFragment_Members_User  "graphql:\"... on User\""
-	Group GetGroup_GetGroup_GroupFragment_Members_Group "graphql:\"... on Group\""
+type GetGroupByXid_GetGroup_GroupFragment_UserOrGroupFragment_Products struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
-type GetGroups_QueryGroup_GroupFragment_UserOrGroupFragment_User struct {
-	ID string "json:\"id\" graphql:\"id\""
+type GetGroupByXid_GetGroup_GroupFragment_Members struct {
+	Typename *string "json:\"__typename\" graphql:\"__typename\""
+	ID       string  "json:\"id\" graphql:\"id\""
 }
-type GetGroups_QueryGroup_GroupFragment_UserOrGroupFragment_Group struct {
+type GetGroupID_GetGroup struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
 type GetGroups_QueryGroup_GroupFragment_UserOrGroupFragment_Host struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetGroups_QueryGroup_GroupFragment_UserOrGroupFragment_Avatar struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Path string "json:\"path\" graphql:\"path\""
 }
 type GetGroups_QueryGroup_GroupFragment_UserOrGroupFragment_MemberOf struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID       string  "json:\"id\" graphql:\"id\""
+	FullName *string "json:\"fullName\" graphql:\"fullName\""
 }
 type GetGroups_QueryGroup_GroupFragment_UserOrGroupFragment_Products struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetGroups_QueryGroup_GroupFragment_Members_User struct {
-	ID string "json:\"id\" graphql:\"id\""
-}
-type GetGroups_QueryGroup_GroupFragment_Members_Group struct {
-	ID string "json:\"id\" graphql:\"id\""
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetGroups_QueryGroup_GroupFragment_Members struct {
-	User  GetGroups_QueryGroup_GroupFragment_Members_User  "graphql:\"... on User\""
-	Group GetGroups_QueryGroup_GroupFragment_Members_Group "graphql:\"... on Group\""
+	Typename *string "json:\"__typename\" graphql:\"__typename\""
+	ID       string  "json:\"id\" graphql:\"id\""
 }
-type SaveGroups_AddGroup_Group struct {
+type GetGroups_AggregateGroup struct {
+	Count *int64 "json:\"count\" graphql:\"count\""
+}
+type CreateGroups_AddGroup_Group struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type SaveGroups_AddGroup struct {
-	Group []*SaveGroups_AddGroup_Group "json:\"group\" graphql:\"group\""
+type CreateGroups_AddGroup struct {
+	Group []*CreateGroups_AddGroup_Group "json:\"group\" graphql:\"group\""
 }
-type DeleteGroup_DeleteGroup_Group struct {
+type UpdateGroups_UpdateGroup_Group struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type DeleteGroup_DeleteGroup struct {
-	Group []*DeleteGroup_DeleteGroup_Group "json:\"group\" graphql:\"group\""
+type UpdateGroups_UpdateGroup struct {
+	Group []*UpdateGroups_UpdateGroup_Group "json:\"group\" graphql:\"group\""
 }
-type GetBoundingBoxDimensions struct {
-	GetBoundingBoxDimensions *BoundingBoxDimensionsFragment "json:\"getBoundingBoxDimensions\" graphql:\"getBoundingBoxDimensions\""
+type DeleteGroups_DeleteGroup_Group struct {
+	ID string "json:\"id\" graphql:\"id\""
 }
-type GetBoundingBoxDimensionss struct {
-	QueryBoundingBoxDimensions []*BoundingBoxDimensionsFragment "json:\"queryBoundingBoxDimensions\" graphql:\"queryBoundingBoxDimensions\""
+type DeleteGroups_DeleteGroup struct {
+	Group []*DeleteGroups_DeleteGroup_Group "json:\"group\" graphql:\"group\""
 }
-type SaveBoundingBoxDimensionss struct {
-	DeleteBoundingBoxDimensions *SaveBoundingBoxDimensionss_DeleteBoundingBoxDimensions "json:\"deleteBoundingBoxDimensions\" graphql:\"deleteBoundingBoxDimensions\""
-	AddBoundingBoxDimensions    *SaveBoundingBoxDimensionss_AddBoundingBoxDimensions    "json:\"addBoundingBoxDimensions\" graphql:\"addBoundingBoxDimensions\""
-}
-type DeleteBoundingBoxDimensions struct {
-	DeleteBoundingBoxDimensions *DeleteBoundingBoxDimensions_DeleteBoundingBoxDimensions "json:\"deleteBoundingBoxDimensions\" graphql:\"deleteBoundingBoxDimensions\""
-}
-type GetCategory struct {
+type GetCategoryByID struct {
 	GetCategory *CategoryFragment "json:\"getCategory\" graphql:\"getCategory\""
 }
+type GetCategoryByXid struct {
+	GetCategory *CategoryFragment "json:\"getCategory\" graphql:\"getCategory\""
+}
+type GetCategoryID struct {
+	GetCategory *GetCategoryID_GetCategory "json:\"getCategory\" graphql:\"getCategory\""
+}
 type GetCategories struct {
-	QueryCategory []*CategoryFragment "json:\"queryCategory\" graphql:\"queryCategory\""
+	QueryCategory     []*CategoryFragment              "json:\"queryCategory\" graphql:\"queryCategory\""
+	AggregateCategory *GetCategories_AggregateCategory "json:\"aggregateCategory\" graphql:\"aggregateCategory\""
 }
-type SaveCategories struct {
-	AddCategory *SaveCategories_AddCategory "json:\"addCategory\" graphql:\"addCategory\""
+type CreateCategories struct {
+	AddCategory *CreateCategories_AddCategory "json:\"addCategory\" graphql:\"addCategory\""
 }
-type DeleteCategory struct {
-	DeleteCategory *DeleteCategory_DeleteCategory "json:\"deleteCategory\" graphql:\"deleteCategory\""
+type UpdateCategories struct {
+	UpdateCategory *UpdateCategories_UpdateCategory "json:\"updateCategory\" graphql:\"updateCategory\""
 }
-type GetComponentSource struct {
-	GetComponentSource *ComponentSourceFragment "json:\"getComponentSource\" graphql:\"getComponentSource\""
+type DeleteCategories struct {
+	DeleteCategory *DeleteCategories_DeleteCategory "json:\"deleteCategory\" graphql:\"deleteCategory\""
 }
-type GetComponentSources struct {
-	QueryComponentSource []*ComponentSourceFragment "json:\"queryComponentSource\" graphql:\"queryComponentSource\""
-}
-type SaveComponentSources struct {
-	AddComponentSource *SaveComponentSources_AddComponentSource "json:\"addComponentSource\" graphql:\"addComponentSource\""
-}
-type DeleteComponentSource struct {
-	DeleteComponentSource *DeleteComponentSource_DeleteComponentSource "json:\"deleteComponentSource\" graphql:\"deleteComponentSource\""
-}
-type GetComponent struct {
+type GetComponentByID struct {
 	GetComponent *ComponentFragment "json:\"getComponent\" graphql:\"getComponent\""
 }
+type GetComponentByXid struct {
+	GetComponent *ComponentFragment "json:\"getComponent\" graphql:\"getComponent\""
+}
+type GetComponentID struct {
+	GetComponent *GetComponentID_GetComponent "json:\"getComponent\" graphql:\"getComponent\""
+}
 type GetComponents struct {
-	QueryComponent []*ComponentFragment "json:\"queryComponent\" graphql:\"queryComponent\""
+	QueryComponent     []*ComponentFragment              "json:\"queryComponent\" graphql:\"queryComponent\""
+	AggregateComponent *GetComponents_AggregateComponent "json:\"aggregateComponent\" graphql:\"aggregateComponent\""
 }
-type SaveComponents struct {
-	AddComponent *SaveComponents_AddComponent "json:\"addComponent\" graphql:\"addComponent\""
+type CreateComponents struct {
+	AddComponent *CreateComponents_AddComponent "json:\"addComponent\" graphql:\"addComponent\""
 }
-type DeleteComponent struct {
-	DeleteComponent *DeleteComponent_DeleteComponent "json:\"deleteComponent\" graphql:\"deleteComponent\""
+type UpdateComponents struct {
+	UpdateComponent *UpdateComponents_UpdateComponent "json:\"updateComponent\" graphql:\"updateComponent\""
 }
-type GetDatabaseInfo struct {
-	QueryDatabase []*DatabaseFragment "json:\"queryDatabase\" graphql:\"queryDatabase\""
+type DeleteComponents struct {
+	DeleteComponent *DeleteComponents_DeleteComponent "json:\"deleteComponent\" graphql:\"deleteComponent\""
 }
-type SaveDatabaseInfo struct {
-	DeleteDatabase *SaveDatabaseInfo_DeleteDatabase "json:\"deleteDatabase\" graphql:\"deleteDatabase\""
-	AddDatabase    *SaveDatabaseInfo_AddDatabase    "json:\"addDatabase\" graphql:\"addDatabase\""
+type GetDatabaseByID struct {
+	GetDatabase *DatabaseFragment "json:\"getDatabase\" graphql:\"getDatabase\""
 }
-type GetFile struct {
+type GetDatabases struct {
+	QueryDatabase     []*DatabaseFragment             "json:\"queryDatabase\" graphql:\"queryDatabase\""
+	AggregateDatabase *GetDatabases_AggregateDatabase "json:\"aggregateDatabase\" graphql:\"aggregateDatabase\""
+}
+type CreateDatabases struct {
+	AddDatabase *CreateDatabases_AddDatabase "json:\"addDatabase\" graphql:\"addDatabase\""
+}
+type UpdateDatabases struct {
+	UpdateDatabase *UpdateDatabases_UpdateDatabase "json:\"updateDatabase\" graphql:\"updateDatabase\""
+}
+type DeleteDatabases struct {
+	DeleteDatabase *DeleteDatabases_DeleteDatabase "json:\"deleteDatabase\" graphql:\"deleteDatabase\""
+}
+type GetFileByID struct {
 	GetFile *FileFragment "json:\"getFile\" graphql:\"getFile\""
 }
+type GetFileByXid struct {
+	GetFile *FileFragment "json:\"getFile\" graphql:\"getFile\""
+}
+type GetFileID struct {
+	GetFile *GetFileID_GetFile "json:\"getFile\" graphql:\"getFile\""
+}
 type GetFiles struct {
-	QueryFile []*FileFragment "json:\"queryFile\" graphql:\"queryFile\""
+	QueryFile     []*FileFragment         "json:\"queryFile\" graphql:\"queryFile\""
+	AggregateFile *GetFiles_AggregateFile "json:\"aggregateFile\" graphql:\"aggregateFile\""
 }
-type SaveFiles struct {
-	DeleteFile *SaveFiles_DeleteFile "json:\"deleteFile\" graphql:\"deleteFile\""
-	AddFile    *SaveFiles_AddFile    "json:\"addFile\" graphql:\"addFile\""
+type CreateFiles struct {
+	AddFile *CreateFiles_AddFile "json:\"addFile\" graphql:\"addFile\""
 }
-type DeleteFile struct {
-	DeleteFile *DeleteFile_DeleteFile "json:\"deleteFile\" graphql:\"deleteFile\""
+type UpdateFiles struct {
+	UpdateFile *UpdateFiles_UpdateFile "json:\"updateFile\" graphql:\"updateFile\""
 }
-type GetFloatV struct {
-	GetFloatV *FloatVFragment "json:\"getFloatV\" graphql:\"getFloatV\""
+type DeleteFiles struct {
+	DeleteFile *DeleteFiles_DeleteFile "json:\"deleteFile\" graphql:\"deleteFile\""
 }
-type GetFloatVs struct {
-	QueryFloatV []*FloatVFragment "json:\"queryFloatV\" graphql:\"queryFloatV\""
-}
-type SaveFloatVs struct {
-	DeleteFloatV *SaveFloatVs_DeleteFloatV "json:\"deleteFloatV\" graphql:\"deleteFloatV\""
-	AddFloatV    *SaveFloatVs_AddFloatV    "json:\"addFloatV\" graphql:\"addFloatV\""
-}
-type DeleteFloatVs struct {
-	DeleteFloatV *DeleteFloatVs_DeleteFloatV "json:\"deleteFloatV\" graphql:\"deleteFloatV\""
-}
-type GetHost struct {
+type GetHostByID struct {
 	GetHost *HostFragment "json:\"getHost\" graphql:\"getHost\""
 }
+type GetHostByDomain struct {
+	GetHost *HostFragment "json:\"getHost\" graphql:\"getHost\""
+}
+type GetHostID struct {
+	GetHost *GetHostID_GetHost "json:\"getHost\" graphql:\"getHost\""
+}
 type GetHosts struct {
-	QueryHost []*HostFragment "json:\"queryHost\" graphql:\"queryHost\""
+	QueryHost     []*HostFragment         "json:\"queryHost\" graphql:\"queryHost\""
+	AggregateHost *GetHosts_AggregateHost "json:\"aggregateHost\" graphql:\"aggregateHost\""
 }
-type SaveHosts struct {
-	AddHost *SaveHosts_AddHost "json:\"addHost\" graphql:\"addHost\""
+type CreateHosts struct {
+	AddHost *CreateHosts_AddHost "json:\"addHost\" graphql:\"addHost\""
 }
-type DeleteHost struct {
-	DeleteHost *DeleteHost_DeleteHost "json:\"deleteHost\" graphql:\"deleteHost\""
+type UpdateHosts struct {
+	UpdateHost *UpdateHosts_UpdateHost "json:\"updateHost\" graphql:\"updateHost\""
 }
-type GetKeyValue struct {
-	GetKeyValue *KeyValueFragment "json:\"getKeyValue\" graphql:\"getKeyValue\""
+type DeleteHosts struct {
+	DeleteHost *DeleteHosts_DeleteHost "json:\"deleteHost\" graphql:\"deleteHost\""
 }
-type GetKeyValues struct {
-	QueryKeyValue []*KeyValueFragment "json:\"queryKeyValue\" graphql:\"queryKeyValue\""
-}
-type SaveKeyValues struct {
-	AddKeyValue *SaveKeyValues_AddKeyValue "json:\"addKeyValue\" graphql:\"addKeyValue\""
-}
-type DeleteKeyValue struct {
-	DeleteKeyValue *DeleteKeyValue_DeleteKeyValue "json:\"deleteKeyValue\" graphql:\"deleteKeyValue\""
-}
-type GetLicense struct {
-	GetLicense *LicenseFragment "json:\"getLicense\" graphql:\"getLicense\""
-}
-type GetLicenses struct {
-	QueryLicense []*LicenseFragment "json:\"queryLicense\" graphql:\"queryLicense\""
-}
-type SaveLicenses struct {
-	AddLicense *SaveLicenses_AddLicense "json:\"addLicense\" graphql:\"addLicense\""
-}
-type DeleteLicense struct {
-	DeleteLicense *DeleteLicense_DeleteLicense "json:\"deleteLicense\" graphql:\"deleteLicense\""
-}
-type GetManufacturingProcess struct {
-	GetManufacturingProcess *ManufacturingProcessFragment "json:\"getManufacturingProcess\" graphql:\"getManufacturingProcess\""
-}
-type GetManufacturingProcesses struct {
-	QueryManufacturingProcess []*ManufacturingProcessFragment "json:\"queryManufacturingProcess\" graphql:\"queryManufacturingProcess\""
-}
-type SaveManufacturingProcesses struct {
-	DeleteManufacturingProcess *SaveManufacturingProcesses_DeleteManufacturingProcess "json:\"deleteManufacturingProcess\" graphql:\"deleteManufacturingProcess\""
-	AddManufacturingProcess    *SaveManufacturingProcesses_AddManufacturingProcess    "json:\"addManufacturingProcess\" graphql:\"addManufacturingProcess\""
-}
-type DeleteManufacturingProcesses struct {
-	DeleteManufacturingProcess *DeleteManufacturingProcesses_DeleteManufacturingProcess "json:\"deleteManufacturingProcess\" graphql:\"deleteManufacturingProcess\""
-}
-type GetMaterial struct {
-	GetMaterial *MaterialFragment "json:\"getMaterial\" graphql:\"getMaterial\""
-}
-type GetMaterials struct {
-	QueryMaterial []*MaterialFragment "json:\"queryMaterial\" graphql:\"queryMaterial\""
-}
-type SaveMaterials struct {
-	DeleteMaterial *SaveMaterials_DeleteMaterial "json:\"deleteMaterial\" graphql:\"deleteMaterial\""
-	AddMaterial    *SaveMaterials_AddMaterial    "json:\"addMaterial\" graphql:\"addMaterial\""
-}
-type DeleteMaterials struct {
-	DeleteMaterial *DeleteMaterials_DeleteMaterial "json:\"deleteMaterial\" graphql:\"deleteMaterial\""
-}
-type GetNode struct {
-	GetNode *GetNode_GetNode "json:\"getNode\" graphql:\"getNode\""
-}
-type GetNodes struct {
-	QueryNode []*GetNodes_QueryNode "json:\"queryNode\" graphql:\"queryNode\""
-}
-type DeleteNode struct {
-	DeleteNode *DeleteNode_DeleteNode "json:\"deleteNode\" graphql:\"deleteNode\""
-}
-type GetOpenSCADDimensions struct {
-	GetOpenSCADDimensions *OpenSCADDimensionsFragment "json:\"getOpenSCADDimensions\" graphql:\"getOpenSCADDimensions\""
-}
-type GetOpenSCADDimensionss struct {
-	QueryOpenSCADDimensions []*OpenSCADDimensionsFragment "json:\"queryOpenSCADDimensions\" graphql:\"queryOpenSCADDimensions\""
-}
-type SaveOpenSCADDimensionss struct {
-	DeleteOpenSCADDimensions *SaveOpenSCADDimensionss_DeleteOpenSCADDimensions "json:\"deleteOpenSCADDimensions\" graphql:\"deleteOpenSCADDimensions\""
-	AddOpenSCADDimensions    *SaveOpenSCADDimensionss_AddOpenSCADDimensions    "json:\"addOpenSCADDimensions\" graphql:\"addOpenSCADDimensions\""
-}
-type DeleteOpenSCADDimensionss struct {
-	DeleteOpenSCADDimensions *DeleteOpenSCADDimensionss_DeleteOpenSCADDimensions "json:\"deleteOpenSCADDimensions\" graphql:\"deleteOpenSCADDimensions\""
-}
-type GetProduct struct {
-	GetProduct *ProductFragment "json:\"getProduct\" graphql:\"getProduct\""
-}
-type GetProducts struct {
-	QueryProduct []*ProductFragment "json:\"queryProduct\" graphql:\"queryProduct\""
-}
-type SaveProducts struct {
-	AddProduct *SaveProducts_AddProduct "json:\"addProduct\" graphql:\"addProduct\""
-}
-type DeleteProduct struct {
-	DeleteProduct *DeleteProduct_DeleteProduct "json:\"deleteProduct\" graphql:\"deleteProduct\""
-}
-type GetSoftware struct {
-	GetSoftware *SoftwareFragment "json:\"getSoftware\" graphql:\"getSoftware\""
-}
-type GetSoftwares struct {
-	QuerySoftware []*SoftwareFragment "json:\"querySoftware\" graphql:\"querySoftware\""
-}
-type SaveSoftwares struct {
-	DeleteSoftware *SaveSoftwares_DeleteSoftware "json:\"deleteSoftware\" graphql:\"deleteSoftware\""
-	AddSoftware    *SaveSoftwares_AddSoftware    "json:\"addSoftware\" graphql:\"addSoftware\""
-}
-type DeleteSoftware struct {
-	DeleteSoftware *DeleteSoftware_DeleteSoftware "json:\"deleteSoftware\" graphql:\"deleteSoftware\""
-}
-type GetStringV struct {
+type GetStringVByID struct {
 	GetStringV *StringVFragment "json:\"getStringV\" graphql:\"getStringV\""
 }
 type GetStringVs struct {
-	QueryStringV []*StringVFragment "json:\"queryStringV\" graphql:\"queryStringV\""
+	QueryStringV     []*StringVFragment            "json:\"queryStringV\" graphql:\"queryStringV\""
+	AggregateStringV *GetStringVs_AggregateStringV "json:\"aggregateStringV\" graphql:\"aggregateStringV\""
 }
-type SaveStringVs struct {
-	DeleteStringV *SaveStringVs_DeleteStringV "json:\"deleteStringV\" graphql:\"deleteStringV\""
-	AddStringV    *SaveStringVs_AddStringV    "json:\"addStringV\" graphql:\"addStringV\""
+type CreateStringVs struct {
+	AddStringV *CreateStringVs_AddStringV "json:\"addStringV\" graphql:\"addStringV\""
+}
+type UpdateStringVs struct {
+	UpdateStringV *UpdateStringVs_UpdateStringV "json:\"updateStringV\" graphql:\"updateStringV\""
 }
 type DeleteStringVs struct {
 	DeleteStringV *DeleteStringVs_DeleteStringV "json:\"deleteStringV\" graphql:\"deleteStringV\""
 }
-type GetTag struct {
+type GetFloatVByID struct {
+	GetFloatV *FloatVFragment "json:\"getFloatV\" graphql:\"getFloatV\""
+}
+type GetFloatVs struct {
+	QueryFloatV     []*FloatVFragment           "json:\"queryFloatV\" graphql:\"queryFloatV\""
+	AggregateFloatV *GetFloatVs_AggregateFloatV "json:\"aggregateFloatV\" graphql:\"aggregateFloatV\""
+}
+type CreateFloatVs struct {
+	AddFloatV *CreateFloatVs_AddFloatV "json:\"addFloatV\" graphql:\"addFloatV\""
+}
+type UpdateFloatVs struct {
+	UpdateFloatV *UpdateFloatVs_UpdateFloatV "json:\"updateFloatV\" graphql:\"updateFloatV\""
+}
+type DeleteFloatVs struct {
+	DeleteFloatV *DeleteFloatVs_DeleteFloatV "json:\"deleteFloatV\" graphql:\"deleteFloatV\""
+}
+type GetKeyValueByID struct {
+	GetKeyValue *KeyValueFragment "json:\"getKeyValue\" graphql:\"getKeyValue\""
+}
+type GetKeyValues struct {
+	QueryKeyValue     []*KeyValueFragment             "json:\"queryKeyValue\" graphql:\"queryKeyValue\""
+	AggregateKeyValue *GetKeyValues_AggregateKeyValue "json:\"aggregateKeyValue\" graphql:\"aggregateKeyValue\""
+}
+type CreateKeyValues struct {
+	AddKeyValue *CreateKeyValues_AddKeyValue "json:\"addKeyValue\" graphql:\"addKeyValue\""
+}
+type UpdateKeyValues struct {
+	UpdateKeyValue *UpdateKeyValues_UpdateKeyValue "json:\"updateKeyValue\" graphql:\"updateKeyValue\""
+}
+type DeleteKeyValues struct {
+	DeleteKeyValue *DeleteKeyValues_DeleteKeyValue "json:\"deleteKeyValue\" graphql:\"deleteKeyValue\""
+}
+type GetLicenseByID struct {
+	GetLicense *LicenseFragment "json:\"getLicense\" graphql:\"getLicense\""
+}
+type GetLicenseByXid struct {
+	GetLicense *LicenseFragment "json:\"getLicense\" graphql:\"getLicense\""
+}
+type GetLicenseID struct {
+	GetLicense *GetLicenseID_GetLicense "json:\"getLicense\" graphql:\"getLicense\""
+}
+type GetLicenses struct {
+	QueryLicense     []*LicenseFragment            "json:\"queryLicense\" graphql:\"queryLicense\""
+	AggregateLicense *GetLicenses_AggregateLicense "json:\"aggregateLicense\" graphql:\"aggregateLicense\""
+}
+type GetAllLicensesBasic struct {
+	QueryLicense []*LicenseFragmentBasic "json:\"queryLicense\" graphql:\"queryLicense\""
+}
+type CreateLicenses struct {
+	AddLicense *CreateLicenses_AddLicense "json:\"addLicense\" graphql:\"addLicense\""
+}
+type UpdateLicenses struct {
+	UpdateLicense *UpdateLicenses_UpdateLicense "json:\"updateLicense\" graphql:\"updateLicense\""
+}
+type DeleteLicenses struct {
+	DeleteLicense *DeleteLicenses_DeleteLicense "json:\"deleteLicense\" graphql:\"deleteLicense\""
+}
+type GetManufacturingProcessByID struct {
+	GetManufacturingProcess *ManufacturingProcessFragment "json:\"getManufacturingProcess\" graphql:\"getManufacturingProcess\""
+}
+type GetManufacturingProcesses struct {
+	QueryManufacturingProcess     []*ManufacturingProcessFragment                          "json:\"queryManufacturingProcess\" graphql:\"queryManufacturingProcess\""
+	AggregateManufacturingProcess *GetManufacturingProcesses_AggregateManufacturingProcess "json:\"aggregateManufacturingProcess\" graphql:\"aggregateManufacturingProcess\""
+}
+type CreateManufacturingProcesses struct {
+	AddManufacturingProcess *CreateManufacturingProcesses_AddManufacturingProcess "json:\"addManufacturingProcess\" graphql:\"addManufacturingProcess\""
+}
+type UpdateManufacturingProcesses struct {
+	UpdateManufacturingProcess *UpdateManufacturingProcesses_UpdateManufacturingProcess "json:\"updateManufacturingProcess\" graphql:\"updateManufacturingProcess\""
+}
+type DeleteManufacturingProcesses struct {
+	DeleteManufacturingProcess *DeleteManufacturingProcesses_DeleteManufacturingProcess "json:\"deleteManufacturingProcess\" graphql:\"deleteManufacturingProcess\""
+}
+type GetMaterialByID struct {
+	GetMaterial *MaterialFragment "json:\"getMaterial\" graphql:\"getMaterial\""
+}
+type GetMaterials struct {
+	QueryMaterial     []*MaterialFragment             "json:\"queryMaterial\" graphql:\"queryMaterial\""
+	AggregateMaterial *GetMaterials_AggregateMaterial "json:\"aggregateMaterial\" graphql:\"aggregateMaterial\""
+}
+type CreateMaterials struct {
+	AddMaterial *CreateMaterials_AddMaterial "json:\"addMaterial\" graphql:\"addMaterial\""
+}
+type UpdateMaterials struct {
+	UpdateMaterial *UpdateMaterials_UpdateMaterial "json:\"updateMaterial\" graphql:\"updateMaterial\""
+}
+type DeleteMaterials struct {
+	DeleteMaterial *DeleteMaterials_DeleteMaterial "json:\"deleteMaterial\" graphql:\"deleteMaterial\""
+}
+type CheckNode struct {
+	GetNode *NodeFragment "json:\"getNode\" graphql:\"getNode\""
+}
+type GetNodeDetails struct {
+	GetNode *NodeFragment "json:\"getNode\" graphql:\"getNode\""
+}
+type GetNodeByID struct {
+	GetNode *NodeFragment "json:\"getNode\" graphql:\"getNode\""
+}
+type GetNodes struct {
+	QueryNode     []*NodeFragment         "json:\"queryNode\" graphql:\"queryNode\""
+	AggregateNode *GetNodes_AggregateNode "json:\"aggregateNode\" graphql:\"aggregateNode\""
+}
+type DeleteNodes struct {
+	DeleteNode *DeleteNodes_DeleteNode "json:\"deleteNode\" graphql:\"deleteNode\""
+}
+type GetBoundingBoxDimensionsByID struct {
+	GetBoundingBoxDimensions *BoundingBoxDimensionsFragment "json:\"getBoundingBoxDimensions\" graphql:\"getBoundingBoxDimensions\""
+}
+type GetBoundingBoxDimensionss struct {
+	QueryBoundingBoxDimensions     []*BoundingBoxDimensionsFragment                          "json:\"queryBoundingBoxDimensions\" graphql:\"queryBoundingBoxDimensions\""
+	AggregateBoundingBoxDimensions *GetBoundingBoxDimensionss_AggregateBoundingBoxDimensions "json:\"aggregateBoundingBoxDimensions\" graphql:\"aggregateBoundingBoxDimensions\""
+}
+type CreateBoundingBoxDimensionss struct {
+	AddBoundingBoxDimensions *CreateBoundingBoxDimensionss_AddBoundingBoxDimensions "json:\"addBoundingBoxDimensions\" graphql:\"addBoundingBoxDimensions\""
+}
+type UpdateBoundingBoxDimensionss struct {
+	UpdateBoundingBoxDimensions *UpdateBoundingBoxDimensionss_UpdateBoundingBoxDimensions "json:\"updateBoundingBoxDimensions\" graphql:\"updateBoundingBoxDimensions\""
+}
+type DeleteBoundingBoxDimensionss struct {
+	DeleteBoundingBoxDimensions *DeleteBoundingBoxDimensionss_DeleteBoundingBoxDimensions "json:\"deleteBoundingBoxDimensions\" graphql:\"deleteBoundingBoxDimensions\""
+}
+type GetOpenSCADDimensionsByID struct {
+	GetOpenSCADDimensions *OpenSCADDimensionsFragment "json:\"getOpenSCADDimensions\" graphql:\"getOpenSCADDimensions\""
+}
+type GetOpenSCADDimensionss struct {
+	QueryOpenSCADDimensions     []*OpenSCADDimensionsFragment                       "json:\"queryOpenSCADDimensions\" graphql:\"queryOpenSCADDimensions\""
+	AggregateOpenSCADDimensions *GetOpenSCADDimensionss_AggregateOpenSCADDimensions "json:\"aggregateOpenSCADDimensions\" graphql:\"aggregateOpenSCADDimensions\""
+}
+type CreateOpenSCADDimensionss struct {
+	AddOpenSCADDimensions *CreateOpenSCADDimensionss_AddOpenSCADDimensions "json:\"addOpenSCADDimensions\" graphql:\"addOpenSCADDimensions\""
+}
+type UpdateOpenSCADDimensionss struct {
+	UpdateOpenSCADDimensions *UpdateOpenSCADDimensionss_UpdateOpenSCADDimensions "json:\"updateOpenSCADDimensions\" graphql:\"updateOpenSCADDimensions\""
+}
+type DeleteOpenSCADDimensionss struct {
+	DeleteOpenSCADDimensions *DeleteOpenSCADDimensionss_DeleteOpenSCADDimensions "json:\"deleteOpenSCADDimensions\" graphql:\"deleteOpenSCADDimensions\""
+}
+type GetProductByID struct {
+	GetProduct *ProductFragment "json:\"getProduct\" graphql:\"getProduct\""
+}
+type GetProductByXid struct {
+	GetProduct *ProductFragment "json:\"getProduct\" graphql:\"getProduct\""
+}
+type GetProductID struct {
+	GetProduct *GetProductID_GetProduct "json:\"getProduct\" graphql:\"getProduct\""
+}
+type GetProducts struct {
+	QueryProduct     []*ProductFragment            "json:\"queryProduct\" graphql:\"queryProduct\""
+	AggregateProduct *GetProducts_AggregateProduct "json:\"aggregateProduct\" graphql:\"aggregateProduct\""
+}
+type SearchProducts struct {
+	QueryProduct     []*ProductSearchFragment         "json:\"queryProduct\" graphql:\"queryProduct\""
+	AggregateProduct *SearchProducts_AggregateProduct "json:\"aggregateProduct\" graphql:\"aggregateProduct\""
+}
+type CreateProducts struct {
+	AddProduct *CreateProducts_AddProduct "json:\"addProduct\" graphql:\"addProduct\""
+}
+type UpdateProducts struct {
+	UpdateProduct *UpdateProducts_UpdateProduct "json:\"updateProduct\" graphql:\"updateProduct\""
+}
+type DeleteProducts struct {
+	DeleteProduct *DeleteProducts_DeleteProduct "json:\"deleteProduct\" graphql:\"deleteProduct\""
+}
+type GetRepositoryByID struct {
+	GetRepository *RepositoryFragment "json:\"getRepository\" graphql:\"getRepository\""
+}
+type GetRepositoryByXid struct {
+	GetRepository *RepositoryFragment "json:\"getRepository\" graphql:\"getRepository\""
+}
+type GetRepositoryID struct {
+	GetRepository *GetRepositoryID_GetRepository "json:\"getRepository\" graphql:\"getRepository\""
+}
+type GetRepositories struct {
+	QueryRepository     []*RepositoryFragment                "json:\"queryRepository\" graphql:\"queryRepository\""
+	AggregateRepository *GetRepositories_AggregateRepository "json:\"aggregateRepository\" graphql:\"aggregateRepository\""
+}
+type CreateRepositories struct {
+	AddRepository *CreateRepositories_AddRepository "json:\"addRepository\" graphql:\"addRepository\""
+}
+type UpdateRepositories struct {
+	UpdateRepository *UpdateRepositories_UpdateRepository "json:\"updateRepository\" graphql:\"updateRepository\""
+}
+type DeleteRepositories struct {
+	DeleteRepository *DeleteRepositories_DeleteRepository "json:\"deleteRepository\" graphql:\"deleteRepository\""
+}
+type GetSoftwareByID struct {
+	GetSoftware *SoftwareFragment "json:\"getSoftware\" graphql:\"getSoftware\""
+}
+type GetSoftwares struct {
+	QuerySoftware     []*SoftwareFragment             "json:\"querySoftware\" graphql:\"querySoftware\""
+	AggregateSoftware *GetSoftwares_AggregateSoftware "json:\"aggregateSoftware\" graphql:\"aggregateSoftware\""
+}
+type CreateSoftwares struct {
+	AddSoftware *CreateSoftwares_AddSoftware "json:\"addSoftware\" graphql:\"addSoftware\""
+}
+type UpdateSoftwares struct {
+	UpdateSoftware *UpdateSoftwares_UpdateSoftware "json:\"updateSoftware\" graphql:\"updateSoftware\""
+}
+type DeleteSoftwares struct {
+	DeleteSoftware *DeleteSoftwares_DeleteSoftware "json:\"deleteSoftware\" graphql:\"deleteSoftware\""
+}
+type GetTagByID struct {
 	GetTag *TagFragment "json:\"getTag\" graphql:\"getTag\""
 }
+type GetTagByXid struct {
+	GetTag *TagFragment "json:\"getTag\" graphql:\"getTag\""
+}
+type GetTagID struct {
+	GetTag *GetTagID_GetTag "json:\"getTag\" graphql:\"getTag\""
+}
 type GetTags struct {
-	QueryTag []*TagFragment "json:\"queryTag\" graphql:\"queryTag\""
+	QueryTag     []*TagFragment        "json:\"queryTag\" graphql:\"queryTag\""
+	AggregateTag *GetTags_AggregateTag "json:\"aggregateTag\" graphql:\"aggregateTag\""
 }
-type SaveTags struct {
-	AddTag *SaveTags_AddTag "json:\"addTag\" graphql:\"addTag\""
+type CreateTags struct {
+	AddTag *CreateTags_AddTag "json:\"addTag\" graphql:\"addTag\""
 }
-type DeleteTag struct {
-	DeleteTag *DeleteTag_DeleteTag "json:\"deleteTag\" graphql:\"deleteTag\""
+type UpdateTags struct {
+	UpdateTag *UpdateTags_UpdateTag "json:\"updateTag\" graphql:\"updateTag\""
 }
-type GetTechnicalStandard struct {
+type DeleteTags struct {
+	DeleteTag *DeleteTags_DeleteTag "json:\"deleteTag\" graphql:\"deleteTag\""
+}
+type GetTechnicalStandardByID struct {
 	GetTechnicalStandard *TechnicalStandardFragment "json:\"getTechnicalStandard\" graphql:\"getTechnicalStandard\""
 }
+type GetTechnicalStandardByXid struct {
+	GetTechnicalStandard *TechnicalStandardFragment "json:\"getTechnicalStandard\" graphql:\"getTechnicalStandard\""
+}
+type GetTechnicalStandardID struct {
+	GetTechnicalStandard *GetTechnicalStandardID_GetTechnicalStandard "json:\"getTechnicalStandard\" graphql:\"getTechnicalStandard\""
+}
 type GetTechnicalStandards struct {
-	QueryTechnicalStandard []*TechnicalStandardFragment "json:\"queryTechnicalStandard\" graphql:\"queryTechnicalStandard\""
+	QueryTechnicalStandard     []*TechnicalStandardFragment                      "json:\"queryTechnicalStandard\" graphql:\"queryTechnicalStandard\""
+	AggregateTechnicalStandard *GetTechnicalStandards_AggregateTechnicalStandard "json:\"aggregateTechnicalStandard\" graphql:\"aggregateTechnicalStandard\""
 }
-type SaveTechnicalStandards struct {
-	AddTechnicalStandard *SaveTechnicalStandards_AddTechnicalStandard "json:\"addTechnicalStandard\" graphql:\"addTechnicalStandard\""
+type CreateTechnicalStandards struct {
+	AddTechnicalStandard *CreateTechnicalStandards_AddTechnicalStandard "json:\"addTechnicalStandard\" graphql:\"addTechnicalStandard\""
 }
-type DeleteTechnicalStandard struct {
-	DeleteTechnicalStandard *DeleteTechnicalStandard_DeleteTechnicalStandard "json:\"deleteTechnicalStandard\" graphql:\"deleteTechnicalStandard\""
+type UpdateTechnicalStandards struct {
+	UpdateTechnicalStandard *UpdateTechnicalStandards_UpdateTechnicalStandard "json:\"updateTechnicalStandard\" graphql:\"updateTechnicalStandard\""
 }
-type GetTechnologySpecificDocumentationCriteria struct {
+type DeleteTechnicalStandards struct {
+	DeleteTechnicalStandard *DeleteTechnicalStandards_DeleteTechnicalStandard "json:\"deleteTechnicalStandard\" graphql:\"deleteTechnicalStandard\""
+}
+type GetTechnologySpecificDocumentationCriteriaByID struct {
 	GetTechnologySpecificDocumentationCriteria *TechnologySpecificDocumentationCriteriaFragment "json:\"getTechnologySpecificDocumentationCriteria\" graphql:\"getTechnologySpecificDocumentationCriteria\""
 }
+type GetTechnologySpecificDocumentationCriteriaByXid struct {
+	GetTechnologySpecificDocumentationCriteria *TechnologySpecificDocumentationCriteriaFragment "json:\"getTechnologySpecificDocumentationCriteria\" graphql:\"getTechnologySpecificDocumentationCriteria\""
+}
+type GetTechnologySpecificDocumentationCriteriaID struct {
+	GetTechnologySpecificDocumentationCriteria *GetTechnologySpecificDocumentationCriteriaID_GetTechnologySpecificDocumentationCriteria "json:\"getTechnologySpecificDocumentationCriteria\" graphql:\"getTechnologySpecificDocumentationCriteria\""
+}
 type GetTechnologySpecificDocumentationCriterias struct {
-	QueryTechnologySpecificDocumentationCriteria []*TechnologySpecificDocumentationCriteriaFragment "json:\"queryTechnologySpecificDocumentationCriteria\" graphql:\"queryTechnologySpecificDocumentationCriteria\""
+	QueryTechnologySpecificDocumentationCriteria     []*TechnologySpecificDocumentationCriteriaFragment                                            "json:\"queryTechnologySpecificDocumentationCriteria\" graphql:\"queryTechnologySpecificDocumentationCriteria\""
+	AggregateTechnologySpecificDocumentationCriteria *GetTechnologySpecificDocumentationCriterias_AggregateTechnologySpecificDocumentationCriteria "json:\"aggregateTechnologySpecificDocumentationCriteria\" graphql:\"aggregateTechnologySpecificDocumentationCriteria\""
 }
-type SaveTechnologySpecificDocumentationCriterias struct {
-	AddTechnologySpecificDocumentationCriteria *SaveTechnologySpecificDocumentationCriterias_AddTechnologySpecificDocumentationCriteria "json:\"addTechnologySpecificDocumentationCriteria\" graphql:\"addTechnologySpecificDocumentationCriteria\""
+type CreateTechnologySpecificDocumentationCriterias struct {
+	AddTechnologySpecificDocumentationCriteria *CreateTechnologySpecificDocumentationCriterias_AddTechnologySpecificDocumentationCriteria "json:\"addTechnologySpecificDocumentationCriteria\" graphql:\"addTechnologySpecificDocumentationCriteria\""
 }
-type DeleteTechnologySpecificDocumentationCriteria struct {
-	DeleteTechnologySpecificDocumentationCriteria *DeleteTechnologySpecificDocumentationCriteria_DeleteTechnologySpecificDocumentationCriteria "json:\"deleteTechnologySpecificDocumentationCriteria\" graphql:\"deleteTechnologySpecificDocumentationCriteria\""
+type UpdateTechnologySpecificDocumentationCriterias struct {
+	UpdateTechnologySpecificDocumentationCriteria *UpdateTechnologySpecificDocumentationCriterias_UpdateTechnologySpecificDocumentationCriteria "json:\"updateTechnologySpecificDocumentationCriteria\" graphql:\"updateTechnologySpecificDocumentationCriteria\""
+}
+type DeleteTechnologySpecificDocumentationCriterias struct {
+	DeleteTechnologySpecificDocumentationCriteria *DeleteTechnologySpecificDocumentationCriterias_DeleteTechnologySpecificDocumentationCriteria "json:\"deleteTechnologySpecificDocumentationCriteria\" graphql:\"deleteTechnologySpecificDocumentationCriteria\""
 }
 type TestConnection struct {
 	Schema TestConnection_Schema "json:\"__schema\" graphql:\"__schema\""
 }
-type GetUserOrGroup struct {
-	GetUserOrGroup *GetUserOrGroup_GetUserOrGroup "json:\"getUserOrGroup\" graphql:\"getUserOrGroup\""
+type GetUserOrGroupByID struct {
+	GetUserOrGroup *GetUserOrGroupByID_GetUserOrGroup "json:\"getUserOrGroup\" graphql:\"getUserOrGroup\""
+}
+type GetUserOrGroupByXid struct {
+	GetUserOrGroup *GetUserOrGroupByXid_GetUserOrGroup "json:\"getUserOrGroup\" graphql:\"getUserOrGroup\""
+}
+type GetUserOrGroupID struct {
+	GetUserOrGroup *GetUserOrGroupID_GetUserOrGroup "json:\"getUserOrGroup\" graphql:\"getUserOrGroup\""
 }
 type GetUserOrGroups struct {
-	QueryUserOrGroup []*GetUserOrGroups_QueryUserOrGroup "json:\"queryUserOrGroup\" graphql:\"queryUserOrGroup\""
+	QueryUserOrGroup     []*GetUserOrGroups_QueryUserOrGroup   "json:\"queryUserOrGroup\" graphql:\"queryUserOrGroup\""
+	AggregateUserOrGroup *GetUserOrGroups_AggregateUserOrGroup "json:\"aggregateUserOrGroup\" graphql:\"aggregateUserOrGroup\""
 }
-type DeleteUserOrGroup struct {
-	DeleteUserOrGroup *DeleteUserOrGroup_DeleteUserOrGroup "json:\"deleteUserOrGroup\" graphql:\"deleteUserOrGroup\""
+type UpdateUserOrGroups struct {
+	UpdateUserOrGroup *UpdateUserOrGroups_UpdateUserOrGroup "json:\"updateUserOrGroup\" graphql:\"updateUserOrGroup\""
 }
-type GetUser struct {
+type DeleteUserOrGroups struct {
+	DeleteUserOrGroup *DeleteUserOrGroups_DeleteUserOrGroup "json:\"deleteUserOrGroup\" graphql:\"deleteUserOrGroup\""
+}
+type GetUserByID struct {
 	GetUser *UserFragment "json:\"getUser\" graphql:\"getUser\""
 }
+type GetUserByXid struct {
+	GetUser *UserFragment "json:\"getUser\" graphql:\"getUser\""
+}
+type GetUserID struct {
+	GetUser *GetUserID_GetUser "json:\"getUser\" graphql:\"getUser\""
+}
 type GetUsers struct {
-	QueryUser []*UserFragment "json:\"queryUser\" graphql:\"queryUser\""
+	QueryUser     []*UserFragment         "json:\"queryUser\" graphql:\"queryUser\""
+	AggregateUser *GetUsers_AggregateUser "json:\"aggregateUser\" graphql:\"aggregateUser\""
 }
-type SaveUsers struct {
-	AddUser *SaveUsers_AddUser "json:\"addUser\" graphql:\"addUser\""
+type CreateUsers struct {
+	AddUser *CreateUsers_AddUser "json:\"addUser\" graphql:\"addUser\""
 }
-type DeleteUser struct {
-	DeleteUser *DeleteUser_DeleteUser "json:\"deleteUser\" graphql:\"deleteUser\""
+type UpdateUsers struct {
+	UpdateUser *UpdateUsers_UpdateUser "json:\"updateUser\" graphql:\"updateUser\""
 }
-type GetGroup struct {
+type DeleteUsers struct {
+	DeleteUser *DeleteUsers_DeleteUser "json:\"deleteUser\" graphql:\"deleteUser\""
+}
+type GetGroupByID struct {
 	GetGroup *GroupFragment "json:\"getGroup\" graphql:\"getGroup\""
 }
+type GetGroupByXid struct {
+	GetGroup *GroupFragment "json:\"getGroup\" graphql:\"getGroup\""
+}
+type GetGroupID struct {
+	GetGroup *GetGroupID_GetGroup "json:\"getGroup\" graphql:\"getGroup\""
+}
 type GetGroups struct {
-	QueryGroup []*GroupFragment "json:\"queryGroup\" graphql:\"queryGroup\""
+	QueryGroup     []*GroupFragment          "json:\"queryGroup\" graphql:\"queryGroup\""
+	AggregateGroup *GetGroups_AggregateGroup "json:\"aggregateGroup\" graphql:\"aggregateGroup\""
 }
-type SaveGroups struct {
-	AddGroup *SaveGroups_AddGroup "json:\"addGroup\" graphql:\"addGroup\""
+type CreateGroups struct {
+	AddGroup *CreateGroups_AddGroup "json:\"addGroup\" graphql:\"addGroup\""
 }
-type DeleteGroup struct {
-	DeleteGroup *DeleteGroup_DeleteGroup "json:\"deleteGroup\" graphql:\"deleteGroup\""
+type UpdateGroups struct {
+	UpdateGroup *UpdateGroups_UpdateGroup "json:\"updateGroup\" graphql:\"updateGroup\""
+}
+type DeleteGroups struct {
+	DeleteGroup *DeleteGroups_DeleteGroup "json:\"deleteGroup\" graphql:\"deleteGroup\""
 }
 
-const GetBoundingBoxDimensionsDocument = `query GetBoundingBoxDimensions ($id: ID!) {
+const GetCategoryByIDDocument = `query GetCategoryByID ($id: ID!) {
+	getCategory(id: $id) {
+		... CategoryFragment
+	}
+}
+fragment CategoryFragment on Category {
+	id
+	xid
+	fullName
+	name
+	description
+	parent {
+		id
+		fullName
+	}
+	children {
+		id
+		fullName
+	}
+	products {
+		id
+		name
+	}
+}
+`
+
+func (c *Client) GetCategoryByID(ctx context.Context, id string) (*GetCategoryByID, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetCategoryByID",
+		Query:         GetCategoryByIDDocument,
+		Variables: map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	var resp GetCategoryByID
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetCategoryByIDWithResponse(ctx context.Context, id string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetCategoryByID",
+		Query:         GetCategoryByIDDocument,
+		Variables: map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetCategoryByXidDocument = `query GetCategoryByXid ($xid: String!) {
+	getCategory(xid: $xid) {
+		... CategoryFragment
+	}
+}
+fragment CategoryFragment on Category {
+	id
+	xid
+	fullName
+	name
+	description
+	parent {
+		id
+		fullName
+	}
+	children {
+		id
+		fullName
+	}
+	products {
+		id
+		name
+	}
+}
+`
+
+func (c *Client) GetCategoryByXid(ctx context.Context, xid string) (*GetCategoryByXid, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetCategoryByXid",
+		Query:         GetCategoryByXidDocument,
+		Variables: map[string]interface{}{
+			"xid": xid,
+		},
+	}
+
+	var resp GetCategoryByXid
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetCategoryByXidWithResponse(ctx context.Context, xid string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetCategoryByXid",
+		Query:         GetCategoryByXidDocument,
+		Variables: map[string]interface{}{
+			"xid": xid,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetCategoryIDDocument = `query GetCategoryID ($xid: String!) {
+	getCategory(xid: $xid) {
+		id
+	}
+}
+`
+
+func (c *Client) GetCategoryID(ctx context.Context, xid string) (*GetCategoryID, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetCategoryID",
+		Query:         GetCategoryIDDocument,
+		Variables: map[string]interface{}{
+			"xid": xid,
+		},
+	}
+
+	var resp GetCategoryID
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetCategoryIDWithResponse(ctx context.Context, xid string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetCategoryID",
+		Query:         GetCategoryIDDocument,
+		Variables: map[string]interface{}{
+			"xid": xid,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetCategoriesDocument = `query GetCategories ($getFilter: CategoryFilter, $order: CategoryOrder, $first: Int, $offset: Int) {
+	queryCategory(filter: $getFilter, order: $order, first: $first, offset: $offset) {
+		... CategoryFragment
+	}
+	aggregateCategory(filter: $getFilter) {
+		count
+	}
+}
+fragment CategoryFragment on Category {
+	id
+	xid
+	fullName
+	name
+	description
+	parent {
+		id
+		fullName
+	}
+	children {
+		id
+		fullName
+	}
+	products {
+		id
+		name
+	}
+}
+`
+
+func (c *Client) GetCategories(ctx context.Context, getFilter *CategoryFilter, order *CategoryOrder, first *int64, offset *int64) (*GetCategories, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetCategories",
+		Query:         GetCategoriesDocument,
+		Variables: map[string]interface{}{
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
+		},
+	}
+
+	var resp GetCategories
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetCategoriesWithResponse(ctx context.Context, getFilter *CategoryFilter, order *CategoryOrder, first *int64, offset *int64, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetCategories",
+		Query:         GetCategoriesDocument,
+		Variables: map[string]interface{}{
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const CreateCategoriesDocument = `mutation CreateCategories ($createInput: [AddCategoryInput!]!) {
+	addCategory(input: $createInput, upsert: true) {
+		category {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) CreateCategories(ctx context.Context, createInput []*AddCategoryInput) (*CreateCategories, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "CreateCategories",
+		Query:         CreateCategoriesDocument,
+		Variables: map[string]interface{}{
+			"createInput": createInput,
+		},
+	}
+
+	var resp CreateCategories
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) CreateCategoriesWithResponse(ctx context.Context, createInput []*AddCategoryInput, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "CreateCategories",
+		Query:         CreateCategoriesDocument,
+		Variables: map[string]interface{}{
+			"createInput": createInput,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const UpdateCategoriesDocument = `mutation UpdateCategories ($updateInput: UpdateCategoryInput!) {
+	updateCategory(input: $updateInput) {
+		category {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) UpdateCategories(ctx context.Context, updateInput UpdateCategoryInput) (*UpdateCategories, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "UpdateCategories",
+		Query:         UpdateCategoriesDocument,
+		Variables: map[string]interface{}{
+			"updateInput": updateInput,
+		},
+	}
+
+	var resp UpdateCategories
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) UpdateCategoriesWithResponse(ctx context.Context, updateInput UpdateCategoryInput, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "UpdateCategories",
+		Query:         UpdateCategoriesDocument,
+		Variables: map[string]interface{}{
+			"updateInput": updateInput,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const DeleteCategoriesDocument = `mutation DeleteCategories ($delFilter: CategoryFilter!) {
+	deleteCategory(filter: $delFilter) {
+		category {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) DeleteCategories(ctx context.Context, delFilter CategoryFilter) (*DeleteCategories, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "DeleteCategories",
+		Query:         DeleteCategoriesDocument,
+		Variables: map[string]interface{}{
+			"delFilter": delFilter,
+		},
+	}
+
+	var resp DeleteCategories
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) DeleteCategoriesWithResponse(ctx context.Context, delFilter CategoryFilter, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "DeleteCategories",
+		Query:         DeleteCategoriesDocument,
+		Variables: map[string]interface{}{
+			"delFilter": delFilter,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetComponentByIDDocument = `query GetComponentByID ($id: ID!) {
+	getComponent(id: $id) {
+		... ComponentFragment
+	}
+}
+fragment OuterDimensionsFragment on OuterDimensions {
+	__typename
+	... on BoundingBoxDimensions {
+		... BoundingBoxDimensionsFragment
+	}
+	... on OpenSCADDimensions {
+		... OpenSCADDimensionsFragment
+	}
+}
+fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
+	id
+	height
+	width
+	depth
+}
+fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
+	id
+	openscad
+	unit
+}
+fragment KeyValueFragment on KeyValue {
+	id
+	key
+	value {
+		... on StringV {
+			id
+			stringValue: value
+		}
+		... on FloatV {
+			id
+			floatValue: value
+		}
+	}
+}
+fragment ComponentFragment on Component {
+	id
+	xid
+	name
+	description
+	version
+	createdAt
+	releases {
+		id
+		name
+	}
+	isLatest
+	repository {
+		id
+		name
+	}
+	license {
+		id
+		xid
+	}
+	additionalLicenses {
+		id
+		xid
+	}
+	licensor {
+		... UserOrGroupBasicFragment
+	}
+	documentationLanguage
+	technologyReadinessLevel
+	documentationReadinessLevel
+	attestation
+	publication
+	compliesWith {
+		id
+		name
+	}
+	cpcPatentClass
+	tsdc {
+		id
+		name
+	}
+	components {
+		id
+		name
+	}
+	software {
+		id
+	}
+	image {
+		id
+		path
+	}
+	readme {
+		id
+		path
+	}
+	contributionGuide {
+		id
+		path
+	}
+	bom {
+		id
+		path
+	}
+	manufacturingInstructions {
+		id
+		path
+	}
+	userManual {
+		id
+		path
+	}
+	product {
+		id
+		name
+	}
+	usedIn {
+		id
+		name
+	}
+	source {
+		id
+		path
+	}
+	export {
+		id
+		path
+	}
+	auxiliary {
+		id
+		path
+	}
+	organization {
+		id
+		name
+	}
+	mass
+	outerDimensions {
+		... OuterDimensionsFragment
+	}
+	material {
+		id
+		name
+	}
+	manufacturingProcess {
+		id
+		name
+	}
+	productionMetadata {
+		... KeyValueFragment
+	}
+}
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
+}
+`
+
+func (c *Client) GetComponentByID(ctx context.Context, id string) (*GetComponentByID, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetComponentByID",
+		Query:         GetComponentByIDDocument,
+		Variables: map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	var resp GetComponentByID
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetComponentByIDWithResponse(ctx context.Context, id string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetComponentByID",
+		Query:         GetComponentByIDDocument,
+		Variables: map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetComponentByXidDocument = `query GetComponentByXid ($xid: String!) {
+	getComponent(xid: $xid) {
+		... ComponentFragment
+	}
+}
+fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
+	id
+	openscad
+	unit
+}
+fragment KeyValueFragment on KeyValue {
+	id
+	key
+	value {
+		... on StringV {
+			id
+			stringValue: value
+		}
+		... on FloatV {
+			id
+			floatValue: value
+		}
+	}
+}
+fragment ComponentFragment on Component {
+	id
+	xid
+	name
+	description
+	version
+	createdAt
+	releases {
+		id
+		name
+	}
+	isLatest
+	repository {
+		id
+		name
+	}
+	license {
+		id
+		xid
+	}
+	additionalLicenses {
+		id
+		xid
+	}
+	licensor {
+		... UserOrGroupBasicFragment
+	}
+	documentationLanguage
+	technologyReadinessLevel
+	documentationReadinessLevel
+	attestation
+	publication
+	compliesWith {
+		id
+		name
+	}
+	cpcPatentClass
+	tsdc {
+		id
+		name
+	}
+	components {
+		id
+		name
+	}
+	software {
+		id
+	}
+	image {
+		id
+		path
+	}
+	readme {
+		id
+		path
+	}
+	contributionGuide {
+		id
+		path
+	}
+	bom {
+		id
+		path
+	}
+	manufacturingInstructions {
+		id
+		path
+	}
+	userManual {
+		id
+		path
+	}
+	product {
+		id
+		name
+	}
+	usedIn {
+		id
+		name
+	}
+	source {
+		id
+		path
+	}
+	export {
+		id
+		path
+	}
+	auxiliary {
+		id
+		path
+	}
+	organization {
+		id
+		name
+	}
+	mass
+	outerDimensions {
+		... OuterDimensionsFragment
+	}
+	material {
+		id
+		name
+	}
+	manufacturingProcess {
+		id
+		name
+	}
+	productionMetadata {
+		... KeyValueFragment
+	}
+}
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
+}
+fragment OuterDimensionsFragment on OuterDimensions {
+	__typename
+	... on BoundingBoxDimensions {
+		... BoundingBoxDimensionsFragment
+	}
+	... on OpenSCADDimensions {
+		... OpenSCADDimensionsFragment
+	}
+}
+fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
+	id
+	height
+	width
+	depth
+}
+`
+
+func (c *Client) GetComponentByXid(ctx context.Context, xid string) (*GetComponentByXid, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetComponentByXid",
+		Query:         GetComponentByXidDocument,
+		Variables: map[string]interface{}{
+			"xid": xid,
+		},
+	}
+
+	var resp GetComponentByXid
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetComponentByXidWithResponse(ctx context.Context, xid string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetComponentByXid",
+		Query:         GetComponentByXidDocument,
+		Variables: map[string]interface{}{
+			"xid": xid,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetComponentIDDocument = `query GetComponentID ($xid: String!) {
+	getComponent(xid: $xid) {
+		id
+	}
+}
+`
+
+func (c *Client) GetComponentID(ctx context.Context, xid string) (*GetComponentID, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetComponentID",
+		Query:         GetComponentIDDocument,
+		Variables: map[string]interface{}{
+			"xid": xid,
+		},
+	}
+
+	var resp GetComponentID
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetComponentIDWithResponse(ctx context.Context, xid string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetComponentID",
+		Query:         GetComponentIDDocument,
+		Variables: map[string]interface{}{
+			"xid": xid,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetComponentsDocument = `query GetComponents ($getFilter: ComponentFilter, $order: ComponentOrder, $first: Int, $offset: Int) {
+	queryComponent(filter: $getFilter, order: $order, first: $first, offset: $offset) {
+		... ComponentFragment
+	}
+	aggregateComponent(filter: $getFilter) {
+		count
+	}
+}
+fragment ComponentFragment on Component {
+	id
+	xid
+	name
+	description
+	version
+	createdAt
+	releases {
+		id
+		name
+	}
+	isLatest
+	repository {
+		id
+		name
+	}
+	license {
+		id
+		xid
+	}
+	additionalLicenses {
+		id
+		xid
+	}
+	licensor {
+		... UserOrGroupBasicFragment
+	}
+	documentationLanguage
+	technologyReadinessLevel
+	documentationReadinessLevel
+	attestation
+	publication
+	compliesWith {
+		id
+		name
+	}
+	cpcPatentClass
+	tsdc {
+		id
+		name
+	}
+	components {
+		id
+		name
+	}
+	software {
+		id
+	}
+	image {
+		id
+		path
+	}
+	readme {
+		id
+		path
+	}
+	contributionGuide {
+		id
+		path
+	}
+	bom {
+		id
+		path
+	}
+	manufacturingInstructions {
+		id
+		path
+	}
+	userManual {
+		id
+		path
+	}
+	product {
+		id
+		name
+	}
+	usedIn {
+		id
+		name
+	}
+	source {
+		id
+		path
+	}
+	export {
+		id
+		path
+	}
+	auxiliary {
+		id
+		path
+	}
+	organization {
+		id
+		name
+	}
+	mass
+	outerDimensions {
+		... OuterDimensionsFragment
+	}
+	material {
+		id
+		name
+	}
+	manufacturingProcess {
+		id
+		name
+	}
+	productionMetadata {
+		... KeyValueFragment
+	}
+}
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
+}
+fragment OuterDimensionsFragment on OuterDimensions {
+	__typename
+	... on BoundingBoxDimensions {
+		... BoundingBoxDimensionsFragment
+	}
+	... on OpenSCADDimensions {
+		... OpenSCADDimensionsFragment
+	}
+}
+fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
+	id
+	height
+	width
+	depth
+}
+fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
+	id
+	openscad
+	unit
+}
+fragment KeyValueFragment on KeyValue {
+	id
+	key
+	value {
+		... on StringV {
+			id
+			stringValue: value
+		}
+		... on FloatV {
+			id
+			floatValue: value
+		}
+	}
+}
+`
+
+func (c *Client) GetComponents(ctx context.Context, getFilter *ComponentFilter, order *ComponentOrder, first *int64, offset *int64) (*GetComponents, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetComponents",
+		Query:         GetComponentsDocument,
+		Variables: map[string]interface{}{
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
+		},
+	}
+
+	var resp GetComponents
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetComponentsWithResponse(ctx context.Context, getFilter *ComponentFilter, order *ComponentOrder, first *int64, offset *int64, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetComponents",
+		Query:         GetComponentsDocument,
+		Variables: map[string]interface{}{
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const CreateComponentsDocument = `mutation CreateComponents ($createInput: [AddComponentInput!]!) {
+	addComponent(input: $createInput, upsert: true) {
+		component {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) CreateComponents(ctx context.Context, createInput []*AddComponentInput) (*CreateComponents, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "CreateComponents",
+		Query:         CreateComponentsDocument,
+		Variables: map[string]interface{}{
+			"createInput": createInput,
+		},
+	}
+
+	var resp CreateComponents
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) CreateComponentsWithResponse(ctx context.Context, createInput []*AddComponentInput, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "CreateComponents",
+		Query:         CreateComponentsDocument,
+		Variables: map[string]interface{}{
+			"createInput": createInput,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const UpdateComponentsDocument = `mutation UpdateComponents ($updateInput: UpdateComponentInput!) {
+	updateComponent(input: $updateInput) {
+		component {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) UpdateComponents(ctx context.Context, updateInput UpdateComponentInput) (*UpdateComponents, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "UpdateComponents",
+		Query:         UpdateComponentsDocument,
+		Variables: map[string]interface{}{
+			"updateInput": updateInput,
+		},
+	}
+
+	var resp UpdateComponents
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) UpdateComponentsWithResponse(ctx context.Context, updateInput UpdateComponentInput, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "UpdateComponents",
+		Query:         UpdateComponentsDocument,
+		Variables: map[string]interface{}{
+			"updateInput": updateInput,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const DeleteComponentsDocument = `mutation DeleteComponents ($delFilter: ComponentFilter!) {
+	deleteComponent(filter: $delFilter) {
+		component {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) DeleteComponents(ctx context.Context, delFilter ComponentFilter) (*DeleteComponents, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "DeleteComponents",
+		Query:         DeleteComponentsDocument,
+		Variables: map[string]interface{}{
+			"delFilter": delFilter,
+		},
+	}
+
+	var resp DeleteComponents
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) DeleteComponentsWithResponse(ctx context.Context, delFilter ComponentFilter, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "DeleteComponents",
+		Query:         DeleteComponentsDocument,
+		Variables: map[string]interface{}{
+			"delFilter": delFilter,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetDatabaseByIDDocument = `query GetDatabaseByID ($id: ID!) {
+	getDatabase(id: $id) {
+		... DatabaseFragment
+	}
+}
+fragment DatabaseFragment on Database {
+	id
+	version
+}
+`
+
+func (c *Client) GetDatabaseByID(ctx context.Context, id string) (*GetDatabaseByID, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetDatabaseByID",
+		Query:         GetDatabaseByIDDocument,
+		Variables: map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	var resp GetDatabaseByID
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetDatabaseByIDWithResponse(ctx context.Context, id string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetDatabaseByID",
+		Query:         GetDatabaseByIDDocument,
+		Variables: map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetDatabasesDocument = `query GetDatabases ($getFilter: DatabaseFilter, $order: DatabaseOrder, $first: Int, $offset: Int) {
+	queryDatabase(filter: $getFilter, order: $order, first: $first, offset: $offset) {
+		... DatabaseFragment
+	}
+	aggregateDatabase(filter: $getFilter) {
+		count
+	}
+}
+fragment DatabaseFragment on Database {
+	id
+	version
+}
+`
+
+func (c *Client) GetDatabases(ctx context.Context, getFilter *DatabaseFilter, order *DatabaseOrder, first *int64, offset *int64) (*GetDatabases, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetDatabases",
+		Query:         GetDatabasesDocument,
+		Variables: map[string]interface{}{
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
+		},
+	}
+
+	var resp GetDatabases
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetDatabasesWithResponse(ctx context.Context, getFilter *DatabaseFilter, order *DatabaseOrder, first *int64, offset *int64, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetDatabases",
+		Query:         GetDatabasesDocument,
+		Variables: map[string]interface{}{
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const CreateDatabasesDocument = `mutation CreateDatabases ($createInput: [AddDatabaseInput!]!) {
+	addDatabase(input: $createInput) {
+		database {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) CreateDatabases(ctx context.Context, createInput []*AddDatabaseInput) (*CreateDatabases, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "CreateDatabases",
+		Query:         CreateDatabasesDocument,
+		Variables: map[string]interface{}{
+			"createInput": createInput,
+		},
+	}
+
+	var resp CreateDatabases
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) CreateDatabasesWithResponse(ctx context.Context, createInput []*AddDatabaseInput, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "CreateDatabases",
+		Query:         CreateDatabasesDocument,
+		Variables: map[string]interface{}{
+			"createInput": createInput,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const UpdateDatabasesDocument = `mutation UpdateDatabases ($updateInput: UpdateDatabaseInput!) {
+	updateDatabase(input: $updateInput) {
+		database {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) UpdateDatabases(ctx context.Context, updateInput UpdateDatabaseInput) (*UpdateDatabases, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "UpdateDatabases",
+		Query:         UpdateDatabasesDocument,
+		Variables: map[string]interface{}{
+			"updateInput": updateInput,
+		},
+	}
+
+	var resp UpdateDatabases
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) UpdateDatabasesWithResponse(ctx context.Context, updateInput UpdateDatabaseInput, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "UpdateDatabases",
+		Query:         UpdateDatabasesDocument,
+		Variables: map[string]interface{}{
+			"updateInput": updateInput,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const DeleteDatabasesDocument = `mutation DeleteDatabases ($delFilter: DatabaseFilter!) {
+	deleteDatabase(filter: $delFilter) {
+		database {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) DeleteDatabases(ctx context.Context, delFilter DatabaseFilter) (*DeleteDatabases, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "DeleteDatabases",
+		Query:         DeleteDatabasesDocument,
+		Variables: map[string]interface{}{
+			"delFilter": delFilter,
+		},
+	}
+
+	var resp DeleteDatabases
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) DeleteDatabasesWithResponse(ctx context.Context, delFilter DatabaseFilter, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "DeleteDatabases",
+		Query:         DeleteDatabasesDocument,
+		Variables: map[string]interface{}{
+			"delFilter": delFilter,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetFileByIDDocument = `query GetFileByID ($id: ID!) {
+	getFile(id: $id) {
+		... FileFragment
+	}
+}
+fragment FileFragment on File {
+	... CrawlerMetaFragment
+	id
+	name
+	path
+	mimeType
+	url
+	createdAt
+}
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
+}
+`
+
+func (c *Client) GetFileByID(ctx context.Context, id string) (*GetFileByID, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetFileByID",
+		Query:         GetFileByIDDocument,
+		Variables: map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	var resp GetFileByID
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetFileByIDWithResponse(ctx context.Context, id string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetFileByID",
+		Query:         GetFileByIDDocument,
+		Variables: map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetFileByXidDocument = `query GetFileByXid ($xid: String!) {
+	getFile(xid: $xid) {
+		... FileFragment
+	}
+}
+fragment FileFragment on File {
+	... CrawlerMetaFragment
+	id
+	name
+	path
+	mimeType
+	url
+	createdAt
+}
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
+}
+`
+
+func (c *Client) GetFileByXid(ctx context.Context, xid string) (*GetFileByXid, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetFileByXid",
+		Query:         GetFileByXidDocument,
+		Variables: map[string]interface{}{
+			"xid": xid,
+		},
+	}
+
+	var resp GetFileByXid
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetFileByXidWithResponse(ctx context.Context, xid string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetFileByXid",
+		Query:         GetFileByXidDocument,
+		Variables: map[string]interface{}{
+			"xid": xid,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetFileIDDocument = `query GetFileID ($xid: String!) {
+	getFile(xid: $xid) {
+		id
+	}
+}
+`
+
+func (c *Client) GetFileID(ctx context.Context, xid string) (*GetFileID, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetFileID",
+		Query:         GetFileIDDocument,
+		Variables: map[string]interface{}{
+			"xid": xid,
+		},
+	}
+
+	var resp GetFileID
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetFileIDWithResponse(ctx context.Context, xid string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetFileID",
+		Query:         GetFileIDDocument,
+		Variables: map[string]interface{}{
+			"xid": xid,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetFilesDocument = `query GetFiles ($getFilter: FileFilter, $order: FileOrder, $first: Int, $offset: Int) {
+	queryFile(filter: $getFilter, order: $order, first: $first, offset: $offset) {
+		... FileFragment
+	}
+	aggregateFile(filter: $getFilter) {
+		count
+	}
+}
+fragment FileFragment on File {
+	... CrawlerMetaFragment
+	id
+	name
+	path
+	mimeType
+	url
+	createdAt
+}
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
+}
+`
+
+func (c *Client) GetFiles(ctx context.Context, getFilter *FileFilter, order *FileOrder, first *int64, offset *int64) (*GetFiles, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetFiles",
+		Query:         GetFilesDocument,
+		Variables: map[string]interface{}{
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
+		},
+	}
+
+	var resp GetFiles
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetFilesWithResponse(ctx context.Context, getFilter *FileFilter, order *FileOrder, first *int64, offset *int64, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetFiles",
+		Query:         GetFilesDocument,
+		Variables: map[string]interface{}{
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const CreateFilesDocument = `mutation CreateFiles ($createInput: [AddFileInput!]!) {
+	addFile(input: $createInput) {
+		file {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) CreateFiles(ctx context.Context, createInput []*AddFileInput) (*CreateFiles, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "CreateFiles",
+		Query:         CreateFilesDocument,
+		Variables: map[string]interface{}{
+			"createInput": createInput,
+		},
+	}
+
+	var resp CreateFiles
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) CreateFilesWithResponse(ctx context.Context, createInput []*AddFileInput, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "CreateFiles",
+		Query:         CreateFilesDocument,
+		Variables: map[string]interface{}{
+			"createInput": createInput,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const UpdateFilesDocument = `mutation UpdateFiles ($updateInput: UpdateFileInput!) {
+	updateFile(input: $updateInput) {
+		file {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) UpdateFiles(ctx context.Context, updateInput UpdateFileInput) (*UpdateFiles, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "UpdateFiles",
+		Query:         UpdateFilesDocument,
+		Variables: map[string]interface{}{
+			"updateInput": updateInput,
+		},
+	}
+
+	var resp UpdateFiles
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) UpdateFilesWithResponse(ctx context.Context, updateInput UpdateFileInput, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "UpdateFiles",
+		Query:         UpdateFilesDocument,
+		Variables: map[string]interface{}{
+			"updateInput": updateInput,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const DeleteFilesDocument = `mutation DeleteFiles ($delFilter: FileFilter!) {
+	deleteFile(filter: $delFilter) {
+		file {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) DeleteFiles(ctx context.Context, delFilter FileFilter) (*DeleteFiles, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "DeleteFiles",
+		Query:         DeleteFilesDocument,
+		Variables: map[string]interface{}{
+			"delFilter": delFilter,
+		},
+	}
+
+	var resp DeleteFiles
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) DeleteFilesWithResponse(ctx context.Context, delFilter FileFilter, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "DeleteFiles",
+		Query:         DeleteFilesDocument,
+		Variables: map[string]interface{}{
+			"delFilter": delFilter,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetHostByIDDocument = `query GetHostByID ($id: ID!) {
+	getHost(id: $id) {
+		... HostFragment
+	}
+}
+fragment HostFragment on Host {
+	id
+	domain
+	name
+}
+`
+
+func (c *Client) GetHostByID(ctx context.Context, id string) (*GetHostByID, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetHostByID",
+		Query:         GetHostByIDDocument,
+		Variables: map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	var resp GetHostByID
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetHostByIDWithResponse(ctx context.Context, id string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetHostByID",
+		Query:         GetHostByIDDocument,
+		Variables: map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetHostByDomainDocument = `query GetHostByDomain ($domain: String!) {
+	getHost(domain: $domain) {
+		... HostFragment
+	}
+}
+fragment HostFragment on Host {
+	id
+	domain
+	name
+}
+`
+
+func (c *Client) GetHostByDomain(ctx context.Context, domain string) (*GetHostByDomain, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetHostByDomain",
+		Query:         GetHostByDomainDocument,
+		Variables: map[string]interface{}{
+			"domain": domain,
+		},
+	}
+
+	var resp GetHostByDomain
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetHostByDomainWithResponse(ctx context.Context, domain string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetHostByDomain",
+		Query:         GetHostByDomainDocument,
+		Variables: map[string]interface{}{
+			"domain": domain,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetHostIDDocument = `query GetHostID ($domain: String!) {
+	getHost(domain: $domain) {
+		id
+	}
+}
+`
+
+func (c *Client) GetHostID(ctx context.Context, domain string) (*GetHostID, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetHostID",
+		Query:         GetHostIDDocument,
+		Variables: map[string]interface{}{
+			"domain": domain,
+		},
+	}
+
+	var resp GetHostID
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetHostIDWithResponse(ctx context.Context, domain string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetHostID",
+		Query:         GetHostIDDocument,
+		Variables: map[string]interface{}{
+			"domain": domain,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetHostsDocument = `query GetHosts ($getFilter: HostFilter, $order: HostOrder, $first: Int, $offset: Int) {
+	queryHost(filter: $getFilter, order: $order, first: $first, offset: $offset) {
+		... HostFragment
+	}
+	aggregateHost(filter: $getFilter) {
+		count
+	}
+}
+fragment HostFragment on Host {
+	id
+	domain
+	name
+}
+`
+
+func (c *Client) GetHosts(ctx context.Context, getFilter *HostFilter, order *HostOrder, first *int64, offset *int64) (*GetHosts, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetHosts",
+		Query:         GetHostsDocument,
+		Variables: map[string]interface{}{
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
+		},
+	}
+
+	var resp GetHosts
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetHostsWithResponse(ctx context.Context, getFilter *HostFilter, order *HostOrder, first *int64, offset *int64, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetHosts",
+		Query:         GetHostsDocument,
+		Variables: map[string]interface{}{
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const CreateHostsDocument = `mutation CreateHosts ($createInput: [AddHostInput!]!) {
+	addHost(input: $createInput, upsert: true) {
+		host {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) CreateHosts(ctx context.Context, createInput []*AddHostInput) (*CreateHosts, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "CreateHosts",
+		Query:         CreateHostsDocument,
+		Variables: map[string]interface{}{
+			"createInput": createInput,
+		},
+	}
+
+	var resp CreateHosts
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) CreateHostsWithResponse(ctx context.Context, createInput []*AddHostInput, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "CreateHosts",
+		Query:         CreateHostsDocument,
+		Variables: map[string]interface{}{
+			"createInput": createInput,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const UpdateHostsDocument = `mutation UpdateHosts ($updateInput: UpdateHostInput!) {
+	updateHost(input: $updateInput) {
+		host {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) UpdateHosts(ctx context.Context, updateInput UpdateHostInput) (*UpdateHosts, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "UpdateHosts",
+		Query:         UpdateHostsDocument,
+		Variables: map[string]interface{}{
+			"updateInput": updateInput,
+		},
+	}
+
+	var resp UpdateHosts
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) UpdateHostsWithResponse(ctx context.Context, updateInput UpdateHostInput, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "UpdateHosts",
+		Query:         UpdateHostsDocument,
+		Variables: map[string]interface{}{
+			"updateInput": updateInput,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const DeleteHostsDocument = `mutation DeleteHosts ($delFilter: HostFilter!) {
+	deleteHost(filter: $delFilter) {
+		host {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) DeleteHosts(ctx context.Context, delFilter HostFilter) (*DeleteHosts, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "DeleteHosts",
+		Query:         DeleteHostsDocument,
+		Variables: map[string]interface{}{
+			"delFilter": delFilter,
+		},
+	}
+
+	var resp DeleteHosts
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) DeleteHostsWithResponse(ctx context.Context, delFilter HostFilter, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "DeleteHosts",
+		Query:         DeleteHostsDocument,
+		Variables: map[string]interface{}{
+			"delFilter": delFilter,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetStringVByIDDocument = `query GetStringVByID ($id: ID!) {
+	getStringV(id: $id) {
+		... StringVFragment
+	}
+}
+fragment StringVFragment on StringV {
+	id
+	value
+}
+`
+
+func (c *Client) GetStringVByID(ctx context.Context, id string) (*GetStringVByID, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetStringVByID",
+		Query:         GetStringVByIDDocument,
+		Variables: map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	var resp GetStringVByID
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetStringVByIDWithResponse(ctx context.Context, id string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetStringVByID",
+		Query:         GetStringVByIDDocument,
+		Variables: map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetStringVsDocument = `query GetStringVs ($getFilter: StringVFilter, $order: StringVOrder, $first: Int, $offset: Int) {
+	queryStringV(filter: $getFilter, order: $order, first: $first, offset: $offset) {
+		... StringVFragment
+	}
+	aggregateStringV(filter: $getFilter) {
+		count
+	}
+}
+fragment StringVFragment on StringV {
+	id
+	value
+}
+`
+
+func (c *Client) GetStringVs(ctx context.Context, getFilter *StringVFilter, order *StringVOrder, first *int64, offset *int64) (*GetStringVs, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetStringVs",
+		Query:         GetStringVsDocument,
+		Variables: map[string]interface{}{
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
+		},
+	}
+
+	var resp GetStringVs
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetStringVsWithResponse(ctx context.Context, getFilter *StringVFilter, order *StringVOrder, first *int64, offset *int64, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetStringVs",
+		Query:         GetStringVsDocument,
+		Variables: map[string]interface{}{
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const CreateStringVsDocument = `mutation CreateStringVs ($createInput: [AddStringVInput!]!) {
+	addStringV(input: $createInput) {
+		stringV {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) CreateStringVs(ctx context.Context, createInput []*AddStringVInput) (*CreateStringVs, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "CreateStringVs",
+		Query:         CreateStringVsDocument,
+		Variables: map[string]interface{}{
+			"createInput": createInput,
+		},
+	}
+
+	var resp CreateStringVs
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) CreateStringVsWithResponse(ctx context.Context, createInput []*AddStringVInput, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "CreateStringVs",
+		Query:         CreateStringVsDocument,
+		Variables: map[string]interface{}{
+			"createInput": createInput,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const UpdateStringVsDocument = `mutation UpdateStringVs ($updateInput: UpdateStringVInput!) {
+	updateStringV(input: $updateInput) {
+		stringV {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) UpdateStringVs(ctx context.Context, updateInput UpdateStringVInput) (*UpdateStringVs, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "UpdateStringVs",
+		Query:         UpdateStringVsDocument,
+		Variables: map[string]interface{}{
+			"updateInput": updateInput,
+		},
+	}
+
+	var resp UpdateStringVs
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) UpdateStringVsWithResponse(ctx context.Context, updateInput UpdateStringVInput, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "UpdateStringVs",
+		Query:         UpdateStringVsDocument,
+		Variables: map[string]interface{}{
+			"updateInput": updateInput,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const DeleteStringVsDocument = `mutation DeleteStringVs ($delFilter: StringVFilter!) {
+	deleteStringV(filter: $delFilter) {
+		stringV {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) DeleteStringVs(ctx context.Context, delFilter StringVFilter) (*DeleteStringVs, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "DeleteStringVs",
+		Query:         DeleteStringVsDocument,
+		Variables: map[string]interface{}{
+			"delFilter": delFilter,
+		},
+	}
+
+	var resp DeleteStringVs
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) DeleteStringVsWithResponse(ctx context.Context, delFilter StringVFilter, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "DeleteStringVs",
+		Query:         DeleteStringVsDocument,
+		Variables: map[string]interface{}{
+			"delFilter": delFilter,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetFloatVByIDDocument = `query GetFloatVByID ($id: ID!) {
+	getFloatV(id: $id) {
+		... FloatVFragment
+	}
+}
+fragment FloatVFragment on FloatV {
+	id
+	value
+}
+`
+
+func (c *Client) GetFloatVByID(ctx context.Context, id string) (*GetFloatVByID, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetFloatVByID",
+		Query:         GetFloatVByIDDocument,
+		Variables: map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	var resp GetFloatVByID
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetFloatVByIDWithResponse(ctx context.Context, id string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetFloatVByID",
+		Query:         GetFloatVByIDDocument,
+		Variables: map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetFloatVsDocument = `query GetFloatVs ($getFilter: FloatVFilter, $order: FloatVOrder, $first: Int, $offset: Int) {
+	queryFloatV(filter: $getFilter, order: $order, first: $first, offset: $offset) {
+		... FloatVFragment
+	}
+	aggregateFloatV(filter: $getFilter) {
+		count
+	}
+}
+fragment FloatVFragment on FloatV {
+	id
+	value
+}
+`
+
+func (c *Client) GetFloatVs(ctx context.Context, getFilter *FloatVFilter, order *FloatVOrder, first *int64, offset *int64) (*GetFloatVs, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetFloatVs",
+		Query:         GetFloatVsDocument,
+		Variables: map[string]interface{}{
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
+		},
+	}
+
+	var resp GetFloatVs
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetFloatVsWithResponse(ctx context.Context, getFilter *FloatVFilter, order *FloatVOrder, first *int64, offset *int64, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetFloatVs",
+		Query:         GetFloatVsDocument,
+		Variables: map[string]interface{}{
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const CreateFloatVsDocument = `mutation CreateFloatVs ($createInput: [AddFloatVInput!]!) {
+	addFloatV(input: $createInput) {
+		floatV {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) CreateFloatVs(ctx context.Context, createInput []*AddFloatVInput) (*CreateFloatVs, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "CreateFloatVs",
+		Query:         CreateFloatVsDocument,
+		Variables: map[string]interface{}{
+			"createInput": createInput,
+		},
+	}
+
+	var resp CreateFloatVs
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) CreateFloatVsWithResponse(ctx context.Context, createInput []*AddFloatVInput, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "CreateFloatVs",
+		Query:         CreateFloatVsDocument,
+		Variables: map[string]interface{}{
+			"createInput": createInput,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const UpdateFloatVsDocument = `mutation UpdateFloatVs ($updateInput: UpdateFloatVInput!) {
+	updateFloatV(input: $updateInput) {
+		floatV {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) UpdateFloatVs(ctx context.Context, updateInput UpdateFloatVInput) (*UpdateFloatVs, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "UpdateFloatVs",
+		Query:         UpdateFloatVsDocument,
+		Variables: map[string]interface{}{
+			"updateInput": updateInput,
+		},
+	}
+
+	var resp UpdateFloatVs
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) UpdateFloatVsWithResponse(ctx context.Context, updateInput UpdateFloatVInput, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "UpdateFloatVs",
+		Query:         UpdateFloatVsDocument,
+		Variables: map[string]interface{}{
+			"updateInput": updateInput,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const DeleteFloatVsDocument = `mutation DeleteFloatVs ($delFilter: FloatVFilter!) {
+	deleteFloatV(filter: $delFilter) {
+		floatV {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) DeleteFloatVs(ctx context.Context, delFilter FloatVFilter) (*DeleteFloatVs, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "DeleteFloatVs",
+		Query:         DeleteFloatVsDocument,
+		Variables: map[string]interface{}{
+			"delFilter": delFilter,
+		},
+	}
+
+	var resp DeleteFloatVs
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) DeleteFloatVsWithResponse(ctx context.Context, delFilter FloatVFilter, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "DeleteFloatVs",
+		Query:         DeleteFloatVsDocument,
+		Variables: map[string]interface{}{
+			"delFilter": delFilter,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetKeyValueByIDDocument = `query GetKeyValueByID ($id: ID!) {
+	getKeyValue(id: $id) {
+		... KeyValueFragment
+	}
+}
+fragment KeyValueFragment on KeyValue {
+	id
+	key
+	value {
+		... on StringV {
+			id
+			stringValue: value
+		}
+		... on FloatV {
+			id
+			floatValue: value
+		}
+	}
+}
+`
+
+func (c *Client) GetKeyValueByID(ctx context.Context, id string) (*GetKeyValueByID, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetKeyValueByID",
+		Query:         GetKeyValueByIDDocument,
+		Variables: map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	var resp GetKeyValueByID
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetKeyValueByIDWithResponse(ctx context.Context, id string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetKeyValueByID",
+		Query:         GetKeyValueByIDDocument,
+		Variables: map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetKeyValuesDocument = `query GetKeyValues ($getFilter: KeyValueFilter, $order: KeyValueOrder, $first: Int, $offset: Int) {
+	queryKeyValue(filter: $getFilter, order: $order, first: $first, offset: $offset) {
+		... KeyValueFragment
+	}
+	aggregateKeyValue(filter: $getFilter) {
+		count
+	}
+}
+fragment KeyValueFragment on KeyValue {
+	id
+	key
+	value {
+		... on StringV {
+			id
+			stringValue: value
+		}
+		... on FloatV {
+			id
+			floatValue: value
+		}
+	}
+}
+`
+
+func (c *Client) GetKeyValues(ctx context.Context, getFilter *KeyValueFilter, order *KeyValueOrder, first *int64, offset *int64) (*GetKeyValues, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetKeyValues",
+		Query:         GetKeyValuesDocument,
+		Variables: map[string]interface{}{
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
+		},
+	}
+
+	var resp GetKeyValues
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetKeyValuesWithResponse(ctx context.Context, getFilter *KeyValueFilter, order *KeyValueOrder, first *int64, offset *int64, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetKeyValues",
+		Query:         GetKeyValuesDocument,
+		Variables: map[string]interface{}{
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const CreateKeyValuesDocument = `mutation CreateKeyValues ($createInput: [AddKeyValueInput!]!) {
+	addKeyValue(input: $createInput) {
+		keyValue {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) CreateKeyValues(ctx context.Context, createInput []*AddKeyValueInput) (*CreateKeyValues, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "CreateKeyValues",
+		Query:         CreateKeyValuesDocument,
+		Variables: map[string]interface{}{
+			"createInput": createInput,
+		},
+	}
+
+	var resp CreateKeyValues
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) CreateKeyValuesWithResponse(ctx context.Context, createInput []*AddKeyValueInput, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "CreateKeyValues",
+		Query:         CreateKeyValuesDocument,
+		Variables: map[string]interface{}{
+			"createInput": createInput,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const UpdateKeyValuesDocument = `mutation UpdateKeyValues ($updateInput: UpdateKeyValueInput!) {
+	updateKeyValue(input: $updateInput) {
+		keyValue {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) UpdateKeyValues(ctx context.Context, updateInput UpdateKeyValueInput) (*UpdateKeyValues, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "UpdateKeyValues",
+		Query:         UpdateKeyValuesDocument,
+		Variables: map[string]interface{}{
+			"updateInput": updateInput,
+		},
+	}
+
+	var resp UpdateKeyValues
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) UpdateKeyValuesWithResponse(ctx context.Context, updateInput UpdateKeyValueInput, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "UpdateKeyValues",
+		Query:         UpdateKeyValuesDocument,
+		Variables: map[string]interface{}{
+			"updateInput": updateInput,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const DeleteKeyValuesDocument = `mutation DeleteKeyValues ($delFilter: KeyValueFilter!) {
+	deleteKeyValue(filter: $delFilter) {
+		keyValue {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) DeleteKeyValues(ctx context.Context, delFilter KeyValueFilter) (*DeleteKeyValues, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "DeleteKeyValues",
+		Query:         DeleteKeyValuesDocument,
+		Variables: map[string]interface{}{
+			"delFilter": delFilter,
+		},
+	}
+
+	var resp DeleteKeyValues
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) DeleteKeyValuesWithResponse(ctx context.Context, delFilter KeyValueFilter, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "DeleteKeyValues",
+		Query:         DeleteKeyValuesDocument,
+		Variables: map[string]interface{}{
+			"delFilter": delFilter,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetLicenseByIDDocument = `query GetLicenseByID ($id: ID!) {
+	getLicense(id: $id) {
+		... LicenseFragment
+	}
+}
+fragment LicenseFragment on License {
+	id
+	xid
+	name
+	text
+	textHTML
+	referenceURL
+	detailsURL
+	type
+	isSpdx
+	isDeprecated
+	isOsiApproved
+	isFsfLibre
+	isBlocked
+}
+`
+
+func (c *Client) GetLicenseByID(ctx context.Context, id string) (*GetLicenseByID, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetLicenseByID",
+		Query:         GetLicenseByIDDocument,
+		Variables: map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	var resp GetLicenseByID
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetLicenseByIDWithResponse(ctx context.Context, id string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetLicenseByID",
+		Query:         GetLicenseByIDDocument,
+		Variables: map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetLicenseByXidDocument = `query GetLicenseByXid ($xid: String!) {
+	getLicense(xid: $xid) {
+		... LicenseFragment
+	}
+}
+fragment LicenseFragment on License {
+	id
+	xid
+	name
+	text
+	textHTML
+	referenceURL
+	detailsURL
+	type
+	isSpdx
+	isDeprecated
+	isOsiApproved
+	isFsfLibre
+	isBlocked
+}
+`
+
+func (c *Client) GetLicenseByXid(ctx context.Context, xid string) (*GetLicenseByXid, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetLicenseByXid",
+		Query:         GetLicenseByXidDocument,
+		Variables: map[string]interface{}{
+			"xid": xid,
+		},
+	}
+
+	var resp GetLicenseByXid
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetLicenseByXidWithResponse(ctx context.Context, xid string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetLicenseByXid",
+		Query:         GetLicenseByXidDocument,
+		Variables: map[string]interface{}{
+			"xid": xid,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetLicenseIDDocument = `query GetLicenseID ($xid: String!) {
+	getLicense(xid: $xid) {
+		id
+	}
+}
+`
+
+func (c *Client) GetLicenseID(ctx context.Context, xid string) (*GetLicenseID, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetLicenseID",
+		Query:         GetLicenseIDDocument,
+		Variables: map[string]interface{}{
+			"xid": xid,
+		},
+	}
+
+	var resp GetLicenseID
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetLicenseIDWithResponse(ctx context.Context, xid string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetLicenseID",
+		Query:         GetLicenseIDDocument,
+		Variables: map[string]interface{}{
+			"xid": xid,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetLicensesDocument = `query GetLicenses ($getFilter: LicenseFilter, $order: LicenseOrder, $first: Int, $offset: Int) {
+	queryLicense(filter: $getFilter, order: $order, first: $first, offset: $offset) {
+		... LicenseFragment
+	}
+	aggregateLicense(filter: $getFilter) {
+		count
+	}
+}
+fragment LicenseFragment on License {
+	id
+	xid
+	name
+	text
+	textHTML
+	referenceURL
+	detailsURL
+	type
+	isSpdx
+	isDeprecated
+	isOsiApproved
+	isFsfLibre
+	isBlocked
+}
+`
+
+func (c *Client) GetLicenses(ctx context.Context, getFilter *LicenseFilter, order *LicenseOrder, first *int64, offset *int64) (*GetLicenses, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetLicenses",
+		Query:         GetLicensesDocument,
+		Variables: map[string]interface{}{
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
+		},
+	}
+
+	var resp GetLicenses
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetLicensesWithResponse(ctx context.Context, getFilter *LicenseFilter, order *LicenseOrder, first *int64, offset *int64, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetLicenses",
+		Query:         GetLicensesDocument,
+		Variables: map[string]interface{}{
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetAllLicensesBasicDocument = `query GetAllLicensesBasic {
+	queryLicense {
+		... LicenseFragmentBasic
+	}
+}
+fragment LicenseFragmentBasic on License {
+	id
+	xid
+	name
+	isSpdx
+	isDeprecated
+	isOsiApproved
+	isFsfLibre
+	isBlocked
+}
+`
+
+func (c *Client) GetAllLicensesBasic(ctx context.Context) (*GetAllLicensesBasic, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetAllLicensesBasic",
+		Query:         GetAllLicensesBasicDocument,
+		Variables:     map[string]interface{}{},
+	}
+
+	var resp GetAllLicensesBasic
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetAllLicensesBasicWithResponse(ctx context.Context, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetAllLicensesBasic",
+		Query:         GetAllLicensesBasicDocument,
+		Variables:     map[string]interface{}{},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const CreateLicensesDocument = `mutation CreateLicenses ($createInput: [AddLicenseInput!]!) {
+	addLicense(input: $createInput, upsert: true) {
+		license {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) CreateLicenses(ctx context.Context, createInput []*AddLicenseInput) (*CreateLicenses, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "CreateLicenses",
+		Query:         CreateLicensesDocument,
+		Variables: map[string]interface{}{
+			"createInput": createInput,
+		},
+	}
+
+	var resp CreateLicenses
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) CreateLicensesWithResponse(ctx context.Context, createInput []*AddLicenseInput, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "CreateLicenses",
+		Query:         CreateLicensesDocument,
+		Variables: map[string]interface{}{
+			"createInput": createInput,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const UpdateLicensesDocument = `mutation UpdateLicenses ($updateInput: UpdateLicenseInput!) {
+	updateLicense(input: $updateInput) {
+		license {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) UpdateLicenses(ctx context.Context, updateInput UpdateLicenseInput) (*UpdateLicenses, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "UpdateLicenses",
+		Query:         UpdateLicensesDocument,
+		Variables: map[string]interface{}{
+			"updateInput": updateInput,
+		},
+	}
+
+	var resp UpdateLicenses
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) UpdateLicensesWithResponse(ctx context.Context, updateInput UpdateLicenseInput, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "UpdateLicenses",
+		Query:         UpdateLicensesDocument,
+		Variables: map[string]interface{}{
+			"updateInput": updateInput,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const DeleteLicensesDocument = `mutation DeleteLicenses ($delFilter: LicenseFilter!) {
+	deleteLicense(filter: $delFilter) {
+		license {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) DeleteLicenses(ctx context.Context, delFilter LicenseFilter) (*DeleteLicenses, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "DeleteLicenses",
+		Query:         DeleteLicensesDocument,
+		Variables: map[string]interface{}{
+			"delFilter": delFilter,
+		},
+	}
+
+	var resp DeleteLicenses
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) DeleteLicensesWithResponse(ctx context.Context, delFilter LicenseFilter, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "DeleteLicenses",
+		Query:         DeleteLicensesDocument,
+		Variables: map[string]interface{}{
+			"delFilter": delFilter,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetManufacturingProcessByIDDocument = `query GetManufacturingProcessByID ($id: ID!) {
+	getManufacturingProcess(id: $id) {
+		... ManufacturingProcessFragment
+	}
+}
+fragment ManufacturingProcessFragment on ManufacturingProcess {
+	id
+	name
+	description
+}
+`
+
+func (c *Client) GetManufacturingProcessByID(ctx context.Context, id string) (*GetManufacturingProcessByID, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetManufacturingProcessByID",
+		Query:         GetManufacturingProcessByIDDocument,
+		Variables: map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	var resp GetManufacturingProcessByID
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetManufacturingProcessByIDWithResponse(ctx context.Context, id string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetManufacturingProcessByID",
+		Query:         GetManufacturingProcessByIDDocument,
+		Variables: map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetManufacturingProcessesDocument = `query GetManufacturingProcesses ($getFilter: ManufacturingProcessFilter, $order: ManufacturingProcessOrder, $first: Int, $offset: Int) {
+	queryManufacturingProcess(filter: $getFilter, order: $order, first: $first, offset: $offset) {
+		... ManufacturingProcessFragment
+	}
+	aggregateManufacturingProcess(filter: $getFilter) {
+		count
+	}
+}
+fragment ManufacturingProcessFragment on ManufacturingProcess {
+	id
+	name
+	description
+}
+`
+
+func (c *Client) GetManufacturingProcesses(ctx context.Context, getFilter *ManufacturingProcessFilter, order *ManufacturingProcessOrder, first *int64, offset *int64) (*GetManufacturingProcesses, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetManufacturingProcesses",
+		Query:         GetManufacturingProcessesDocument,
+		Variables: map[string]interface{}{
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
+		},
+	}
+
+	var resp GetManufacturingProcesses
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetManufacturingProcessesWithResponse(ctx context.Context, getFilter *ManufacturingProcessFilter, order *ManufacturingProcessOrder, first *int64, offset *int64, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetManufacturingProcesses",
+		Query:         GetManufacturingProcessesDocument,
+		Variables: map[string]interface{}{
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const CreateManufacturingProcessesDocument = `mutation CreateManufacturingProcesses ($createInput: [AddManufacturingProcessInput!]!) {
+	addManufacturingProcess(input: $createInput) {
+		manufacturingProcess {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) CreateManufacturingProcesses(ctx context.Context, createInput []*AddManufacturingProcessInput) (*CreateManufacturingProcesses, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "CreateManufacturingProcesses",
+		Query:         CreateManufacturingProcessesDocument,
+		Variables: map[string]interface{}{
+			"createInput": createInput,
+		},
+	}
+
+	var resp CreateManufacturingProcesses
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) CreateManufacturingProcessesWithResponse(ctx context.Context, createInput []*AddManufacturingProcessInput, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "CreateManufacturingProcesses",
+		Query:         CreateManufacturingProcessesDocument,
+		Variables: map[string]interface{}{
+			"createInput": createInput,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const UpdateManufacturingProcessesDocument = `mutation UpdateManufacturingProcesses ($updateInput: UpdateManufacturingProcessInput!) {
+	updateManufacturingProcess(input: $updateInput) {
+		manufacturingProcess {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) UpdateManufacturingProcesses(ctx context.Context, updateInput UpdateManufacturingProcessInput) (*UpdateManufacturingProcesses, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "UpdateManufacturingProcesses",
+		Query:         UpdateManufacturingProcessesDocument,
+		Variables: map[string]interface{}{
+			"updateInput": updateInput,
+		},
+	}
+
+	var resp UpdateManufacturingProcesses
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) UpdateManufacturingProcessesWithResponse(ctx context.Context, updateInput UpdateManufacturingProcessInput, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "UpdateManufacturingProcesses",
+		Query:         UpdateManufacturingProcessesDocument,
+		Variables: map[string]interface{}{
+			"updateInput": updateInput,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const DeleteManufacturingProcessesDocument = `mutation DeleteManufacturingProcesses ($delFilter: ManufacturingProcessFilter!) {
+	deleteManufacturingProcess(filter: $delFilter) {
+		manufacturingProcess {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) DeleteManufacturingProcesses(ctx context.Context, delFilter ManufacturingProcessFilter) (*DeleteManufacturingProcesses, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "DeleteManufacturingProcesses",
+		Query:         DeleteManufacturingProcessesDocument,
+		Variables: map[string]interface{}{
+			"delFilter": delFilter,
+		},
+	}
+
+	var resp DeleteManufacturingProcesses
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) DeleteManufacturingProcessesWithResponse(ctx context.Context, delFilter ManufacturingProcessFilter, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "DeleteManufacturingProcesses",
+		Query:         DeleteManufacturingProcessesDocument,
+		Variables: map[string]interface{}{
+			"delFilter": delFilter,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetMaterialByIDDocument = `query GetMaterialByID ($id: ID!) {
+	getMaterial(id: $id) {
+		... MaterialFragment
+	}
+}
+fragment MaterialFragment on Material {
+	id
+	name
+	description
+}
+`
+
+func (c *Client) GetMaterialByID(ctx context.Context, id string) (*GetMaterialByID, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetMaterialByID",
+		Query:         GetMaterialByIDDocument,
+		Variables: map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	var resp GetMaterialByID
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetMaterialByIDWithResponse(ctx context.Context, id string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetMaterialByID",
+		Query:         GetMaterialByIDDocument,
+		Variables: map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetMaterialsDocument = `query GetMaterials ($getFilter: MaterialFilter, $order: MaterialOrder, $first: Int, $offset: Int) {
+	queryMaterial(filter: $getFilter, order: $order, first: $first, offset: $offset) {
+		... MaterialFragment
+	}
+	aggregateMaterial(filter: $getFilter) {
+		count
+	}
+}
+fragment MaterialFragment on Material {
+	id
+	name
+	description
+}
+`
+
+func (c *Client) GetMaterials(ctx context.Context, getFilter *MaterialFilter, order *MaterialOrder, first *int64, offset *int64) (*GetMaterials, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetMaterials",
+		Query:         GetMaterialsDocument,
+		Variables: map[string]interface{}{
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
+		},
+	}
+
+	var resp GetMaterials
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetMaterialsWithResponse(ctx context.Context, getFilter *MaterialFilter, order *MaterialOrder, first *int64, offset *int64, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetMaterials",
+		Query:         GetMaterialsDocument,
+		Variables: map[string]interface{}{
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const CreateMaterialsDocument = `mutation CreateMaterials ($createInput: [AddMaterialInput!]!) {
+	addMaterial(input: $createInput) {
+		material {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) CreateMaterials(ctx context.Context, createInput []*AddMaterialInput) (*CreateMaterials, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "CreateMaterials",
+		Query:         CreateMaterialsDocument,
+		Variables: map[string]interface{}{
+			"createInput": createInput,
+		},
+	}
+
+	var resp CreateMaterials
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) CreateMaterialsWithResponse(ctx context.Context, createInput []*AddMaterialInput, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "CreateMaterials",
+		Query:         CreateMaterialsDocument,
+		Variables: map[string]interface{}{
+			"createInput": createInput,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const UpdateMaterialsDocument = `mutation UpdateMaterials ($updateInput: UpdateMaterialInput!) {
+	updateMaterial(input: $updateInput) {
+		material {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) UpdateMaterials(ctx context.Context, updateInput UpdateMaterialInput) (*UpdateMaterials, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "UpdateMaterials",
+		Query:         UpdateMaterialsDocument,
+		Variables: map[string]interface{}{
+			"updateInput": updateInput,
+		},
+	}
+
+	var resp UpdateMaterials
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) UpdateMaterialsWithResponse(ctx context.Context, updateInput UpdateMaterialInput, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "UpdateMaterials",
+		Query:         UpdateMaterialsDocument,
+		Variables: map[string]interface{}{
+			"updateInput": updateInput,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const DeleteMaterialsDocument = `mutation DeleteMaterials ($delFilter: MaterialFilter!) {
+	deleteMaterial(filter: $delFilter) {
+		material {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) DeleteMaterials(ctx context.Context, delFilter MaterialFilter) (*DeleteMaterials, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "DeleteMaterials",
+		Query:         DeleteMaterialsDocument,
+		Variables: map[string]interface{}{
+			"delFilter": delFilter,
+		},
+	}
+
+	var resp DeleteMaterials
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) DeleteMaterialsWithResponse(ctx context.Context, delFilter MaterialFilter, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "DeleteMaterials",
+		Query:         DeleteMaterialsDocument,
+		Variables: map[string]interface{}{
+			"delFilter": delFilter,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const CheckNodeDocument = `query CheckNode ($id: ID!) {
+	getNode(id: $id) {
+		... NodeFragment
+	}
+}
+fragment NodeFragment on Node {
+	__typename
+	id
+}
+`
+
+func (c *Client) CheckNode(ctx context.Context, id string) (*CheckNode, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "CheckNode",
+		Query:         CheckNodeDocument,
+		Variables: map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	var resp CheckNode
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) CheckNodeWithResponse(ctx context.Context, id string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "CheckNode",
+		Query:         CheckNodeDocument,
+		Variables: map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetNodeDetailsDocument = `query GetNodeDetails ($id: ID!) {
+	getNode(id: $id) {
+		... NodeFragment
+	}
+}
+fragment NodeFragment on Node {
+	__typename
+	id
+}
+`
+
+func (c *Client) GetNodeDetails(ctx context.Context, id string) (*GetNodeDetails, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetNodeDetails",
+		Query:         GetNodeDetailsDocument,
+		Variables: map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	var resp GetNodeDetails
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetNodeDetailsWithResponse(ctx context.Context, id string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetNodeDetails",
+		Query:         GetNodeDetailsDocument,
+		Variables: map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetNodeByIDDocument = `query GetNodeByID ($id: ID!) {
+	getNode(id: $id) {
+		... NodeFragment
+	}
+}
+fragment NodeFragment on Node {
+	__typename
+	id
+}
+`
+
+func (c *Client) GetNodeByID(ctx context.Context, id string) (*GetNodeByID, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetNodeByID",
+		Query:         GetNodeByIDDocument,
+		Variables: map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	var resp GetNodeByID
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetNodeByIDWithResponse(ctx context.Context, id string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetNodeByID",
+		Query:         GetNodeByIDDocument,
+		Variables: map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetNodesDocument = `query GetNodes ($getFilter: NodeFilter, $first: Int, $offset: Int) {
+	queryNode(filter: $getFilter, first: $first, offset: $offset) {
+		... NodeFragment
+	}
+	aggregateNode(filter: $getFilter) {
+		count
+	}
+}
+fragment NodeFragment on Node {
+	__typename
+	id
+}
+`
+
+func (c *Client) GetNodes(ctx context.Context, getFilter *NodeFilter, first *int64, offset *int64) (*GetNodes, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetNodes",
+		Query:         GetNodesDocument,
+		Variables: map[string]interface{}{
+			"getFilter": getFilter,
+			"first":     first,
+			"offset":    offset,
+		},
+	}
+
+	var resp GetNodes
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetNodesWithResponse(ctx context.Context, getFilter *NodeFilter, first *int64, offset *int64, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetNodes",
+		Query:         GetNodesDocument,
+		Variables: map[string]interface{}{
+			"getFilter": getFilter,
+			"first":     first,
+			"offset":    offset,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const DeleteNodesDocument = `mutation DeleteNodes ($delFilter: NodeFilter!) {
+	deleteNode(filter: $delFilter) {
+		node {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) DeleteNodes(ctx context.Context, delFilter NodeFilter) (*DeleteNodes, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "DeleteNodes",
+		Query:         DeleteNodesDocument,
+		Variables: map[string]interface{}{
+			"delFilter": delFilter,
+		},
+	}
+
+	var resp DeleteNodes
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) DeleteNodesWithResponse(ctx context.Context, delFilter NodeFilter, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "DeleteNodes",
+		Query:         DeleteNodesDocument,
+		Variables: map[string]interface{}{
+			"delFilter": delFilter,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetBoundingBoxDimensionsByIDDocument = `query GetBoundingBoxDimensionsByID ($id: ID!) {
 	getBoundingBoxDimensions(id: $id) {
 		... BoundingBoxDimensionsFragment
 	}
@@ -1993,17 +6797,17 @@ fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
 }
 `
 
-func (c *Client) GetBoundingBoxDimensions(ctx context.Context, id string) (*GetBoundingBoxDimensions, error) {
+func (c *Client) GetBoundingBoxDimensionsByID(ctx context.Context, id string) (*GetBoundingBoxDimensionsByID, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
-		OperationName: "GetBoundingBoxDimensions",
-		Query:         GetBoundingBoxDimensionsDocument,
+		OperationName: "GetBoundingBoxDimensionsByID",
+		Query:         GetBoundingBoxDimensionsByIDDocument,
 		Variables: map[string]interface{}{
 			"id": id,
 		},
 	}
 
-	var resp GetBoundingBoxDimensions
+	var resp GetBoundingBoxDimensionsByID
 	err := c.Requester.Do(req, &resp)
 	if err != nil {
 		return nil, err
@@ -2011,9 +6815,29 @@ func (c *Client) GetBoundingBoxDimensions(ctx context.Context, id string) (*GetB
 	return &resp, nil
 }
 
-const GetBoundingBoxDimensionssDocument = `query GetBoundingBoxDimensionss ($filter: BoundingBoxDimensionsFilter, $order: BoundingBoxDimensionsOrder, $first: Int, $offset: Int) {
-	queryBoundingBoxDimensions(filter: $filter, order: $order, first: $first, offset: $offset) {
+func (c *Client) GetBoundingBoxDimensionsByIDWithResponse(ctx context.Context, id string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetBoundingBoxDimensionsByID",
+		Query:         GetBoundingBoxDimensionsByIDDocument,
+		Variables: map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetBoundingBoxDimensionssDocument = `query GetBoundingBoxDimensionss ($getFilter: BoundingBoxDimensionsFilter, $order: BoundingBoxDimensionsOrder, $first: Int, $offset: Int) {
+	queryBoundingBoxDimensions(filter: $getFilter, order: $order, first: $first, offset: $offset) {
 		... BoundingBoxDimensionsFragment
+	}
+	aggregateBoundingBoxDimensions(filter: $getFilter) {
+		count
 	}
 }
 fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
@@ -2024,16 +6848,16 @@ fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
 }
 `
 
-func (c *Client) GetBoundingBoxDimensionss(ctx context.Context, filter *models.BoundingBoxDimensionsFilter, order *models.BoundingBoxDimensionsOrder, first *int64, offset *int64) (*GetBoundingBoxDimensionss, error) {
+func (c *Client) GetBoundingBoxDimensionss(ctx context.Context, getFilter *BoundingBoxDimensionsFilter, order *BoundingBoxDimensionsOrder, first *int64, offset *int64) (*GetBoundingBoxDimensionss, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
 		OperationName: "GetBoundingBoxDimensionss",
 		Query:         GetBoundingBoxDimensionssDocument,
 		Variables: map[string]interface{}{
-			"filter": filter,
-			"order":  order,
-			"first":  first,
-			"offset": offset,
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
 		},
 	}
 
@@ -2045,41 +6869,28 @@ func (c *Client) GetBoundingBoxDimensionss(ctx context.Context, filter *models.B
 	return &resp, nil
 }
 
-const SaveBoundingBoxDimensionssDocument = `mutation SaveBoundingBoxDimensionss ($input: [AddBoundingBoxDimensionsInput!]!, $deleteIds: [ID!]!) {
-	deleteBoundingBoxDimensions(filter: {id:$deleteIds}) {
-		boundingBoxDimensions {
-			id
-		}
-	}
-	addBoundingBoxDimensions(input: $input) {
-		boundingBoxDimensions {
-			id
-		}
-	}
-}
-`
-
-func (c *Client) SaveBoundingBoxDimensionss(ctx context.Context, input []*models.AddBoundingBoxDimensionsInput, deleteIds []string) (*SaveBoundingBoxDimensionss, error) {
+func (c *Client) GetBoundingBoxDimensionssWithResponse(ctx context.Context, getFilter *BoundingBoxDimensionsFilter, order *BoundingBoxDimensionsOrder, first *int64, offset *int64, resp interface{}) error {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
-		OperationName: "SaveBoundingBoxDimensionss",
-		Query:         SaveBoundingBoxDimensionssDocument,
+		OperationName: "GetBoundingBoxDimensionss",
+		Query:         GetBoundingBoxDimensionssDocument,
 		Variables: map[string]interface{}{
-			"input":     input,
-			"deleteIds": deleteIds,
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
 		},
 	}
 
-	var resp SaveBoundingBoxDimensionss
-	err := c.Requester.Do(req, &resp)
+	err := c.Requester.Do(req, resp)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return &resp, nil
+	return nil
 }
 
-const DeleteBoundingBoxDimensionsDocument = `mutation DeleteBoundingBoxDimensions ($filter: BoundingBoxDimensionsFilter!) {
-	deleteBoundingBoxDimensions(filter: $filter) {
+const CreateBoundingBoxDimensionssDocument = `mutation CreateBoundingBoxDimensionss ($createInput: [AddBoundingBoxDimensionsInput!]!) {
+	addBoundingBoxDimensions(input: $createInput) {
 		boundingBoxDimensions {
 			id
 		}
@@ -2087,17 +6898,17 @@ const DeleteBoundingBoxDimensionsDocument = `mutation DeleteBoundingBoxDimension
 }
 `
 
-func (c *Client) DeleteBoundingBoxDimensions(ctx context.Context, filter models.BoundingBoxDimensionsFilter) (*DeleteBoundingBoxDimensions, error) {
+func (c *Client) CreateBoundingBoxDimensionss(ctx context.Context, createInput []*AddBoundingBoxDimensionsInput) (*CreateBoundingBoxDimensionss, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
-		OperationName: "DeleteBoundingBoxDimensions",
-		Query:         DeleteBoundingBoxDimensionsDocument,
+		OperationName: "CreateBoundingBoxDimensionss",
+		Query:         CreateBoundingBoxDimensionssDocument,
 		Variables: map[string]interface{}{
-			"filter": filter,
+			"createInput": createInput,
 		},
 	}
 
-	var resp DeleteBoundingBoxDimensions
+	var resp CreateBoundingBoxDimensionss
 	err := c.Requester.Do(req, &resp)
 	if err != nil {
 		return nil, err
@@ -2105,112 +6916,43 @@ func (c *Client) DeleteBoundingBoxDimensions(ctx context.Context, filter models.
 	return &resp, nil
 }
 
-const GetCategoryDocument = `query GetCategory ($id: ID, $xid: String) {
-	getCategory(id: $id, xid: $xid) {
-		... CategoryFragment
-	}
-}
-fragment CategoryFragment on Category {
-	id
-	xid
-	fullName
-	name
-	description
-	parent {
-		id
-	}
-	children {
-		id
-	}
-	products {
-		id
-	}
-}
-`
-
-func (c *Client) GetCategory(ctx context.Context, id *string, xid *string) (*GetCategory, error) {
+func (c *Client) CreateBoundingBoxDimensionssWithResponse(ctx context.Context, createInput []*AddBoundingBoxDimensionsInput, resp interface{}) error {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
-		OperationName: "GetCategory",
-		Query:         GetCategoryDocument,
+		OperationName: "CreateBoundingBoxDimensionss",
+		Query:         CreateBoundingBoxDimensionssDocument,
 		Variables: map[string]interface{}{
-			"id":  id,
-			"xid": xid,
+			"createInput": createInput,
 		},
 	}
 
-	var resp GetCategory
-	err := c.Requester.Do(req, &resp)
+	err := c.Requester.Do(req, resp)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return &resp, nil
+	return nil
 }
 
-const GetCategoriesDocument = `query GetCategories ($filter: CategoryFilter, $order: CategoryOrder, $first: Int, $offset: Int) {
-	queryCategory(filter: $filter, order: $order, first: $first, offset: $offset) {
-		... CategoryFragment
-	}
-}
-fragment CategoryFragment on Category {
-	id
-	xid
-	fullName
-	name
-	description
-	parent {
-		id
-	}
-	children {
-		id
-	}
-	products {
-		id
-	}
-}
-`
-
-func (c *Client) GetCategories(ctx context.Context, filter *models.CategoryFilter, order *models.CategoryOrder, first *int64, offset *int64) (*GetCategories, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "GetCategories",
-		Query:         GetCategoriesDocument,
-		Variables: map[string]interface{}{
-			"filter": filter,
-			"order":  order,
-			"first":  first,
-			"offset": offset,
-		},
-	}
-
-	var resp GetCategories
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const SaveCategoriesDocument = `mutation SaveCategories ($input: [AddCategoryInput!]!) {
-	addCategory(input: $input, upsert: true) {
-		category {
+const UpdateBoundingBoxDimensionssDocument = `mutation UpdateBoundingBoxDimensionss ($updateInput: UpdateBoundingBoxDimensionsInput!) {
+	updateBoundingBoxDimensions(input: $updateInput) {
+		boundingBoxDimensions {
 			id
 		}
 	}
 }
 `
 
-func (c *Client) SaveCategories(ctx context.Context, input []*models.AddCategoryInput) (*SaveCategories, error) {
+func (c *Client) UpdateBoundingBoxDimensionss(ctx context.Context, updateInput UpdateBoundingBoxDimensionsInput) (*UpdateBoundingBoxDimensionss, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
-		OperationName: "SaveCategories",
-		Query:         SaveCategoriesDocument,
+		OperationName: "UpdateBoundingBoxDimensionss",
+		Query:         UpdateBoundingBoxDimensionssDocument,
 		Variables: map[string]interface{}{
-			"input": input,
+			"updateInput": updateInput,
 		},
 	}
 
-	var resp SaveCategories
+	var resp UpdateBoundingBoxDimensionss
 	err := c.Requester.Do(req, &resp)
 	if err != nil {
 		return nil, err
@@ -2218,26 +6960,43 @@ func (c *Client) SaveCategories(ctx context.Context, input []*models.AddCategory
 	return &resp, nil
 }
 
-const DeleteCategoryDocument = `mutation DeleteCategory ($filter: CategoryFilter!) {
-	deleteCategory(filter: $filter) {
-		category {
+func (c *Client) UpdateBoundingBoxDimensionssWithResponse(ctx context.Context, updateInput UpdateBoundingBoxDimensionsInput, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "UpdateBoundingBoxDimensionss",
+		Query:         UpdateBoundingBoxDimensionssDocument,
+		Variables: map[string]interface{}{
+			"updateInput": updateInput,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const DeleteBoundingBoxDimensionssDocument = `mutation DeleteBoundingBoxDimensionss ($delFilter: BoundingBoxDimensionsFilter!) {
+	deleteBoundingBoxDimensions(filter: $delFilter) {
+		boundingBoxDimensions {
 			id
 		}
 	}
 }
 `
 
-func (c *Client) DeleteCategory(ctx context.Context, filter models.CategoryFilter) (*DeleteCategory, error) {
+func (c *Client) DeleteBoundingBoxDimensionss(ctx context.Context, delFilter BoundingBoxDimensionsFilter) (*DeleteBoundingBoxDimensionss, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
-		OperationName: "DeleteCategory",
-		Query:         DeleteCategoryDocument,
+		OperationName: "DeleteBoundingBoxDimensionss",
+		Query:         DeleteBoundingBoxDimensionssDocument,
 		Variables: map[string]interface{}{
-			"filter": filter,
+			"delFilter": delFilter,
 		},
 	}
 
-	var resp DeleteCategory
+	var resp DeleteBoundingBoxDimensionss
 	err := c.Requester.Do(req, &resp)
 	if err != nil {
 		return nil, err
@@ -2245,1769 +7004,46 @@ func (c *Client) DeleteCategory(ctx context.Context, filter models.CategoryFilte
 	return &resp, nil
 }
 
-const GetComponentSourceDocument = `query GetComponentSource ($id: ID, $xid: String) {
-	getComponentSource(id: $id, xid: $xid) {
-		... ComponentSourceFragment
-	}
-}
-fragment ComponentSourceFragment on ComponentSource {
-	... NodeFragment
-	xid
-	url
-	permaUrl
-	host {
-		id
-	}
-	owner {
-		id
-	}
-	name
-	tag
-	path
-}
-fragment NodeFragment on Node {
-	id
-}
-`
-
-func (c *Client) GetComponentSource(ctx context.Context, id *string, xid *string) (*GetComponentSource, error) {
+func (c *Client) DeleteBoundingBoxDimensionssWithResponse(ctx context.Context, delFilter BoundingBoxDimensionsFilter, resp interface{}) error {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
-		OperationName: "GetComponentSource",
-		Query:         GetComponentSourceDocument,
+		OperationName: "DeleteBoundingBoxDimensionss",
+		Query:         DeleteBoundingBoxDimensionssDocument,
 		Variables: map[string]interface{}{
-			"id":  id,
-			"xid": xid,
+			"delFilter": delFilter,
 		},
 	}
 
-	var resp GetComponentSource
-	err := c.Requester.Do(req, &resp)
+	err := c.Requester.Do(req, resp)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return &resp, nil
+	return nil
 }
 
-const GetComponentSourcesDocument = `query GetComponentSources ($filter: ComponentSourceFilter, $order: ComponentSourceOrder, $first: Int, $offset: Int) {
-	queryComponentSource(filter: $filter, order: $order, first: $first, offset: $offset) {
-		... ComponentSourceFragment
-	}
-}
-fragment ComponentSourceFragment on ComponentSource {
-	... NodeFragment
-	xid
-	url
-	permaUrl
-	host {
-		id
-	}
-	owner {
-		id
-	}
-	name
-	tag
-	path
-}
-fragment NodeFragment on Node {
-	id
-}
-`
-
-func (c *Client) GetComponentSources(ctx context.Context, filter *models.ComponentSourceFilter, order *models.ComponentSourceOrder, first *int64, offset *int64) (*GetComponentSources, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "GetComponentSources",
-		Query:         GetComponentSourcesDocument,
-		Variables: map[string]interface{}{
-			"filter": filter,
-			"order":  order,
-			"first":  first,
-			"offset": offset,
-		},
-	}
-
-	var resp GetComponentSources
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const SaveComponentSourcesDocument = `mutation SaveComponentSources ($input: [AddComponentSourceInput!]!) {
-	addComponentSource(input: $input, upsert: true) {
-		componentSource {
-			id
-		}
-	}
-}
-`
-
-func (c *Client) SaveComponentSources(ctx context.Context, input []*models.AddComponentSourceInput) (*SaveComponentSources, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "SaveComponentSources",
-		Query:         SaveComponentSourcesDocument,
-		Variables: map[string]interface{}{
-			"input": input,
-		},
-	}
-
-	var resp SaveComponentSources
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const DeleteComponentSourceDocument = `mutation DeleteComponentSource ($filter: ComponentSourceFilter!) {
-	deleteComponentSource(filter: $filter) {
-		componentSource {
-			id
-		}
-	}
-}
-`
-
-func (c *Client) DeleteComponentSource(ctx context.Context, filter models.ComponentSourceFilter) (*DeleteComponentSource, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "DeleteComponentSource",
-		Query:         DeleteComponentSourceDocument,
-		Variables: map[string]interface{}{
-			"filter": filter,
-		},
-	}
-
-	var resp DeleteComponentSource
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const GetComponentDocument = `query GetComponent ($id: ID, $xid: String) {
-	getComponent(id: $id, xid: $xid) {
-		... ComponentFragment
-	}
-}
-fragment ComponentFragment on Component {
-	id
-	xid
-	name
-	description
-	owner {
-		id
-	}
-	version
-	createdAt
-	releases {
-		id
-	}
-	isLatest
-	repository {
-		id
-	}
-	license {
-		id
-	}
-	additionalLicenses {
-		id
-	}
-	licensor {
-		id
-	}
-	documentationLanguage
-	technologyReadinessLevel
-	documentationReadinessLevel
-	attestation
-	publication
-	compliesWith {
-		id
-	}
-	cpcPatentClass
-	tsdc {
-		id
-	}
-	components {
-		id
-	}
-	software {
-		id
-	}
-	image {
-		id
-	}
-	readme {
-		id
-	}
-	contributionGuide {
-		id
-	}
-	bom {
-		id
-	}
-	manufacturingInstructions {
-		id
-	}
-	userManual {
-		id
-	}
-	product {
-		id
-	}
-	usedIn {
-		id
-	}
-	source {
-		id
-	}
-	export {
-		id
-	}
-	auxiliary {
-		id
-	}
-	organization {
-		id
-	}
-	mass
-	outerDimensions {
-		... on BoundingBoxDimensions {
-			id
-		}
-		... on OpenSCADDimensions {
-			id
-		}
-	}
-	material {
-		id
-	}
-	manufacturingProcess {
-		id
-	}
-	productionMetadata {
-		id
-	}
-}
-`
-
-func (c *Client) GetComponent(ctx context.Context, id *string, xid *string) (*GetComponent, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "GetComponent",
-		Query:         GetComponentDocument,
-		Variables: map[string]interface{}{
-			"id":  id,
-			"xid": xid,
-		},
-	}
-
-	var resp GetComponent
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const GetComponentsDocument = `query GetComponents ($filter: ComponentFilter, $order: ComponentOrder, $first: Int, $offset: Int) {
-	queryComponent(filter: $filter, order: $order, first: $first, offset: $offset) {
-		... ComponentFragment
-	}
-}
-fragment ComponentFragment on Component {
-	id
-	xid
-	name
-	description
-	owner {
-		id
-	}
-	version
-	createdAt
-	releases {
-		id
-	}
-	isLatest
-	repository {
-		id
-	}
-	license {
-		id
-	}
-	additionalLicenses {
-		id
-	}
-	licensor {
-		id
-	}
-	documentationLanguage
-	technologyReadinessLevel
-	documentationReadinessLevel
-	attestation
-	publication
-	compliesWith {
-		id
-	}
-	cpcPatentClass
-	tsdc {
-		id
-	}
-	components {
-		id
-	}
-	software {
-		id
-	}
-	image {
-		id
-	}
-	readme {
-		id
-	}
-	contributionGuide {
-		id
-	}
-	bom {
-		id
-	}
-	manufacturingInstructions {
-		id
-	}
-	userManual {
-		id
-	}
-	product {
-		id
-	}
-	usedIn {
-		id
-	}
-	source {
-		id
-	}
-	export {
-		id
-	}
-	auxiliary {
-		id
-	}
-	organization {
-		id
-	}
-	mass
-	outerDimensions {
-		... on BoundingBoxDimensions {
-			id
-		}
-		... on OpenSCADDimensions {
-			id
-		}
-	}
-	material {
-		id
-	}
-	manufacturingProcess {
-		id
-	}
-	productionMetadata {
-		id
-	}
-}
-`
-
-func (c *Client) GetComponents(ctx context.Context, filter *models.ComponentFilter, order *models.ComponentOrder, first *int64, offset *int64) (*GetComponents, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "GetComponents",
-		Query:         GetComponentsDocument,
-		Variables: map[string]interface{}{
-			"filter": filter,
-			"order":  order,
-			"first":  first,
-			"offset": offset,
-		},
-	}
-
-	var resp GetComponents
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const SaveComponentsDocument = `mutation SaveComponents ($input: [AddComponentInput!]!) {
-	addComponent(input: $input, upsert: true) {
-		component {
-			id
-		}
-	}
-}
-`
-
-func (c *Client) SaveComponents(ctx context.Context, input []*models.AddComponentInput) (*SaveComponents, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "SaveComponents",
-		Query:         SaveComponentsDocument,
-		Variables: map[string]interface{}{
-			"input": input,
-		},
-	}
-
-	var resp SaveComponents
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const DeleteComponentDocument = `mutation DeleteComponent ($filter: ComponentFilter!) {
-	deleteComponent(filter: $filter) {
-		component {
-			id
-		}
-	}
-}
-`
-
-func (c *Client) DeleteComponent(ctx context.Context, filter models.ComponentFilter) (*DeleteComponent, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "DeleteComponent",
-		Query:         DeleteComponentDocument,
-		Variables: map[string]interface{}{
-			"filter": filter,
-		},
-	}
-
-	var resp DeleteComponent
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const GetDatabaseInfoDocument = `query GetDatabaseInfo {
-	queryDatabase(first: 1) {
-		... DatabaseFragment
-	}
-}
-fragment DatabaseFragment on Database {
-	id
-	version
-}
-`
-
-func (c *Client) GetDatabaseInfo(ctx context.Context) (*GetDatabaseInfo, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "GetDatabaseInfo",
-		Query:         GetDatabaseInfoDocument,
-		Variables:     map[string]interface{}{},
-	}
-
-	var resp GetDatabaseInfo
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const SaveDatabaseInfoDocument = `mutation SaveDatabaseInfo ($dbInfo: [AddDatabaseInput!]!) {
-	deleteDatabase(filter: {}) {
-		database {
-			id
-		}
-	}
-	addDatabase(input: $dbInfo) {
-		database {
-			id
-		}
-	}
-}
-`
-
-func (c *Client) SaveDatabaseInfo(ctx context.Context, dbInfo []*models.AddDatabaseInput) (*SaveDatabaseInfo, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "SaveDatabaseInfo",
-		Query:         SaveDatabaseInfoDocument,
-		Variables: map[string]interface{}{
-			"dbInfo": dbInfo,
-		},
-	}
-
-	var resp SaveDatabaseInfo
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const GetFileDocument = `query GetFile ($id: ID!) {
-	getFile(id: $id) {
-		... FileFragment
-	}
-}
-fragment CrawlerMetaFragment on CrawlerMeta {
-	discoveredAt
-	lastIndexedAt
-}
-fragment FileFragment on File {
-	... NodeFragment
-	... CrawlerMetaFragment
-	name
-	path
-	mimeType
-	url
-	createdAt
-}
-fragment NodeFragment on Node {
-	id
-}
-`
-
-func (c *Client) GetFile(ctx context.Context, id string) (*GetFile, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "GetFile",
-		Query:         GetFileDocument,
-		Variables: map[string]interface{}{
-			"id": id,
-		},
-	}
-
-	var resp GetFile
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const GetFilesDocument = `query GetFiles ($filter: FileFilter, $order: FileOrder, $first: Int, $offset: Int) {
-	queryFile(filter: $filter, order: $order, first: $first, offset: $offset) {
-		... FileFragment
-	}
-}
-fragment CrawlerMetaFragment on CrawlerMeta {
-	discoveredAt
-	lastIndexedAt
-}
-fragment FileFragment on File {
-	... NodeFragment
-	... CrawlerMetaFragment
-	name
-	path
-	mimeType
-	url
-	createdAt
-}
-fragment NodeFragment on Node {
-	id
-}
-`
-
-func (c *Client) GetFiles(ctx context.Context, filter *models.FileFilter, order *models.FileOrder, first *int64, offset *int64) (*GetFiles, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "GetFiles",
-		Query:         GetFilesDocument,
-		Variables: map[string]interface{}{
-			"filter": filter,
-			"order":  order,
-			"first":  first,
-			"offset": offset,
-		},
-	}
-
-	var resp GetFiles
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const SaveFilesDocument = `mutation SaveFiles ($input: [AddFileInput!]!, $deleteIds: [ID!]!) {
-	deleteFile(filter: {id:$deleteIds}) {
-		file {
-			id
-		}
-	}
-	addFile(input: $input) {
-		file {
-			id
-		}
-	}
-}
-`
-
-func (c *Client) SaveFiles(ctx context.Context, input []*models.AddFileInput, deleteIds []string) (*SaveFiles, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "SaveFiles",
-		Query:         SaveFilesDocument,
-		Variables: map[string]interface{}{
-			"input":     input,
-			"deleteIds": deleteIds,
-		},
-	}
-
-	var resp SaveFiles
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const DeleteFileDocument = `mutation DeleteFile ($filter: FileFilter!) {
-	deleteFile(filter: $filter) {
-		file {
-			id
-		}
-	}
-}
-`
-
-func (c *Client) DeleteFile(ctx context.Context, filter models.FileFilter) (*DeleteFile, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "DeleteFile",
-		Query:         DeleteFileDocument,
-		Variables: map[string]interface{}{
-			"filter": filter,
-		},
-	}
-
-	var resp DeleteFile
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const GetFloatVDocument = `query GetFloatV ($id: ID!) {
-	getFloatV(id: $id) {
-		... FloatVFragment
-	}
-}
-fragment FloatVFragment on FloatV {
-	... NodeFragment
-	value
-}
-fragment NodeFragment on Node {
-	id
-}
-`
-
-func (c *Client) GetFloatV(ctx context.Context, id string) (*GetFloatV, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "GetFloatV",
-		Query:         GetFloatVDocument,
-		Variables: map[string]interface{}{
-			"id": id,
-		},
-	}
-
-	var resp GetFloatV
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const GetFloatVsDocument = `query GetFloatVs ($filter: FloatVFilter, $order: FloatVOrder, $first: Int, $offset: Int) {
-	queryFloatV(filter: $filter, order: $order, first: $first, offset: $offset) {
-		... FloatVFragment
-	}
-}
-fragment FloatVFragment on FloatV {
-	... NodeFragment
-	value
-}
-fragment NodeFragment on Node {
-	id
-}
-`
-
-func (c *Client) GetFloatVs(ctx context.Context, filter *models.FloatVFilter, order *models.FloatVOrder, first *int64, offset *int64) (*GetFloatVs, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "GetFloatVs",
-		Query:         GetFloatVsDocument,
-		Variables: map[string]interface{}{
-			"filter": filter,
-			"order":  order,
-			"first":  first,
-			"offset": offset,
-		},
-	}
-
-	var resp GetFloatVs
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const SaveFloatVsDocument = `mutation SaveFloatVs ($input: [AddFloatVInput!]!, $deleteIds: [ID!]!) {
-	deleteFloatV(filter: {id:$deleteIds}) {
-		floatV {
-			id
-		}
-	}
-	addFloatV(input: $input) {
-		floatV {
-			id
-		}
-	}
-}
-`
-
-func (c *Client) SaveFloatVs(ctx context.Context, input []*models.AddFloatVInput, deleteIds []string) (*SaveFloatVs, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "SaveFloatVs",
-		Query:         SaveFloatVsDocument,
-		Variables: map[string]interface{}{
-			"input":     input,
-			"deleteIds": deleteIds,
-		},
-	}
-
-	var resp SaveFloatVs
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const DeleteFloatVsDocument = `mutation DeleteFloatVs ($filter: FloatVFilter!) {
-	deleteFloatV(filter: $filter) {
-		floatV {
-			id
-		}
-	}
-}
-`
-
-func (c *Client) DeleteFloatVs(ctx context.Context, filter models.FloatVFilter) (*DeleteFloatVs, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "DeleteFloatVs",
-		Query:         DeleteFloatVsDocument,
-		Variables: map[string]interface{}{
-			"filter": filter,
-		},
-	}
-
-	var resp DeleteFloatVs
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const GetHostDocument = `query GetHost ($id: ID, $domain: String) {
-	getHost(id: $id, domain: $domain) {
-		... HostFragment
-	}
-}
-fragment HostFragment on Host {
-	... NodeFragment
-	domain
-	name
-}
-fragment NodeFragment on Node {
-	id
-}
-`
-
-func (c *Client) GetHost(ctx context.Context, id *string, domain *string) (*GetHost, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "GetHost",
-		Query:         GetHostDocument,
-		Variables: map[string]interface{}{
-			"id":     id,
-			"domain": domain,
-		},
-	}
-
-	var resp GetHost
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const GetHostsDocument = `query GetHosts ($filter: HostFilter, $order: HostOrder, $first: Int, $offset: Int) {
-	queryHost(filter: $filter, order: $order, first: $first, offset: $offset) {
-		... HostFragment
-	}
-}
-fragment NodeFragment on Node {
-	id
-}
-fragment HostFragment on Host {
-	... NodeFragment
-	domain
-	name
-}
-`
-
-func (c *Client) GetHosts(ctx context.Context, filter *models.HostFilter, order *models.HostOrder, first *int64, offset *int64) (*GetHosts, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "GetHosts",
-		Query:         GetHostsDocument,
-		Variables: map[string]interface{}{
-			"filter": filter,
-			"order":  order,
-			"first":  first,
-			"offset": offset,
-		},
-	}
-
-	var resp GetHosts
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const SaveHostsDocument = `mutation SaveHosts ($hosts: [AddHostInput!]!) {
-	addHost(input: $hosts, upsert: true) {
-		host {
-			id
-		}
-	}
-}
-`
-
-func (c *Client) SaveHosts(ctx context.Context, hosts []*models.AddHostInput) (*SaveHosts, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "SaveHosts",
-		Query:         SaveHostsDocument,
-		Variables: map[string]interface{}{
-			"hosts": hosts,
-		},
-	}
-
-	var resp SaveHosts
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const DeleteHostDocument = `mutation DeleteHost ($filter: HostFilter!) {
-	deleteHost(filter: $filter) {
-		host {
-			id
-		}
-	}
-}
-`
-
-func (c *Client) DeleteHost(ctx context.Context, filter models.HostFilter) (*DeleteHost, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "DeleteHost",
-		Query:         DeleteHostDocument,
-		Variables: map[string]interface{}{
-			"filter": filter,
-		},
-	}
-
-	var resp DeleteHost
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const GetKeyValueDocument = `query GetKeyValue ($id: ID!) {
-	getKeyValue(id: $id) {
-		... KeyValueFragment
-	}
-}
-fragment KeyValueFragment on KeyValue {
-	... NodeFragment
-	key
-	value {
-		... on StringV {
-			id
-			stringValue: value
-		}
-		... on FloatV {
-			id
-			floatValue: value
-		}
-	}
-}
-fragment NodeFragment on Node {
-	id
-}
-`
-
-func (c *Client) GetKeyValue(ctx context.Context, id string) (*GetKeyValue, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "GetKeyValue",
-		Query:         GetKeyValueDocument,
-		Variables: map[string]interface{}{
-			"id": id,
-		},
-	}
-
-	var resp GetKeyValue
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const GetKeyValuesDocument = `query GetKeyValues ($filter: KeyValueFilter, $order: KeyValueOrder, $first: Int, $offset: Int) {
-	queryKeyValue(filter: $filter, order: $order, first: $first, offset: $offset) {
-		... KeyValueFragment
-	}
-}
-fragment KeyValueFragment on KeyValue {
-	... NodeFragment
-	key
-	value {
-		... on StringV {
-			id
-			stringValue: value
-		}
-		... on FloatV {
-			id
-			floatValue: value
-		}
-	}
-}
-fragment NodeFragment on Node {
-	id
-}
-`
-
-func (c *Client) GetKeyValues(ctx context.Context, filter *models.KeyValueFilter, order *models.KeyValueOrder, first *int64, offset *int64) (*GetKeyValues, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "GetKeyValues",
-		Query:         GetKeyValuesDocument,
-		Variables: map[string]interface{}{
-			"filter": filter,
-			"order":  order,
-			"first":  first,
-			"offset": offset,
-		},
-	}
-
-	var resp GetKeyValues
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const SaveKeyValuesDocument = `mutation SaveKeyValues ($keyValues: [AddKeyValueInput!]!) {
-	addKeyValue(input: $keyValues) {
-		keyValue {
-			id
-		}
-	}
-}
-`
-
-func (c *Client) SaveKeyValues(ctx context.Context, keyValues []*models.AddKeyValueInput) (*SaveKeyValues, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "SaveKeyValues",
-		Query:         SaveKeyValuesDocument,
-		Variables: map[string]interface{}{
-			"keyValues": keyValues,
-		},
-	}
-
-	var resp SaveKeyValues
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const DeleteKeyValueDocument = `mutation DeleteKeyValue ($filter: KeyValueFilter!) {
-	deleteKeyValue(filter: $filter) {
-		keyValue {
-			id
-		}
-	}
-}
-`
-
-func (c *Client) DeleteKeyValue(ctx context.Context, filter models.KeyValueFilter) (*DeleteKeyValue, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "DeleteKeyValue",
-		Query:         DeleteKeyValueDocument,
-		Variables: map[string]interface{}{
-			"filter": filter,
-		},
-	}
-
-	var resp DeleteKeyValue
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const GetLicenseDocument = `query GetLicense ($id: ID, $xid: String) {
-	getLicense(id: $id, xid: $xid) {
-		... LicenseFragment
-	}
-}
-fragment LicenseFragment on License {
-	id
-	xid
-	name
-	text
-	textHTML
-	referenceURL
-	detailsURL
-	type
-	isSpdx
-	isDeprecated
-	isOsiApproved
-	isFsfLibre
-	isBlocked
-}
-`
-
-func (c *Client) GetLicense(ctx context.Context, id *string, xid *string) (*GetLicense, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "GetLicense",
-		Query:         GetLicenseDocument,
-		Variables: map[string]interface{}{
-			"id":  id,
-			"xid": xid,
-		},
-	}
-
-	var resp GetLicense
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const GetLicensesDocument = `query GetLicenses ($filter: LicenseFilter, $order: LicenseOrder, $first: Int, $offset: Int) {
-	queryLicense(filter: $filter, order: $order, first: $first, offset: $offset) {
-		... LicenseFragment
-	}
-}
-fragment LicenseFragment on License {
-	id
-	xid
-	name
-	text
-	textHTML
-	referenceURL
-	detailsURL
-	type
-	isSpdx
-	isDeprecated
-	isOsiApproved
-	isFsfLibre
-	isBlocked
-}
-`
-
-func (c *Client) GetLicenses(ctx context.Context, filter *models.LicenseFilter, order *models.LicenseOrder, first *int64, offset *int64) (*GetLicenses, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "GetLicenses",
-		Query:         GetLicensesDocument,
-		Variables: map[string]interface{}{
-			"filter": filter,
-			"order":  order,
-			"first":  first,
-			"offset": offset,
-		},
-	}
-
-	var resp GetLicenses
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const SaveLicensesDocument = `mutation SaveLicenses ($licenses: [AddLicenseInput!]!) {
-	addLicense(input: $licenses, upsert: true) {
-		license {
-			id
-		}
-	}
-}
-`
-
-func (c *Client) SaveLicenses(ctx context.Context, licenses []*models.AddLicenseInput) (*SaveLicenses, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "SaveLicenses",
-		Query:         SaveLicensesDocument,
-		Variables: map[string]interface{}{
-			"licenses": licenses,
-		},
-	}
-
-	var resp SaveLicenses
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const DeleteLicenseDocument = `mutation DeleteLicense ($filter: LicenseFilter!) {
-	deleteLicense(filter: $filter) {
-		license {
-			id
-		}
-	}
-}
-`
-
-func (c *Client) DeleteLicense(ctx context.Context, filter models.LicenseFilter) (*DeleteLicense, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "DeleteLicense",
-		Query:         DeleteLicenseDocument,
-		Variables: map[string]interface{}{
-			"filter": filter,
-		},
-	}
-
-	var resp DeleteLicense
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const GetManufacturingProcessDocument = `query GetManufacturingProcess ($id: ID!) {
-	getManufacturingProcess(id: $id) {
-		... ManufacturingProcessFragment
-	}
-}
-fragment ManufacturingProcessFragment on ManufacturingProcess {
-	... NodeFragment
-	name
-	description
-}
-fragment NodeFragment on Node {
-	id
-}
-`
-
-func (c *Client) GetManufacturingProcess(ctx context.Context, id string) (*GetManufacturingProcess, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "GetManufacturingProcess",
-		Query:         GetManufacturingProcessDocument,
-		Variables: map[string]interface{}{
-			"id": id,
-		},
-	}
-
-	var resp GetManufacturingProcess
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const GetManufacturingProcessesDocument = `query GetManufacturingProcesses ($filter: ManufacturingProcessFilter, $order: ManufacturingProcessOrder, $first: Int, $offset: Int) {
-	queryManufacturingProcess(filter: $filter, order: $order, first: $first, offset: $offset) {
-		... ManufacturingProcessFragment
-	}
-}
-fragment ManufacturingProcessFragment on ManufacturingProcess {
-	... NodeFragment
-	name
-	description
-}
-fragment NodeFragment on Node {
-	id
-}
-`
-
-func (c *Client) GetManufacturingProcesses(ctx context.Context, filter *models.ManufacturingProcessFilter, order *models.ManufacturingProcessOrder, first *int64, offset *int64) (*GetManufacturingProcesses, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "GetManufacturingProcesses",
-		Query:         GetManufacturingProcessesDocument,
-		Variables: map[string]interface{}{
-			"filter": filter,
-			"order":  order,
-			"first":  first,
-			"offset": offset,
-		},
-	}
-
-	var resp GetManufacturingProcesses
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const SaveManufacturingProcessesDocument = `mutation SaveManufacturingProcesses ($input: [AddManufacturingProcessInput!]!, $deleteIds: [ID!]!) {
-	deleteManufacturingProcess(filter: {id:$deleteIds}) {
-		manufacturingProcess {
-			id
-		}
-	}
-	addManufacturingProcess(input: $input) {
-		manufacturingProcess {
-			id
-		}
-	}
-}
-`
-
-func (c *Client) SaveManufacturingProcesses(ctx context.Context, input []*models.AddManufacturingProcessInput, deleteIds []string) (*SaveManufacturingProcesses, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "SaveManufacturingProcesses",
-		Query:         SaveManufacturingProcessesDocument,
-		Variables: map[string]interface{}{
-			"input":     input,
-			"deleteIds": deleteIds,
-		},
-	}
-
-	var resp SaveManufacturingProcesses
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const DeleteManufacturingProcessesDocument = `mutation DeleteManufacturingProcesses ($filter: ManufacturingProcessFilter!) {
-	deleteManufacturingProcess(filter: $filter) {
-		manufacturingProcess {
-			id
-		}
-	}
-}
-`
-
-func (c *Client) DeleteManufacturingProcesses(ctx context.Context, filter models.ManufacturingProcessFilter) (*DeleteManufacturingProcesses, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "DeleteManufacturingProcesses",
-		Query:         DeleteManufacturingProcessesDocument,
-		Variables: map[string]interface{}{
-			"filter": filter,
-		},
-	}
-
-	var resp DeleteManufacturingProcesses
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const GetMaterialDocument = `query GetMaterial ($id: ID!) {
-	getMaterial(id: $id) {
-		... MaterialFragment
-	}
-}
-fragment MaterialFragment on Material {
-	... NodeFragment
-	name
-	description
-}
-fragment NodeFragment on Node {
-	id
-}
-`
-
-func (c *Client) GetMaterial(ctx context.Context, id string) (*GetMaterial, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "GetMaterial",
-		Query:         GetMaterialDocument,
-		Variables: map[string]interface{}{
-			"id": id,
-		},
-	}
-
-	var resp GetMaterial
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const GetMaterialsDocument = `query GetMaterials ($filter: MaterialFilter, $order: MaterialOrder, $first: Int, $offset: Int) {
-	queryMaterial(filter: $filter, order: $order, first: $first, offset: $offset) {
-		... MaterialFragment
-	}
-}
-fragment MaterialFragment on Material {
-	... NodeFragment
-	name
-	description
-}
-fragment NodeFragment on Node {
-	id
-}
-`
-
-func (c *Client) GetMaterials(ctx context.Context, filter *models.MaterialFilter, order *models.MaterialOrder, first *int64, offset *int64) (*GetMaterials, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "GetMaterials",
-		Query:         GetMaterialsDocument,
-		Variables: map[string]interface{}{
-			"filter": filter,
-			"order":  order,
-			"first":  first,
-			"offset": offset,
-		},
-	}
-
-	var resp GetMaterials
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const SaveMaterialsDocument = `mutation SaveMaterials ($input: [AddMaterialInput!]!, $deleteIds: [ID!]!) {
-	deleteMaterial(filter: {id:$deleteIds}) {
-		material {
-			id
-		}
-	}
-	addMaterial(input: $input) {
-		material {
-			id
-		}
-	}
-}
-`
-
-func (c *Client) SaveMaterials(ctx context.Context, input []*models.AddMaterialInput, deleteIds []string) (*SaveMaterials, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "SaveMaterials",
-		Query:         SaveMaterialsDocument,
-		Variables: map[string]interface{}{
-			"input":     input,
-			"deleteIds": deleteIds,
-		},
-	}
-
-	var resp SaveMaterials
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const DeleteMaterialsDocument = `mutation DeleteMaterials ($filter: MaterialFilter!) {
-	deleteMaterial(filter: $filter) {
-		material {
-			id
-		}
-	}
-}
-`
-
-func (c *Client) DeleteMaterials(ctx context.Context, filter models.MaterialFilter) (*DeleteMaterials, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "DeleteMaterials",
-		Query:         DeleteMaterialsDocument,
-		Variables: map[string]interface{}{
-			"filter": filter,
-		},
-	}
-
-	var resp DeleteMaterials
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const GetNodeDocument = `query GetNode ($id: ID!) {
-	getNode(id: $id) {
-		__typename
-		... NodeFragment
-		... on Product {
-			... ProductFragment
-		}
-		... on Component {
-			... ComponentFragment
-		}
-		... on License {
-			... LicenseFragment
-		}
-		... on User {
-			... UserFragment
-		}
-		... on Group {
-			... GroupFragment
-		}
-	}
-}
-fragment NodeFragment on Node {
-	id
-}
-fragment ProductFragment on Product {
-	... NodeFragment
-	... CrawlerMetaFragment
-	xid
-	name
-	owner {
-		id
-	}
-	description
-	website
-	version
-	release {
-		id
-	}
-	releases {
-		id
-	}
-	renamedTo {
-		id
-	}
-	renamedFrom {
-		id
-	}
-	forkOf {
-		id
-	}
-	forks {
-		id
-	}
-	tags {
-		id
-	}
-	category {
-		id
-	}
-}
-fragment CrawlerMetaFragment on CrawlerMeta {
-	discoveredAt
-	lastIndexedAt
-}
-fragment ComponentFragment on Component {
-	id
-	xid
-	name
-	description
-	owner {
-		id
-	}
-	version
-	createdAt
-	releases {
-		id
-	}
-	isLatest
-	repository {
-		id
-	}
-	license {
-		id
-	}
-	additionalLicenses {
-		id
-	}
-	licensor {
-		id
-	}
-	documentationLanguage
-	technologyReadinessLevel
-	documentationReadinessLevel
-	attestation
-	publication
-	compliesWith {
-		id
-	}
-	cpcPatentClass
-	tsdc {
-		id
-	}
-	components {
-		id
-	}
-	software {
-		id
-	}
-	image {
-		id
-	}
-	readme {
-		id
-	}
-	contributionGuide {
-		id
-	}
-	bom {
-		id
-	}
-	manufacturingInstructions {
-		id
-	}
-	userManual {
-		id
-	}
-	product {
-		id
-	}
-	usedIn {
-		id
-	}
-	source {
-		id
-	}
-	export {
-		id
-	}
-	auxiliary {
-		id
-	}
-	organization {
-		id
-	}
-	mass
-	outerDimensions {
-		... on BoundingBoxDimensions {
-			id
-		}
-		... on OpenSCADDimensions {
-			id
-		}
-	}
-	material {
-		id
-	}
-	manufacturingProcess {
-		id
-	}
-	productionMetadata {
-		id
-	}
-}
-fragment LicenseFragment on License {
-	id
-	xid
-	name
-	text
-	textHTML
-	referenceURL
-	detailsURL
-	type
-	isSpdx
-	isDeprecated
-	isOsiApproved
-	isFsfLibre
-	isBlocked
-}
-fragment UserFragment on User {
-	... NodeFragment
-	... UserOrGroupFragment
-	fullName
-	locale
-}
-fragment UserOrGroupFragment on UserOrGroup {
-	__typename
-	... on User {
-		id
-	}
-	... on Group {
-		id
-	}
-	xid
-	host {
-		id
-	}
-	name
-	email
-	avatar {
-		id
-	}
-	url
-	memberOf {
-		id
-	}
-	products {
-		id
-	}
-}
-fragment GroupFragment on Group {
-	... NodeFragment
-	... UserOrGroupFragment
-	members {
-		... on User {
-			id
-		}
-		... on Group {
-			id
-		}
-	}
-}
-`
-
-func (c *Client) GetNode(ctx context.Context, id string) (*GetNode, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "GetNode",
-		Query:         GetNodeDocument,
-		Variables: map[string]interface{}{
-			"id": id,
-		},
-	}
-
-	var resp GetNode
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const GetNodesDocument = `query GetNodes ($filter: NodeFilter, $first: Int, $offset: Int) {
-	queryNode(filter: $filter, first: $first, offset: $offset) {
-		id
-	}
-}
-`
-
-func (c *Client) GetNodes(ctx context.Context, filter *models.NodeFilter, first *int64, offset *int64) (*GetNodes, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "GetNodes",
-		Query:         GetNodesDocument,
-		Variables: map[string]interface{}{
-			"filter": filter,
-			"first":  first,
-			"offset": offset,
-		},
-	}
-
-	var resp GetNodes
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const DeleteNodeDocument = `mutation DeleteNode ($filter: NodeFilter!) {
-	deleteNode(filter: $filter) {
-		node {
-			id
-		}
-	}
-}
-`
-
-func (c *Client) DeleteNode(ctx context.Context, filter models.NodeFilter) (*DeleteNode, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "DeleteNode",
-		Query:         DeleteNodeDocument,
-		Variables: map[string]interface{}{
-			"filter": filter,
-		},
-	}
-
-	var resp DeleteNode
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const GetOpenSCADDimensionsDocument = `query GetOpenSCADDimensions ($id: ID!) {
+const GetOpenSCADDimensionsByIDDocument = `query GetOpenSCADDimensionsByID ($id: ID!) {
 	getOpenSCADDimensions(id: $id) {
 		... OpenSCADDimensionsFragment
 	}
 }
 fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
-	... NodeFragment
+	id
 	openscad
 	unit
 }
-fragment NodeFragment on Node {
-	id
-}
 `
 
-func (c *Client) GetOpenSCADDimensions(ctx context.Context, id string) (*GetOpenSCADDimensions, error) {
+func (c *Client) GetOpenSCADDimensionsByID(ctx context.Context, id string) (*GetOpenSCADDimensionsByID, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
-		OperationName: "GetOpenSCADDimensions",
-		Query:         GetOpenSCADDimensionsDocument,
+		OperationName: "GetOpenSCADDimensionsByID",
+		Query:         GetOpenSCADDimensionsByIDDocument,
 		Variables: map[string]interface{}{
 			"id": id,
 		},
 	}
 
-	var resp GetOpenSCADDimensions
+	var resp GetOpenSCADDimensionsByID
 	err := c.Requester.Do(req, &resp)
 	if err != nil {
 		return nil, err
@@ -4015,31 +7051,48 @@ func (c *Client) GetOpenSCADDimensions(ctx context.Context, id string) (*GetOpen
 	return &resp, nil
 }
 
-const GetOpenSCADDimensionssDocument = `query GetOpenSCADDimensionss ($filter: OpenSCADDimensionsFilter, $order: OpenSCADDimensionsOrder, $first: Int, $offset: Int) {
-	queryOpenSCADDimensions(filter: $filter, order: $order, first: $first, offset: $offset) {
+func (c *Client) GetOpenSCADDimensionsByIDWithResponse(ctx context.Context, id string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetOpenSCADDimensionsByID",
+		Query:         GetOpenSCADDimensionsByIDDocument,
+		Variables: map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetOpenSCADDimensionssDocument = `query GetOpenSCADDimensionss ($getFilter: OpenSCADDimensionsFilter, $order: OpenSCADDimensionsOrder, $first: Int, $offset: Int) {
+	queryOpenSCADDimensions(filter: $getFilter, order: $order, first: $first, offset: $offset) {
 		... OpenSCADDimensionsFragment
+	}
+	aggregateOpenSCADDimensions(filter: $getFilter) {
+		count
 	}
 }
 fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
-	... NodeFragment
+	id
 	openscad
 	unit
 }
-fragment NodeFragment on Node {
-	id
-}
 `
 
-func (c *Client) GetOpenSCADDimensionss(ctx context.Context, filter *models.OpenSCADDimensionsFilter, order *models.OpenSCADDimensionsOrder, first *int64, offset *int64) (*GetOpenSCADDimensionss, error) {
+func (c *Client) GetOpenSCADDimensionss(ctx context.Context, getFilter *OpenSCADDimensionsFilter, order *OpenSCADDimensionsOrder, first *int64, offset *int64) (*GetOpenSCADDimensionss, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
 		OperationName: "GetOpenSCADDimensionss",
 		Query:         GetOpenSCADDimensionssDocument,
 		Variables: map[string]interface{}{
-			"filter": filter,
-			"order":  order,
-			"first":  first,
-			"offset": offset,
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
 		},
 	}
 
@@ -4051,13 +7104,28 @@ func (c *Client) GetOpenSCADDimensionss(ctx context.Context, filter *models.Open
 	return &resp, nil
 }
 
-const SaveOpenSCADDimensionssDocument = `mutation SaveOpenSCADDimensionss ($input: [AddOpenSCADDimensionsInput!]!, $deleteIds: [ID!]!) {
-	deleteOpenSCADDimensions(filter: {id:$deleteIds}) {
-		openSCADDimensions {
-			id
-		}
+func (c *Client) GetOpenSCADDimensionssWithResponse(ctx context.Context, getFilter *OpenSCADDimensionsFilter, order *OpenSCADDimensionsOrder, first *int64, offset *int64, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetOpenSCADDimensionss",
+		Query:         GetOpenSCADDimensionssDocument,
+		Variables: map[string]interface{}{
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
+		},
 	}
-	addOpenSCADDimensions(input: $input) {
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const CreateOpenSCADDimensionssDocument = `mutation CreateOpenSCADDimensionss ($createInput: [AddOpenSCADDimensionsInput!]!) {
+	addOpenSCADDimensions(input: $createInput) {
 		openSCADDimensions {
 			id
 		}
@@ -4065,18 +7133,17 @@ const SaveOpenSCADDimensionssDocument = `mutation SaveOpenSCADDimensionss ($inpu
 }
 `
 
-func (c *Client) SaveOpenSCADDimensionss(ctx context.Context, input []*models.AddOpenSCADDimensionsInput, deleteIds []string) (*SaveOpenSCADDimensionss, error) {
+func (c *Client) CreateOpenSCADDimensionss(ctx context.Context, createInput []*AddOpenSCADDimensionsInput) (*CreateOpenSCADDimensionss, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
-		OperationName: "SaveOpenSCADDimensionss",
-		Query:         SaveOpenSCADDimensionssDocument,
+		OperationName: "CreateOpenSCADDimensionss",
+		Query:         CreateOpenSCADDimensionssDocument,
 		Variables: map[string]interface{}{
-			"input":     input,
-			"deleteIds": deleteIds,
+			"createInput": createInput,
 		},
 	}
 
-	var resp SaveOpenSCADDimensionss
+	var resp CreateOpenSCADDimensionss
 	err := c.Requester.Do(req, &resp)
 	if err != nil {
 		return nil, err
@@ -4084,8 +7151,25 @@ func (c *Client) SaveOpenSCADDimensionss(ctx context.Context, input []*models.Ad
 	return &resp, nil
 }
 
-const DeleteOpenSCADDimensionssDocument = `mutation DeleteOpenSCADDimensionss ($filter: OpenSCADDimensionsFilter!) {
-	deleteOpenSCADDimensions(filter: $filter) {
+func (c *Client) CreateOpenSCADDimensionssWithResponse(ctx context.Context, createInput []*AddOpenSCADDimensionsInput, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "CreateOpenSCADDimensionss",
+		Query:         CreateOpenSCADDimensionssDocument,
+		Variables: map[string]interface{}{
+			"createInput": createInput,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const UpdateOpenSCADDimensionssDocument = `mutation UpdateOpenSCADDimensionss ($updateInput: UpdateOpenSCADDimensionsInput!) {
+	updateOpenSCADDimensions(input: $updateInput) {
 		openSCADDimensions {
 			id
 		}
@@ -4093,13 +7177,57 @@ const DeleteOpenSCADDimensionssDocument = `mutation DeleteOpenSCADDimensionss ($
 }
 `
 
-func (c *Client) DeleteOpenSCADDimensionss(ctx context.Context, filter models.OpenSCADDimensionsFilter) (*DeleteOpenSCADDimensionss, error) {
+func (c *Client) UpdateOpenSCADDimensionss(ctx context.Context, updateInput UpdateOpenSCADDimensionsInput) (*UpdateOpenSCADDimensionss, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "UpdateOpenSCADDimensionss",
+		Query:         UpdateOpenSCADDimensionssDocument,
+		Variables: map[string]interface{}{
+			"updateInput": updateInput,
+		},
+	}
+
+	var resp UpdateOpenSCADDimensionss
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) UpdateOpenSCADDimensionssWithResponse(ctx context.Context, updateInput UpdateOpenSCADDimensionsInput, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "UpdateOpenSCADDimensionss",
+		Query:         UpdateOpenSCADDimensionssDocument,
+		Variables: map[string]interface{}{
+			"updateInput": updateInput,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const DeleteOpenSCADDimensionssDocument = `mutation DeleteOpenSCADDimensionss ($delFilter: OpenSCADDimensionsFilter!) {
+	deleteOpenSCADDimensions(filter: $delFilter) {
+		openSCADDimensions {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) DeleteOpenSCADDimensionss(ctx context.Context, delFilter OpenSCADDimensionsFilter) (*DeleteOpenSCADDimensionss, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
 		OperationName: "DeleteOpenSCADDimensionss",
 		Query:         DeleteOpenSCADDimensionssDocument,
 		Variables: map[string]interface{}{
-			"filter": filter,
+			"delFilter": delFilter,
 		},
 	}
 
@@ -4111,68 +7239,100 @@ func (c *Client) DeleteOpenSCADDimensionss(ctx context.Context, filter models.Op
 	return &resp, nil
 }
 
-const GetProductDocument = `query GetProduct ($id: ID, $xid: String) {
-	getProduct(id: $id, xid: $xid) {
+func (c *Client) DeleteOpenSCADDimensionssWithResponse(ctx context.Context, delFilter OpenSCADDimensionsFilter, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "DeleteOpenSCADDimensionss",
+		Query:         DeleteOpenSCADDimensionssDocument,
+		Variables: map[string]interface{}{
+			"delFilter": delFilter,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetProductByIDDocument = `query GetProductByID ($id: ID!) {
+	getProduct(id: $id) {
 		... ProductFragment
 	}
 }
 fragment ProductFragment on Product {
-	... NodeFragment
 	... CrawlerMetaFragment
+	id
 	xid
 	name
-	owner {
-		id
-	}
 	description
-	website
+	documentationLanguage
 	version
+	license {
+		id
+		xid
+	}
+	licensor {
+		... UserOrGroupBasicFragment
+	}
+	website
 	release {
 		id
+		name
 	}
 	releases {
 		id
+		name
 	}
 	renamedTo {
 		id
+		name
 	}
 	renamedFrom {
 		id
+		name
 	}
 	forkOf {
 		id
+		name
 	}
 	forks {
 		id
+		name
 	}
 	tags {
 		id
+		name
 	}
 	category {
 		id
+		fullName
 	}
-}
-fragment NodeFragment on Node {
-	id
 }
 fragment CrawlerMetaFragment on CrawlerMeta {
 	discoveredAt
 	lastIndexedAt
 }
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
+}
 `
 
-func (c *Client) GetProduct(ctx context.Context, id *string, xid *string) (*GetProduct, error) {
+func (c *Client) GetProductByID(ctx context.Context, id string) (*GetProductByID, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
-		OperationName: "GetProduct",
-		Query:         GetProductDocument,
+		OperationName: "GetProductByID",
+		Query:         GetProductByIDDocument,
 		Variables: map[string]interface{}{
-			"id":  id,
-			"xid": xid,
+			"id": id,
 		},
 	}
 
-	var resp GetProduct
+	var resp GetProductByID
 	err := c.Requester.Do(req, &resp)
 	if err != nil {
 		return nil, err
@@ -4180,66 +7340,245 @@ func (c *Client) GetProduct(ctx context.Context, id *string, xid *string) (*GetP
 	return &resp, nil
 }
 
-const GetProductsDocument = `query GetProducts ($filter: ProductFilter, $order: ProductOrder, $first: Int, $offset: Int) {
-	queryProduct(filter: $filter, order: $order, first: $first, offset: $offset) {
+func (c *Client) GetProductByIDWithResponse(ctx context.Context, id string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetProductByID",
+		Query:         GetProductByIDDocument,
+		Variables: map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetProductByXidDocument = `query GetProductByXid ($xid: String!) {
+	getProduct(xid: $xid) {
 		... ProductFragment
 	}
 }
-fragment NodeFragment on Node {
+fragment ProductFragment on Product {
+	... CrawlerMetaFragment
 	id
+	xid
+	name
+	description
+	documentationLanguage
+	version
+	license {
+		id
+		xid
+	}
+	licensor {
+		... UserOrGroupBasicFragment
+	}
+	website
+	release {
+		id
+		name
+	}
+	releases {
+		id
+		name
+	}
+	renamedTo {
+		id
+		name
+	}
+	renamedFrom {
+		id
+		name
+	}
+	forkOf {
+		id
+		name
+	}
+	forks {
+		id
+		name
+	}
+	tags {
+		id
+		name
+	}
+	category {
+		id
+		fullName
+	}
 }
 fragment CrawlerMetaFragment on CrawlerMeta {
 	discoveredAt
 	lastIndexedAt
 }
-fragment ProductFragment on Product {
-	... NodeFragment
-	... CrawlerMetaFragment
-	xid
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
 	name
-	owner {
-		id
+	fullName
+	id
+}
+`
+
+func (c *Client) GetProductByXid(ctx context.Context, xid string) (*GetProductByXid, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetProductByXid",
+		Query:         GetProductByXidDocument,
+		Variables: map[string]interface{}{
+			"xid": xid,
+		},
 	}
-	description
-	website
-	version
-	release {
-		id
+
+	var resp GetProductByXid
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
 	}
-	releases {
-		id
+	return &resp, nil
+}
+
+func (c *Client) GetProductByXidWithResponse(ctx context.Context, xid string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetProductByXid",
+		Query:         GetProductByXidDocument,
+		Variables: map[string]interface{}{
+			"xid": xid,
+		},
 	}
-	renamedTo {
-		id
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
 	}
-	renamedFrom {
-		id
-	}
-	forkOf {
-		id
-	}
-	forks {
-		id
-	}
-	tags {
-		id
-	}
-	category {
+	return nil
+}
+
+const GetProductIDDocument = `query GetProductID ($xid: String!) {
+	getProduct(xid: $xid) {
 		id
 	}
 }
 `
 
-func (c *Client) GetProducts(ctx context.Context, filter *models.ProductFilter, order *models.ProductOrder, first *int64, offset *int64) (*GetProducts, error) {
+func (c *Client) GetProductID(ctx context.Context, xid string) (*GetProductID, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetProductID",
+		Query:         GetProductIDDocument,
+		Variables: map[string]interface{}{
+			"xid": xid,
+		},
+	}
+
+	var resp GetProductID
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetProductIDWithResponse(ctx context.Context, xid string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetProductID",
+		Query:         GetProductIDDocument,
+		Variables: map[string]interface{}{
+			"xid": xid,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetProductsDocument = `query GetProducts ($getFilter: ProductFilter, $order: ProductOrder, $first: Int, $offset: Int) {
+	queryProduct(filter: $getFilter, order: $order, first: $first, offset: $offset) {
+		... ProductFragment
+	}
+	aggregateProduct(filter: $getFilter) {
+		count
+	}
+}
+fragment ProductFragment on Product {
+	... CrawlerMetaFragment
+	id
+	xid
+	name
+	description
+	documentationLanguage
+	version
+	license {
+		id
+		xid
+	}
+	licensor {
+		... UserOrGroupBasicFragment
+	}
+	website
+	release {
+		id
+		name
+	}
+	releases {
+		id
+		name
+	}
+	renamedTo {
+		id
+		name
+	}
+	renamedFrom {
+		id
+		name
+	}
+	forkOf {
+		id
+		name
+	}
+	forks {
+		id
+		name
+	}
+	tags {
+		id
+		name
+	}
+	category {
+		id
+		fullName
+	}
+}
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
+}
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
+}
+`
+
+func (c *Client) GetProducts(ctx context.Context, getFilter *ProductFilter, order *ProductOrder, first *int64, offset *int64) (*GetProducts, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
 		OperationName: "GetProducts",
 		Query:         GetProductsDocument,
 		Variables: map[string]interface{}{
-			"filter": filter,
-			"order":  order,
-			"first":  first,
-			"offset": offset,
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
 		},
 	}
 
@@ -4251,98 +7590,515 @@ func (c *Client) GetProducts(ctx context.Context, filter *models.ProductFilter, 
 	return &resp, nil
 }
 
-const SaveProductsDocument = `mutation SaveProducts ($products: [AddProductInput!]!) {
-	addProduct(input: $products, upsert: true) {
-		product {
-			id
-		}
-	}
-}
-`
-
-func (c *Client) SaveProducts(ctx context.Context, products []*models.AddProductInput) (*SaveProducts, error) {
+func (c *Client) GetProductsWithResponse(ctx context.Context, getFilter *ProductFilter, order *ProductOrder, first *int64, offset *int64, resp interface{}) error {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
-		OperationName: "SaveProducts",
-		Query:         SaveProductsDocument,
+		OperationName: "GetProducts",
+		Query:         GetProductsDocument,
 		Variables: map[string]interface{}{
-			"products": products,
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
 		},
 	}
 
-	var resp SaveProducts
-	err := c.Requester.Do(req, &resp)
+	err := c.Requester.Do(req, resp)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return &resp, nil
+	return nil
 }
 
-const DeleteProductDocument = `mutation DeleteProduct ($filter: ProductFilter!) {
-	deleteProduct(filter: $filter) {
-		product {
-			id
-		}
+const SearchProductsDocument = `query SearchProducts ($getFilter: ProductFilter, $order: ProductOrder, $first: Int, $offset: Int) {
+	queryProduct(filter: $getFilter, order: $order, first: $first, offset: $offset) {
+		... ProductSearchFragment
+	}
+	aggregateProduct(filter: $getFilter) {
+		count
 	}
 }
-`
-
-func (c *Client) DeleteProduct(ctx context.Context, filter models.ProductFilter) (*DeleteProduct, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "DeleteProduct",
-		Query:         DeleteProductDocument,
-		Variables: map[string]interface{}{
-			"filter": filter,
-		},
-	}
-
-	var resp DeleteProduct
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const GetSoftwareDocument = `query GetSoftware ($id: ID!) {
-	getSoftware(id: $id) {
-		... SoftwareFragment
-	}
-}
-fragment SoftwareFragment on Software {
-	... NodeFragment
+fragment ProductSearchFragment on Product {
 	... CrawlerMetaFragment
-	release
-	installationGuide {
-		id
-	}
-	documentationLanguage
-	license {
-		id
-	}
-	licensor
-}
-fragment NodeFragment on Node {
 	id
+	xid
+	name
+	website
+	renamedTo {
+		id
+	}
+	renamedFrom {
+		id
+	}
+	forkOf {
+		id
+		release {
+			repository {
+				url
+			}
+		}
+	}
+	forks {
+		id
+	}
+	tags {
+		... TagFragment
+	}
+	category {
+		... CategoryFragment
+	}
+	releases {
+		id
+	}
+	release {
+		id
+		xid
+		name
+		description
+		version
+		createdAt
+		releases {
+			id
+		}
+		isLatest
+		repository {
+			... RepositoryFragment
+		}
+		license {
+			... LicenseFragmentBasic
+		}
+		additionalLicenses {
+			... LicenseFragmentBasic
+		}
+		licensor {
+			... UserOrGroupFullFragment
+		}
+		documentationLanguage
+		technologyReadinessLevel
+		documentationReadinessLevel
+		attestation
+		publication
+		compliesWith {
+			name
+		}
+		cpcPatentClass
+		tsdc {
+			id
+		}
+		components {
+			id
+		}
+		software {
+			id
+		}
+		image {
+			... FileFragment
+		}
+		readme {
+			... FileFragment
+		}
+		contributionGuide {
+			... FileFragment
+		}
+		bom {
+			... FileFragment
+		}
+		manufacturingInstructions {
+			... FileFragment
+		}
+		userManual {
+			... FileFragment
+		}
+		product {
+			id
+		}
+		usedIn {
+			id
+		}
+		source {
+			... FileFragment
+		}
+		export {
+			... FileFragment
+		}
+		auxiliary {
+			... FileFragment
+		}
+		organization {
+			id
+		}
+		mass
+		outerDimensions {
+			... OuterDimensionsFragment
+		}
+		material {
+			id
+		}
+		manufacturingProcess {
+			id
+		}
+		productionMetadata {
+			id
+		}
+	}
+}
+fragment TagFragment on Tag {
+	id
+	xid
+	name
+	aliases {
+		id
+		name
+	}
+	related {
+		id
+		name
+	}
+}
+fragment CategoryFragment on Category {
+	id
+	xid
+	fullName
+	name
+	description
+	parent {
+		id
+		fullName
+	}
+	children {
+		id
+		fullName
+	}
+	products {
+		id
+		name
+	}
+}
+fragment RepositoryFragment on Repository {
+	id
+	xid
+	url
+	permaUrl
+	host {
+		id
+		name
+	}
+	owner {
+		... UserOrGroupBasicFragment
+	}
+	name
+	reference
+	path
+}
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
+}
+fragment GroupFragment on Group {
+	... UserOrGroupFragment
+	members {
+		__typename
+		id
+	}
+}
+fragment LicenseFragmentBasic on License {
+	id
+	xid
+	name
+	isSpdx
+	isDeprecated
+	isOsiApproved
+	isFsfLibre
+	isBlocked
+}
+fragment UserFragment on User {
+	... UserOrGroupFragment
+	locale
+}
+fragment UserOrGroupFragment on UserOrGroup {
+	__typename
+	id
+	xid
+	host {
+		id
+		name
+	}
+	name
+	fullName
+	email
+	avatar {
+		id
+		path
+	}
+	url
+	memberOf {
+		id
+		fullName
+	}
+	products {
+		id
+		name
+	}
+}
+fragment FileFragment on File {
+	... CrawlerMetaFragment
+	id
+	name
+	path
+	mimeType
+	url
+	createdAt
 }
 fragment CrawlerMetaFragment on CrawlerMeta {
 	discoveredAt
 	lastIndexedAt
 }
+fragment OuterDimensionsFragment on OuterDimensions {
+	__typename
+	... on BoundingBoxDimensions {
+		... BoundingBoxDimensionsFragment
+	}
+	... on OpenSCADDimensions {
+		... OpenSCADDimensionsFragment
+	}
+}
+fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
+	id
+	height
+	width
+	depth
+}
+fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
+	id
+	openscad
+	unit
+}
+fragment UserOrGroupFullFragment on UserOrGroup {
+	__typename
+	... on User {
+		... UserFragment
+	}
+	... on Group {
+		... GroupFragment
+	}
+}
 `
 
-func (c *Client) GetSoftware(ctx context.Context, id string) (*GetSoftware, error) {
+func (c *Client) SearchProducts(ctx context.Context, getFilter *ProductFilter, order *ProductOrder, first *int64, offset *int64) (*SearchProducts, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
-		OperationName: "GetSoftware",
-		Query:         GetSoftwareDocument,
+		OperationName: "SearchProducts",
+		Query:         SearchProductsDocument,
+		Variables: map[string]interface{}{
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
+		},
+	}
+
+	var resp SearchProducts
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) SearchProductsWithResponse(ctx context.Context, getFilter *ProductFilter, order *ProductOrder, first *int64, offset *int64, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "SearchProducts",
+		Query:         SearchProductsDocument,
+		Variables: map[string]interface{}{
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const CreateProductsDocument = `mutation CreateProducts ($createInput: [AddProductInput!]!) {
+	addProduct(input: $createInput, upsert: true) {
+		product {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) CreateProducts(ctx context.Context, createInput []*AddProductInput) (*CreateProducts, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "CreateProducts",
+		Query:         CreateProductsDocument,
+		Variables: map[string]interface{}{
+			"createInput": createInput,
+		},
+	}
+
+	var resp CreateProducts
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) CreateProductsWithResponse(ctx context.Context, createInput []*AddProductInput, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "CreateProducts",
+		Query:         CreateProductsDocument,
+		Variables: map[string]interface{}{
+			"createInput": createInput,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const UpdateProductsDocument = `mutation UpdateProducts ($updateInput: UpdateProductInput!) {
+	updateProduct(input: $updateInput) {
+		product {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) UpdateProducts(ctx context.Context, updateInput UpdateProductInput) (*UpdateProducts, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "UpdateProducts",
+		Query:         UpdateProductsDocument,
+		Variables: map[string]interface{}{
+			"updateInput": updateInput,
+		},
+	}
+
+	var resp UpdateProducts
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) UpdateProductsWithResponse(ctx context.Context, updateInput UpdateProductInput, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "UpdateProducts",
+		Query:         UpdateProductsDocument,
+		Variables: map[string]interface{}{
+			"updateInput": updateInput,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const DeleteProductsDocument = `mutation DeleteProducts ($delFilter: ProductFilter!) {
+	deleteProduct(filter: $delFilter) {
+		product {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) DeleteProducts(ctx context.Context, delFilter ProductFilter) (*DeleteProducts, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "DeleteProducts",
+		Query:         DeleteProductsDocument,
+		Variables: map[string]interface{}{
+			"delFilter": delFilter,
+		},
+	}
+
+	var resp DeleteProducts
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) DeleteProductsWithResponse(ctx context.Context, delFilter ProductFilter, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "DeleteProducts",
+		Query:         DeleteProductsDocument,
+		Variables: map[string]interface{}{
+			"delFilter": delFilter,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetRepositoryByIDDocument = `query GetRepositoryByID ($id: ID!) {
+	getRepository(id: $id) {
+		... RepositoryFragment
+	}
+}
+fragment RepositoryFragment on Repository {
+	id
+	xid
+	url
+	permaUrl
+	host {
+		id
+		name
+	}
+	owner {
+		... UserOrGroupBasicFragment
+	}
+	name
+	reference
+	path
+}
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
+}
+`
+
+func (c *Client) GetRepositoryByID(ctx context.Context, id string) (*GetRepositoryByID, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetRepositoryByID",
+		Query:         GetRepositoryByIDDocument,
 		Variables: map[string]interface{}{
 			"id": id,
 		},
 	}
 
-	var resp GetSoftware
+	var resp GetRepositoryByID
 	err := c.Requester.Do(req, &resp)
 	if err != nil {
 		return nil, err
@@ -4350,43 +8106,434 @@ func (c *Client) GetSoftware(ctx context.Context, id string) (*GetSoftware, erro
 	return &resp, nil
 }
 
-const GetSoftwaresDocument = `query GetSoftwares ($filter: SoftwareFilter, $order: SoftwareOrder, $first: Int, $offset: Int) {
-	querySoftware(filter: $filter, order: $order, first: $first, offset: $offset) {
+func (c *Client) GetRepositoryByIDWithResponse(ctx context.Context, id string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetRepositoryByID",
+		Query:         GetRepositoryByIDDocument,
+		Variables: map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetRepositoryByXidDocument = `query GetRepositoryByXid ($xid: String!) {
+	getRepository(xid: $xid) {
+		... RepositoryFragment
+	}
+}
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
+}
+fragment RepositoryFragment on Repository {
+	id
+	xid
+	url
+	permaUrl
+	host {
+		id
+		name
+	}
+	owner {
+		... UserOrGroupBasicFragment
+	}
+	name
+	reference
+	path
+}
+`
+
+func (c *Client) GetRepositoryByXid(ctx context.Context, xid string) (*GetRepositoryByXid, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetRepositoryByXid",
+		Query:         GetRepositoryByXidDocument,
+		Variables: map[string]interface{}{
+			"xid": xid,
+		},
+	}
+
+	var resp GetRepositoryByXid
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetRepositoryByXidWithResponse(ctx context.Context, xid string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetRepositoryByXid",
+		Query:         GetRepositoryByXidDocument,
+		Variables: map[string]interface{}{
+			"xid": xid,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetRepositoryIDDocument = `query GetRepositoryID ($xid: String!) {
+	getRepository(xid: $xid) {
+		id
+	}
+}
+`
+
+func (c *Client) GetRepositoryID(ctx context.Context, xid string) (*GetRepositoryID, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetRepositoryID",
+		Query:         GetRepositoryIDDocument,
+		Variables: map[string]interface{}{
+			"xid": xid,
+		},
+	}
+
+	var resp GetRepositoryID
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetRepositoryIDWithResponse(ctx context.Context, xid string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetRepositoryID",
+		Query:         GetRepositoryIDDocument,
+		Variables: map[string]interface{}{
+			"xid": xid,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetRepositoriesDocument = `query GetRepositories ($getFilter: RepositoryFilter, $order: RepositoryOrder, $first: Int, $offset: Int) {
+	queryRepository(filter: $getFilter, order: $order, first: $first, offset: $offset) {
+		... RepositoryFragment
+	}
+	aggregateRepository(filter: $getFilter) {
+		count
+	}
+}
+fragment RepositoryFragment on Repository {
+	id
+	xid
+	url
+	permaUrl
+	host {
+		id
+		name
+	}
+	owner {
+		... UserOrGroupBasicFragment
+	}
+	name
+	reference
+	path
+}
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
+}
+`
+
+func (c *Client) GetRepositories(ctx context.Context, getFilter *RepositoryFilter, order *RepositoryOrder, first *int64, offset *int64) (*GetRepositories, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetRepositories",
+		Query:         GetRepositoriesDocument,
+		Variables: map[string]interface{}{
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
+		},
+	}
+
+	var resp GetRepositories
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetRepositoriesWithResponse(ctx context.Context, getFilter *RepositoryFilter, order *RepositoryOrder, first *int64, offset *int64, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetRepositories",
+		Query:         GetRepositoriesDocument,
+		Variables: map[string]interface{}{
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const CreateRepositoriesDocument = `mutation CreateRepositories ($createInput: [AddRepositoryInput!]!) {
+	addRepository(input: $createInput, upsert: true) {
+		repository {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) CreateRepositories(ctx context.Context, createInput []*AddRepositoryInput) (*CreateRepositories, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "CreateRepositories",
+		Query:         CreateRepositoriesDocument,
+		Variables: map[string]interface{}{
+			"createInput": createInput,
+		},
+	}
+
+	var resp CreateRepositories
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) CreateRepositoriesWithResponse(ctx context.Context, createInput []*AddRepositoryInput, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "CreateRepositories",
+		Query:         CreateRepositoriesDocument,
+		Variables: map[string]interface{}{
+			"createInput": createInput,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const UpdateRepositoriesDocument = `mutation UpdateRepositories ($updateInput: UpdateRepositoryInput!) {
+	updateRepository(input: $updateInput) {
+		repository {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) UpdateRepositories(ctx context.Context, updateInput UpdateRepositoryInput) (*UpdateRepositories, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "UpdateRepositories",
+		Query:         UpdateRepositoriesDocument,
+		Variables: map[string]interface{}{
+			"updateInput": updateInput,
+		},
+	}
+
+	var resp UpdateRepositories
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) UpdateRepositoriesWithResponse(ctx context.Context, updateInput UpdateRepositoryInput, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "UpdateRepositories",
+		Query:         UpdateRepositoriesDocument,
+		Variables: map[string]interface{}{
+			"updateInput": updateInput,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const DeleteRepositoriesDocument = `mutation DeleteRepositories ($delFilter: RepositoryFilter!) {
+	deleteRepository(filter: $delFilter) {
+		repository {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) DeleteRepositories(ctx context.Context, delFilter RepositoryFilter) (*DeleteRepositories, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "DeleteRepositories",
+		Query:         DeleteRepositoriesDocument,
+		Variables: map[string]interface{}{
+			"delFilter": delFilter,
+		},
+	}
+
+	var resp DeleteRepositories
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) DeleteRepositoriesWithResponse(ctx context.Context, delFilter RepositoryFilter, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "DeleteRepositories",
+		Query:         DeleteRepositoriesDocument,
+		Variables: map[string]interface{}{
+			"delFilter": delFilter,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetSoftwareByIDDocument = `query GetSoftwareByID ($id: ID!) {
+	getSoftware(id: $id) {
 		... SoftwareFragment
 	}
+}
+fragment SoftwareFragment on Software {
+	... CrawlerMetaFragment
+	id
+	release
+	installationGuide {
+		id
+		path
+	}
+	documentationLanguage
+	license {
+		id
+		xid
+	}
+	licensor
 }
 fragment CrawlerMetaFragment on CrawlerMeta {
 	discoveredAt
 	lastIndexedAt
 }
+`
+
+func (c *Client) GetSoftwareByID(ctx context.Context, id string) (*GetSoftwareByID, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetSoftwareByID",
+		Query:         GetSoftwareByIDDocument,
+		Variables: map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	var resp GetSoftwareByID
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetSoftwareByIDWithResponse(ctx context.Context, id string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetSoftwareByID",
+		Query:         GetSoftwareByIDDocument,
+		Variables: map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetSoftwaresDocument = `query GetSoftwares ($getFilter: SoftwareFilter, $order: SoftwareOrder, $first: Int, $offset: Int) {
+	querySoftware(filter: $getFilter, order: $order, first: $first, offset: $offset) {
+		... SoftwareFragment
+	}
+	aggregateSoftware(filter: $getFilter) {
+		count
+	}
+}
 fragment SoftwareFragment on Software {
-	... NodeFragment
 	... CrawlerMetaFragment
+	id
 	release
 	installationGuide {
 		id
+		path
 	}
 	documentationLanguage
 	license {
 		id
+		xid
 	}
 	licensor
 }
-fragment NodeFragment on Node {
-	id
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
 }
 `
 
-func (c *Client) GetSoftwares(ctx context.Context, filter *models.SoftwareFilter, order *models.SoftwareOrder, first *int64, offset *int64) (*GetSoftwares, error) {
+func (c *Client) GetSoftwares(ctx context.Context, getFilter *SoftwareFilter, order *SoftwareOrder, first *int64, offset *int64) (*GetSoftwares, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
 		OperationName: "GetSoftwares",
 		Query:         GetSoftwaresDocument,
 		Variables: map[string]interface{}{
-			"filter": filter,
-			"order":  order,
-			"first":  first,
-			"offset": offset,
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
 		},
 	}
 
@@ -4398,13 +8545,28 @@ func (c *Client) GetSoftwares(ctx context.Context, filter *models.SoftwareFilter
 	return &resp, nil
 }
 
-const SaveSoftwaresDocument = `mutation SaveSoftwares ($input: [AddSoftwareInput!]!, $deleteIds: [ID!]!) {
-	deleteSoftware(filter: {id:$deleteIds}) {
-		software {
-			id
-		}
+func (c *Client) GetSoftwaresWithResponse(ctx context.Context, getFilter *SoftwareFilter, order *SoftwareOrder, first *int64, offset *int64, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetSoftwares",
+		Query:         GetSoftwaresDocument,
+		Variables: map[string]interface{}{
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
+		},
 	}
-	addSoftware(input: $input) {
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const CreateSoftwaresDocument = `mutation CreateSoftwares ($createInput: [AddSoftwareInput!]!) {
+	addSoftware(input: $createInput) {
 		software {
 			id
 		}
@@ -4412,18 +8574,17 @@ const SaveSoftwaresDocument = `mutation SaveSoftwares ($input: [AddSoftwareInput
 }
 `
 
-func (c *Client) SaveSoftwares(ctx context.Context, input []*models.AddSoftwareInput, deleteIds []string) (*SaveSoftwares, error) {
+func (c *Client) CreateSoftwares(ctx context.Context, createInput []*AddSoftwareInput) (*CreateSoftwares, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
-		OperationName: "SaveSoftwares",
-		Query:         SaveSoftwaresDocument,
+		OperationName: "CreateSoftwares",
+		Query:         CreateSoftwaresDocument,
 		Variables: map[string]interface{}{
-			"input":     input,
-			"deleteIds": deleteIds,
+			"createInput": createInput,
 		},
 	}
 
-	var resp SaveSoftwares
+	var resp CreateSoftwares
 	err := c.Requester.Do(req, &resp)
 	if err != nil {
 		return nil, err
@@ -4431,8 +8592,25 @@ func (c *Client) SaveSoftwares(ctx context.Context, input []*models.AddSoftwareI
 	return &resp, nil
 }
 
-const DeleteSoftwareDocument = `mutation DeleteSoftware ($filter: SoftwareFilter!) {
-	deleteSoftware(filter: $filter) {
+func (c *Client) CreateSoftwaresWithResponse(ctx context.Context, createInput []*AddSoftwareInput, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "CreateSoftwares",
+		Query:         CreateSoftwaresDocument,
+		Variables: map[string]interface{}{
+			"createInput": createInput,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const UpdateSoftwaresDocument = `mutation UpdateSoftwares ($updateInput: UpdateSoftwareInput!) {
+	updateSoftware(input: $updateInput) {
 		software {
 			id
 		}
@@ -4440,17 +8618,17 @@ const DeleteSoftwareDocument = `mutation DeleteSoftware ($filter: SoftwareFilter
 }
 `
 
-func (c *Client) DeleteSoftware(ctx context.Context, filter models.SoftwareFilter) (*DeleteSoftware, error) {
+func (c *Client) UpdateSoftwares(ctx context.Context, updateInput UpdateSoftwareInput) (*UpdateSoftwares, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
-		OperationName: "DeleteSoftware",
-		Query:         DeleteSoftwareDocument,
+		OperationName: "UpdateSoftwares",
+		Query:         UpdateSoftwaresDocument,
 		Variables: map[string]interface{}{
-			"filter": filter,
+			"updateInput": updateInput,
 		},
 	}
 
-	var resp DeleteSoftware
+	var resp UpdateSoftwares
 	err := c.Requester.Do(req, &resp)
 	if err != nil {
 		return nil, err
@@ -4458,31 +8636,98 @@ func (c *Client) DeleteSoftware(ctx context.Context, filter models.SoftwareFilte
 	return &resp, nil
 }
 
-const GetStringVDocument = `query GetStringV ($id: ID!) {
-	getStringV(id: $id) {
-		... StringVFragment
+func (c *Client) UpdateSoftwaresWithResponse(ctx context.Context, updateInput UpdateSoftwareInput, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "UpdateSoftwares",
+		Query:         UpdateSoftwaresDocument,
+		Variables: map[string]interface{}{
+			"updateInput": updateInput,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const DeleteSoftwaresDocument = `mutation DeleteSoftwares ($delFilter: SoftwareFilter!) {
+	deleteSoftware(filter: $delFilter) {
+		software {
+			id
+		}
 	}
 }
-fragment StringVFragment on StringV {
-	... NodeFragment
-	value
+`
+
+func (c *Client) DeleteSoftwares(ctx context.Context, delFilter SoftwareFilter) (*DeleteSoftwares, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "DeleteSoftwares",
+		Query:         DeleteSoftwaresDocument,
+		Variables: map[string]interface{}{
+			"delFilter": delFilter,
+		},
+	}
+
+	var resp DeleteSoftwares
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
 }
-fragment NodeFragment on Node {
+
+func (c *Client) DeleteSoftwaresWithResponse(ctx context.Context, delFilter SoftwareFilter, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "DeleteSoftwares",
+		Query:         DeleteSoftwaresDocument,
+		Variables: map[string]interface{}{
+			"delFilter": delFilter,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetTagByIDDocument = `query GetTagByID ($id: ID!) {
+	getTag(id: $id) {
+		... TagFragment
+	}
+}
+fragment TagFragment on Tag {
 	id
+	xid
+	name
+	aliases {
+		id
+		name
+	}
+	related {
+		id
+		name
+	}
 }
 `
 
-func (c *Client) GetStringV(ctx context.Context, id string) (*GetStringV, error) {
+func (c *Client) GetTagByID(ctx context.Context, id string) (*GetTagByID, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
-		OperationName: "GetStringV",
-		Query:         GetStringVDocument,
+		OperationName: "GetTagByID",
+		Query:         GetTagByIDDocument,
 		Variables: map[string]interface{}{
 			"id": id,
 		},
 	}
 
-	var resp GetStringV
+	var resp GetTagByID
 	err := c.Requester.Do(req, &resp)
 	if err != nil {
 		return nil, err
@@ -4490,103 +8735,25 @@ func (c *Client) GetStringV(ctx context.Context, id string) (*GetStringV, error)
 	return &resp, nil
 }
 
-const GetStringVsDocument = `query GetStringVs ($filter: StringVFilter, $order: StringVOrder, $first: Int, $offset: Int) {
-	queryStringV(filter: $filter, order: $order, first: $first, offset: $offset) {
-		... StringVFragment
-	}
-}
-fragment StringVFragment on StringV {
-	... NodeFragment
-	value
-}
-fragment NodeFragment on Node {
-	id
-}
-`
-
-func (c *Client) GetStringVs(ctx context.Context, filter *models.StringVFilter, order *models.StringVOrder, first *int64, offset *int64) (*GetStringVs, error) {
+func (c *Client) GetTagByIDWithResponse(ctx context.Context, id string, resp interface{}) error {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
-		OperationName: "GetStringVs",
-		Query:         GetStringVsDocument,
+		OperationName: "GetTagByID",
+		Query:         GetTagByIDDocument,
 		Variables: map[string]interface{}{
-			"filter": filter,
-			"order":  order,
-			"first":  first,
-			"offset": offset,
+			"id": id,
 		},
 	}
 
-	var resp GetStringVs
-	err := c.Requester.Do(req, &resp)
+	err := c.Requester.Do(req, resp)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return &resp, nil
+	return nil
 }
 
-const SaveStringVsDocument = `mutation SaveStringVs ($input: [AddStringVInput!]!, $deleteIds: [ID!]!) {
-	deleteStringV(filter: {id:$deleteIds}) {
-		stringV {
-			id
-		}
-	}
-	addStringV(input: $input) {
-		stringV {
-			id
-		}
-	}
-}
-`
-
-func (c *Client) SaveStringVs(ctx context.Context, input []*models.AddStringVInput, deleteIds []string) (*SaveStringVs, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "SaveStringVs",
-		Query:         SaveStringVsDocument,
-		Variables: map[string]interface{}{
-			"input":     input,
-			"deleteIds": deleteIds,
-		},
-	}
-
-	var resp SaveStringVs
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const DeleteStringVsDocument = `mutation DeleteStringVs ($filter: StringVFilter!) {
-	deleteStringV(filter: $filter) {
-		stringV {
-			id
-		}
-	}
-}
-`
-
-func (c *Client) DeleteStringVs(ctx context.Context, filter models.StringVFilter) (*DeleteStringVs, error) {
-	req := request.GraphQLRequest{
-		Ctx:           ctx,
-		OperationName: "DeleteStringVs",
-		Query:         DeleteStringVsDocument,
-		Variables: map[string]interface{}{
-			"filter": filter,
-		},
-	}
-
-	var resp DeleteStringVs
-	err := c.Requester.Do(req, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-const GetTagDocument = `query GetTag ($id: ID, $xid: String) {
-	getTag(id: $id, xid: $xid) {
+const GetTagByXidDocument = `query GetTagByXid ($xid: String!) {
+	getTag(xid: $xid) {
 		... TagFragment
 	}
 }
@@ -4596,25 +8763,26 @@ fragment TagFragment on Tag {
 	name
 	aliases {
 		id
+		name
 	}
 	related {
 		id
+		name
 	}
 }
 `
 
-func (c *Client) GetTag(ctx context.Context, id *string, xid *string) (*GetTag, error) {
+func (c *Client) GetTagByXid(ctx context.Context, xid string) (*GetTagByXid, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
-		OperationName: "GetTag",
-		Query:         GetTagDocument,
+		OperationName: "GetTagByXid",
+		Query:         GetTagByXidDocument,
 		Variables: map[string]interface{}{
-			"id":  id,
 			"xid": xid,
 		},
 	}
 
-	var resp GetTag
+	var resp GetTagByXid
 	err := c.Requester.Do(req, &resp)
 	if err != nil {
 		return nil, err
@@ -4622,9 +8790,71 @@ func (c *Client) GetTag(ctx context.Context, id *string, xid *string) (*GetTag, 
 	return &resp, nil
 }
 
-const GetTagsDocument = `query GetTags ($filter: TagFilter, $order: TagOrder, $first: Int, $offset: Int) {
-	queryTag(filter: $filter, order: $order, first: $first, offset: $offset) {
+func (c *Client) GetTagByXidWithResponse(ctx context.Context, xid string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetTagByXid",
+		Query:         GetTagByXidDocument,
+		Variables: map[string]interface{}{
+			"xid": xid,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetTagIDDocument = `query GetTagID ($xid: String!) {
+	getTag(xid: $xid) {
+		id
+	}
+}
+`
+
+func (c *Client) GetTagID(ctx context.Context, xid string) (*GetTagID, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetTagID",
+		Query:         GetTagIDDocument,
+		Variables: map[string]interface{}{
+			"xid": xid,
+		},
+	}
+
+	var resp GetTagID
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetTagIDWithResponse(ctx context.Context, xid string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetTagID",
+		Query:         GetTagIDDocument,
+		Variables: map[string]interface{}{
+			"xid": xid,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetTagsDocument = `query GetTags ($getFilter: TagFilter, $order: TagOrder, $first: Int, $offset: Int) {
+	queryTag(filter: $getFilter, order: $order, first: $first, offset: $offset) {
 		... TagFragment
+	}
+	aggregateTag(filter: $getFilter) {
+		count
 	}
 }
 fragment TagFragment on Tag {
@@ -4633,23 +8863,25 @@ fragment TagFragment on Tag {
 	name
 	aliases {
 		id
+		name
 	}
 	related {
 		id
+		name
 	}
 }
 `
 
-func (c *Client) GetTags(ctx context.Context, filter *models.TagFilter, order *models.TagOrder, first *int64, offset *int64) (*GetTags, error) {
+func (c *Client) GetTags(ctx context.Context, getFilter *TagFilter, order *TagOrder, first *int64, offset *int64) (*GetTags, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
 		OperationName: "GetTags",
 		Query:         GetTagsDocument,
 		Variables: map[string]interface{}{
-			"filter": filter,
-			"order":  order,
-			"first":  first,
-			"offset": offset,
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
 		},
 	}
 
@@ -4661,8 +8893,28 @@ func (c *Client) GetTags(ctx context.Context, filter *models.TagFilter, order *m
 	return &resp, nil
 }
 
-const SaveTagsDocument = `mutation SaveTags ($input: [AddTagInput!]!) {
-	addTag(input: $input, upsert: true) {
+func (c *Client) GetTagsWithResponse(ctx context.Context, getFilter *TagFilter, order *TagOrder, first *int64, offset *int64, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetTags",
+		Query:         GetTagsDocument,
+		Variables: map[string]interface{}{
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const CreateTagsDocument = `mutation CreateTags ($createInput: [AddTagInput!]!) {
+	addTag(input: $createInput, upsert: true) {
 		tag {
 			id
 		}
@@ -4670,17 +8922,17 @@ const SaveTagsDocument = `mutation SaveTags ($input: [AddTagInput!]!) {
 }
 `
 
-func (c *Client) SaveTags(ctx context.Context, input []*models.AddTagInput) (*SaveTags, error) {
+func (c *Client) CreateTags(ctx context.Context, createInput []*AddTagInput) (*CreateTags, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
-		OperationName: "SaveTags",
-		Query:         SaveTagsDocument,
+		OperationName: "CreateTags",
+		Query:         CreateTagsDocument,
 		Variables: map[string]interface{}{
-			"input": input,
+			"createInput": createInput,
 		},
 	}
 
-	var resp SaveTags
+	var resp CreateTags
 	err := c.Requester.Do(req, &resp)
 	if err != nil {
 		return nil, err
@@ -4688,8 +8940,25 @@ func (c *Client) SaveTags(ctx context.Context, input []*models.AddTagInput) (*Sa
 	return &resp, nil
 }
 
-const DeleteTagDocument = `mutation DeleteTag ($filter: TagFilter!) {
-	deleteTag(filter: $filter) {
+func (c *Client) CreateTagsWithResponse(ctx context.Context, createInput []*AddTagInput, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "CreateTags",
+		Query:         CreateTagsDocument,
+		Variables: map[string]interface{}{
+			"createInput": createInput,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const UpdateTagsDocument = `mutation UpdateTags ($updateInput: UpdateTagInput!) {
+	updateTag(input: $updateInput) {
 		tag {
 			id
 		}
@@ -4697,17 +8966,17 @@ const DeleteTagDocument = `mutation DeleteTag ($filter: TagFilter!) {
 }
 `
 
-func (c *Client) DeleteTag(ctx context.Context, filter models.TagFilter) (*DeleteTag, error) {
+func (c *Client) UpdateTags(ctx context.Context, updateInput UpdateTagInput) (*UpdateTags, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
-		OperationName: "DeleteTag",
-		Query:         DeleteTagDocument,
+		OperationName: "UpdateTags",
+		Query:         UpdateTagsDocument,
 		Variables: map[string]interface{}{
-			"filter": filter,
+			"updateInput": updateInput,
 		},
 	}
 
-	var resp DeleteTag
+	var resp UpdateTags
 	err := c.Requester.Do(req, &resp)
 	if err != nil {
 		return nil, err
@@ -4715,37 +8984,147 @@ func (c *Client) DeleteTag(ctx context.Context, filter models.TagFilter) (*Delet
 	return &resp, nil
 }
 
-const GetTechnicalStandardDocument = `query GetTechnicalStandard ($id: ID, $xid: String) {
-	getTechnicalStandard(id: $id, xid: $xid) {
+func (c *Client) UpdateTagsWithResponse(ctx context.Context, updateInput UpdateTagInput, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "UpdateTags",
+		Query:         UpdateTagsDocument,
+		Variables: map[string]interface{}{
+			"updateInput": updateInput,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const DeleteTagsDocument = `mutation DeleteTags ($delFilter: TagFilter!) {
+	deleteTag(filter: $delFilter) {
+		tag {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) DeleteTags(ctx context.Context, delFilter TagFilter) (*DeleteTags, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "DeleteTags",
+		Query:         DeleteTagsDocument,
+		Variables: map[string]interface{}{
+			"delFilter": delFilter,
+		},
+	}
+
+	var resp DeleteTags
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) DeleteTagsWithResponse(ctx context.Context, delFilter TagFilter, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "DeleteTags",
+		Query:         DeleteTagsDocument,
+		Variables: map[string]interface{}{
+			"delFilter": delFilter,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetTechnicalStandardByIDDocument = `query GetTechnicalStandardByID ($id: ID!) {
+	getTechnicalStandard(id: $id) {
 		... TechnicalStandardFragment
 	}
 }
 fragment TechnicalStandardFragment on TechnicalStandard {
-	... NodeFragment
+	id
 	xid
 	name
 	description
 	components {
 		id
+		name
 	}
-}
-fragment NodeFragment on Node {
-	id
 }
 `
 
-func (c *Client) GetTechnicalStandard(ctx context.Context, id *string, xid *string) (*GetTechnicalStandard, error) {
+func (c *Client) GetTechnicalStandardByID(ctx context.Context, id string) (*GetTechnicalStandardByID, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
-		OperationName: "GetTechnicalStandard",
-		Query:         GetTechnicalStandardDocument,
+		OperationName: "GetTechnicalStandardByID",
+		Query:         GetTechnicalStandardByIDDocument,
 		Variables: map[string]interface{}{
-			"id":  id,
+			"id": id,
+		},
+	}
+
+	var resp GetTechnicalStandardByID
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetTechnicalStandardByIDWithResponse(ctx context.Context, id string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetTechnicalStandardByID",
+		Query:         GetTechnicalStandardByIDDocument,
+		Variables: map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetTechnicalStandardByXidDocument = `query GetTechnicalStandardByXid ($xid: String!) {
+	getTechnicalStandard(xid: $xid) {
+		... TechnicalStandardFragment
+	}
+}
+fragment TechnicalStandardFragment on TechnicalStandard {
+	id
+	xid
+	name
+	description
+	components {
+		id
+		name
+	}
+}
+`
+
+func (c *Client) GetTechnicalStandardByXid(ctx context.Context, xid string) (*GetTechnicalStandardByXid, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetTechnicalStandardByXid",
+		Query:         GetTechnicalStandardByXidDocument,
+		Variables: map[string]interface{}{
 			"xid": xid,
 		},
 	}
 
-	var resp GetTechnicalStandard
+	var resp GetTechnicalStandardByXid
 	err := c.Requester.Do(req, &resp)
 	if err != nil {
 		return nil, err
@@ -4753,35 +9132,95 @@ func (c *Client) GetTechnicalStandard(ctx context.Context, id *string, xid *stri
 	return &resp, nil
 }
 
-const GetTechnicalStandardsDocument = `query GetTechnicalStandards ($filter: TechnicalStandardFilter, $order: TechnicalStandardOrder, $first: Int, $offset: Int) {
-	queryTechnicalStandard(filter: $filter, order: $order, first: $first, offset: $offset) {
+func (c *Client) GetTechnicalStandardByXidWithResponse(ctx context.Context, xid string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetTechnicalStandardByXid",
+		Query:         GetTechnicalStandardByXidDocument,
+		Variables: map[string]interface{}{
+			"xid": xid,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetTechnicalStandardIDDocument = `query GetTechnicalStandardID ($xid: String!) {
+	getTechnicalStandard(xid: $xid) {
+		id
+	}
+}
+`
+
+func (c *Client) GetTechnicalStandardID(ctx context.Context, xid string) (*GetTechnicalStandardID, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetTechnicalStandardID",
+		Query:         GetTechnicalStandardIDDocument,
+		Variables: map[string]interface{}{
+			"xid": xid,
+		},
+	}
+
+	var resp GetTechnicalStandardID
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetTechnicalStandardIDWithResponse(ctx context.Context, xid string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetTechnicalStandardID",
+		Query:         GetTechnicalStandardIDDocument,
+		Variables: map[string]interface{}{
+			"xid": xid,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetTechnicalStandardsDocument = `query GetTechnicalStandards ($getFilter: TechnicalStandardFilter, $order: TechnicalStandardOrder, $first: Int, $offset: Int) {
+	queryTechnicalStandard(filter: $getFilter, order: $order, first: $first, offset: $offset) {
 		... TechnicalStandardFragment
+	}
+	aggregateTechnicalStandard(filter: $getFilter) {
+		count
 	}
 }
 fragment TechnicalStandardFragment on TechnicalStandard {
-	... NodeFragment
+	id
 	xid
 	name
 	description
 	components {
 		id
+		name
 	}
-}
-fragment NodeFragment on Node {
-	id
 }
 `
 
-func (c *Client) GetTechnicalStandards(ctx context.Context, filter *models.TechnicalStandardFilter, order *models.TechnicalStandardOrder, first *int64, offset *int64) (*GetTechnicalStandards, error) {
+func (c *Client) GetTechnicalStandards(ctx context.Context, getFilter *TechnicalStandardFilter, order *TechnicalStandardOrder, first *int64, offset *int64) (*GetTechnicalStandards, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
 		OperationName: "GetTechnicalStandards",
 		Query:         GetTechnicalStandardsDocument,
 		Variables: map[string]interface{}{
-			"filter": filter,
-			"order":  order,
-			"first":  first,
-			"offset": offset,
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
 		},
 	}
 
@@ -4793,8 +9232,28 @@ func (c *Client) GetTechnicalStandards(ctx context.Context, filter *models.Techn
 	return &resp, nil
 }
 
-const SaveTechnicalStandardsDocument = `mutation SaveTechnicalStandards ($input: [AddTechnicalStandardInput!]!) {
-	addTechnicalStandard(input: $input, upsert: true) {
+func (c *Client) GetTechnicalStandardsWithResponse(ctx context.Context, getFilter *TechnicalStandardFilter, order *TechnicalStandardOrder, first *int64, offset *int64, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetTechnicalStandards",
+		Query:         GetTechnicalStandardsDocument,
+		Variables: map[string]interface{}{
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const CreateTechnicalStandardsDocument = `mutation CreateTechnicalStandards ($createInput: [AddTechnicalStandardInput!]!) {
+	addTechnicalStandard(input: $createInput, upsert: true) {
 		technicalStandard {
 			id
 		}
@@ -4802,17 +9261,17 @@ const SaveTechnicalStandardsDocument = `mutation SaveTechnicalStandards ($input:
 }
 `
 
-func (c *Client) SaveTechnicalStandards(ctx context.Context, input []*models.AddTechnicalStandardInput) (*SaveTechnicalStandards, error) {
+func (c *Client) CreateTechnicalStandards(ctx context.Context, createInput []*AddTechnicalStandardInput) (*CreateTechnicalStandards, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
-		OperationName: "SaveTechnicalStandards",
-		Query:         SaveTechnicalStandardsDocument,
+		OperationName: "CreateTechnicalStandards",
+		Query:         CreateTechnicalStandardsDocument,
 		Variables: map[string]interface{}{
-			"input": input,
+			"createInput": createInput,
 		},
 	}
 
-	var resp SaveTechnicalStandards
+	var resp CreateTechnicalStandards
 	err := c.Requester.Do(req, &resp)
 	if err != nil {
 		return nil, err
@@ -4820,8 +9279,25 @@ func (c *Client) SaveTechnicalStandards(ctx context.Context, input []*models.Add
 	return &resp, nil
 }
 
-const DeleteTechnicalStandardDocument = `mutation DeleteTechnicalStandard ($filter: TechnicalStandardFilter!) {
-	deleteTechnicalStandard(filter: $filter) {
+func (c *Client) CreateTechnicalStandardsWithResponse(ctx context.Context, createInput []*AddTechnicalStandardInput, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "CreateTechnicalStandards",
+		Query:         CreateTechnicalStandardsDocument,
+		Variables: map[string]interface{}{
+			"createInput": createInput,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const UpdateTechnicalStandardsDocument = `mutation UpdateTechnicalStandards ($updateInput: UpdateTechnicalStandardInput!) {
+	updateTechnicalStandard(input: $updateInput) {
 		technicalStandard {
 			id
 		}
@@ -4829,17 +9305,17 @@ const DeleteTechnicalStandardDocument = `mutation DeleteTechnicalStandard ($filt
 }
 `
 
-func (c *Client) DeleteTechnicalStandard(ctx context.Context, filter models.TechnicalStandardFilter) (*DeleteTechnicalStandard, error) {
+func (c *Client) UpdateTechnicalStandards(ctx context.Context, updateInput UpdateTechnicalStandardInput) (*UpdateTechnicalStandards, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
-		OperationName: "DeleteTechnicalStandard",
-		Query:         DeleteTechnicalStandardDocument,
+		OperationName: "UpdateTechnicalStandards",
+		Query:         UpdateTechnicalStandardsDocument,
 		Variables: map[string]interface{}{
-			"filter": filter,
+			"updateInput": updateInput,
 		},
 	}
 
-	var resp DeleteTechnicalStandard
+	var resp UpdateTechnicalStandards
 	err := c.Requester.Do(req, &resp)
 	if err != nil {
 		return nil, err
@@ -4847,38 +9323,149 @@ func (c *Client) DeleteTechnicalStandard(ctx context.Context, filter models.Tech
 	return &resp, nil
 }
 
-const GetTechnologySpecificDocumentationCriteriaDocument = `query GetTechnologySpecificDocumentationCriteria ($id: ID, $xid: String) {
-	getTechnologySpecificDocumentationCriteria(id: $id, xid: $xid) {
+func (c *Client) UpdateTechnicalStandardsWithResponse(ctx context.Context, updateInput UpdateTechnicalStandardInput, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "UpdateTechnicalStandards",
+		Query:         UpdateTechnicalStandardsDocument,
+		Variables: map[string]interface{}{
+			"updateInput": updateInput,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const DeleteTechnicalStandardsDocument = `mutation DeleteTechnicalStandards ($delFilter: TechnicalStandardFilter!) {
+	deleteTechnicalStandard(filter: $delFilter) {
+		technicalStandard {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) DeleteTechnicalStandards(ctx context.Context, delFilter TechnicalStandardFilter) (*DeleteTechnicalStandards, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "DeleteTechnicalStandards",
+		Query:         DeleteTechnicalStandardsDocument,
+		Variables: map[string]interface{}{
+			"delFilter": delFilter,
+		},
+	}
+
+	var resp DeleteTechnicalStandards
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) DeleteTechnicalStandardsWithResponse(ctx context.Context, delFilter TechnicalStandardFilter, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "DeleteTechnicalStandards",
+		Query:         DeleteTechnicalStandardsDocument,
+		Variables: map[string]interface{}{
+			"delFilter": delFilter,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetTechnologySpecificDocumentationCriteriaByIDDocument = `query GetTechnologySpecificDocumentationCriteriaByID ($id: ID!) {
+	getTechnologySpecificDocumentationCriteria(id: $id) {
 		... TechnologySpecificDocumentationCriteriaFragment
 	}
 }
 fragment TechnologySpecificDocumentationCriteriaFragment on TechnologySpecificDocumentationCriteria {
-	... NodeFragment
+	id
 	xid
 	name
 	comment
 	requirementsUri
 	components {
 		id
+		name
 	}
-}
-fragment NodeFragment on Node {
-	id
 }
 `
 
-func (c *Client) GetTechnologySpecificDocumentationCriteria(ctx context.Context, id *string, xid *string) (*GetTechnologySpecificDocumentationCriteria, error) {
+func (c *Client) GetTechnologySpecificDocumentationCriteriaByID(ctx context.Context, id string) (*GetTechnologySpecificDocumentationCriteriaByID, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
-		OperationName: "GetTechnologySpecificDocumentationCriteria",
-		Query:         GetTechnologySpecificDocumentationCriteriaDocument,
+		OperationName: "GetTechnologySpecificDocumentationCriteriaByID",
+		Query:         GetTechnologySpecificDocumentationCriteriaByIDDocument,
 		Variables: map[string]interface{}{
-			"id":  id,
+			"id": id,
+		},
+	}
+
+	var resp GetTechnologySpecificDocumentationCriteriaByID
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetTechnologySpecificDocumentationCriteriaByIDWithResponse(ctx context.Context, id string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetTechnologySpecificDocumentationCriteriaByID",
+		Query:         GetTechnologySpecificDocumentationCriteriaByIDDocument,
+		Variables: map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetTechnologySpecificDocumentationCriteriaByXidDocument = `query GetTechnologySpecificDocumentationCriteriaByXid ($xid: String!) {
+	getTechnologySpecificDocumentationCriteria(xid: $xid) {
+		... TechnologySpecificDocumentationCriteriaFragment
+	}
+}
+fragment TechnologySpecificDocumentationCriteriaFragment on TechnologySpecificDocumentationCriteria {
+	id
+	xid
+	name
+	comment
+	requirementsUri
+	components {
+		id
+		name
+	}
+}
+`
+
+func (c *Client) GetTechnologySpecificDocumentationCriteriaByXid(ctx context.Context, xid string) (*GetTechnologySpecificDocumentationCriteriaByXid, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetTechnologySpecificDocumentationCriteriaByXid",
+		Query:         GetTechnologySpecificDocumentationCriteriaByXidDocument,
+		Variables: map[string]interface{}{
 			"xid": xid,
 		},
 	}
 
-	var resp GetTechnologySpecificDocumentationCriteria
+	var resp GetTechnologySpecificDocumentationCriteriaByXid
 	err := c.Requester.Do(req, &resp)
 	if err != nil {
 		return nil, err
@@ -4886,36 +9473,96 @@ func (c *Client) GetTechnologySpecificDocumentationCriteria(ctx context.Context,
 	return &resp, nil
 }
 
-const GetTechnologySpecificDocumentationCriteriasDocument = `query GetTechnologySpecificDocumentationCriterias ($filter: TechnologySpecificDocumentationCriteriaFilter, $order: TechnologySpecificDocumentationCriteriaOrder, $first: Int, $offset: Int) {
-	queryTechnologySpecificDocumentationCriteria(filter: $filter, order: $order, first: $first, offset: $offset) {
+func (c *Client) GetTechnologySpecificDocumentationCriteriaByXidWithResponse(ctx context.Context, xid string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetTechnologySpecificDocumentationCriteriaByXid",
+		Query:         GetTechnologySpecificDocumentationCriteriaByXidDocument,
+		Variables: map[string]interface{}{
+			"xid": xid,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetTechnologySpecificDocumentationCriteriaIDDocument = `query GetTechnologySpecificDocumentationCriteriaID ($xid: String!) {
+	getTechnologySpecificDocumentationCriteria(xid: $xid) {
+		id
+	}
+}
+`
+
+func (c *Client) GetTechnologySpecificDocumentationCriteriaID(ctx context.Context, xid string) (*GetTechnologySpecificDocumentationCriteriaID, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetTechnologySpecificDocumentationCriteriaID",
+		Query:         GetTechnologySpecificDocumentationCriteriaIDDocument,
+		Variables: map[string]interface{}{
+			"xid": xid,
+		},
+	}
+
+	var resp GetTechnologySpecificDocumentationCriteriaID
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetTechnologySpecificDocumentationCriteriaIDWithResponse(ctx context.Context, xid string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetTechnologySpecificDocumentationCriteriaID",
+		Query:         GetTechnologySpecificDocumentationCriteriaIDDocument,
+		Variables: map[string]interface{}{
+			"xid": xid,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetTechnologySpecificDocumentationCriteriasDocument = `query GetTechnologySpecificDocumentationCriterias ($getFilter: TechnologySpecificDocumentationCriteriaFilter, $order: TechnologySpecificDocumentationCriteriaOrder, $first: Int, $offset: Int) {
+	queryTechnologySpecificDocumentationCriteria(filter: $getFilter, order: $order, first: $first, offset: $offset) {
 		... TechnologySpecificDocumentationCriteriaFragment
+	}
+	aggregateTechnologySpecificDocumentationCriteria(filter: $getFilter) {
+		count
 	}
 }
 fragment TechnologySpecificDocumentationCriteriaFragment on TechnologySpecificDocumentationCriteria {
-	... NodeFragment
+	id
 	xid
 	name
 	comment
 	requirementsUri
 	components {
 		id
+		name
 	}
-}
-fragment NodeFragment on Node {
-	id
 }
 `
 
-func (c *Client) GetTechnologySpecificDocumentationCriterias(ctx context.Context, filter *models.TechnologySpecificDocumentationCriteriaFilter, order *models.TechnologySpecificDocumentationCriteriaOrder, first *int64, offset *int64) (*GetTechnologySpecificDocumentationCriterias, error) {
+func (c *Client) GetTechnologySpecificDocumentationCriterias(ctx context.Context, getFilter *TechnologySpecificDocumentationCriteriaFilter, order *TechnologySpecificDocumentationCriteriaOrder, first *int64, offset *int64) (*GetTechnologySpecificDocumentationCriterias, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
 		OperationName: "GetTechnologySpecificDocumentationCriterias",
 		Query:         GetTechnologySpecificDocumentationCriteriasDocument,
 		Variables: map[string]interface{}{
-			"filter": filter,
-			"order":  order,
-			"first":  first,
-			"offset": offset,
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
 		},
 	}
 
@@ -4927,8 +9574,28 @@ func (c *Client) GetTechnologySpecificDocumentationCriterias(ctx context.Context
 	return &resp, nil
 }
 
-const SaveTechnologySpecificDocumentationCriteriasDocument = `mutation SaveTechnologySpecificDocumentationCriterias ($input: [AddTechnologySpecificDocumentationCriteriaInput!]!) {
-	addTechnologySpecificDocumentationCriteria(input: $input, upsert: true) {
+func (c *Client) GetTechnologySpecificDocumentationCriteriasWithResponse(ctx context.Context, getFilter *TechnologySpecificDocumentationCriteriaFilter, order *TechnologySpecificDocumentationCriteriaOrder, first *int64, offset *int64, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetTechnologySpecificDocumentationCriterias",
+		Query:         GetTechnologySpecificDocumentationCriteriasDocument,
+		Variables: map[string]interface{}{
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const CreateTechnologySpecificDocumentationCriteriasDocument = `mutation CreateTechnologySpecificDocumentationCriterias ($createInput: [AddTechnologySpecificDocumentationCriteriaInput!]!) {
+	addTechnologySpecificDocumentationCriteria(input: $createInput, upsert: true) {
 		technologySpecificDocumentationCriteria {
 			id
 		}
@@ -4936,17 +9603,17 @@ const SaveTechnologySpecificDocumentationCriteriasDocument = `mutation SaveTechn
 }
 `
 
-func (c *Client) SaveTechnologySpecificDocumentationCriterias(ctx context.Context, input []*models.AddTechnologySpecificDocumentationCriteriaInput) (*SaveTechnologySpecificDocumentationCriterias, error) {
+func (c *Client) CreateTechnologySpecificDocumentationCriterias(ctx context.Context, createInput []*AddTechnologySpecificDocumentationCriteriaInput) (*CreateTechnologySpecificDocumentationCriterias, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
-		OperationName: "SaveTechnologySpecificDocumentationCriterias",
-		Query:         SaveTechnologySpecificDocumentationCriteriasDocument,
+		OperationName: "CreateTechnologySpecificDocumentationCriterias",
+		Query:         CreateTechnologySpecificDocumentationCriteriasDocument,
 		Variables: map[string]interface{}{
-			"input": input,
+			"createInput": createInput,
 		},
 	}
 
-	var resp SaveTechnologySpecificDocumentationCriterias
+	var resp CreateTechnologySpecificDocumentationCriterias
 	err := c.Requester.Do(req, &resp)
 	if err != nil {
 		return nil, err
@@ -4954,8 +9621,25 @@ func (c *Client) SaveTechnologySpecificDocumentationCriterias(ctx context.Contex
 	return &resp, nil
 }
 
-const DeleteTechnologySpecificDocumentationCriteriaDocument = `mutation DeleteTechnologySpecificDocumentationCriteria ($filter: TechnologySpecificDocumentationCriteriaFilter!) {
-	deleteTechnologySpecificDocumentationCriteria(filter: $filter) {
+func (c *Client) CreateTechnologySpecificDocumentationCriteriasWithResponse(ctx context.Context, createInput []*AddTechnologySpecificDocumentationCriteriaInput, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "CreateTechnologySpecificDocumentationCriterias",
+		Query:         CreateTechnologySpecificDocumentationCriteriasDocument,
+		Variables: map[string]interface{}{
+			"createInput": createInput,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const UpdateTechnologySpecificDocumentationCriteriasDocument = `mutation UpdateTechnologySpecificDocumentationCriterias ($updateInput: UpdateTechnologySpecificDocumentationCriteriaInput!) {
+	updateTechnologySpecificDocumentationCriteria(input: $updateInput) {
 		technologySpecificDocumentationCriteria {
 			id
 		}
@@ -4963,22 +9647,83 @@ const DeleteTechnologySpecificDocumentationCriteriaDocument = `mutation DeleteTe
 }
 `
 
-func (c *Client) DeleteTechnologySpecificDocumentationCriteria(ctx context.Context, filter models.TechnologySpecificDocumentationCriteriaFilter) (*DeleteTechnologySpecificDocumentationCriteria, error) {
+func (c *Client) UpdateTechnologySpecificDocumentationCriterias(ctx context.Context, updateInput UpdateTechnologySpecificDocumentationCriteriaInput) (*UpdateTechnologySpecificDocumentationCriterias, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
-		OperationName: "DeleteTechnologySpecificDocumentationCriteria",
-		Query:         DeleteTechnologySpecificDocumentationCriteriaDocument,
+		OperationName: "UpdateTechnologySpecificDocumentationCriterias",
+		Query:         UpdateTechnologySpecificDocumentationCriteriasDocument,
 		Variables: map[string]interface{}{
-			"filter": filter,
+			"updateInput": updateInput,
 		},
 	}
 
-	var resp DeleteTechnologySpecificDocumentationCriteria
+	var resp UpdateTechnologySpecificDocumentationCriterias
 	err := c.Requester.Do(req, &resp)
 	if err != nil {
 		return nil, err
 	}
 	return &resp, nil
+}
+
+func (c *Client) UpdateTechnologySpecificDocumentationCriteriasWithResponse(ctx context.Context, updateInput UpdateTechnologySpecificDocumentationCriteriaInput, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "UpdateTechnologySpecificDocumentationCriterias",
+		Query:         UpdateTechnologySpecificDocumentationCriteriasDocument,
+		Variables: map[string]interface{}{
+			"updateInput": updateInput,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const DeleteTechnologySpecificDocumentationCriteriasDocument = `mutation DeleteTechnologySpecificDocumentationCriterias ($delFilter: TechnologySpecificDocumentationCriteriaFilter!) {
+	deleteTechnologySpecificDocumentationCriteria(filter: $delFilter) {
+		technologySpecificDocumentationCriteria {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) DeleteTechnologySpecificDocumentationCriterias(ctx context.Context, delFilter TechnologySpecificDocumentationCriteriaFilter) (*DeleteTechnologySpecificDocumentationCriterias, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "DeleteTechnologySpecificDocumentationCriterias",
+		Query:         DeleteTechnologySpecificDocumentationCriteriasDocument,
+		Variables: map[string]interface{}{
+			"delFilter": delFilter,
+		},
+	}
+
+	var resp DeleteTechnologySpecificDocumentationCriterias
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) DeleteTechnologySpecificDocumentationCriteriasWithResponse(ctx context.Context, delFilter TechnologySpecificDocumentationCriteriaFilter, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "DeleteTechnologySpecificDocumentationCriterias",
+		Query:         DeleteTechnologySpecificDocumentationCriteriasDocument,
+		Variables: map[string]interface{}{
+			"delFilter": delFilter,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 const TestConnectionDocument = `query TestConnection {
@@ -5006,8 +9751,23 @@ func (c *Client) TestConnection(ctx context.Context) (*TestConnection, error) {
 	return &resp, nil
 }
 
-const GetUserOrGroupDocument = `query GetUserOrGroup ($id: ID, $xid: String) {
-	getUserOrGroup(id: $id, xid: $xid) {
+func (c *Client) TestConnectionWithResponse(ctx context.Context, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "TestConnection",
+		Query:         TestConnectionDocument,
+		Variables:     map[string]interface{}{},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetUserOrGroupByIDDocument = `query GetUserOrGroupByID ($id: ID!) {
+	getUserOrGroup(id: $id) {
 		... on User {
 			... UserFragment
 		}
@@ -5017,65 +9777,54 @@ const GetUserOrGroupDocument = `query GetUserOrGroup ($id: ID, $xid: String) {
 	}
 }
 fragment UserFragment on User {
-	... NodeFragment
 	... UserOrGroupFragment
-	fullName
 	locale
-}
-fragment NodeFragment on Node {
-	id
 }
 fragment UserOrGroupFragment on UserOrGroup {
 	__typename
-	... on User {
-		id
-	}
-	... on Group {
-		id
-	}
+	id
 	xid
 	host {
 		id
+		name
 	}
 	name
+	fullName
 	email
 	avatar {
 		id
+		path
 	}
 	url
 	memberOf {
 		id
+		fullName
 	}
 	products {
 		id
+		name
 	}
 }
 fragment GroupFragment on Group {
-	... NodeFragment
 	... UserOrGroupFragment
 	members {
-		... on User {
-			id
-		}
-		... on Group {
-			id
-		}
+		__typename
+		id
 	}
 }
 `
 
-func (c *Client) GetUserOrGroup(ctx context.Context, id *string, xid *string) (*GetUserOrGroup, error) {
+func (c *Client) GetUserOrGroupByID(ctx context.Context, id string) (*GetUserOrGroupByID, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
-		OperationName: "GetUserOrGroup",
-		Query:         GetUserOrGroupDocument,
+		OperationName: "GetUserOrGroupByID",
+		Query:         GetUserOrGroupByIDDocument,
 		Variables: map[string]interface{}{
-			"id":  id,
-			"xid": xid,
+			"id": id,
 		},
 	}
 
-	var resp GetUserOrGroup
+	var resp GetUserOrGroupByID
 	err := c.Requester.Do(req, &resp)
 	if err != nil {
 		return nil, err
@@ -5083,8 +9832,25 @@ func (c *Client) GetUserOrGroup(ctx context.Context, id *string, xid *string) (*
 	return &resp, nil
 }
 
-const GetUserOrGroupsDocument = `query GetUserOrGroups ($filter: UserOrGroupFilter, $order: UserOrGroupOrder, $first: Int, $offset: Int) {
-	queryUserOrGroup(filter: $filter, order: $order, first: $first, offset: $offset) {
+func (c *Client) GetUserOrGroupByIDWithResponse(ctx context.Context, id string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetUserOrGroupByID",
+		Query:         GetUserOrGroupByIDDocument,
+		Variables: map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetUserOrGroupByXidDocument = `query GetUserOrGroupByXid ($xid: String!) {
+	getUserOrGroup(xid: $xid) {
 		... on User {
 			... UserFragment
 		}
@@ -5094,63 +9860,181 @@ const GetUserOrGroupsDocument = `query GetUserOrGroups ($filter: UserOrGroupFilt
 	}
 }
 fragment UserFragment on User {
-	... NodeFragment
 	... UserOrGroupFragment
-	fullName
 	locale
-}
-fragment NodeFragment on Node {
-	id
 }
 fragment UserOrGroupFragment on UserOrGroup {
 	__typename
-	... on User {
-		id
-	}
-	... on Group {
-		id
-	}
+	id
 	xid
 	host {
 		id
+		name
 	}
 	name
+	fullName
 	email
 	avatar {
 		id
+		path
 	}
 	url
 	memberOf {
 		id
+		fullName
 	}
 	products {
 		id
+		name
 	}
 }
 fragment GroupFragment on Group {
-	... NodeFragment
 	... UserOrGroupFragment
 	members {
-		... on User {
-			id
-		}
-		... on Group {
-			id
-		}
+		__typename
+		id
 	}
 }
 `
 
-func (c *Client) GetUserOrGroups(ctx context.Context, filter *models.UserOrGroupFilter, order *models.UserOrGroupOrder, first *int64, offset *int64) (*GetUserOrGroups, error) {
+func (c *Client) GetUserOrGroupByXid(ctx context.Context, xid string) (*GetUserOrGroupByXid, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetUserOrGroupByXid",
+		Query:         GetUserOrGroupByXidDocument,
+		Variables: map[string]interface{}{
+			"xid": xid,
+		},
+	}
+
+	var resp GetUserOrGroupByXid
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetUserOrGroupByXidWithResponse(ctx context.Context, xid string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetUserOrGroupByXid",
+		Query:         GetUserOrGroupByXidDocument,
+		Variables: map[string]interface{}{
+			"xid": xid,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetUserOrGroupIDDocument = `query GetUserOrGroupID ($xid: String!) {
+	getUserOrGroup(xid: $xid) {
+		id
+	}
+}
+`
+
+func (c *Client) GetUserOrGroupID(ctx context.Context, xid string) (*GetUserOrGroupID, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetUserOrGroupID",
+		Query:         GetUserOrGroupIDDocument,
+		Variables: map[string]interface{}{
+			"xid": xid,
+		},
+	}
+
+	var resp GetUserOrGroupID
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetUserOrGroupIDWithResponse(ctx context.Context, xid string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetUserOrGroupID",
+		Query:         GetUserOrGroupIDDocument,
+		Variables: map[string]interface{}{
+			"xid": xid,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetUserOrGroupsDocument = `query GetUserOrGroups ($getFilter: UserOrGroupFilter, $order: UserOrGroupOrder, $first: Int, $offset: Int) {
+	queryUserOrGroup(filter: $getFilter, order: $order, first: $first, offset: $offset) {
+		... on User {
+			... UserFragment
+		}
+		... on Group {
+			... GroupFragment
+		}
+	}
+	aggregateUserOrGroup(filter: $getFilter) {
+		count
+	}
+}
+fragment UserFragment on User {
+	... UserOrGroupFragment
+	locale
+}
+fragment UserOrGroupFragment on UserOrGroup {
+	__typename
+	id
+	xid
+	host {
+		id
+		name
+	}
+	name
+	fullName
+	email
+	avatar {
+		id
+		path
+	}
+	url
+	memberOf {
+		id
+		fullName
+	}
+	products {
+		id
+		name
+	}
+}
+fragment GroupFragment on Group {
+	... UserOrGroupFragment
+	members {
+		__typename
+		id
+	}
+}
+`
+
+func (c *Client) GetUserOrGroups(ctx context.Context, getFilter *UserOrGroupFilter, order *UserOrGroupOrder, first *int64, offset *int64) (*GetUserOrGroups, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
 		OperationName: "GetUserOrGroups",
 		Query:         GetUserOrGroupsDocument,
 		Variables: map[string]interface{}{
-			"filter": filter,
-			"order":  order,
-			"first":  first,
-			"offset": offset,
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
 		},
 	}
 
@@ -5162,8 +10046,28 @@ func (c *Client) GetUserOrGroups(ctx context.Context, filter *models.UserOrGroup
 	return &resp, nil
 }
 
-const DeleteUserOrGroupDocument = `mutation DeleteUserOrGroup ($filter: UserOrGroupFilter!) {
-	deleteUserOrGroup(filter: $filter) {
+func (c *Client) GetUserOrGroupsWithResponse(ctx context.Context, getFilter *UserOrGroupFilter, order *UserOrGroupOrder, first *int64, offset *int64, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetUserOrGroups",
+		Query:         GetUserOrGroupsDocument,
+		Variables: map[string]interface{}{
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const UpdateUserOrGroupsDocument = `mutation UpdateUserOrGroups ($updateInput: UpdateUserOrGroupInput!) {
+	updateUserOrGroup(input: $updateInput) {
 		userOrGroup {
 			id
 		}
@@ -5171,17 +10075,17 @@ const DeleteUserOrGroupDocument = `mutation DeleteUserOrGroup ($filter: UserOrGr
 }
 `
 
-func (c *Client) DeleteUserOrGroup(ctx context.Context, filter models.UserOrGroupFilter) (*DeleteUserOrGroup, error) {
+func (c *Client) UpdateUserOrGroups(ctx context.Context, updateInput UpdateUserOrGroupInput) (*UpdateUserOrGroups, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
-		OperationName: "DeleteUserOrGroup",
-		Query:         DeleteUserOrGroupDocument,
+		OperationName: "UpdateUserOrGroups",
+		Query:         UpdateUserOrGroupsDocument,
 		Variables: map[string]interface{}{
-			"filter": filter,
+			"updateInput": updateInput,
 		},
 	}
 
-	var resp DeleteUserOrGroup
+	var resp UpdateUserOrGroups
 	err := c.Requester.Do(req, &resp)
 	if err != nil {
 		return nil, err
@@ -5189,59 +10093,185 @@ func (c *Client) DeleteUserOrGroup(ctx context.Context, filter models.UserOrGrou
 	return &resp, nil
 }
 
-const GetUserDocument = `query GetUser ($id: ID, $xid: String) {
-	getUser(id: $id, xid: $xid) {
-		... UserFragment
+func (c *Client) UpdateUserOrGroupsWithResponse(ctx context.Context, updateInput UpdateUserOrGroupInput, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "UpdateUserOrGroups",
+		Query:         UpdateUserOrGroupsDocument,
+		Variables: map[string]interface{}{
+			"updateInput": updateInput,
+		},
 	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
 }
-fragment UserFragment on User {
-	... NodeFragment
-	... UserOrGroupFragment
-	fullName
-	locale
-}
-fragment NodeFragment on Node {
-	id
-}
-fragment UserOrGroupFragment on UserOrGroup {
-	__typename
-	... on User {
-		id
-	}
-	... on Group {
-		id
-	}
-	xid
-	host {
-		id
-	}
-	name
-	email
-	avatar {
-		id
-	}
-	url
-	memberOf {
-		id
-	}
-	products {
-		id
+
+const DeleteUserOrGroupsDocument = `mutation DeleteUserOrGroups ($delFilter: UserOrGroupFilter!) {
+	deleteUserOrGroup(filter: $delFilter) {
+		userOrGroup {
+			id
+		}
 	}
 }
 `
 
-func (c *Client) GetUser(ctx context.Context, id *string, xid *string) (*GetUser, error) {
+func (c *Client) DeleteUserOrGroups(ctx context.Context, delFilter UserOrGroupFilter) (*DeleteUserOrGroups, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
-		OperationName: "GetUser",
-		Query:         GetUserDocument,
+		OperationName: "DeleteUserOrGroups",
+		Query:         DeleteUserOrGroupsDocument,
 		Variables: map[string]interface{}{
-			"id":  id,
+			"delFilter": delFilter,
+		},
+	}
+
+	var resp DeleteUserOrGroups
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) DeleteUserOrGroupsWithResponse(ctx context.Context, delFilter UserOrGroupFilter, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "DeleteUserOrGroups",
+		Query:         DeleteUserOrGroupsDocument,
+		Variables: map[string]interface{}{
+			"delFilter": delFilter,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetUserByIDDocument = `query GetUserByID ($id: ID!) {
+	getUser(id: $id) {
+		... UserFragment
+	}
+}
+fragment UserFragment on User {
+	... UserOrGroupFragment
+	locale
+}
+fragment UserOrGroupFragment on UserOrGroup {
+	__typename
+	id
+	xid
+	host {
+		id
+		name
+	}
+	name
+	fullName
+	email
+	avatar {
+		id
+		path
+	}
+	url
+	memberOf {
+		id
+		fullName
+	}
+	products {
+		id
+		name
+	}
+}
+`
+
+func (c *Client) GetUserByID(ctx context.Context, id string) (*GetUserByID, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetUserByID",
+		Query:         GetUserByIDDocument,
+		Variables: map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	var resp GetUserByID
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetUserByIDWithResponse(ctx context.Context, id string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetUserByID",
+		Query:         GetUserByIDDocument,
+		Variables: map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetUserByXidDocument = `query GetUserByXid ($xid: String!) {
+	getUser(xid: $xid) {
+		... UserFragment
+	}
+}
+fragment UserFragment on User {
+	... UserOrGroupFragment
+	locale
+}
+fragment UserOrGroupFragment on UserOrGroup {
+	__typename
+	id
+	xid
+	host {
+		id
+		name
+	}
+	name
+	fullName
+	email
+	avatar {
+		id
+		path
+	}
+	url
+	memberOf {
+		id
+		fullName
+	}
+	products {
+		id
+		name
+	}
+}
+`
+
+func (c *Client) GetUserByXid(ctx context.Context, xid string) (*GetUserByXid, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetUserByXid",
+		Query:         GetUserByXidDocument,
+		Variables: map[string]interface{}{
 			"xid": xid,
 		},
 	}
 
-	var resp GetUser
+	var resp GetUserByXid
 	err := c.Requester.Do(req, &resp)
 	if err != nil {
 		return nil, err
@@ -5249,57 +10279,114 @@ func (c *Client) GetUser(ctx context.Context, id *string, xid *string) (*GetUser
 	return &resp, nil
 }
 
-const GetUsersDocument = `query GetUsers ($filter: UserFilter, $order: UserOrder, $first: Int, $offset: Int) {
-	queryUser(filter: $filter, order: $order, first: $first, offset: $offset) {
+func (c *Client) GetUserByXidWithResponse(ctx context.Context, xid string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetUserByXid",
+		Query:         GetUserByXidDocument,
+		Variables: map[string]interface{}{
+			"xid": xid,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetUserIDDocument = `query GetUserID ($xid: String!) {
+	getUser(xid: $xid) {
+		id
+	}
+}
+`
+
+func (c *Client) GetUserID(ctx context.Context, xid string) (*GetUserID, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetUserID",
+		Query:         GetUserIDDocument,
+		Variables: map[string]interface{}{
+			"xid": xid,
+		},
+	}
+
+	var resp GetUserID
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetUserIDWithResponse(ctx context.Context, xid string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetUserID",
+		Query:         GetUserIDDocument,
+		Variables: map[string]interface{}{
+			"xid": xid,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetUsersDocument = `query GetUsers ($getFilter: UserFilter, $order: UserOrder, $first: Int, $offset: Int) {
+	queryUser(filter: $getFilter, order: $order, first: $first, offset: $offset) {
 		... UserFragment
+	}
+	aggregateUser(filter: $getFilter) {
+		count
 	}
 }
 fragment UserOrGroupFragment on UserOrGroup {
 	__typename
-	... on User {
-		id
-	}
-	... on Group {
-		id
-	}
+	id
 	xid
 	host {
 		id
+		name
 	}
 	name
+	fullName
 	email
 	avatar {
 		id
+		path
 	}
 	url
 	memberOf {
 		id
+		fullName
 	}
 	products {
 		id
+		name
 	}
 }
 fragment UserFragment on User {
-	... NodeFragment
 	... UserOrGroupFragment
-	fullName
 	locale
-}
-fragment NodeFragment on Node {
-	id
 }
 `
 
-func (c *Client) GetUsers(ctx context.Context, filter *models.UserFilter, order *models.UserOrder, first *int64, offset *int64) (*GetUsers, error) {
+func (c *Client) GetUsers(ctx context.Context, getFilter *UserFilter, order *UserOrder, first *int64, offset *int64) (*GetUsers, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
 		OperationName: "GetUsers",
 		Query:         GetUsersDocument,
 		Variables: map[string]interface{}{
-			"filter": filter,
-			"order":  order,
-			"first":  first,
-			"offset": offset,
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
 		},
 	}
 
@@ -5311,8 +10398,28 @@ func (c *Client) GetUsers(ctx context.Context, filter *models.UserFilter, order 
 	return &resp, nil
 }
 
-const SaveUsersDocument = `mutation SaveUsers ($input: [AddUserInput!]!) {
-	addUser(input: $input, upsert: true) {
+func (c *Client) GetUsersWithResponse(ctx context.Context, getFilter *UserFilter, order *UserOrder, first *int64, offset *int64, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetUsers",
+		Query:         GetUsersDocument,
+		Variables: map[string]interface{}{
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const CreateUsersDocument = `mutation CreateUsers ($createInput: [AddUserInput!]!) {
+	addUser(input: $createInput, upsert: true) {
 		user {
 			id
 		}
@@ -5320,17 +10427,17 @@ const SaveUsersDocument = `mutation SaveUsers ($input: [AddUserInput!]!) {
 }
 `
 
-func (c *Client) SaveUsers(ctx context.Context, input []*models.AddUserInput) (*SaveUsers, error) {
+func (c *Client) CreateUsers(ctx context.Context, createInput []*AddUserInput) (*CreateUsers, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
-		OperationName: "SaveUsers",
-		Query:         SaveUsersDocument,
+		OperationName: "CreateUsers",
+		Query:         CreateUsersDocument,
 		Variables: map[string]interface{}{
-			"input": input,
+			"createInput": createInput,
 		},
 	}
 
-	var resp SaveUsers
+	var resp CreateUsers
 	err := c.Requester.Do(req, &resp)
 	if err != nil {
 		return nil, err
@@ -5338,8 +10445,25 @@ func (c *Client) SaveUsers(ctx context.Context, input []*models.AddUserInput) (*
 	return &resp, nil
 }
 
-const DeleteUserDocument = `mutation DeleteUser ($filter: UserFilter!) {
-	deleteUser(filter: $filter) {
+func (c *Client) CreateUsersWithResponse(ctx context.Context, createInput []*AddUserInput, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "CreateUsers",
+		Query:         CreateUsersDocument,
+		Variables: map[string]interface{}{
+			"createInput": createInput,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const UpdateUsersDocument = `mutation UpdateUsers ($updateInput: UpdateUserInput!) {
+	updateUser(input: $updateInput) {
 		user {
 			id
 		}
@@ -5347,17 +10471,17 @@ const DeleteUserDocument = `mutation DeleteUser ($filter: UserFilter!) {
 }
 `
 
-func (c *Client) DeleteUser(ctx context.Context, filter models.UserFilter) (*DeleteUser, error) {
+func (c *Client) UpdateUsers(ctx context.Context, updateInput UpdateUserInput) (*UpdateUsers, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
-		OperationName: "DeleteUser",
-		Query:         DeleteUserDocument,
+		OperationName: "UpdateUsers",
+		Query:         UpdateUsersDocument,
 		Variables: map[string]interface{}{
-			"filter": filter,
+			"updateInput": updateInput,
 		},
 	}
 
-	var resp DeleteUser
+	var resp UpdateUsers
 	err := c.Requester.Do(req, &resp)
 	if err != nil {
 		return nil, err
@@ -5365,65 +10489,191 @@ func (c *Client) DeleteUser(ctx context.Context, filter models.UserFilter) (*Del
 	return &resp, nil
 }
 
-const GetGroupDocument = `query GetGroup ($id: ID, $xid: String) {
-	getGroup(id: $id, xid: $xid) {
+func (c *Client) UpdateUsersWithResponse(ctx context.Context, updateInput UpdateUserInput, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "UpdateUsers",
+		Query:         UpdateUsersDocument,
+		Variables: map[string]interface{}{
+			"updateInput": updateInput,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const DeleteUsersDocument = `mutation DeleteUsers ($delFilter: UserFilter!) {
+	deleteUser(filter: $delFilter) {
+		user {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) DeleteUsers(ctx context.Context, delFilter UserFilter) (*DeleteUsers, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "DeleteUsers",
+		Query:         DeleteUsersDocument,
+		Variables: map[string]interface{}{
+			"delFilter": delFilter,
+		},
+	}
+
+	var resp DeleteUsers
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) DeleteUsersWithResponse(ctx context.Context, delFilter UserFilter, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "DeleteUsers",
+		Query:         DeleteUsersDocument,
+		Variables: map[string]interface{}{
+			"delFilter": delFilter,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetGroupByIDDocument = `query GetGroupByID ($id: ID!) {
+	getGroup(id: $id) {
 		... GroupFragment
 	}
 }
 fragment GroupFragment on Group {
-	... NodeFragment
 	... UserOrGroupFragment
 	members {
-		... on User {
-			id
-		}
-		... on Group {
-			id
-		}
+		__typename
+		id
 	}
-}
-fragment NodeFragment on Node {
-	id
 }
 fragment UserOrGroupFragment on UserOrGroup {
 	__typename
-	... on User {
-		id
-	}
-	... on Group {
-		id
-	}
+	id
 	xid
 	host {
 		id
+		name
 	}
 	name
+	fullName
 	email
 	avatar {
 		id
+		path
 	}
 	url
 	memberOf {
 		id
+		fullName
 	}
 	products {
 		id
+		name
 	}
 }
 `
 
-func (c *Client) GetGroup(ctx context.Context, id *string, xid *string) (*GetGroup, error) {
+func (c *Client) GetGroupByID(ctx context.Context, id string) (*GetGroupByID, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
-		OperationName: "GetGroup",
-		Query:         GetGroupDocument,
+		OperationName: "GetGroupByID",
+		Query:         GetGroupByIDDocument,
 		Variables: map[string]interface{}{
-			"id":  id,
+			"id": id,
+		},
+	}
+
+	var resp GetGroupByID
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetGroupByIDWithResponse(ctx context.Context, id string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetGroupByID",
+		Query:         GetGroupByIDDocument,
+		Variables: map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetGroupByXidDocument = `query GetGroupByXid ($xid: String!) {
+	getGroup(xid: $xid) {
+		... GroupFragment
+	}
+}
+fragment GroupFragment on Group {
+	... UserOrGroupFragment
+	members {
+		__typename
+		id
+	}
+}
+fragment UserOrGroupFragment on UserOrGroup {
+	__typename
+	id
+	xid
+	host {
+		id
+		name
+	}
+	name
+	fullName
+	email
+	avatar {
+		id
+		path
+	}
+	url
+	memberOf {
+		id
+		fullName
+	}
+	products {
+		id
+		name
+	}
+}
+`
+
+func (c *Client) GetGroupByXid(ctx context.Context, xid string) (*GetGroupByXid, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetGroupByXid",
+		Query:         GetGroupByXidDocument,
+		Variables: map[string]interface{}{
 			"xid": xid,
 		},
 	}
 
-	var resp GetGroup
+	var resp GetGroupByXid
 	err := c.Requester.Do(req, &resp)
 	if err != nil {
 		return nil, err
@@ -5431,63 +10681,117 @@ func (c *Client) GetGroup(ctx context.Context, id *string, xid *string) (*GetGro
 	return &resp, nil
 }
 
-const GetGroupsDocument = `query GetGroups ($filter: GroupFilter, $order: GroupOrder, $first: Int, $offset: Int) {
-	queryGroup(filter: $filter, order: $order, first: $first, offset: $offset) {
-		... GroupFragment
+func (c *Client) GetGroupByXidWithResponse(ctx context.Context, xid string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetGroupByXid",
+		Query:         GetGroupByXidDocument,
+		Variables: map[string]interface{}{
+			"xid": xid,
+		},
 	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
 }
-fragment GroupFragment on Group {
-	... NodeFragment
-	... UserOrGroupFragment
-	members {
-		... on User {
-			id
-		}
-		... on Group {
-			id
-		}
-	}
-}
-fragment NodeFragment on Node {
-	id
-}
-fragment UserOrGroupFragment on UserOrGroup {
-	__typename
-	... on User {
-		id
-	}
-	... on Group {
-		id
-	}
-	xid
-	host {
-		id
-	}
-	name
-	email
-	avatar {
-		id
-	}
-	url
-	memberOf {
-		id
-	}
-	products {
+
+const GetGroupIDDocument = `query GetGroupID ($xid: String!) {
+	getGroup(xid: $xid) {
 		id
 	}
 }
 `
 
-func (c *Client) GetGroups(ctx context.Context, filter *models.GroupFilter, order *models.GroupOrder, first *int64, offset *int64) (*GetGroups, error) {
+func (c *Client) GetGroupID(ctx context.Context, xid string) (*GetGroupID, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetGroupID",
+		Query:         GetGroupIDDocument,
+		Variables: map[string]interface{}{
+			"xid": xid,
+		},
+	}
+
+	var resp GetGroupID
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetGroupIDWithResponse(ctx context.Context, xid string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetGroupID",
+		Query:         GetGroupIDDocument,
+		Variables: map[string]interface{}{
+			"xid": xid,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetGroupsDocument = `query GetGroups ($getFilter: GroupFilter, $order: GroupOrder, $first: Int, $offset: Int) {
+	queryGroup(filter: $getFilter, order: $order, first: $first, offset: $offset) {
+		... GroupFragment
+	}
+	aggregateGroup(filter: $getFilter) {
+		count
+	}
+}
+fragment GroupFragment on Group {
+	... UserOrGroupFragment
+	members {
+		__typename
+		id
+	}
+}
+fragment UserOrGroupFragment on UserOrGroup {
+	__typename
+	id
+	xid
+	host {
+		id
+		name
+	}
+	name
+	fullName
+	email
+	avatar {
+		id
+		path
+	}
+	url
+	memberOf {
+		id
+		fullName
+	}
+	products {
+		id
+		name
+	}
+}
+`
+
+func (c *Client) GetGroups(ctx context.Context, getFilter *GroupFilter, order *GroupOrder, first *int64, offset *int64) (*GetGroups, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
 		OperationName: "GetGroups",
 		Query:         GetGroupsDocument,
 		Variables: map[string]interface{}{
-			"filter": filter,
-			"order":  order,
-			"first":  first,
-			"offset": offset,
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
 		},
 	}
 
@@ -5499,8 +10803,28 @@ func (c *Client) GetGroups(ctx context.Context, filter *models.GroupFilter, orde
 	return &resp, nil
 }
 
-const SaveGroupsDocument = `mutation SaveGroups ($input: [AddGroupInput!]!) {
-	addGroup(input: $input, upsert: true) {
+func (c *Client) GetGroupsWithResponse(ctx context.Context, getFilter *GroupFilter, order *GroupOrder, first *int64, offset *int64, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetGroups",
+		Query:         GetGroupsDocument,
+		Variables: map[string]interface{}{
+			"getFilter": getFilter,
+			"order":     order,
+			"first":     first,
+			"offset":    offset,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const CreateGroupsDocument = `mutation CreateGroups ($createInput: [AddGroupInput!]!) {
+	addGroup(input: $createInput, upsert: true) {
 		group {
 			id
 		}
@@ -5508,17 +10832,17 @@ const SaveGroupsDocument = `mutation SaveGroups ($input: [AddGroupInput!]!) {
 }
 `
 
-func (c *Client) SaveGroups(ctx context.Context, input []*models.AddGroupInput) (*SaveGroups, error) {
+func (c *Client) CreateGroups(ctx context.Context, createInput []*AddGroupInput) (*CreateGroups, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
-		OperationName: "SaveGroups",
-		Query:         SaveGroupsDocument,
+		OperationName: "CreateGroups",
+		Query:         CreateGroupsDocument,
 		Variables: map[string]interface{}{
-			"input": input,
+			"createInput": createInput,
 		},
 	}
 
-	var resp SaveGroups
+	var resp CreateGroups
 	err := c.Requester.Do(req, &resp)
 	if err != nil {
 		return nil, err
@@ -5526,8 +10850,25 @@ func (c *Client) SaveGroups(ctx context.Context, input []*models.AddGroupInput) 
 	return &resp, nil
 }
 
-const DeleteGroupDocument = `mutation DeleteGroup ($filter: GroupFilter!) {
-	deleteGroup(filter: $filter) {
+func (c *Client) CreateGroupsWithResponse(ctx context.Context, createInput []*AddGroupInput, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "CreateGroups",
+		Query:         CreateGroupsDocument,
+		Variables: map[string]interface{}{
+			"createInput": createInput,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const UpdateGroupsDocument = `mutation UpdateGroups ($updateInput: UpdateGroupInput!) {
+	updateGroup(input: $updateInput) {
 		group {
 			id
 		}
@@ -5535,20 +10876,81 @@ const DeleteGroupDocument = `mutation DeleteGroup ($filter: GroupFilter!) {
 }
 `
 
-func (c *Client) DeleteGroup(ctx context.Context, filter models.GroupFilter) (*DeleteGroup, error) {
+func (c *Client) UpdateGroups(ctx context.Context, updateInput UpdateGroupInput) (*UpdateGroups, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
-		OperationName: "DeleteGroup",
-		Query:         DeleteGroupDocument,
+		OperationName: "UpdateGroups",
+		Query:         UpdateGroupsDocument,
 		Variables: map[string]interface{}{
-			"filter": filter,
+			"updateInput": updateInput,
 		},
 	}
 
-	var resp DeleteGroup
+	var resp UpdateGroups
 	err := c.Requester.Do(req, &resp)
 	if err != nil {
 		return nil, err
 	}
 	return &resp, nil
+}
+
+func (c *Client) UpdateGroupsWithResponse(ctx context.Context, updateInput UpdateGroupInput, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "UpdateGroups",
+		Query:         UpdateGroupsDocument,
+		Variables: map[string]interface{}{
+			"updateInput": updateInput,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const DeleteGroupsDocument = `mutation DeleteGroups ($delFilter: GroupFilter!) {
+	deleteGroup(filter: $delFilter) {
+		group {
+			id
+		}
+	}
+}
+`
+
+func (c *Client) DeleteGroups(ctx context.Context, delFilter GroupFilter) (*DeleteGroups, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "DeleteGroups",
+		Query:         DeleteGroupsDocument,
+		Variables: map[string]interface{}{
+			"delFilter": delFilter,
+		},
+	}
+
+	var resp DeleteGroups
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) DeleteGroupsWithResponse(ctx context.Context, delFilter GroupFilter, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "DeleteGroups",
+		Query:         DeleteGroupsDocument,
+		Variables: map[string]interface{}{
+			"delFilter": delFilter,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
 }

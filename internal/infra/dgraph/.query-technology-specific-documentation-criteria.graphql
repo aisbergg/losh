@@ -1,30 +1,42 @@
 fragment TechnologySpecificDocumentationCriteriaFragment on TechnologySpecificDocumentationCriteria {
-	...NodeFragment
+	id
 	xid
 	name
 	comment
 	requirementsUri
-	components {id}
+	components {
+		id
+		name
+	}
 }
 
 # ------------------------------------------------------------------------------
 
-query GetTechnologySpecificDocumentationCriteria($id: ID, $xid: String) {
-	getTechnologySpecificDocumentationCriteria(id: $id, xid: $xid) {
-		...TechnologySpecificDocumentationCriteriaFragment
-	}
+query GetTechnologySpecificDocumentationCriteriaByID($id: ID!) {
+	getTechnologySpecificDocumentationCriteria(id: $id) {...TechnologySpecificDocumentationCriteriaFragment}
 }
 
-query GetTechnologySpecificDocumentationCriterias($filter: TechnologySpecificDocumentationCriteriaFilter, $order: TechnologySpecificDocumentationCriteriaOrder, $first: Int, $offset: Int) {
-	queryTechnologySpecificDocumentationCriteria(filter: $filter, order: $order, first: $first, offset: $offset) {
-		...TechnologySpecificDocumentationCriteriaFragment
-	}
+query GetTechnologySpecificDocumentationCriteriaByXid($xid: String!) {
+	getTechnologySpecificDocumentationCriteria(xid: $xid) {...TechnologySpecificDocumentationCriteriaFragment}
 }
 
-mutation SaveTechnologySpecificDocumentationCriterias($input: [AddTechnologySpecificDocumentationCriteriaInput!]!) {
-	addTechnologySpecificDocumentationCriteria(input: $input, upsert: true) {technologySpecificDocumentationCriteria {id}}
+query GetTechnologySpecificDocumentationCriteriaID($xid: String!) {
+	getTechnologySpecificDocumentationCriteria(xid: $xid) {id}
 }
 
-mutation DeleteTechnologySpecificDocumentationCriteria($filter: TechnologySpecificDocumentationCriteriaFilter!) {
-	deleteTechnologySpecificDocumentationCriteria(filter: $filter) {technologySpecificDocumentationCriteria {id}}
+query GetTechnologySpecificDocumentationCriterias($getFilter: TechnologySpecificDocumentationCriteriaFilter, $order: TechnologySpecificDocumentationCriteriaOrder, $first: Int, $offset: Int) {
+	queryTechnologySpecificDocumentationCriteria(filter: $getFilter, order: $order, first: $first, offset: $offset) {...TechnologySpecificDocumentationCriteriaFragment}
+	aggregateTechnologySpecificDocumentationCriteria(filter: $getFilter) {count}
+}
+
+mutation CreateTechnologySpecificDocumentationCriterias($createInput: [AddTechnologySpecificDocumentationCriteriaInput!]!) {
+	addTechnologySpecificDocumentationCriteria(input: $createInput, upsert: true) {technologySpecificDocumentationCriteria {id}}
+}
+
+mutation UpdateTechnologySpecificDocumentationCriterias($updateInput: UpdateTechnologySpecificDocumentationCriteriaInput!) {
+	updateTechnologySpecificDocumentationCriteria(input: $updateInput) {technologySpecificDocumentationCriteria {id}}
+}
+
+mutation DeleteTechnologySpecificDocumentationCriterias($delFilter: TechnologySpecificDocumentationCriteriaFilter!) {
+	deleteTechnologySpecificDocumentationCriteria(filter: $delFilter) {technologySpecificDocumentationCriteria {id}}
 }

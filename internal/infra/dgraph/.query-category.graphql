@@ -4,29 +4,47 @@ fragment CategoryFragment on Category {
 	fullName
 	name
 	description
-	parent {id}
-	children {id}
-	products {id}
+	parent {
+		id
+		fullName
+	}
+	children {
+		id
+		fullName
+	}
+	products {
+		id
+		name
+	}
 }
 
 # ------------------------------------------------------------------------------
 
-query GetCategory($id: ID, $xid: String) {
-	getCategory(id: $id, xid: $xid) {
-		...CategoryFragment
-	}
+query GetCategoryByID($id: ID!) {
+	getCategory(id: $id) {...CategoryFragment}
 }
 
-query GetCategories($filter: CategoryFilter, $order: CategoryOrder, $first: Int, $offset: Int) {
-	queryCategory(filter: $filter, order: $order, first: $first, offset: $offset) {
-		...CategoryFragment
-	}
+query GetCategoryByXid($xid: String!) {
+	getCategory(xid: $xid) {...CategoryFragment}
 }
 
-mutation SaveCategories($input: [AddCategoryInput!]!) {
-	addCategory(input: $input, upsert: true) {category {id}}
+query GetCategoryID($xid: String!) {
+	getCategory(xid: $xid) {id}
 }
 
-mutation DeleteCategory($filter: CategoryFilter!) {
-	deleteCategory(filter: $filter) {category {id}}
+query GetCategories($getFilter: CategoryFilter, $order: CategoryOrder, $first: Int, $offset: Int) {
+	queryCategory(filter: $getFilter, order: $order, first: $first, offset: $offset) {...CategoryFragment}
+	aggregateCategory(filter: $getFilter) {count}
+}
+
+mutation CreateCategories($createInput: [AddCategoryInput!]!) {
+	addCategory(input: $createInput, upsert: true) {category {id}}
+}
+
+mutation UpdateCategories($updateInput: UpdateCategoryInput!) {
+	updateCategory(input: $updateInput) {category {id}}
+}
+
+mutation DeleteCategories($delFilter: CategoryFilter!) {
+	deleteCategory(filter: $delFilter) {category {id}}
 }

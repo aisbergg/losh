@@ -1,25 +1,34 @@
 fragment NodeFragment on Node {
+	__typename
 	id
+}
+
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
 }
 
 # ------------------------------------------------------------------------------
 
-query GetNode($id: ID!) {
+query CheckNode($id: ID!) {
+	getNode(id: $id) {...NodeFragment}
+}
+
+query GetNodeDetails($id: ID!) {
 	getNode(id: $id) {
-		__typename
 		...NodeFragment
-		... on Product {...ProductFragment}
-		... on Component {...ComponentFragment}
-		... on License {...LicenseFragment}
-		... on User {...UserFragment}
-		... on Group {...GroupFragment}
 	}
 }
 
-query GetNodes($filter: NodeFilter, $first: Int, $offset: Int) {
-	queryNode(filter: $filter, first: $first, offset: $offset) {id}
+query GetNodeByID($id: ID!) {
+	getNode(id: $id) {...NodeFragment}
 }
 
-mutation DeleteNode($filter: NodeFilter!) {
-	deleteNode(filter: $filter) {node {id}}
+query GetNodes($getFilter: NodeFilter, $first: Int, $offset: Int) {
+	queryNode(filter: $getFilter, first: $first, offset: $offset) {...NodeFragment}
+	aggregateNode(filter: $getFilter) {count}
+}
+
+mutation DeleteNodes($delFilter: NodeFilter!) {
+	deleteNode(filter: $delFilter) {node {id}}
 }

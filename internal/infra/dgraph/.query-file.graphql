@@ -1,6 +1,6 @@
 fragment FileFragment on File {
-	...NodeFragment
 	...CrawlerMetaFragment
+	id
 	name
 	path
 	mimeType
@@ -10,23 +10,31 @@ fragment FileFragment on File {
 
 # ------------------------------------------------------------------------------
 
-query GetFile($id: ID!) {
-	getFile(id: $id) {
-		...FileFragment
-	}
+query GetFileByID($id: ID!) {
+	getFile(id: $id) {...FileFragment}
 }
 
-query GetFiles($filter: FileFilter, $order: FileOrder, $first: Int, $offset: Int) {
-	queryFile(filter: $filter, order: $order, first: $first, offset: $offset) {
-		...FileFragment
-	}
+query GetFileByXid($xid: String!) {
+	getFile(xid: $xid) {...FileFragment}
 }
 
-mutation SaveFiles($input: [AddFileInput!]!, $deleteIds: [ID!]!) {
-	deleteFile(filter: {id: $deleteIds}) {file {id}}
-	addFile(input: $input) {file {id}}
+query GetFileID($xid: String!) {
+	getFile(xid: $xid) {id}
 }
 
-mutation DeleteFile($filter: FileFilter!) {
-	deleteFile(filter: $filter) {file {id}}
+query GetFiles($getFilter: FileFilter, $order: FileOrder, $first: Int, $offset: Int) {
+	queryFile(filter: $getFilter, order: $order, first: $first, offset: $offset) {...FileFragment}
+	aggregateFile(filter: $getFilter) {count}
+}
+
+mutation CreateFiles($createInput: [AddFileInput!]!) {
+	addFile(input: $createInput) {file {id}}
+}
+
+mutation UpdateFiles($updateInput: UpdateFileInput!) {
+	updateFile(input: $updateInput) {file {id}}
+}
+
+mutation DeleteFiles($delFilter: FileFilter!) {
+	deleteFile(filter: $delFilter) {file {id}}
 }

@@ -3,8 +3,7 @@ package dgraph
 import (
 	"context"
 
-	"losh/internal/core/product/models"
-	"losh/internal/repository"
+	"losh/internal/infra/dgraph/dgclient"
 )
 
 var (
@@ -14,81 +13,89 @@ var (
 )
 
 // GetNode returns a `Node` object by its ID.
-func (dr *DgraphRepository) GetNode(id string) (models.Node, error) {
-	ctx := context.Background()
-	getNode, err := dr.client.GetNode(ctx, id)
+func (dr *DgraphRepository) GetNode(ctx context.Context, id string) (interface{}, error) {
+	getNode, err := dr.client.GetNodeByID(ctx, id)
 	if err != nil {
-		return nil, repository.WrapRepoError(err, errGetNodeStr).Add("nodeId", id)
+		return nil, WrapRepoError(err, errGetNodeStr).Add("nodeId", id)
 	}
-	if getNode.GetNode == nil { // not found
+	if getNode.GetNode == nil {
 		return nil, nil
 	}
 
-	var node models.Node
-	var copyFrom interface{}
+	var node interface{}
 	switch *getNode.GetNode.Typename {
-	case "Product":
-		node = &models.Product{}
-		copyFrom = getNode.GetNode.Product
+	case "Category":
+		node, err = dr.GetCategory(ctx, &id, nil)
 	case "Component":
-		node = &models.Component{}
-		copyFrom = getNode.GetNode.Component
+		node, err = dr.GetComponent(ctx, &id, nil)
+	case "File":
+		node, err = dr.GetFile(ctx, &id, nil)
+	case "KeyValueFragment":
+		node, err = dr.GetKeyValue(ctx, &id)
+	case "FloatV":
+		node, err = dr.GetFloatV(ctx, &id)
+	case "StringV":
+		node, err = dr.GetStringV(ctx, &id)
+	case "Host":
+		node, err = dr.GetHost(ctx, &id, nil)
 	case "License":
-		node = &models.License{}
-		copyFrom = getNode.GetNode.License
+		node, err = dr.GetLicense(ctx, &id, nil)
+	case "ManufacturingProcess":
+		node, err = dr.GetManufacturingProcess(ctx, &id)
+	case "Material":
+		node, err = dr.GetMaterial(ctx, &id)
+	case "BoundingBoxDimensions":
+		node, err = dr.GetBoundingBoxDimensions(ctx, &id)
+	case "OpenSCADDimensions":
+		node, err = dr.GetOpenSCADDimensions(ctx, &id)
+	case "Product":
+		node, err = dr.GetProduct(ctx, &id, nil)
+	case "Repository":
+		node, err = dr.GetRepository(ctx, &id, nil)
+	case "Software":
+		node, err = dr.GetSoftware(ctx, &id)
+	case "Tag":
+		node, err = dr.GetTag(ctx, &id, nil)
+	case "TechnicalStandard":
+		node, err = dr.GetTechnicalStandard(ctx, &id, nil)
+	case "TechnologySpecificDocumentationCriteria":
+		node, err = dr.GetTechnologySpecificDocumentationCriteria(ctx, &id, nil)
 	case "User":
-		node = &models.User{}
-		copyFrom = getNode.GetNode.User
+		node, err = dr.GetUser(ctx, &id, nil)
 	case "Group":
-		node = &models.Group{}
-		copyFrom = getNode.GetNode.Group
+		node, err = dr.GetGroup(ctx, &id, nil)
 	default:
-		return nil, repository.WrapRepoError(err, "unsupported type").Add("nodeId", id)
+		return nil, WrapRepoError(err, "unsupported type").Add("nodeId", id)
 	}
-	if err = dr.dataCopier.CopyTo(copyFrom, node); err != nil {
-		panic(err)
+	if err != nil {
+		return nil, err
 	}
+
 	return node, nil
 }
 
-// // GetNodes returns a list of `Node` objects matching the filter criteria.
-// func (dr *DgraphRepository) GetNodes(filter *models.NodeFilter, order *models.NodeOrder, first *int64, offset *int64) ([]*models.Node, error) {
-// 	ctx := context.Background()
-// 	getNodes, err := dr.client.GetNodes(ctx, filter, order, first, offset)
-// 	if err != nil {
-// 		return nil, repository.WrapRepoError(err, errGetNodeStr)
-// 	}
-// 	nodes := make([]*models.Node, 0, len(getNodes.QueryNode))
-// 	for _, x := range getNodes.QueryNode {
-// 		node := &models.Node{ID: x.ID}
-// 		if err = dr.dataCopier.CopyTo(x, node); err != nil {
-// 			panic(err)
-// 		}
-// 		nodes = append(nodes, node)
-// 	}
-// 	return nodes, nil
-// }
-
-// // GetAllNodes returns a list of all `Node` objects.
-// func (dr *DgraphRepository) GetAllNodes() ([]*models.Node, error) {
-// 	return dr.GetNodes(nil, nil, nil, nil)
-// }
+// CheckNode checks if a `Node` object exists in the DB.
+func (dr *DgraphRepository) CheckNode(ctx context.Context, id string) (bool, error) {
+	getNode, err := dr.client.CheckNode(ctx, id)
+	if err != nil {
+		return false, WrapRepoError(err, errGetNodeStr).Add("nodeId", id)
+	}
+	return getNode.GetNode != nil, nil
+}
 
 // DeleteNode deletes a `Node` object.
-func (dr *DgraphRepository) DeleteNode(id *string) error {
-	ctx := context.Background()
-	delFilter := models.NodeFilter{}
+func (dr *DgraphRepository) DeleteNode(ctx context.Context, id *string) error {
+	delFilter := dgclient.NodeFilter{}
 	if id != nil {
 		delFilter.ID = []string{*id}
 	}
-	_, err := dr.client.DeleteNode(ctx, delFilter)
-	if err != nil {
-		return repository.WrapRepoError(err, errDeleteNodeStr).Add("nodeId", id)
+	if _, err := dr.client.DeleteNodes(ctx, delFilter); err != nil {
+		return WrapRepoError(err, errDeleteNodeStr).Add("nodeId", id)
 	}
 	return nil
 }
 
 // DeleteAllNodes deletes all `Nodes` objects.
-func (dr *DgraphRepository) DeleteAllNodes() error {
-	return dr.DeleteNode(nil)
+func (dr *DgraphRepository) DeleteAllNodes(ctx context.Context) error {
+	return dr.DeleteNode(ctx, nil)
 }
