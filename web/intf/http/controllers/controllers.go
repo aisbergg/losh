@@ -2,7 +2,10 @@ package controllers
 
 import (
 	"fmt"
+	"regexp"
 	"strconv"
+	"strings"
+	"unsafe"
 
 	gourl "net/url"
 
@@ -33,11 +36,6 @@ type RequestInfo struct {
 // paramParser is a function that parses the request params or query params.
 type paramParser func(ctx *fiber.Ctx) interface{}
 
-// parseParamNoop is a noop param parser.
-func parseParamNoop(ctx *fiber.Ctx) interface{} {
-	return nil
-}
-
 func parseRequestInfo(ctx *fiber.Ctx, queryParser paramParser, paramParser paramParser) *RequestInfo {
 	req := &RequestInfo{}
 	req.BaseURL = ctx.BaseURL()
@@ -63,7 +61,38 @@ func parseRequestInfo(ctx *fiber.Ctx, queryParser paramParser, paramParser param
 	req.Cookies = reqCookies
 	req.IP = ctx.IP()
 	req.IPs = ctx.IPs()
-	req.Params = paramParser(ctx)
-	req.QueryParams = queryParser(ctx)
+	if queryParser != nil {
+		req.QueryParams = queryParser(ctx)
+	}
+	if paramParser != nil {
+		req.Params = paramParser(ctx)
+	}
 	return req
+}
+
+var idPattern = regexp.MustCompile(`^[a-f0-9]{1,16}$`)
+
+func parseID(id string) string {
+	if id == "" {
+		return ""
+	}
+	id = strings.ToLower(strings.TrimSpace(id))
+	if idPattern.MatchString(id) {
+		return id
+	}
+	return ""
+}
+
+func parseHexID(id string) string {
+	if id == "" {
+		return ""
+	}
+	id = strings.ToLower(strings.TrimSpace(id))
+	if idPattern.MatchString(id) {
+		buf := make([]byte, 0, len(id)+2)
+		buf = append(buf, "0x"...)
+		buf = append(buf, id...)
+		return *(*string)(unsafe.Pointer(&buf))
+	}
+	return ""
 }

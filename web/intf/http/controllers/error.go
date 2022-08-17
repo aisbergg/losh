@@ -110,7 +110,7 @@ func NewErrorController(debug bool, log *zap.SugaredLogger, tplBndPrv binding.Te
 // RegisterDebugRoute registers a simple debug route handler.
 func RegisterDebugRoute(router fiber.Router) {
 	router.Get("/error", func(ctx *fiber.Ctx) error {
-		reqInf := parseRequestInfo(ctx, parseParamNoop, parseParamNoop)
+		reqInf := parseRequestInfo(ctx, nil, nil)
 		barErr := losherrors.NewAppError("bar").
 			Add("foo", "1").
 			Add("bar", "2")
@@ -233,7 +233,6 @@ func (c ErrorController) handleControllerError(ctx *fiber.Ctx, code int, message
 	switch contentType {
 	case fiber.MIMEApplicationJSON, fiber.MIMEApplicationJSONCharsetUTF8:
 		// TODO: json error https://cloud.google.com/storage/docs/json_api/v1/status-codes#403-forbidden
-		ctx.Set("Content-Type", "application/json")
 		return ctx.JSON(tplBnd)
 
 	default:
