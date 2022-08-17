@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/sethvargo/go-retry"
+	"github.com/aisbergg/go-retry/pkg/retry"
 	"go.uber.org/zap"
 
 	losherrors "losh/internal/lib/errors"

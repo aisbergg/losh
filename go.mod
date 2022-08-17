@@ -9,6 +9,7 @@ require (
 	github.com/aisbergg/go-copier v0.0.0-20220721165003-f7c0105f4fb8
 	github.com/aisbergg/go-errors v0.0.0-20220713173946-6fef60b496f0
 	github.com/aisbergg/go-pathlib v0.12.1-0.20220720080820-6840c871ef28
+	github.com/aisbergg/go-retry v1.0.0
 	github.com/alecthomas/chroma v0.10.0
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/gofiber/fiber/v2 v2.32.0
@@ -23,7 +24,6 @@ require (
 	github.com/microcosm-cc/bluemonday v1.0.18
 	github.com/osteele/liquid v1.3.0
 	github.com/russross/blackfriday/v2 v2.1.0
-	github.com/sethvargo/go-retry v0.2.3
 	github.com/spf13/afero v1.8.2
 	github.com/wk8/go-ordered-map v1.0.0
 	go.uber.org/zap v1.21.0

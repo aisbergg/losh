@@ -7,7 +7,7 @@ import (
 
 	"losh/internal/lib/net/ratelimit"
 
-	"github.com/sethvargo/go-retry"
+	"github.com/aisbergg/go-retry/pkg/retry"
 	"go.uber.org/zap"
 )
 
