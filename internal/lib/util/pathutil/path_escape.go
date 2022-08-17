@@ -14,7 +14,7 @@
 
 // Implements systemd-escape [--unescape] [--path]
 
-package stringutil
+package pathutil
 
 import (
 	"fmt"
