@@ -10,9 +10,7 @@ import (
 	"github.com/gookit/event"
 	"github.com/gookit/gcli/v3"
 
-	"losh/internal/infra/dgraph"
 	"losh/internal/lib/log"
-	"losh/web/core/config"
 	loshapp "losh/web/intf/http"
 )
 
@@ -25,21 +23,14 @@ var RunCommand = &gcli.Command{
 	Name: "run",
 	Desc: "Run the application",
 	Config: func(c *gcli.Command) {
-		c.StrOpt(&configShowOptions.Path, "config", "c", "", "configuration file path")
+		c.StrOpt(&runOptions.Path, "config", "c", "", "configuration file path")
 	},
 	Func: func(cmd *gcli.Command, args []string) error {
-		// configuration
-		cfgSvc := config.NewService(configInitOptions.Output)
-		cfg, err := cfgSvc.Get()
+		cfg, db, err := initConfigAndDatabase(runOptions.Path)
 		if err != nil {
-			return errors.Wrap(err, "failed to load configuration")
+			return err
 		}
 
-		// logging
-		err = log.Initialize(cfg.Log)
-		if err != nil {
-			return errors.Wrap(err, "failed to initialize logging")
-		}
 		// flush logs and close log file after server shutdown
 		event.On("server.stop", event.ListenerFunc(func(e event.Event) error {
 			return log.Close()
@@ -48,15 +39,6 @@ var RunCommand = &gcli.Command{
 		event.On("signal.us1", event.ListenerFunc(func(e event.Event) error {
 			return log.RotateLogFile()
 		}))
-
-		// database
-		db, err := dgraph.NewDgraphRepository(cfg.Database)
-		if err != nil {
-			return errors.Wrap(err, "failed to initialize Dgraph database connection")
-		}
-		if !db.IsReachable() {
-			return errors.New("failed to connect to Dgraph database")
-		}
 
 		// server
 		if err, _ = event.Fire("server.initialize", nil); err != nil {

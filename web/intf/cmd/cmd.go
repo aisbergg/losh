@@ -1,25 +1,34 @@
 package cmd
 
 import (
-	"losh/crawler/core/config"
 	"losh/internal/infra/dgraph"
 	"losh/internal/lib/log"
+	"losh/web/core/config"
 
 	"github.com/aisbergg/go-errors/pkg/errors"
 )
 
-func initConfigAndDatabase(cfgPth string) (config.Config, *dgraph.DgraphRepository, error) {
+func initConfig(cfgPth string) (config.Config, error) {
 	// configuration
-	cfgSvc := config.NewService(configInitOptions.Output)
+	cfgSvc := config.NewService(cfgPth)
 	cfg, err := cfgSvc.Get()
 	if err != nil {
-		return config.Config{}, nil, errors.Wrap(err, "failed to load configuration")
+		return config.Config{}, errors.Wrap(err, "failed to load configuration")
 	}
 
 	// logging
 	err = log.Initialize(cfg.Log)
 	if err != nil {
-		return config.Config{}, nil, errors.Wrap(err, "failed to initialize logging")
+		return config.Config{}, errors.Wrap(err, "failed to initialize logging")
+	}
+
+	return cfg, nil
+}
+
+func initConfigAndDatabase(cfgPth string) (config.Config, *dgraph.DgraphRepository, error) {
+	cfg, err := initConfig(cfgPth)
+	if err != nil {
+		return config.Config{}, nil, err
 	}
 
 	// database

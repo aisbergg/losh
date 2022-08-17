@@ -21,6 +21,7 @@ func main() {
 
 	// register commands
 	app.Add(cmd.RunCommand)
+	app.Add(cmd.SearchCommand)
 	app.Add(cmd.ConfigCommand)
 
 	// run the application

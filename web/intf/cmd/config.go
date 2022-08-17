@@ -1,6 +1,8 @@
 package cmd
 
-import "github.com/gookit/gcli/v3"
+import (
+	"github.com/gookit/gcli/v3"
+)
 
 // ConfigCommand is the CLI command to run configuration tasks.
 var ConfigCommand = &gcli.Command{
