@@ -1,18 +1,17 @@
-{% assign curPage = include.curPage %}
-{% assign numPages = include.numPages %}
-{% assign resultsPerPage = include.resultsPerPage %}
+{%- assign curPage = include.curPage %}
+{%- assign numPages = include.numPages %}
+{%- assign resultsPerPage = include.resultsPerPage %}
 
-{% comment %} windowStart = max(1, min(numPages - 4, curPage - 2)) {% endcomment %}
-{% assign windowStart = numPages | minus: 4 | min: (curPage | minus: 2) | max: 1 | int %}
-{% comment %} windowEnd = min(numPages, windowStart + 4) {% endcomment %}
-{% assign windowEnd = numPages | min: (windowStart | plus: 4) | int %}
+{%- comment %} windowStart = max(1, min(numPages - 4, curPage - 2)) {% endcomment %}
+{%- assign windowStart = numPages | minus: 4 | min: (curPage | minus: 2) | max: 1 | int %}
+{%- comment %} windowEnd = min(numPages, windowStart + 4) {% endcomment %}
+{%- assign windowEnd = numPages | min: (windowStart | plus: 4) | int %}
 
 <div class="pagination-cnt">
 	<form name="resultsPerPage" class="results-per-page">
-		<span class="results-per-page-label">Results per page:</span>
 		<select name="rpp" class="form-select w-auto" onchange="this.form.submit(); return handleResultsPerPage();">
 			{% for rpp in "10,25,50,100" | split: "," %}
-			<option value="{{ rpp }}"{% if (resultsPerPage | string) == rpp %} selected{% endif %}>{{ rpp }}</option>
+			<option value="{{ rpp }}"{% if (resultsPerPage | string) == rpp %} selected{% endif %}>{{ rpp }} / Page</option>
 			{% endfor %}
 		</select>
 	</form>
@@ -73,7 +72,7 @@
 		const params = new URLSearchParams(window.location.search);
 		params.set("rpp", formData.get("rpp"));
 
-		// change target location to search page
+		// change target location
 		location = "{{ req.path }}?" + params.toString();
 
 		// cancel submit event
@@ -85,9 +84,16 @@
 		const form = document.forms.goToPage;
 		const formData = new FormData(form);
 		const params = new URLSearchParams(window.location.search);
-		params.set('page', formData.get("page"));
+		var page = formData.get("page")
+		if (page < 1) {
+			page = 1;
+		}
+		if (page > {{ numPages }}) {
+			page = {{ numPages }};
+		}
+		params.set('page', page);
 
-		// change target location to search page
+		// change target location
 		location = "{{ req.path }}?" + params.toString();
 
 		// cancel submit event
