@@ -15,17 +15,17 @@ type ProductURL struct {
 	Domain string
 	Owner  string
 	Repo   string
-	Tag    string
+	Ref    string
 	Path   string
 }
 
 // NewProductURL creates a new PlatformURL from parts.
-func NewProductURL(platform, owner, repo, tag, path string) *ProductURL {
+func NewProductURL(platform, owner, repo, ref, path string) *ProductURL {
 	return &ProductURL{
 		Domain: platform,
 		Owner:  owner,
 		Repo:   repo,
-		Tag:    tag,
+		Ref:    ref,
 		Path:   path,
 	}
 }
@@ -46,13 +46,13 @@ func NewProductURLFromURL(url string) (*ProductURL, error) {
 		productURL.Domain = "github.com"
 		if domain == "github.com" && len(pathParts) > 4 {
 			if pathParts[2] == "blob" || pathParts[2] == "tree" || pathParts[2] == "commit" {
-				productURL.Tag = pathParts[3]
+				productURL.Ref = pathParts[3]
 				productURL.Path = strings.Join(pathParts[4:], "/")
 			} else {
 				return nil, ErrInvalidURL
 			}
 		} else if domain == "raw.githubusercontent.com" {
-			productURL.Tag = pathParts[2]
+			productURL.Ref = pathParts[2]
 			productURL.Path = strings.Join(pathParts[3:], "/")
 		} else {
 			return nil, ErrInvalidURL
@@ -64,7 +64,7 @@ func NewProductURLFromURL(url string) (*ProductURL, error) {
 		productURL.Domain = "gitlab.com"
 		// if len(path_parts) >= 5 and path_parts[2] == "-" and path_parts[3] in ["tree", "blob", "raw"]:
 		if len(pathParts) > 5 && pathParts[2] == "-" && (pathParts[3] == "tree" || pathParts[3] == "blob" || pathParts[3] == "raw") {
-			productURL.Tag = pathParts[4]
+			productURL.Ref = pathParts[4]
 			productURL.Path = strings.Join(pathParts[5:], "/")
 		} else {
 			return nil, ErrInvalidURL
@@ -81,7 +81,7 @@ func NewProductURLFromURL(url string) (*ProductURL, error) {
 		if len(pathParts) >= 4 && (pathParts[2] == "file" || pathParts[2] == "files") {
 			productURL.Path = strings.Join(pathParts[3:], "/")
 		} else if len(pathParts) >= 4 && pathParts[2] == "v" {
-			productURL.Tag = pathParts[3]
+			productURL.Ref = pathParts[3]
 			if len(pathParts) >= 6 && (pathParts[4] == "file" || pathParts[4] == "files") {
 				productURL.Path = strings.Join(pathParts[5:], "/")
 			}
@@ -154,32 +154,32 @@ func (pu *ProductURL) RepositoryURL() string {
 func (pu *ProductURL) PermaURL() string {
 	switch pu.Domain {
 
-	// format: https://raw.githubusercontent.com/{owner}/{repo}/{tag}/{path}
+	// format: https://raw.githubusercontent.com/{owner}/{repo}/{ref}/{path}
 	case "github.com":
 		return (&gourl.URL{
 			Scheme: "https",
 			Host:   "raw.githubusercontent.com",
-			Path:   fmt.Sprintf("/%s/%s/%s/%s", pu.Owner, pu.Repo, pu.Tag, pu.Path),
+			Path:   fmt.Sprintf("/%s/%s/%s/%s", pu.Owner, pu.Repo, pu.Ref, pu.Path),
 		}).String()
 
-	// format: https://gitlab.com/{owner}/{repo}/-/raw/{tag}/{path}
+	// format: https://gitlab.com/{owner}/{repo}/-/raw/{ref}/{path}
 	case "gitlab.com":
 		return (&gourl.URL{
 			Scheme: "https",
 			Host:   "gitlab.com",
-			Path:   fmt.Sprintf("/%s/%s/-/raw/%s/%s", pu.Owner, pu.Repo, pu.Tag, pu.Path),
+			Path:   fmt.Sprintf("/%s/%s/-/raw/%s/%s", pu.Owner, pu.Repo, pu.Ref, pu.Path),
 		}).String()
 
-	// format: https://wikifactory.com/{owner}/{repo}/contributions/{tag}/file/{path}
+	// format: https://wikifactory.com/{owner}/{repo}/contributions/{ref}/file/{path}
 	case "wikifactory.com":
 		url := &gourl.URL{
 			Scheme: "https",
 			Host:   "projects.fablabs.io",
 		}
 		if pu.Path == "" {
-			url.Path = fmt.Sprintf("/%s/%s/contributions/%s", pu.Owner, pu.Repo, pu.Tag)
+			url.Path = fmt.Sprintf("/%s/%s/contributions/%s", pu.Owner, pu.Repo, pu.Ref)
 		} else {
-			url.Path = fmt.Sprintf("/%s/%s/contributions/%s/file/%s", pu.Owner, pu.Repo, pu.Tag, pu.Path)
+			url.Path = fmt.Sprintf("/%s/%s/contributions/%s/file/%s", pu.Owner, pu.Repo, pu.Ref, pu.Path)
 		}
 		return url.String()
 	}

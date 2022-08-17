@@ -1,0 +1,162 @@
+package services
+
+import (
+	"context"
+	"losh/internal/core/product/models"
+	"reflect"
+)
+
+// saveProduct saves a product.
+func (s *Service) saveProduct(ctx context.Context, product *models.Product) error {
+
+	// for each field
+	// field is not a pointer -> mandatory field
+	//    field is a struct
+	//       has no ID
+	//          save field first
+	//       has ID
+	//          copy field ID
+	//     field is not a struct
+	//          copy field
+
+	return nil
+}
+
+// saveProduct saves a product.
+func (s *Service) copyX(ctx context.Context, src, dst interface{}) error {
+	dstVal := reflect.ValueOf(dst)
+	if dstVal.Kind() != reflect.Ptr {
+		panic("copy destination must be a pointer")
+	}
+	dstVal = dstVal.Elem()
+	if dstVal.Kind() != reflect.Struct || !dstVal.IsValid() {
+		panic("copy destination is invalid")
+	}
+
+	srcVal := reflect.ValueOf(src)
+	if srcVal.Kind() == reflect.Pointer || srcVal.Kind() == reflect.Interface {
+		srcVal = srcVal.Elem()
+	}
+	if srcVal.Kind() != reflect.Struct || !srcVal.IsValid() {
+		panic("copy source is invalid")
+	}
+
+	srcFields := s.getStructFields(srcVal)
+	dstFields := s.getStructFields(dstBaseVal)
+
+	// for each field
+	// field is not a pointer -> mandatory field
+	//    field is a struct
+	//       has no ID
+	//          save field first
+	//       has ID
+	//          copy field ID
+	//     field is not a struct
+	//          copy field
+
+	for k, srcField := range srcFields {
+		dstFld, ok := dstFields[k]
+		if !ok {
+			continue
+		}
+		srcFldVal := srcVal.Field(srcField.Index)
+		// srcFldTyp := srcFldVal.Type()
+		dstFldVal := dstVal.Field(dstFld.Index)
+
+		// mandatory field
+		if srcFldVal.Kind() != reflect.Pointer {
+			srcFldVal = reflect.Indirect(srcFldVal)
+			dstFldVal = reflect.Indirect(dstFldVal)
+			if srcFldVal.Kind() == reflect.Struct {
+				id := srcFldVal.FieldByName("ID").Interface()
+				// save mandatory sub field first
+				if id == "" {
+					reflect.New(dstFldVal.Type()).Elem()
+					if err := s.copyX(srcFldVal.Interface()); err != nil {
+						return err
+					}
+				}
+
+				// copy ID
+
+			} else {
+
+			}
+		}
+
+		// non mandatory field
+
+		// save stuff
+		// set ID on src
+
+		// if srcField.Name == "ID" {
+		// 	continue
+		// }
+		// if srcField.Kind == reflect.Struct {
+		// 	if srcField.Value.IsNil() {
+		// 		continue
+		// 	}
+		// 	if srcField.Value.Kind() == reflect.Ptr {
+		// 		srcField.Value = srcField.Value.Elem()
+		// 	}
+		// 	if srcField.Value.Kind() != reflect.Struct || !srcField.Value.IsValid() {
+		// 		panic("copy source is invalid")
+		// 	}
+		// 	if err := c.copyX(srcField.Value.Interface(), dstFields[srcField.Name]); err != nil {
+		// 		return err
+		// 	}
+		// } else {
+		// 	dstFields[srcField.Name].Set(srcField.Value)
+		// }
+	}
+
+	return nil
+}
+
+// updateX updates the given product.
+func (s *Service) updateNodeNonMandatory(ctx context.Context, node interface{}) error {
+	return nil
+}
+
+// saveMandatoryProduct saves the mandatory fields of a product.
+func (s *Service) saveMandatoryProduct(ctx context.Context, product *models.Product) error {
+
+	if err := s.repo.CreateProduct(ctx, product); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+type structField struct {
+	Index int
+}
+
+// getStructFields returns the (filtered) fields of the given struct.
+func (s *Service) getStructFields(structVal reflect.Value) map[string]structField {
+	typ := structVal.Type()
+	if cached, ok := s.structFieldsCache[typ]; ok {
+		return cached
+	}
+
+	flds := make([]reflect.StructField, 0, structVal.NumField())
+	for i := 0; i < structVal.NumField(); i++ {
+		// the struct field `PkgPath` is empty for exported fields
+		if structVal.Type().Field(i).PkgPath != "" {
+			continue
+		}
+		flds = append(flds, structVal.Type().Field(i))
+	}
+
+	structFlds := make(map[string]structField, len(flds))
+	for _, fld := range flds {
+		structFlds[fld.Name] = structField{
+			Index: fld.Index[0],
+		}
+	}
+
+	// cache fields info
+	s.structFieldsCache[typ] = structFlds
+
+	return structFlds
+}
