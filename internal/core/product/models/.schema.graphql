@@ -1,3 +1,12 @@
+# ------------------------------------------------------------------------------
+# Database Schema Definition
+#
+# Some useful information about schema development:
+#   - https://graphql.org/learn/schema/
+#   - https://medium.com/@calebmer/when-to-use-graphql-non-null-fields-4059337f6fc8
+#   - https://yelp.github.io/graphql-guidelines/nullability.html
+# ------------------------------------------------------------------------------
+
 """
 Meta data concerning the database itself.
 """
@@ -45,7 +54,7 @@ type Product implements Node & CrawlerMeta {
   """
   The unique human readable identifier of the product in the format: `domain.tld/owner/repo/file-path`. For example:
 	- `github.com/aisbergg/foobar/okh.yml`
-	- `wikifactory.com/aisbergg/foobar/-`
+	- `wikifactory.com/@aisbergg/foobar/-`
 	- `oshwa.org/-/-/us000000.html`
 	"""
   xid: String! @id
@@ -55,27 +64,40 @@ type Product implements Node & CrawlerMeta {
   """
   name: String! @search(by: [hash, fulltext, regexp])
 
-  # TODO: product ID? repository, path....
-
-  """
-  The owner of the product.
-  """
-  owner: UserOrGroup!
-
   """
   The short description of the product.
   """
   description: String! @search(by: [fulltext, regexp])
 
   """
-  The product website URL, if any.
+  The language in which the documentation is written.
   """
-  website: String @search(by: [hash, fulltext, regexp])
+  documentationLanguage: String! @search(by: [hash])
 
   """
   The latest version of the product.
   """
   version: String! @search
+
+  """
+  The license used for the component.
+  """
+  license: License!
+
+  """
+  The license holder of the product.
+  """
+  licensor: UserOrGroup!
+
+	"""
+  The product website URL, if any.
+  """
+  website: String @search(by: [hash, fulltext, regexp])
+
+	"""
+	Indicates if the product is still actively developed or not.
+	"""
+	isActive: Boolean! @search
 
   """
   The latest release of the product.
@@ -105,12 +127,12 @@ type Product implements Node & CrawlerMeta {
   """
   A list of products that are based on this product.
   """
-  forks: [Product!]! @hasInverse(field: forkOf)
+  forks: [Product!] @hasInverse(field: forkOf)
 
   """
   A list of all tags associated with the product.
   """
-  tags: [Tag!]!
+  tags: [Tag!]
 
   """
   The category of the product.
@@ -123,10 +145,10 @@ A component is a tangible object that can be a module or a part. It has a name, 
 """
 type Component implements Node & CrawlerMeta {
 	"""
-  The unique human readable identifier of the component in the format: `domain.tld/owner/repo/file-path/component-name/version`. For example:
-	- `github.com/aisbergg/foobar/okh.yml/baz/1.0.0`
-	- `wikifactory.com/aisbergg/foobar/-/baz/1.0.0`
-	- `oshwa.org/-/-/us000000.html/baz/1.0.0`
+  The unique human readable identifier of the component in the format: `domain.tld/owner/repo/version/file-path/component-name`. Each part is path escaped. A single dash '-' denotes an empty part. Examples:
+	- `github.com/aisbergg/foobar/1.0.0/path%2Fto%2Fokh.yml/baz`
+	- `wikifactory.com/@aisbergg/foobar/a1b2c3d/-/baz`
+	- `oshwa.org/-/-/1.0.0/us000000.html/baz`
 	"""
 	xid: String! @id
 
@@ -141,11 +163,6 @@ type Component implements Node & CrawlerMeta {
   description: String! @search(by: [fulltext, regexp])
 
   """
-  The owner of the component.
-  """
-  owner: UserOrGroup!
-
-  """
   The version string of the release.
   """
   version: String! @search
@@ -158,7 +175,7 @@ type Component implements Node & CrawlerMeta {
   """
   A list of all releases of the component.
   """
-  releases: [Component!]! @hasInverse(field: releases)
+  releases: [Component!] @hasInverse(field: releases)
 
   """
   Indicates if this release is the latest release of the component.
@@ -178,7 +195,7 @@ type Component implements Node & CrawlerMeta {
   """
   The additional licenses used for the documentation and other assets, if any.
   """
-  additionalLicenses: [License!]!
+  additionalLicenses: [License!]
 
   """
   The license holder of the component.
@@ -194,13 +211,13 @@ type Component implements Node & CrawlerMeta {
   The OSH technology readiness level (OTRL) of the component. For information see:
   https://github.com/OPEN-NEXT/OKH-LOSH/blob/master/OTRL.md
   """
-  technologyReadinessLevel: TechnologyReadinessLevel
+  technologyReadinessLevel: TechnologyReadinessLevel!
 
   """
   The OSH documentation readiness level (ODRL) of the component. For information see:
   https://github.com/OPEN-NEXT/OKH-LOSH/blob/master/OTRL.md
   """
-  documentationReadinessLevel: DocumentationReadinessLevel
+  documentationReadinessLevel: DocumentationReadinessLevel!
 
   """
   The permanent URL to evidence of compliance (OSHWA, FSF, DIN SPEC 3105).
@@ -237,12 +254,12 @@ type Component implements Node & CrawlerMeta {
   """
   A list of sub components.
   """
-  components: [Component!]! @hasInverse(field: components)
+  components: [Component!] @hasInverse(field: components)
 
   """
   A list of software (including firmware) that is reuqired to run and use the component.
   """
-  software: [Software!]!
+  software: [Software!]
 
   """
   An image of the component if any is available.
@@ -277,12 +294,12 @@ type Component implements Node & CrawlerMeta {
   """
   The product this component belongs to.
   """
-  product: Product!
+  product: Product
 
   """
   A list of components that use this component.
   """
-  usedIn: [Component!]!
+  usedIn: [Component!]
 
   """
   The source file that makes the component.
@@ -292,18 +309,18 @@ type Component implements Node & CrawlerMeta {
   """
   A list of files exported from the source file.
   """
-  export: [File!]!
+  export: [File!]
 
   """
   A list of auxiliary files.
   """
-  auxiliary: [File!]!
+  auxiliary: [File!]
 
   # TODO: needed? Represented as UserOrGroup?
   organization: Group
 
   """
-  The mass of the component.
+  The mass of the component in grams.
   """
   mass: Float @search
 
@@ -325,7 +342,7 @@ type Component implements Node & CrawlerMeta {
   """
   A list of additional production metadata such as tolerances, surface roughness, etc.
   """
-  productionMetadata: [KeyValue!]!
+  productionMetadata: [KeyValue!]
 }
 
 # TODO: needs to be defined
@@ -337,19 +354,30 @@ type Software implements Node & CrawlerMeta {
   licensor: String
 }
 
+"""
+Repository represents a data source. It might be a Git repository (+ manifest file), a website or other kind of data source.
+"""
 type Repository implements Node {
-  """
-  The human readable identifier of the object.
-  """
+	"""
+  The unique human readable identifier of the repository in the format: `domain.tld/owner/repo/ref/file-path`. Each part is path escaped. A single dash '-' denotes an empty part. Examples:
+	- `github.com/aisbergg/foobar/1.0.0/path%2Fto%2Fokh.yml`
+	- `wikifactory.com/@aisbergg/foobar/a1b2c3d/-`
+	- `oshwa.org/-/-/1.0.0/us000000.html`
+	"""
   xid: String! @id @search(by: [hash])
 
+	"""
+	The type of the repository.
+	"""
+	type: RepositoryType! @search(by: [hash])
+
   """
-  The repository URL where the component was discoverd from or is developed in.
+  Nice URL of the repository where the result is The repository URL where the component was discoverd from or is developed in.
   """
   url: String!
 
 	"""
-  The URL to specific release version of the component.
+  The permanent URL to the specific release version.
   """
   permaUrl: String!
 
@@ -359,24 +387,38 @@ type Repository implements Node {
   host: Host!
 
   """
-  The owner (user or group) of the repository.
+  The owner (user or group) of the repository, if any.
   """
   owner: UserOrGroup
 
   """
-  The name of the repository.
+  The repository name, if any.
   """
   name: String @search(by: [hash, fulltext, regexp])
 
   """
-  The tag of the repository, if any. (might be a Git tag or branch name)
+  The reference, if any. This could be a Git tag or branch for example.
   """
-  tag: String
+  reference: String
 
   """
-  The path of the manifest file or other resource inside the repository, if any.
+  The path of the file or other resource inside the repository, if any.
   """
   path: String
+
+	"""
+	The actual file that the repository represents. If the repository is a Git repository, this is the manifest file.
+	"""
+	file: File
+}
+
+"""
+The recognized types of repositories.
+"""
+enum RepositoryType {
+	WEBSITE
+  FILE
+	GIT
 }
 
 """
@@ -473,6 +515,7 @@ enum LicenseType {
 The technology readiness levels of components.
 """
 enum TechnologyReadinessLevel {
+	UNDETERMINED
   OTRL_1
   OTRL_2
   OTRL_3
@@ -484,6 +527,7 @@ enum TechnologyReadinessLevel {
 The documentation readiness levels of components.
 """
 enum DocumentationReadinessLevel {
+	UNDETERMINED
   ODRL_1
   ODRL_2
   ODRL_3
@@ -519,7 +563,7 @@ type TechnologySpecificDocumentationCriteria implements Node {
   """
   A list of components that meet the criteria.
   """
-  components: [Component!]! @hasInverse(field: tsdc)
+  components: [Component!] @hasInverse(field: tsdc)
 }
 
 """
@@ -544,7 +588,7 @@ type TechnicalStandard implements Node {
   """
   A list of components that meet the standard.
   """
-  components: [Component!]! @hasInverse(field: compliesWith)
+  components: [Component!] @hasInverse(field: compliesWith)
 }
 
 interface UserOrGroup {
@@ -554,28 +598,38 @@ interface UserOrGroup {
   id: ID!
 
 	"""
-  The unique human readable identifier of the owner. For example: `github.com/aisbergg`
+  The unique human readable identifier of the owner in the format: `domain.tld/owner`. Each part is path escaped. A single dash '-' denotes an empty part. Examples:
+	- `github.com/aisbergg`
+	- `wikifactory.com/@aisbergg`
 	"""
   xid: String! @id(interface: true) @search(by: [hash]) # shall be unique across all implementing
   host: Host!
   name: String! @search(by: [hash])
+  fullName: String
   email: String
   avatar: File
   url: String
-  memberOf: [Group!]!
-  products: [Product!] @hasInverse(field: owner)
-}
-
-type Group implements Node & UserOrGroup {
-  members: [UserOrGroup!]!
+  memberOf: [Group!] @hasInverse(field: members)
+  products: [Product!] @hasInverse(field: licensor)
 }
 
 type User implements Node & UserOrGroup {
-  fullName: String
   locale: String
 }
 
+type Group implements Node & UserOrGroup {
+  members: [UserOrGroup!]
+}
+
 type File implements Node & CrawlerMeta {
+	"""
+	The unique human readable identifier of the file in the format: `domain.tld/owner/repo/ref/file-path`. Each part is path escaped. A single dash '-' denotes an empty part. Examples:
+	- `github.com/aisbergg/foobar/1.0.0/path%2Fto%2Fokh.yml`
+	- `wikifactory.com/@aisbergg/foobar/a1b2c3d/-`
+	- `oshwa.org/-/-/1.0.0/us000000.html`
+	"""
+	xid: String! @id @search(by: [hash])
+
 	"""
 	The name of the file (without parent path).
 	"""
@@ -609,18 +663,18 @@ type File implements Node & CrawlerMeta {
 # ------------------------------------------------------------------------------
 
 type KeyValue implements Node {
-  key: String
-  value: StringOrFloat
+  key: String!
+  value: StringOrFloat!
 }
 
 union StringOrFloat = StringV | FloatV
 
 type StringV implements Node {
-  value: String
+  value: String!
 }
 
 type FloatV implements Node {
-  value: Float
+  value: Float!
 }
 
 
@@ -656,17 +710,17 @@ union OuterDimensions = BoundingBoxDimensions | OpenSCADDimensions
 A type of dimension in form of a box. Unit: m
 """
 type BoundingBoxDimensions implements Node {
-  height: Float
-  width: Float
-  depth: Float
+  height: Float!
+  width: Float!
+  depth: Float!
 }
 
 """
 A type of dimension in form of a box. Unit: m
 """
 type OpenSCADDimensions implements Node {
-  openscad: String
-  unit: String
+  openscad: String!
+  unit: String!
 }
 
 
@@ -697,7 +751,7 @@ type Category implements Node {
   """
   A short description of the category.
   """
-  description: String!
+  description: String
 
   """
   The parent category of this category.
@@ -707,12 +761,12 @@ type Category implements Node {
   """
   List of all subcategories of this category.
   """
-  children: [Category!]! @hasInverse(field: parent)
+  children: [Category!] @hasInverse(field: parent)
 
   """
   List of all products, that are categorized under this category.
   """
-  products: [Product!]! @hasInverse(field: category)
+  products: [Product!] @hasInverse(field: category)
 }
 
 
@@ -733,10 +787,10 @@ type Tag implements Node {
   """
   List of alliases of the tag.
   """
-  aliases: [Tag!]! @hasInverse(field: aliases)
+  aliases: [Tag!] @hasInverse(field: aliases)
 
   """
   List of related tags.
   """
-  related: [Tag!]! @hasInverse(field: related)
+  related: [Tag!] @hasInverse(field: related)
 }
