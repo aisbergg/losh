@@ -1,308 +1,227 @@
-{% assign numResults = 123 %}
-{% assign resultsPerPage = 10 %}
-{% assign curPage = 5 %}
-{% assign numPages = 25 %}
-{% assign sortBy = "name" %}
+{%- assign resultsPerPage = req.queryParams.resultsPerPage -%}
+{%- assign results = page.results.items -%}
+{%- assign numResults = page.results.count -%}
+{%- assign numPagedResults = page.results.items | size -%}
 
-<div class="row row-cards">
-
-	<!-- results as table -->
-	<!-- <div class="col-12">
-		<div class="card">
-			<div class="card-body">
-				<h2>ee</h2>
-			</div>
-
-			<div class="table-responsive">
-				<table class="table table-vcenter{% if include.mobile %} table-mobile-md{% endif %}{% if include.card %} card-table{% endif %}{% if include.stripped %} table-striped{% endif %}{% if include.nowrap %} table-nowrap{% endif %}">
-					<thead>
-						<tr>
-							<th>Name</th>
-							<th>Description</th>
-							<th>License</th>
-							<th>Version</th>
-							<th class="w-1"></th>
-						</tr>
-					</thead>
-					<tbody>
-						{% for person in site.data.people limit: 5 offset: include.offset %}
-						<tr>
-							{% if include.avatars %}
-							<td {% if include.mobile %}data-label="Name" {% endif %}>
-								<div class="d-flex py-1 align-items-center">
-									{% include ui/avatar.html person-id=person.id class="me-2" %}
-									<div class="flex-fill">
-										<div class="font-weight-medium">{{ person.full_name }}</div>
-										<div class="text-muted"><a href="#" class="text-reset">{{ person.email }}</a>
-										</div>
-									</div>
-								</div>
-							</td>
-							{% else %}
-							<td {% if include.mobile %}data-label="Name" {% endif %}>{{ person.full_name }}</td>
-							{% endif %}
-
-
-							{% if include.avatars %}
-							<td {% if include.mobile %}data-label="Title" {% endif %}>
-								<div>{{ person.job_title }}</div>
-								<div class="text-muted">{{ person.department }}</div>
-							</td>
-							{% else %}
-							<td class="text-muted" {% if include.mobile %}data-label="Title" {% endif %}>
-								{{ person.job_title }}, {{ person.department }}
-							</td>
-							{% endif %}
-
-							{% unless include.avatars %}
-							<td class="text-muted" {% if include.mobile %}data-label="Email" {% endif %}><a href="#" class="text-reset">{{
-									person.email }}</a></td>
-							{% endunless %}
-
-
-							<td class="text-muted" {% if include.mobile %}data-label="Role" {% endif %}>
-								{% assign role-id = forloop.index | random_number: 0, 2 %}
-								{{ roles[role-id] }}
-							</td>
-
-							{% if include.nowrap %}
-							<td>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi, commodi cupiditate
-								debitis deserunt
-								expedita hic incidunt iste modi molestiae nesciunt non nostrum perferendis perspiciatis
-								placeat praesentium
-								quaerat quo repellendus, voluptates.
-							</td>
-							{% endif %}
-
-							<td>
-								{% if include.buttons %}
-								<div class="btn-list flex-nowrap">
-									{% include ui/button.html text="Edit" %}
-									<div class="dropdown">
-										<button class="btn dropdown-toggle align-text-top" data-bs-toggle="dropdown">
-											Actions
-										</button>
-										{% include ui/dropdown-menu.html right=true %}
-									</div>
-								</div>
-								{% else %}
-								<a href="#">Edit</a>
-								{% endif %}
-							</td>
-						</tr>
-						{% endfor %}
-
-
-
-						<tr>
-							{% if include.avatars %}
-							<td {% if include.mobile %}data-label="Name" {% endif %}>
-								<div class="d-flex py-1 align-items-center">
-									{% include ui/avatar.html person-id=person.id class="me-2" %}
-									<div class="flex-fill">
-										<div class="font-weight-medium">{{ person.full_name }}</div>
-										<div class="text-muted"><a href="#" class="text-reset">{{ person.email }}</a>
-										</div>
-									</div>
-								</div>
-							</td>
-							{% else %}
-							<td {% if include.mobile %}data-label="Name" {% endif %}>{{ person.full_name }}</td>
-							{% endif %}
-
-
-							{% if include.avatars %}
-							<td {% if include.mobile %}data-label="Title" {% endif %}>
-								<div>{{ person.job_title }}</div>
-								<div class="text-muted">{{ person.department }}</div>
-							</td>
-							{% else %}
-							<td class="text-muted" {% if include.mobile %}data-label="Title" {% endif %}>
-								{{ person.job_title }}, {{ person.department }}
-							</td>
-							{% endif %}
-
-							{% unless include.avatars %}
-							<td class="text-muted" {% if include.mobile %}data-label="Email" {% endif %}><a href="#" class="text-reset">{{
-									person.email }}</a></td>
-							{% endunless %}
-
-
-							<td class="text-muted" {% if include.mobile %}data-label="Role" {% endif %}>
-								{% assign role-id = forloop.index | random_number: 0, 2 %}
-								{{ roles[role-id] }}
-							</td>
-
-							{% if include.nowrap %}
-							<td>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi, commodi cupiditate
-								debitis deserunt
-								expedita hic incidunt iste modi molestiae nesciunt non nostrum perferendis perspiciatis
-								placeat praesentium
-								quaerat quo repellendus, voluptates.
-							</td>
-							{% endif %}
-
-							<td>
-								{% if include.buttons %}
-								<div class="btn-list flex-nowrap">
-									{% include ui/button.html text="Edit" %}
-									<div class="dropdown">
-										<button class="btn dropdown-toggle align-text-top" data-bs-toggle="dropdown">
-											Actions
-										</button>
-										{% include ui/dropdown-menu.html right=true %}
-									</div>
-								</div>
-								{% else %}
-								<a href="#">Edit</a>
-								{% endif %}
-							</td>
-						</tr>
-
-
-
-
-
-
-
-					</tbody>
-				</table>
-			</div>
-
-		</div>
-	</div> -->
-</div>
-
+{%- assign sortBy = "name" -%}
+{%- assign displayMode = req.queryParams.displayMode -%}
 <div class="card">
-	<div class="card-header">
-		<h3 class="card-title">Search Results</h3>
-	</div>
-	<div class="card-body border-bottom py-3">
-
-		{% assign hoverable = include.hoverable | default: false %}
-
-		<div class="list-group list-group-flush{% if hoverable %} list-group-hoverable{% endif %}">
-			<div class="list-group-item row align-items-start">
-				<div class="row align-items-start">
-					<div class="col-12 col-sm-3">
-						<img src="http://localhost:3000/static/img/logo.png" alt="">
-
-					</div>
-					<div class="col-12 col-sm-9">
-						<div class="fs-3 fw-bold mb-2">Hello</div>
-						<div class="search-result-info mb-1">
-							<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Description">{% include ui/icon.html icon="file-description" %}</span>
-							<span>Blanditiis voluptates quae aut at sed cupiditate. Ipsum vitae velit laudantium blanditiis modi. Et quasi ex perferendis aut consectetur et voluptates.
-
-								At fugiat voluptas est dicta voluptatum. Qui blanditiis voluptas minus aliquid. Dolorem libero officiis qui sequi aliquam aut aperiam eum. Quaerat animi cum commodi et architecto. Dolores quos et eveniet et perspiciatis nostrum.</span>
-						</div>
-						<a href="details/~~id~~" class="search-result-info-link mb-1">
-							<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Owner">{% include ui/icon.html icon="user" %}</span>
-							<span>Andre Lehmann</span>
-						</a>
-						<a href="details/~~id~~" class="search-result-info-link mb-1" in="">
-							<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="License">{% include ui/icon.html icon="license" %}</span>
-							<span>CC-BY-SA</span>
-						</a>
-						<a href="#" class="search-result-info-link mb-1" in="">
-							<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Tags">{% include ui/icon.html icon="tag" %}</span>
-							<span>Foo, Bar</span>
-						</a>
-						<a href="details/~~id~~" class="search-result-info-link mb-1" in="">
-							<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Version">{% include ui/icon.html icon="versions" %}</span>
-							<span>1.0.0</span>
-						</a>
-
-						<div class="search-result-info mb-1">
-							<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Description">{% include ui/icon.html icon="file-description" %}</span>
-							<div><span class="text-ellipses-line-2">Blanditiis voluptates quae aut at sed cupiditate. Ipsum vitae velit laudantium blanditiis modi. Et quasi ex perferendis aut consectetur et voluptates.
-								At fugiat voluptas est dicta voluptatum. Qui blanditiis voluptas minus aliquid. Dolorem libero officiis qui sequi aliquam aut aperiam eum. Quaerat animi cum commodi et architecto. Dolores quos et eveniet et perspiciatis nostrum.</span><span class="more d-inline-block"><i class="fa fa-plus"></i> more</span></div>
-						</div>
-<!--
-						<div id="faq-1" class="accordion" role="tablist" aria-multiselectable="false">
-							<div class="accordion-item">
-								<div class="accordion-header" role="tab">
-									<button class="accordion-button{% unless questions-loop.index == 1 %} collapsed{% endunless %}" data-bs-toggle="collapse" data-bs-target="#faq-{{ categories-loop.index }}-{{ questions-loop.index }}">{{ question.question }}</button>
-								</div>
-								<div id="faq-{{ categories-loop.index }}-{{ questions-loop.index }}" class="accordion-collapse collapse{% if questions-loop.index == 1 %} show{% endif %}" role="tabpanel" data-bs-parent="#faq-{{ categories-loop.index }}">
-									<div class="accordion-body pt-0">
-										<div>
-											<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium alias dignissimos dolorum ea est eveniet, excepturi illum in iste iure maiores nemo recusandae rerum saepe sed, sunt totam! Explicabo, ipsa?</p>
-											<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium alias dignissimos dolorum ea est eveniet, excepturi illum in iste iure maiores nemo recusandae rerum saepe sed, sunt totam! Explicabo, ipsa?</p>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div> -->
-
-
-
-					</div>
-
-				</div>
-
+	<form name="search" onSubmit="return handleSearch();">
+		<div class="card-body">
+			<div class="input-group input-group mb-2">
+				<input type="text" name="q" class="form-control" autofocus placeholder="Search Product…" value="{{ req.queryParams.query | escape }}">
+				{% include ui/button.html element="button" type="submit" color="primary" icon-only=true icon="search" %}
 			</div>
 		</div>
 
+		<div class="card-body">
+			<div class="d-flex justify-content-between align-items-center">
+				<div class="text-muted">{% if numPagedResults > 0 %}Showing {{ page.curPage | minus: 1 | times: resultsPerPage | plus: 1 | int64 }} to {{ page.curPage | minus: 1 | times: resultsPerPage | plus: numPagedResults | int64 }} of {% endif %}{{ numResults }} results</div>
+				<div class="btn-group">
+					{% include ui/button.html element="a" href="{{ req.fullPath | url_with_params: 'dm', 'card' }}" size="md" icon-only=true icon="layout-grid" name="ds" value="cards" %}
+					{% include ui/button.html element="a" href="{{ req.fullPath | url_with_params: 'dm', 'list' }}" size="md" icon-only=true icon="layout-list" name="ds" value="list" %}
+					{% include ui/button.html element="a" href="{{ req.fullPath | url_with_params: 'dm', 'table' }}" size="md" icon-only=true icon="table" name="ds" value="table" %}
+				</div>
+			</div>
+		</div>
+	</form>
 
+
+	{%- if page.results.count == 0 %}
+	<div class="card-body mx-auto">
+		<div class="text-center text-muted my-4 fs-1 no-results">
+			<div class="mb-2">{% include ui/icon.html class="no-results-icon mx-auto" icon="mood-sad" use-svg=true %}</div>
+			<div class="">No Results</div>
+		</div>
 	</div>
 
 
-
-
-
-	<!-- <div class="table-responsive">
-		<table class="table card-table table-vcenter text-nowrap datatable">
+	{%- elsif displayMode == "table" %}
+	<div class="table-responsive">
+		<table class="table table-vcenter{% if include.mobile %} table-mobile-md{% endif %}{% if include.card %} card-table{% endif %}{% if include.stripped %} table-striped{% endif %}{% if include.nowrap %} table-nowrap{% endif %}">
 			<thead>
 				<tr>
-					<th class="w-1"><input class="form-check-input m-0 align-middle" type="checkbox" aria-label="Select all invoices"></th>
-					<th class="w-1">No. {% include ui/icon.html icon="chevron-up" class="icon-sm text-dark icon-thick" %}</th>
-					<th>Invoice Subject</th>
-					<th>Client</th>
-					<th>VAT No.</th>
-					<th>Created</th>
-					<th>Status</th>
-					<th>Price</th>
-					<th></th>
+					<th class="w-1"></th>
+					<th>Name</th>
+					<th>Language</th>
+					<th>Description</th>
+					<th>Licensor</th>
+					<th>License</th>
 				</tr>
 			</thead>
-
 			<tbody>
-				{% for invoice in site.data.invoices limit: 8 %}
+				{%- for product in page.results.items %}
 				<tr>
-					<td><input class="form-check-input m-0 align-middle" type="checkbox" aria-label="Select invoice"></td>
-					<td><span class="text-muted">00{{ forloop.index | plus: 1400 }}</span></td>
-					<td><a href="invoice.html" class="text-reset" tabindex="-1">{{ invoice.name }}</a></td>
-					<td>
-						{% include ui/flag.html flag=invoice.country %}
-						{{ invoice.client }}
+					<td style="width: 6rem; height: auto;">
+						<a href="/details/{{ product.ID | idhex }}">
+							<div class="card-img-top img-responsive img-responsive-1x1" style="background-image: url({{ product.Release.Image.URL }})"></div>
+						</a>
 					</td>
-					<td>
-						{{ invoice.vat-no }}
-					</td>
-					<td>
-						{{ invoice.date }}
-					</td>
-					<td>
-						<span class="badge bg-{{ invoice.status }} me-1"></span> {{ invoice.status-name }}
-					</td>
-					<td>{{ invoice.price }}</td>
 
-					<td class="text-end">
-						<span class="dropdown">
-							<button class="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown">Actions</button>
-							{% include ui/dropdown-menu.html right=true %}
-						</span>
+					<td>
+						{{ product.Release.DocumentationLanguage }}
+					</td>
+
+					<td>
+						<a href="/details/{{ product.ID | idhex }}" class="search-result-info-link">{{ product.Name | escape }}</a>
+					</td>
+
+					<td>
+						<a href="/details/{{ product.Release.ID | idhex }}" class="search-result-info-link">{{ product.Release.Description | escape }}</a>
+					</td>
+
+					<td>
+						<a href="/details/{{ product.Release.Licensor.ID | idhex }}" class="search-result-info-link">{% if product.Release.Licensor.FullName %}{{ product.Release.Licensor.FullName | escape }}{% else %}{{ product.Release.Licensor.Name | escape }}{% endif %}</a>
+					</td>
+
+					<td>
+						<a href="/details/{{ product.Release.License.ID | idhex }}" class="search-result-info-link">{{ product.Release.License.Xid }}</a>
 					</td>
 				</tr>
 				{% endfor %}
 			</tbody>
 		</table>
-	</div> -->
+	</div>
+
+
+	{%- elsif displayMode == "list" %}
+	<div class="list-group list-group-flush">
+		{% for product in page.results.items %}
+		<div class="list-group-item align-items-start">
+			<div class="row align-items-start">
+				<div class="col-12 col-sm-3">
+					<a href="/details/{{ product.ID | idhex }}">
+						<div class="card-img-top img-responsive img-responsive-4x3" style="background-image: url({{ product.Release.Image.URL }})"></div>
+					</a>
+				</div>
+				<div class="col-12 col-sm-9">
+					<a href="/details/{{ product.ID | idhex }}" class="nav-link">
+						<div class="fs-3 fw-bold mb-2">{{ product.Name | escape }}</div>
+					</a>
+					<div class="search-result-info mb-1">
+						<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Language">{% include ui/icon.html icon="language" %}</span>
+						<span>{{ product.Release.DocumentationLanguage | escape }}</span>
+					</div>
+					<div class="search-result-info mb-1">
+						<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Description">{% include ui/icon.html icon="file-description" %}</span>
+						<span>{{ product.Release.Description | escape }}</span>
+					</div>
+					<a href="/details/{{ product.Release.Licensor.ID | idhex }}" class="search-result-info-link mb-1">
+						<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Owner">{% include ui/icon.html icon="user" %}</span>
+						<span>{% if product.Release.Licensor.FullName %}{{ product.Release.Licensor.FullName | escape }}{% else %}{{ product.Release.Licensor.Name | escape }}{% endif %}</span>
+					</a>
+					<a href="/details/{{ product.Release.License.ID | idhex }}" class="search-result-info-link mb-1" in="">
+						<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="License">{% include ui/icon.html icon="license" %}</span>
+						<span>{{ product.Release.License.Xid }}</span>
+					</a>
+					{%- if (product.Tags | size) > 1 %}
+					<a href="#" class="search-result-info-link mb-1" in="">
+						<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Tags">{% include ui/icon.html icon="tag" %}</span>
+						<span>{% for tag in product.Tags %}{{ tag.Name }}{% unless forloop.last %}, {% endunless %}{% endfor %}</span>
+					</a>
+					{%- endif %}
+					<div class="search-result-info mb-1">
+						<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Version">{% include ui/icon.html icon="versions" %}</span>
+						<span>{{ product.Release.Version | escape }}</span>
+					</div>
+
+					<div class="search-result-info mb-1">
+						<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Description">{% include ui/icon.html icon="file-description" %}</span>
+						<div><span class="text-ellipses-line-2">Blanditiis voluptates quae aut at sed cupiditate. Ipsum vitae velit laudantium blanditiis modi. Et quasi ex perferendis aut consectetur et voluptates.
+							At fugiat voluptas est dicta voluptatum. Qui blanditiis voluptas minus aliquid. Dolorem libero officiis qui sequi aliquam aut aperiam eum. Quaerat animi cum commodi et architecto. Dolores quos et eveniet et perspiciatis nostrum.</span><span class="more d-inline-block"><i class="fa fa-plus"></i> more</span></div>
+					</div>
+<!--
+					<div id="faq-1" class="accordion" role="tablist" aria-multiselectable="false">
+						<div class="accordion-item">
+							<div class="accordion-header" role="tab">
+								<button class="accordion-button{% unless questions-loop.index == 1 %} collapsed{% endunless %}" data-bs-toggle="collapse" data-bs-target="#faq-{{ categories-loop.index }}-{{ questions-loop.index }}">{{ question.question }}</button>
+							</div>
+							<div id="faq-{{ categories-loop.index }}-{{ questions-loop.index }}" class="accordion-collapse collapse{% if questions-loop.index == 1 %} show{% endif %}" role="tabpanel" data-bs-parent="#faq-{{ categories-loop.index }}">
+								<div class="accordion-body pt-0">
+									<div>
+										<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium alias dignissimos dolorum ea est eveniet, excepturi illum in iste iure maiores nemo recusandae rerum saepe sed, sunt totam! Explicabo, ipsa?</p>
+										<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium alias dignissimos dolorum ea est eveniet, excepturi illum in iste iure maiores nemo recusandae rerum saepe sed, sunt totam! Explicabo, ipsa?</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div> -->
+
+				</div>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+
+
+	{%- else %}
+	<div class="row row-cards mx-md-1 mb-3">
+		{%- for product in page.results.items %}
+		<div class="col-md-4 col-lg-3">
+			<div class="card">
+				<a href="/details/{{ product.ID | idhex }}">
+					<div class="card-img-top img-responsive img-responsive-4x3" style="background-image: url({{ product.Release.Image.URL }})"></div>
+				</a>
+				<div class="card-body">
+					<div class="d-flex">
+						<a href="/details/{{ product.ID | idhex }}" class="search-result-info-link flex-grow-1"><h3 class="card-title">{{ product.Name | escape }}</h3></a>
+						<div class="search-result-info mb-1">
+							<div class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Language">
+								{% include ui/icon.html icon="language" %} {{ product.Release.DocumentationLanguage | escape }}
+							</div>
+						</div>
+					</div>
+
+					<div class="search-result-info mb-1">
+						<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Description">{% include ui/icon.html icon="file-description" %}</span>
+						<span class="text-ellipses-line-3">{{ product.Release.Description | escape }}</span>
+					</div>
+				</div>
+				</div>
+		  </div>
+		{%- endfor %}
+	</div>
+	{%- endif %}
+
 	<div class="card-footer d-flex align-items-center">
-		<p class="m-0 text-muted">Showing <span>{{ req.queryParams.page | minus: 1 | times: resultsPerPage | plus: 1 | int64 }}</span> to <span>{{ req.queryParams.page | times: resultsPerPage | int64 }}</span> of <span>{{ numResults }}</span> results</p>
+		<div>
+			<!-- {% include ui/button.html element="button" type="submit" disabled={{ numPagedResults == 0 }} size="md" icon="file-download" name="ds" value="cards" text="Export Results" %} -->
+			<div class="btn-group" role="button">
+				<button id="exportResults" type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" {% if page.results.count == 0 %} disabled{% endif %}>
+					{% include ui/icon.html icon="file-download" use-svg=true %}
+					Export Results
+				</button>
+				<div class="dropdown-menu dropdown-menu-end">
+					<a class="dropdown-item" href="{{ req.url | url_with_params: 'export', 'csv' }}">
+						CSV
+					</a>
+					<a class="dropdown-item" href="{{ req.url | url_with_params: 'export', 'tsv' }}">
+						TSV
+					</a>
+				</div>
+			</div>
+		</div>
 		<div class="m-0 ms-auto d-flex">
-			{% include ui/pagination.html icons=true numPages={{ numPages }} curPage={{ req.queryParams.page }} resultsPerPage={{ req.queryParams.resultsPerPage }} %}
+			{% include ui/pagination.html icons=true numPages={{ page.numPages }} curPage={{ page.curPage }} resultsPerPage={{ req.queryParams.resultsPerPage }} %}
 		</div>
 	</div>
 </div>
+
+<script>
+	function handleSearch(event) {
+		const form = document.forms.search;
+		const formData = new FormData(form);
+		const params = new URLSearchParams(window.location.search);
+		// unset page for new query
+		params.delete("page")
+		params.set("q", formData.get("q"));
+
+		console.log ("here");
+
+		// change target location
+		location = "{{ req.path }}?" + params.toString();
+
+		// cancel submit event
+		return false;
+	}
+</script>
