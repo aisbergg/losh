@@ -57,7 +57,7 @@ type {{ .Query.Name | go }} {{ .Query.Type | ref }}
 	const {{ $model.Name|go }}Document = `{{ $model.Operation }}`
 
 	{{- if $.GenerateClient }}
-		func (c *Client) {{ $model.Name|go }} (ctx context.Context{{- range $arg := .Args }}, {{ $arg.Variable | goPrivate }} {{ $arg.Type | ref }} {{- end }}) (*{{ $model.ResponseStructName | go }}, error) {
+		func (c *Client) {{ $model.Name|go }}(ctx context.Context{{- range $arg := .Args }}, {{ $arg.Variable | goPrivate }} {{ $arg.Type | ref }} {{- end }}) (*{{ $model.ResponseStructName | go }}, error) {
 			req := request.GraphQLRequest{
 				Ctx:           ctx,
 				OperationName: "{{ $model.Name }}",
@@ -75,6 +75,25 @@ type {{ .Query.Name | go }} {{ .Query.Type | ref }}
 				return nil, err
 			}
 			return &resp, nil
+		}
+
+		func (c *Client) {{ $model.Name|go }}WithResponse(ctx context.Context{{- range $arg := .Args }}, {{ $arg.Variable | goPrivate }} {{ $arg.Type | ref }} {{- end }}, resp interface{}) error {
+			req := request.GraphQLRequest{
+				Ctx:           ctx,
+				OperationName: "{{ $model.Name }}",
+				Query:         {{ $model.Name|go }}Document,
+				Variables: map[string]interface{}{
+				{{- range $args := .VariableDefinitions}}
+					"{{ $args.Variable }}": {{ $args.Variable | goPrivate }},
+				{{- end }}
+				},
+			}
+
+			err := c.Requester.Do(req, resp)
+			if err != nil {
+				return err
+			}
+			return nil
 		}
 	{{- end}}
 {{- end}}
