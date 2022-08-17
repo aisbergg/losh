@@ -46,8 +46,8 @@ type Supplier interface {
 }
 
 type AcceptInvite struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Result     *string      `json:"result,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Result     *string      `json:"result"`
 }
 
 type AcceptInviteInput struct {
@@ -57,24 +57,24 @@ type AcceptInviteInput struct {
 }
 
 type ActivityConnection struct {
-	PageInfo   *PageInfo       `json:"pageInfo,omitempty"`
-	Edges      []*ActivityEdge `json:"edges,omitempty"`
-	TotalCount *int64          `json:"totalCount,omitempty"`
+	PageInfo   PageInfo        `json:"pageInfo"`
+	Edges      []*ActivityEdge `json:"edges"`
+	TotalCount *int64          `json:"totalCount"`
 }
 
 type ActivityContent struct {
 	// The ID of the object.
 	ID                    string             `json:"id"`
-	Type                  *string            `json:"type,omitempty"`
-	Slug                  *string            `json:"slug,omitempty"`
+	Type                  *string            `json:"type"`
+	Slug                  *string            `json:"slug"`
 	CreatorID             int64              `json:"creatorId"`
-	CreatedInRegion       *string            `json:"createdInRegion,omitempty"`
-	SpaceID               *int64             `json:"spaceId,omitempty"`
-	DateCreated           *time.Time         `json:"dateCreated,omitempty"`
-	LastUpdated           *time.Time         `json:"lastUpdated,omitempty"`
-	Whitelabel            *string            `json:"whitelabel,omitempty"`
-	WhiteLabelOnlyContent *bool              `json:"whiteLabelOnlyContent,omitempty"`
-	LastCommentedAt       *time.Time         `json:"lastCommentedAt,omitempty"`
+	CreatedInRegion       *string            `json:"createdInRegion"`
+	SpaceID               *int64             `json:"spaceId"`
+	DateCreated           *time.Time         `json:"dateCreated"`
+	LastUpdated           *time.Time         `json:"lastUpdated"`
+	Whitelabel            *string            `json:"whitelabel"`
+	WhiteLabelOnlyContent *bool              `json:"whiteLabelOnlyContent"`
+	LastCommentedAt       *time.Time         `json:"lastCommentedAt"`
 	LastActivityAt        time.Time          `json:"lastActivityAt"`
 	CommentsCount         int64              `json:"commentsCount"`
 	LikesCount            int64              `json:"likesCount"`
@@ -83,58 +83,57 @@ type ActivityContent struct {
 	PageviewsCount        int64              `json:"pageviewsCount"`
 	PublicRead            bool               `json:"publicRead"`
 	RegisteredRead        bool               `json:"registeredRead"`
-	FeaturedIn            *string            `json:"featuredIn,omitempty"`
-	Creator               *User              `json:"creator,omitempty"`
-	Followers             *ProfileConnection `json:"followers,omitempty"`
-	Tags                  []*Tag             `json:"tags,omitempty"`
-	Comments              *CommentConnection `json:"comments,omitempty"`
-	CanUpdate             *bool              `json:"canUpdate,omitempty"`
-	CanDelete             *bool              `json:"canDelete,omitempty"`
-	ParentSlug            *string            `json:"parentSlug,omitempty"`
-	IsPrivate             *bool              `json:"isPrivate,omitempty"`
-	Description           *string            `json:"description,omitempty"`
-	Content               *Content           `json:"content,omitempty"`
-	ParentContent         *Content           `json:"parentContent,omitempty"`
-	InSpace               *Space             `json:"inSpace,omitempty"`
-	Avatar                *File              `json:"avatar,omitempty"`
-	ImageFallbackChar     *string            `json:"imageFallbackChar,omitempty"`
-	Title                 *string            `json:"title,omitempty"`
-	Commenters            []*Profile         `json:"commenters,omitempty"`
-	PageViews             *int64             `json:"pageViews,omitempty"`
-	Version               *string            `json:"version,omitempty"`
-	Origin                *Content           `json:"origin,omitempty"`
+	Creator               *User              `json:"creator"`
+	Followers             *ProfileConnection `json:"followers"`
+	Tags                  []*Tag             `json:"tags"`
+	Comments              *CommentConnection `json:"comments"`
+	CanUpdate             *bool              `json:"canUpdate"`
+	CanDelete             *bool              `json:"canDelete"`
+	ParentSlug            *string            `json:"parentSlug"`
+	IsPrivate             *bool              `json:"isPrivate"`
+	Description           *string            `json:"description"`
+	Content               *Content           `json:"content"`
+	ParentContent         *Content           `json:"parentContent"`
+	InSpace               *Space             `json:"inSpace"`
+	Avatar                *File              `json:"avatar"`
+	ImageFallbackChar     *string            `json:"imageFallbackChar"`
+	Title                 *string            `json:"title"`
+	Commenters            []*Profile         `json:"commenters"`
+	PageViews             *int64             `json:"pageViews"`
+	Version               *string            `json:"version"`
+	Origin                *Content           `json:"origin"`
 }
 
 func (ActivityContent) IsNode() {}
 
 type ActivityEdge struct {
 	// The item at the end of the edge
-	Node *ActivityFeedLine `json:"node,omitempty"`
+	Node *ActivityFeedLine `json:"node"`
 	// A cursor for use in pagination
 	Cursor string `json:"cursor"`
 }
 
 type ActivityFeedLine struct {
-	ID      *string          `json:"id,omitempty"`
-	Action  *string          `json:"action,omitempty"`
-	Date    *time.Time       `json:"date,omitempty"`
-	Origin  *ActivityOrigin  `json:"origin,omitempty"`
-	Content *ActivityContent `json:"content,omitempty"`
+	ID      *string          `json:"id"`
+	Action  *string          `json:"action"`
+	Date    *time.Time       `json:"date"`
+	Origin  *ActivityOrigin  `json:"origin"`
+	Content *ActivityContent `json:"content"`
 }
 
 type ActivityOrigin struct {
 	// The ID of the object.
 	ID                    string             `json:"id"`
-	Type                  *string            `json:"type,omitempty"`
-	Slug                  *string            `json:"slug,omitempty"`
+	Type                  *string            `json:"type"`
+	Slug                  *string            `json:"slug"`
 	CreatorID             int64              `json:"creatorId"`
-	CreatedInRegion       *string            `json:"createdInRegion,omitempty"`
-	SpaceID               *int64             `json:"spaceId,omitempty"`
-	DateCreated           *time.Time         `json:"dateCreated,omitempty"`
-	LastUpdated           *time.Time         `json:"lastUpdated,omitempty"`
-	Whitelabel            *string            `json:"whitelabel,omitempty"`
-	WhiteLabelOnlyContent *bool              `json:"whiteLabelOnlyContent,omitempty"`
-	LastCommentedAt       *time.Time         `json:"lastCommentedAt,omitempty"`
+	CreatedInRegion       *string            `json:"createdInRegion"`
+	SpaceID               *int64             `json:"spaceId"`
+	DateCreated           *time.Time         `json:"dateCreated"`
+	LastUpdated           *time.Time         `json:"lastUpdated"`
+	Whitelabel            *string            `json:"whitelabel"`
+	WhiteLabelOnlyContent *bool              `json:"whiteLabelOnlyContent"`
+	LastCommentedAt       *time.Time         `json:"lastCommentedAt"`
 	LastActivityAt        time.Time          `json:"lastActivityAt"`
 	CommentsCount         int64              `json:"commentsCount"`
 	LikesCount            int64              `json:"likesCount"`
@@ -143,24 +142,23 @@ type ActivityOrigin struct {
 	PageviewsCount        int64              `json:"pageviewsCount"`
 	PublicRead            bool               `json:"publicRead"`
 	RegisteredRead        bool               `json:"registeredRead"`
-	FeaturedIn            *string            `json:"featuredIn,omitempty"`
-	Creator               *User              `json:"creator,omitempty"`
-	Followers             *ProfileConnection `json:"followers,omitempty"`
-	Tags                  []*Tag             `json:"tags,omitempty"`
-	Comments              *CommentConnection `json:"comments,omitempty"`
-	CanUpdate             *bool              `json:"canUpdate,omitempty"`
-	CanDelete             *bool              `json:"canDelete,omitempty"`
-	ParentSlug            *string            `json:"parentSlug,omitempty"`
-	IsPrivate             *bool              `json:"isPrivate,omitempty"`
-	Description           *string            `json:"description,omitempty"`
-	Content               *Content           `json:"content,omitempty"`
-	ParentContent         *Content           `json:"parentContent,omitempty"`
-	InSpace               *Space             `json:"inSpace,omitempty"`
-	Avatar                *File              `json:"avatar,omitempty"`
-	ImageFallbackChar     *string            `json:"imageFallbackChar,omitempty"`
-	Title                 *string            `json:"title,omitempty"`
-	Commenters            []*Profile         `json:"commenters,omitempty"`
-	PageViews             *int64             `json:"pageViews,omitempty"`
+	Creator               *User              `json:"creator"`
+	Followers             *ProfileConnection `json:"followers"`
+	Tags                  []*Tag             `json:"tags"`
+	Comments              *CommentConnection `json:"comments"`
+	CanUpdate             *bool              `json:"canUpdate"`
+	CanDelete             *bool              `json:"canDelete"`
+	ParentSlug            *string            `json:"parentSlug"`
+	IsPrivate             *bool              `json:"isPrivate"`
+	Description           *string            `json:"description"`
+	Content               *Content           `json:"content"`
+	ParentContent         *Content           `json:"parentContent"`
+	InSpace               *Space             `json:"inSpace"`
+	Avatar                *File              `json:"avatar"`
+	ImageFallbackChar     *string            `json:"imageFallbackChar"`
+	Title                 *string            `json:"title"`
+	Commenters            []*Profile         `json:"commenters"`
+	PageViews             *int64             `json:"pageViews"`
 }
 
 func (ActivityOrigin) IsNode() {}
@@ -171,8 +169,8 @@ type AddPaymentMethodInput struct {
 }
 
 type AddPaymentMutation struct {
-	UserErrors    []*UserError `json:"userErrors,omitempty"`
-	PaymentMethod *CreditCard  `json:"paymentMethod,omitempty"`
+	UserErrors    []*UserError `json:"userErrors"`
+	PaymentMethod *CreditCard  `json:"paymentMethod"`
 }
 
 type AddQuotingPriorityInput struct {
@@ -184,13 +182,13 @@ type Address struct {
 	ID       string  `json:"id"`
 	Name     string  `json:"name"`
 	Address1 string  `json:"address1"`
-	Address2 *string `json:"address2,omitempty"`
+	Address2 *string `json:"address2"`
 	City     string  `json:"city"`
 	Province string  `json:"province"`
 	Country  string  `json:"country"`
 	Zip      string  `json:"zip"`
-	Phone    *string `json:"phone,omitempty"`
-	Company  *string `json:"company,omitempty"`
+	Phone    *string `json:"phone"`
+	Company  *string `json:"company"`
 	Default  bool    `json:"default"`
 }
 
@@ -200,16 +198,16 @@ type Annotation struct {
 	ID           string       `json:"id"`
 	ContextID    string       `json:"contextId"`
 	ResourceID   string       `json:"resourceId"`
-	ReferenceID  *string      `json:"referenceId,omitempty"`
+	ReferenceID  *string      `json:"referenceId"`
 	Body         string       `json:"body"`
 	CreatedBy    string       `json:"createdBy"`
-	Target       *Target      `json:"target,omitempty"`
+	Target       Target       `json:"target"`
 	Timestamp    string       `json:"timestamp"`
-	Camera       *Camera      `json:"camera,omitempty"`
-	HoopsVersion *string      `json:"hoopsVersion,omitempty"`
-	ImportConfig *string      `json:"importConfig,omitempty"`
-	TempKey      *string      `json:"tempKey,omitempty"`
-	ViewerState  *ViewerState `json:"viewerState,omitempty"`
+	Camera       Camera       `json:"camera"`
+	HoopsVersion *string      `json:"hoopsVersion"`
+	ImportConfig *string      `json:"importConfig"`
+	TempKey      *string      `json:"tempKey"`
+	ViewerState  *ViewerState `json:"viewerState"`
 }
 
 type ApproveSessionInput struct {
@@ -218,61 +216,61 @@ type ApproveSessionInput struct {
 
 type AssignRequestForQuoteInput struct {
 	RequestForQuoteID string   `json:"requestForQuoteId"`
-	SupplierIds       []string `json:"supplierIds,omitempty"`
+	SupplierIds       []string `json:"supplierIds"`
 }
 
 type AutoBillingInvoiceConnection struct {
-	PageInfo *PageInfo                 `json:"pageInfo,omitempty"`
-	Edges    []*AutoBillingInvoiceEdge `json:"edges,omitempty"`
+	PageInfo PageInfo                  `json:"pageInfo"`
+	Edges    []*AutoBillingInvoiceEdge `json:"edges"`
 }
 
 type AutoBillingInvoiceEdge struct {
 	// The item at the end of the edge
-	Node *BillingInvoice `json:"node,omitempty"`
+	Node *BillingInvoice `json:"node"`
 	// A cursor for use in pagination
 	Cursor string `json:"cursor"`
 }
 
 type AutoGroupConnection struct {
-	PageInfo *PageInfo        `json:"pageInfo,omitempty"`
-	Edges    []*AutoGroupEdge `json:"edges,omitempty"`
+	PageInfo PageInfo         `json:"pageInfo"`
+	Edges    []*AutoGroupEdge `json:"edges"`
 }
 
 type AutoGroupEdge struct {
 	// The item at the end of the edge
-	Node *Group `json:"node,omitempty"`
+	Node *Group `json:"node"`
 	// A cursor for use in pagination
 	Cursor string `json:"cursor"`
 }
 
 type AutoGroupInviteConnection struct {
-	PageInfo *PageInfo              `json:"pageInfo,omitempty"`
-	Edges    []*AutoGroupInviteEdge `json:"edges,omitempty"`
+	PageInfo PageInfo               `json:"pageInfo"`
+	Edges    []*AutoGroupInviteEdge `json:"edges"`
 }
 
 type AutoGroupInviteEdge struct {
 	// The item at the end of the edge
-	Node *GroupInvite `json:"node,omitempty"`
+	Node *GroupInvite `json:"node"`
 	// A cursor for use in pagination
 	Cursor string `json:"cursor"`
 }
 
 type AutoInviteLinkConnection struct {
-	PageInfo *PageInfo             `json:"pageInfo,omitempty"`
-	Edges    []*AutoInviteLinkEdge `json:"edges,omitempty"`
+	PageInfo PageInfo              `json:"pageInfo"`
+	Edges    []*AutoInviteLinkEdge `json:"edges"`
 }
 
 type AutoInviteLinkEdge struct {
 	// The item at the end of the edge
-	Node *InviteLink `json:"node,omitempty"`
+	Node *InviteLink `json:"node"`
 	// A cursor for use in pagination
 	Cursor string `json:"cursor"`
 }
 
 type BanProfile struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Result     *string      `json:"result,omitempty"`
-	Management *string      `json:"management,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Result     *string      `json:"result"`
+	Management *string      `json:"management"`
 }
 
 type BanProfileInput struct {
@@ -286,20 +284,20 @@ type BillingAddSeatsInput struct {
 }
 
 type BillingAddSeatsMutation struct {
-	UserErrors   []*UserError         `json:"userErrors,omitempty"`
-	Subscription *BillingSubscription `json:"subscription,omitempty"`
+	UserErrors   []*UserError         `json:"userErrors"`
+	Subscription *BillingSubscription `json:"subscription"`
 }
 
 type BillingAddress struct {
-	Name       *string `json:"name,omitempty"`
-	Email      *string `json:"email,omitempty"`
-	Phone      *string `json:"phone,omitempty"`
-	City       *string `json:"city,omitempty"`
-	Country    *string `json:"country,omitempty"`
-	Line1      *string `json:"line1,omitempty"`
-	Line2      *string `json:"line2,omitempty"`
-	PostalCode *string `json:"postalCode,omitempty"`
-	State      *string `json:"state,omitempty"`
+	Name       *string `json:"name"`
+	Email      *string `json:"email"`
+	Phone      *string `json:"phone"`
+	City       *string `json:"city"`
+	Country    *string `json:"country"`
+	Line1      *string `json:"line1"`
+	Line2      *string `json:"line2"`
+	PostalCode *string `json:"postalCode"`
+	State      *string `json:"state"`
 }
 
 type BillingCancelSubscriptionInput struct {
@@ -307,22 +305,22 @@ type BillingCancelSubscriptionInput struct {
 }
 
 type BillingCancelSubscriptionMutation struct {
-	UserErrors   []*UserError         `json:"userErrors,omitempty"`
-	Subscription *BillingSubscription `json:"subscription,omitempty"`
+	UserErrors   []*UserError         `json:"userErrors"`
+	Subscription *BillingSubscription `json:"subscription"`
 }
 
 type BillingInvoice struct {
 	// The ID of the object.
 	ID             string               `json:"id"`
-	SubscriptionID *int64               `json:"subscriptionId,omitempty"`
-	Status         *string              `json:"status,omitempty"`
-	PeriodStart    *time.Time           `json:"periodStart,omitempty"`
-	PeriodEnd      *time.Time           `json:"periodEnd,omitempty"`
+	SubscriptionID *int64               `json:"subscriptionId"`
+	Status         *string              `json:"status"`
+	PeriodStart    *time.Time           `json:"periodStart"`
+	PeriodEnd      *time.Time           `json:"periodEnd"`
 	Number         string               `json:"number"`
 	Amount         int64                `json:"amount"`
-	DownloadURL    *string              `json:"downloadUrl,omitempty"`
-	PaymentMethod  *string              `json:"paymentMethod,omitempty"`
-	Subscription   *BillingSubscription `json:"subscription,omitempty"`
+	DownloadURL    *string              `json:"downloadUrl"`
+	PaymentMethod  *string              `json:"paymentMethod"`
+	Subscription   *BillingSubscription `json:"subscription"`
 }
 
 func (BillingInvoice) IsNode() {}
@@ -330,12 +328,12 @@ func (BillingInvoice) IsNode() {}
 type BillingPlan struct {
 	// The ID of the object.
 	ID            string   `json:"id"`
-	ProductID     *int64   `json:"productId,omitempty"`
+	ProductID     *int64   `json:"productId"`
 	Name          string   `json:"name"`
 	Type          Plantype `json:"type"`
 	Currency      string   `json:"currency"`
-	PerSeatAmount *int64   `json:"perSeatAmount,omitempty"`
-	InitialAmount *int64   `json:"initialAmount,omitempty"`
+	PerSeatAmount *int64   `json:"perSeatAmount"`
+	InitialAmount *int64   `json:"initialAmount"`
 }
 
 func (BillingPlan) IsNode() {}
@@ -346,8 +344,8 @@ type BillingRemoveSeatsInput struct {
 }
 
 type BillingRemoveSeatsMutation struct {
-	UserErrors   []*UserError         `json:"userErrors,omitempty"`
-	Subscription *BillingSubscription `json:"subscription,omitempty"`
+	UserErrors   []*UserError         `json:"userErrors"`
+	Subscription *BillingSubscription `json:"subscription"`
 }
 
 type BillingSubscribeInput struct {
@@ -361,30 +359,30 @@ type BillingSubscribeInput struct {
 }
 
 type BillingSubscribeMutation struct {
-	UserErrors   []*UserError         `json:"userErrors,omitempty"`
-	Subscription *BillingSubscription `json:"subscription,omitempty"`
+	UserErrors   []*UserError         `json:"userErrors"`
+	Subscription *BillingSubscription `json:"subscription"`
 }
 
 type BillingSubscription struct {
 	// The ID of the object.
 	ID                 string                        `json:"id"`
-	PlanID             *int64                        `json:"planId,omitempty"`
+	PlanID             *int64                        `json:"planId"`
 	SpaceID            int64                         `json:"spaceId"`
 	Status             Subscriptionstatus            `json:"status"`
 	CancelAtPeriodEnd  bool                          `json:"cancelAtPeriodEnd"`
-	CurrentPeriodStart *time.Time                    `json:"currentPeriodStart,omitempty"`
-	CurrentPeriodEnd   *time.Time                    `json:"currentPeriodEnd,omitempty"`
-	NextAmount         *int64                        `json:"nextAmount,omitempty"`
-	TrialEnd           *time.Time                    `json:"trialEnd,omitempty"`
+	CurrentPeriodStart *time.Time                    `json:"currentPeriodStart"`
+	CurrentPeriodEnd   *time.Time                    `json:"currentPeriodEnd"`
+	NextAmount         *int64                        `json:"nextAmount"`
+	TrialEnd           *time.Time                    `json:"trialEnd"`
 	PurchasedSeats     int64                         `json:"purchasedSeats"`
-	SeatsIncluded      *int64                        `json:"SeatsIncluded,omitempty"`
-	Plan               *BillingPlan                  `json:"plan,omitempty"`
-	Invoices           *AutoBillingInvoiceConnection `json:"invoices,omitempty"`
-	LastInvoice        *BillingInvoice               `json:"lastInvoice,omitempty"`
-	Seats              *SeatsUsage                   `json:"seats,omitempty"`
-	AddSeatsPreview    *SubscriptionPreview          `json:"addSeatsPreview,omitempty"`
-	RemoveSeatsPreview *SubscriptionPreview          `json:"removeSeatsPreview,omitempty"`
-	ScaSecret          *string                       `json:"scaSecret,omitempty"`
+	SeatsIncluded      *int64                        `json:"SeatsIncluded"`
+	Plan               *BillingPlan                  `json:"plan"`
+	Invoices           *AutoBillingInvoiceConnection `json:"invoices"`
+	LastInvoice        *BillingInvoice               `json:"lastInvoice"`
+	Seats              *SeatsUsage                   `json:"seats"`
+	AddSeatsPreview    *SubscriptionPreview          `json:"addSeatsPreview"`
+	RemoveSeatsPreview *SubscriptionPreview          `json:"removeSeatsPreview"`
+	ScaSecret          *string                       `json:"scaSecret"`
 }
 
 func (BillingSubscription) IsNode() {}
@@ -392,30 +390,30 @@ func (BillingSubscription) IsNode() {}
 type Body struct {
 	ID      string         `json:"id"`
 	CadID   string         `json:"cadId"`
-	SrcFile *FederatedFile `json:"srcFile,omitempty"`
+	SrcFile *FederatedFile `json:"srcFile"`
 	Status  string         `json:"status"`
-	Error   *string        `json:"error,omitempty"`
+	Error   *string        `json:"error"`
 }
 
 func (Body) IsNode() {}
 
 type Build struct {
 	ID              string           `json:"id"`
-	Material        *Material        `json:"material,omitempty"`
-	Process         *Process         `json:"process,omitempty"`
-	Previous        *Build           `json:"previous,omitempty"`
-	Values          []*BuildValue    `json:"values,omitempty"`
-	SupportingFiles []*FederatedFile `json:"supportingFiles,omitempty"`
-	File            *FederatedFile   `json:"file,omitempty"`
-	Body            *Body            `json:"body,omitempty"`
+	Material        Material         `json:"material"`
+	Process         Process          `json:"process"`
+	Previous        *Build           `json:"previous"`
+	Values          []*BuildValue    `json:"values"`
+	SupportingFiles []*FederatedFile `json:"supportingFiles"`
+	File            *FederatedFile   `json:"file"`
+	Body            *Body            `json:"body"`
 }
 
 type BuildValue struct {
-	Of          Option   `json:"of,omitempty"`
-	ValueFloat  *float64 `json:"valueFloat,omitempty"`
-	ValueInt    *int64   `json:"valueInt,omitempty"`
-	ValueString *string  `json:"valueString,omitempty"`
-	ValueBool   *bool    `json:"valueBool,omitempty"`
+	Of          Option   `json:"of"`
+	ValueFloat  *float64 `json:"valueFloat"`
+	ValueInt    *int64   `json:"valueInt"`
+	ValueString *string  `json:"valueString"`
+	ValueBool   *bool    `json:"valueBool"`
 }
 
 type BuildWithQuantity struct {
@@ -426,12 +424,12 @@ type BuildWithQuantity struct {
 type CadConversion struct {
 	ID        string         `json:"id"`
 	SrcFileID string         `json:"srcFileId"`
-	CadID     *string        `json:"cadId,omitempty"`
+	CadID     *string        `json:"cadId"`
 	Status    string         `json:"status"`
-	Error     *string        `json:"error,omitempty"`
+	Error     *string        `json:"error"`
 	Format    string         `json:"format"`
-	URL       *string        `json:"url,omitempty"`
-	File      *FederatedFile `json:"file,omitempty"`
+	URL       *string        `json:"url"`
+	File      *FederatedFile `json:"file"`
 }
 
 func (CadConversion) IsNode() {}
@@ -443,21 +441,21 @@ type CadConvertInput struct {
 }
 
 type Camera struct {
-	Up         *Vector `json:"up,omitempty"`
-	Right      *Vector `json:"right,omitempty"`
-	Position   *Vector `json:"position,omitempty"`
-	Lookat     *Vector `json:"lookat,omitempty"`
-	TargetType *int64  `json:"targetType,omitempty"`
-	CadID      *string `json:"cadID,omitempty"`
+	Up         Vector  `json:"up"`
+	Right      Vector  `json:"right"`
+	Position   Vector  `json:"position"`
+	Lookat     Vector  `json:"lookat"`
+	TargetType *int64  `json:"targetType"`
+	CadID      *string `json:"cadID"`
 }
 
 type CameraInput struct {
-	Up         *VectorInput `json:"up,omitempty"`
-	Right      *VectorInput `json:"right,omitempty"`
-	Position   *VectorInput `json:"position,omitempty"`
-	Lookat     *VectorInput `json:"lookat,omitempty"`
-	TargetType *int64       `json:"targetType,omitempty"`
-	CadID      *string      `json:"cadId,omitempty"`
+	Up         VectorInput `json:"up"`
+	Right      VectorInput `json:"right"`
+	Position   VectorInput `json:"position"`
+	Lookat     VectorInput `json:"lookat"`
+	TargetType *int64      `json:"targetType,omitempty"`
+	CadID      *string     `json:"cadId,omitempty"`
 }
 
 type CancelImportProjectInput struct {
@@ -465,8 +463,8 @@ type CancelImportProjectInput struct {
 }
 
 type CancelImportProjectMutation struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Result     *string      `json:"result,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Result     *string      `json:"result"`
 }
 
 type CancelOrderInput struct {
@@ -474,12 +472,12 @@ type CancelOrderInput struct {
 }
 
 type CardInformation struct {
-	Name     *string `json:"name,omitempty"`
-	Brand    *string `json:"brand,omitempty"`
-	Last4    *string `json:"last4,omitempty"`
-	ExpMonth *int64  `json:"expMonth,omitempty"`
-	ExpYear  *int64  `json:"expYear,omitempty"`
-	Country  *string `json:"country,omitempty"`
+	Name     *string `json:"name"`
+	Brand    *string `json:"brand"`
+	Last4    *string `json:"last4"`
+	ExpMonth *int64  `json:"expMonth"`
+	ExpYear  *int64  `json:"expYear"`
+	Country  *string `json:"country"`
 }
 
 type Category struct {
@@ -487,18 +485,18 @@ type Category struct {
 	ID                  string            `json:"id"`
 	Title               string            `json:"title"`
 	Description         string            `json:"description"`
-	Color               *string           `json:"color,omitempty"`
+	Color               *string           `json:"color"`
 	ForumID             float64           `json:"forumId"`
-	ThreadsCount        *int64            `json:"threadsCount,omitempty"`
+	ThreadsCount        *int64            `json:"threadsCount"`
 	ThreadsCountPublic  int64             `json:"threadsCountPublic"`
-	Forum               *Forum            `json:"forum,omitempty"`
-	Pinned              []*Thread         `json:"pinned,omitempty"`
-	Threads             *ThreadConnection `json:"threads,omitempty"`
-	URLID               *string           `json:"urlId,omitempty"`
-	CanUpdate           *bool             `json:"canUpdate,omitempty"`
-	CanDelete           *bool             `json:"canDelete,omitempty"`
-	PrivateThreadsCount *int64            `json:"privateThreadsCount,omitempty"`
-	LastActiveThread    *Thread           `json:"lastActiveThread,omitempty"`
+	Forum               *Forum            `json:"forum"`
+	Pinned              []*Thread         `json:"pinned"`
+	Threads             *ThreadConnection `json:"threads"`
+	URLID               *string           `json:"urlId"`
+	CanUpdate           *bool             `json:"canUpdate"`
+	CanDelete           *bool             `json:"canDelete"`
+	PrivateThreadsCount *int64            `json:"privateThreadsCount"`
+	LastActiveThread    *Thread           `json:"lastActiveThread"`
 }
 
 func (Category) IsNode() {}
@@ -511,14 +509,14 @@ type CategoryInput struct {
 }
 
 type CategoryMutation struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Category   *Category    `json:"category,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Category   *Category    `json:"category"`
 }
 
 type Certificate struct {
 	ID   string         `json:"id"`
 	Name Certification  `json:"name"`
-	File *FederatedFile `json:"file,omitempty"`
+	File *FederatedFile `json:"file"`
 }
 
 func (Certificate) IsNode() {}
@@ -529,9 +527,9 @@ type CertificateInput struct {
 }
 
 type ChangeEmailPreferences struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Result     *string      `json:"result,omitempty"`
-	Msg        *string      `json:"msg,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Result     *string      `json:"result"`
+	Msg        *string      `json:"msg"`
 }
 
 type ChangeEmailPreferencesInput struct {
@@ -540,9 +538,9 @@ type ChangeEmailPreferencesInput struct {
 }
 
 type ChangeLanguagePreferences struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Result     *string      `json:"result,omitempty"`
-	Msg        *string      `json:"msg,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Result     *string      `json:"result"`
+	Msg        *string      `json:"msg"`
 }
 
 type ChangeLanguagePreferencesInput struct {
@@ -550,9 +548,9 @@ type ChangeLanguagePreferencesInput struct {
 }
 
 type ChangePassword struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Result     *string      `json:"result,omitempty"`
-	Msg        *string      `json:"msg,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Result     *string      `json:"result"`
+	Msg        *string      `json:"msg"`
 }
 
 type ChangePasswordInput struct {
@@ -563,14 +561,14 @@ type ChangePasswordInput struct {
 type Channel struct {
 	// The ID of the object.
 	ID                    string                `json:"id"`
-	Type                  *string               `json:"type,omitempty"`
-	Slug                  *string               `json:"slug,omitempty"`
-	CreatedInRegion       *string               `json:"createdInRegion,omitempty"`
-	DateCreated           *time.Time            `json:"dateCreated,omitempty"`
-	LastUpdated           *time.Time            `json:"lastUpdated,omitempty"`
-	Whitelabel            *string               `json:"whitelabel,omitempty"`
-	WhiteLabelOnlyContent *bool                 `json:"whiteLabelOnlyContent,omitempty"`
-	LastCommentedAt       *time.Time            `json:"lastCommentedAt,omitempty"`
+	Type                  *string               `json:"type"`
+	Slug                  *string               `json:"slug"`
+	CreatedInRegion       *string               `json:"createdInRegion"`
+	DateCreated           *time.Time            `json:"dateCreated"`
+	LastUpdated           *time.Time            `json:"lastUpdated"`
+	Whitelabel            *string               `json:"whitelabel"`
+	WhiteLabelOnlyContent *bool                 `json:"whiteLabelOnlyContent"`
+	LastCommentedAt       *time.Time            `json:"lastCommentedAt"`
 	LastActivityAt        time.Time             `json:"lastActivityAt"`
 	CommentsCount         int64                 `json:"commentsCount"`
 	LikesCount            int64                 `json:"likesCount"`
@@ -580,63 +578,62 @@ type Channel struct {
 	PublicRead            bool                  `json:"publicRead"`
 	RegisteredRead        bool                  `json:"registeredRead"`
 	Name                  string                `json:"name"`
-	Description           *string               `json:"description,omitempty"`
-	Ctas                  *string               `json:"ctas,omitempty"`
-	Configuration         *string               `json:"configuration,omitempty"`
-	TaggedCount           *int64                `json:"taggedCount,omitempty"`
-	FeaturedIn            *string               `json:"featuredIn,omitempty"`
-	Avatar                *File                 `json:"avatar,omitempty"`
-	Story                 *Story                `json:"story,omitempty"`
-	Creator               *User                 `json:"creator,omitempty"`
-	Followers             *ProfileConnection    `json:"followers,omitempty"`
-	Tags                  []*Tag                `json:"tags,omitempty"`
-	Comments              *CommentConnection    `json:"comments,omitempty"`
-	SocialAccounts        []*Social             `json:"socialAccounts,omitempty"`
-	Forum                 *Forum                `json:"forum,omitempty"`
-	FollowingCount        *int64                `json:"followingCount,omitempty"`
-	CanUpdate             *bool                 `json:"canUpdate,omitempty"`
-	CanDelete             *bool                 `json:"canDelete,omitempty"`
-	ParentSlug            *string               `json:"parentSlug,omitempty"`
-	IsPrivate             *bool                 `json:"isPrivate,omitempty"`
-	Content               *Content              `json:"content,omitempty"`
-	ParentContent         *Content              `json:"parentContent,omitempty"`
-	InSpace               *Space                `json:"inSpace,omitempty"`
-	ImageFallbackChar     *string               `json:"imageFallbackChar,omitempty"`
-	Title                 *string               `json:"title,omitempty"`
-	Commenters            []*Profile            `json:"commenters,omitempty"`
-	PageViews             *int64                `json:"pageViews,omitempty"`
-	Moderators            []*Profile            `json:"moderators,omitempty"`
-	Posts                 *PostConnection       `json:"posts,omitempty"`
-	Projects              *ProjectConnection    `json:"projects,omitempty"`
-	Stories               *StoryConnection      `json:"stories,omitempty"`
-	Threads               *ThreadConnection     `json:"threads,omitempty"`
-	Collections           *CollectionConnection `json:"collections,omitempty"`
-	HasModerators         *bool                 `json:"hasModerators,omitempty"`
+	Description           *string               `json:"description"`
+	Ctas                  *string               `json:"ctas"`
+	Configuration         *string               `json:"configuration"`
+	TaggedCount           *int64                `json:"taggedCount"`
+	Avatar                *File                 `json:"avatar"`
+	Story                 *Story                `json:"story"`
+	Creator               *User                 `json:"creator"`
+	Followers             *ProfileConnection    `json:"followers"`
+	Tags                  []*Tag                `json:"tags"`
+	Comments              *CommentConnection    `json:"comments"`
+	SocialAccounts        []*Social             `json:"socialAccounts"`
+	Forum                 *Forum                `json:"forum"`
+	FollowingCount        *int64                `json:"followingCount"`
+	CanUpdate             *bool                 `json:"canUpdate"`
+	CanDelete             *bool                 `json:"canDelete"`
+	ParentSlug            *string               `json:"parentSlug"`
+	IsPrivate             *bool                 `json:"isPrivate"`
+	Content               *Content              `json:"content"`
+	ParentContent         *Content              `json:"parentContent"`
+	InSpace               *Space                `json:"inSpace"`
+	ImageFallbackChar     *string               `json:"imageFallbackChar"`
+	Title                 *string               `json:"title"`
+	Commenters            []*Profile            `json:"commenters"`
+	PageViews             *int64                `json:"pageViews"`
+	Moderators            []*Profile            `json:"moderators"`
+	Posts                 *PostConnection       `json:"posts"`
+	Projects              *ProjectConnection    `json:"projects"`
+	Stories               *StoryConnection      `json:"stories"`
+	Threads               *ThreadConnection     `json:"threads"`
+	Collections           *CollectionConnection `json:"collections"`
+	HasModerators         *bool                 `json:"hasModerators"`
 }
 
 func (Channel) IsNode() {}
 
 type ChannelConnection struct {
-	PageInfo   *PageInfo      `json:"pageInfo,omitempty"`
-	Edges      []*ChannelEdge `json:"edges,omitempty"`
-	TotalCount *int64         `json:"totalCount,omitempty"`
+	PageInfo   PageInfo       `json:"pageInfo"`
+	Edges      []*ChannelEdge `json:"edges"`
+	TotalCount *int64         `json:"totalCount"`
 }
 
 type ChannelConnectionErrorHandler struct {
-	UserErrors []*UserError       `json:"userErrors,omitempty"`
-	Result     *ChannelConnection `json:"result,omitempty"`
+	UserErrors []*UserError       `json:"userErrors"`
+	Result     *ChannelConnection `json:"result"`
 }
 
 type ChannelEdge struct {
 	// The item at the end of the edge
-	Node *Channel `json:"node,omitempty"`
+	Node *Channel `json:"node"`
 	// A cursor for use in pagination
 	Cursor string `json:"cursor"`
 }
 
 type CloseRequestForQuoteInput struct {
 	RequestForQuoteID string   `json:"requestForQuoteId"`
-	KeepSessionIds    []string `json:"keepSessionIds,omitempty"`
+	KeepSessionIds    []string `json:"keepSessionIds"`
 }
 
 type CloseSessionInput struct {
@@ -646,16 +643,16 @@ type CloseSessionInput struct {
 type Collection struct {
 	// The ID of the object.
 	ID                    string             `json:"id"`
-	Type                  *string            `json:"type,omitempty"`
-	Slug                  *string            `json:"slug,omitempty"`
+	Type                  *string            `json:"type"`
+	Slug                  *string            `json:"slug"`
 	CreatorID             int64              `json:"creatorId"`
-	CreatedInRegion       *string            `json:"createdInRegion,omitempty"`
-	SpaceID               *int64             `json:"spaceId,omitempty"`
-	DateCreated           *time.Time         `json:"dateCreated,omitempty"`
-	LastUpdated           *time.Time         `json:"lastUpdated,omitempty"`
-	Whitelabel            *string            `json:"whitelabel,omitempty"`
-	WhiteLabelOnlyContent *bool              `json:"whiteLabelOnlyContent,omitempty"`
-	LastCommentedAt       *time.Time         `json:"lastCommentedAt,omitempty"`
+	CreatedInRegion       *string            `json:"createdInRegion"`
+	SpaceID               *int64             `json:"spaceId"`
+	DateCreated           *time.Time         `json:"dateCreated"`
+	LastUpdated           *time.Time         `json:"lastUpdated"`
+	Whitelabel            *string            `json:"whitelabel"`
+	WhiteLabelOnlyContent *bool              `json:"whiteLabelOnlyContent"`
+	LastCommentedAt       *time.Time         `json:"lastCommentedAt"`
 	LastActivityAt        time.Time          `json:"lastActivityAt"`
 	CommentsCount         int64              `json:"commentsCount"`
 	LikesCount            int64              `json:"likesCount"`
@@ -665,48 +662,47 @@ type Collection struct {
 	PublicRead            bool               `json:"publicRead"`
 	RegisteredRead        bool               `json:"registeredRead"`
 	ContentPtrID          string             `json:"contentPtrId"`
-	Name                  *string            `json:"name,omitempty"`
-	Description           *string            `json:"description,omitempty"`
-	ProjectsCount         *int64             `json:"projectsCount,omitempty"`
-	FeaturedIn            *string            `json:"featuredIn,omitempty"`
-	Creator               *User              `json:"creator,omitempty"`
-	Space                 *Space             `json:"space,omitempty"`
-	Followers             *ProfileConnection `json:"followers,omitempty"`
-	Tags                  []*Tag             `json:"tags,omitempty"`
-	Projects              *ProjectConnection `json:"projects,omitempty"`
-	Comments              *CommentConnection `json:"comments,omitempty"`
-	CanUpdate             *bool              `json:"canUpdate,omitempty"`
-	CanDelete             *bool              `json:"canDelete,omitempty"`
-	ParentSlug            *string            `json:"parentSlug,omitempty"`
-	IsPrivate             *bool              `json:"isPrivate,omitempty"`
-	Content               *Content           `json:"content,omitempty"`
-	ParentContent         *Content           `json:"parentContent,omitempty"`
-	InSpace               *Space             `json:"inSpace,omitempty"`
-	Avatar                *File              `json:"avatar,omitempty"`
-	ImageFallbackChar     *string            `json:"imageFallbackChar,omitempty"`
-	Title                 *string            `json:"title,omitempty"`
-	Commenters            []*Profile         `json:"commenters,omitempty"`
-	PageViews             *int64             `json:"pageViews,omitempty"`
-	Images                []*File            `json:"images,omitempty"`
-	CreatorProfile        *Profile           `json:"creatorProfile,omitempty"`
+	Name                  *string            `json:"name"`
+	Description           *string            `json:"description"`
+	ProjectsCount         *int64             `json:"projectsCount"`
+	Creator               *User              `json:"creator"`
+	Space                 *Space             `json:"space"`
+	Followers             *ProfileConnection `json:"followers"`
+	Tags                  []*Tag             `json:"tags"`
+	Projects              *ProjectConnection `json:"projects"`
+	Comments              *CommentConnection `json:"comments"`
+	CanUpdate             *bool              `json:"canUpdate"`
+	CanDelete             *bool              `json:"canDelete"`
+	ParentSlug            *string            `json:"parentSlug"`
+	IsPrivate             *bool              `json:"isPrivate"`
+	Content               *Content           `json:"content"`
+	ParentContent         *Content           `json:"parentContent"`
+	InSpace               *Space             `json:"inSpace"`
+	Avatar                *File              `json:"avatar"`
+	ImageFallbackChar     *string            `json:"imageFallbackChar"`
+	Title                 *string            `json:"title"`
+	Commenters            []*Profile         `json:"commenters"`
+	PageViews             *int64             `json:"pageViews"`
+	Images                []*File            `json:"images"`
+	CreatorProfile        *Profile           `json:"creatorProfile"`
 }
 
 func (Collection) IsNode() {}
 
 type CollectionConnection struct {
-	PageInfo   *PageInfo         `json:"pageInfo,omitempty"`
-	Edges      []*CollectionEdge `json:"edges,omitempty"`
-	TotalCount *int64            `json:"totalCount,omitempty"`
+	PageInfo   PageInfo          `json:"pageInfo"`
+	Edges      []*CollectionEdge `json:"edges"`
+	TotalCount *int64            `json:"totalCount"`
 }
 
 type CollectionConnectionErrorHandler struct {
-	UserErrors []*UserError          `json:"userErrors,omitempty"`
-	Result     *CollectionConnection `json:"result,omitempty"`
+	UserErrors []*UserError          `json:"userErrors"`
+	Result     *CollectionConnection `json:"result"`
 }
 
 type CollectionEdge struct {
 	// The item at the end of the edge
-	Node *Collection `json:"node,omitempty"`
+	Node *Collection `json:"node"`
 	// A cursor for use in pagination
 	Cursor string `json:"cursor"`
 }
@@ -721,9 +717,9 @@ type CollectionInput struct {
 }
 
 type CollectionMutation struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Collection *Collection  `json:"collection,omitempty"`
-	Project    *Project     `json:"project,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Collection *Collection  `json:"collection"`
+	Project    *Project     `json:"project"`
 }
 
 type CollectionProjectInput struct {
@@ -734,20 +730,20 @@ type CollectionProjectInput struct {
 
 type Comment struct {
 	ID                    string             `json:"id"`
-	Type                  *string            `json:"type,omitempty"`
-	Slug                  *string            `json:"slug,omitempty"`
+	Type                  *string            `json:"type"`
+	Slug                  *string            `json:"slug"`
 	CreatorID             int64              `json:"creatorId"`
-	CreatedInRegion       *string            `json:"createdInRegion,omitempty"`
-	SpaceID               *int64             `json:"spaceId,omitempty"`
-	DateCreated           *time.Time         `json:"dateCreated,omitempty"`
-	LastUpdated           *time.Time         `json:"lastUpdated,omitempty"`
-	Whitelabel            *string            `json:"whitelabel,omitempty"`
-	WhiteLabelOnlyContent *bool              `json:"whiteLabelOnlyContent,omitempty"`
-	LastCommentedAt       *time.Time         `json:"lastCommentedAt,omitempty"`
+	CreatedInRegion       *string            `json:"createdInRegion"`
+	SpaceID               *int64             `json:"spaceId"`
+	DateCreated           *time.Time         `json:"dateCreated"`
+	LastUpdated           *time.Time         `json:"lastUpdated"`
+	Whitelabel            *string            `json:"whitelabel"`
+	WhiteLabelOnlyContent *bool              `json:"whiteLabelOnlyContent"`
+	LastCommentedAt       *time.Time         `json:"lastCommentedAt"`
 	LastActivityAt        time.Time          `json:"lastActivityAt"`
-	CommentsCount         *int64             `json:"commentsCount,omitempty"`
-	LikesCount            *int64             `json:"likesCount,omitempty"`
-	FollowersCount        *int64             `json:"followersCount,omitempty"`
+	CommentsCount         *int64             `json:"commentsCount"`
+	LikesCount            *int64             `json:"likesCount"`
+	FollowersCount        *int64             `json:"followersCount"`
 	Score                 float64            `json:"score"`
 	PageviewsCount        int64              `json:"pageviewsCount"`
 	PublicRead            bool               `json:"publicRead"`
@@ -755,31 +751,30 @@ type Comment struct {
 	ContentPtrID          string             `json:"contentPtrId"`
 	Body                  string             `json:"body"`
 	OriginID              int64              `json:"originId"`
-	ReplytoID             *int64             `json:"replytoId,omitempty"`
-	FeaturedIn            *string            `json:"featuredIn,omitempty"`
-	Origin                ContentInterface   `json:"origin,omitempty"`
-	Replyto               *Comment           `json:"replyto,omitempty"`
-	Creator               *User              `json:"creator,omitempty"`
-	Space                 *Space             `json:"space,omitempty"`
-	Followers             *ProfileConnection `json:"followers,omitempty"`
-	Tags                  []*Tag             `json:"tags,omitempty"`
-	Comments              *CommentConnection `json:"comments,omitempty"`
-	ContentType           *string            `json:"contentType,omitempty"`
-	ParentSlug            *string            `json:"parentSlug,omitempty"`
-	IsPrivate             *bool              `json:"isPrivate,omitempty"`
-	Description           *string            `json:"description,omitempty"`
-	Snippet               *string            `json:"snippet,omitempty"`
-	CanUpdate             *bool              `json:"canUpdate,omitempty"`
-	CanDelete             *bool              `json:"canDelete,omitempty"`
-	Content               *Content           `json:"content,omitempty"`
-	ParentContent         *Content           `json:"parentContent,omitempty"`
-	InSpace               *Space             `json:"inSpace,omitempty"`
-	Avatar                *File              `json:"avatar,omitempty"`
-	ImageFallbackChar     *string            `json:"imageFallbackChar,omitempty"`
-	Title                 *string            `json:"title,omitempty"`
-	Commenters            []*Profile         `json:"commenters,omitempty"`
-	PageViews             *int64             `json:"pageViews,omitempty"`
-	CreatorProfile        *Profile           `json:"creatorProfile,omitempty"`
+	ReplytoID             *int64             `json:"replytoId"`
+	Origin                ContentInterface   `json:"origin"`
+	Replyto               *Comment           `json:"replyto"`
+	Creator               *User              `json:"creator"`
+	Space                 *Space             `json:"space"`
+	Followers             *ProfileConnection `json:"followers"`
+	Tags                  []*Tag             `json:"tags"`
+	Comments              *CommentConnection `json:"comments"`
+	ContentType           *string            `json:"contentType"`
+	ParentSlug            *string            `json:"parentSlug"`
+	IsPrivate             *bool              `json:"isPrivate"`
+	Description           *string            `json:"description"`
+	Snippet               *string            `json:"snippet"`
+	CanUpdate             *bool              `json:"canUpdate"`
+	CanDelete             *bool              `json:"canDelete"`
+	Content               *Content           `json:"content"`
+	ParentContent         *Content           `json:"parentContent"`
+	InSpace               *Space             `json:"inSpace"`
+	Avatar                *File              `json:"avatar"`
+	ImageFallbackChar     *string            `json:"imageFallbackChar"`
+	Title                 *string            `json:"title"`
+	Commenters            []*Profile         `json:"commenters"`
+	PageViews             *int64             `json:"pageViews"`
+	CreatorProfile        *Profile           `json:"creatorProfile"`
 }
 
 func (Comment) IsNode()               {}
@@ -787,14 +782,14 @@ func (Comment) IsContentInterface()   {}
 func (Comment) IsNotificationTarget() {}
 
 type CommentConnection struct {
-	PageInfo   *PageInfo      `json:"pageInfo,omitempty"`
-	Edges      []*CommentEdge `json:"edges,omitempty"`
-	TotalCount *int64         `json:"totalCount,omitempty"`
+	PageInfo   PageInfo       `json:"pageInfo"`
+	Edges      []*CommentEdge `json:"edges"`
+	TotalCount *int64         `json:"totalCount"`
 }
 
 type CommentEdge struct {
 	// The item at the end of the edge
-	Node *Comment `json:"node,omitempty"`
+	Node *Comment `json:"node"`
 	// A cursor for use in pagination
 	Cursor string `json:"cursor"`
 }
@@ -808,8 +803,8 @@ type CommentInput struct {
 }
 
 type CommentMutation struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Comment    *Comment     `json:"comment,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Comment    *Comment     `json:"comment"`
 }
 
 type CommitInput struct {
@@ -821,10 +816,10 @@ type CommitInput struct {
 }
 
 type CommitMutation struct {
-	UserErrors      []*UserError `json:"userErrors,omitempty"`
-	Project         *Project     `json:"project,omitempty"`
-	Conflicts       []*Conflict  `json:"conflicts,omitempty"`
-	ConflictsParent *string      `json:"conflictsParent,omitempty"`
+	UserErrors      []*UserError `json:"userErrors"`
+	Project         *Project     `json:"project"`
+	Conflicts       []*Conflict  `json:"conflicts"`
+	ConflictsParent *string      `json:"conflictsParent"`
 }
 
 type ConfirmOrderInput struct {
@@ -832,8 +827,8 @@ type ConfirmOrderInput struct {
 }
 
 type ConfirmProfile struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Profile    *Profile     `json:"profile,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Profile    *Profile     `json:"profile"`
 }
 
 type ConfirmProfileInput struct {
@@ -848,18 +843,18 @@ type ConfirmProfileInput struct {
 
 type Confirmation struct {
 	ID        string     `json:"id"`
-	Customer  *string    `json:"customer,omitempty"`
-	Timestamp *time.Time `json:"timestamp,omitempty"`
+	Customer  *string    `json:"customer"`
+	Timestamp *time.Time `json:"timestamp"`
 }
 
 type Conflict struct {
-	ID                 *string       `json:"id,omitempty"`
-	Path               *string       `json:"path,omitempty"`
-	Local              *File         `json:"local,omitempty"`
-	LocalStatus        *Status       `json:"localStatus,omitempty"`
-	Remote             *File         `json:"remote,omitempty"`
-	RemoteContribution *Contribution `json:"remoteContribution,omitempty"`
-	RemoteStatus       *Status       `json:"remoteStatus,omitempty"`
+	ID                 *string       `json:"id"`
+	Path               *string       `json:"path"`
+	Local              *File         `json:"local"`
+	LocalStatus        *Status       `json:"localStatus"`
+	Remote             *File         `json:"remote"`
+	RemoteContribution *Contribution `json:"remoteContribution"`
+	RemoteStatus       *Status       `json:"remoteStatus"`
 }
 
 type ConflictResolutionInput struct {
@@ -870,34 +865,34 @@ type ConflictResolutionInput struct {
 type Content struct {
 	// The ID of the object.
 	ID                string             `json:"id"`
-	CanUpdate         *bool              `json:"canUpdate,omitempty"`
-	CanDelete         *bool              `json:"canDelete,omitempty"`
-	Type              *string            `json:"type,omitempty"`
-	Slug              *string            `json:"slug,omitempty"`
-	ParentSlug        *string            `json:"parentSlug,omitempty"`
-	IsPrivate         *bool              `json:"isPrivate,omitempty"`
-	Description       *string            `json:"description,omitempty"`
-	Creator           *User              `json:"creator,omitempty"`
-	DateCreated       *time.Time         `json:"dateCreated,omitempty"`
-	LastUpdated       *time.Time         `json:"lastUpdated,omitempty"`
-	Content           *Content           `json:"content,omitempty"`
-	ParentContent     *Content           `json:"parentContent,omitempty"`
-	InSpace           *Space             `json:"inSpace,omitempty"`
-	Avatar            *File              `json:"avatar,omitempty"`
-	ImageFallbackChar *string            `json:"imageFallbackChar,omitempty"`
-	Title             *string            `json:"title,omitempty"`
-	Tags              []*Tag             `json:"tags,omitempty"`
-	Comments          *CommentConnection `json:"comments,omitempty"`
-	Commenters        []*Profile         `json:"commenters,omitempty"`
-	PageViews         *int64             `json:"pageViews,omitempty"`
-	Followers         *ProfileConnection `json:"followers,omitempty"`
-	LikesCount        *int64             `json:"likesCount,omitempty"`
-	FollowersCount    *int64             `json:"followersCount,omitempty"`
-	CommentsCount     *int64             `json:"commentsCount,omitempty"`
-	IsLiked           *bool              `json:"isLiked,omitempty"`
-	Version           *string            `json:"version,omitempty"`
-	Whitelabel        *string            `json:"whitelabel,omitempty"`
-	IsFollowed        *bool              `json:"isFollowed,omitempty"`
+	CanUpdate         *bool              `json:"canUpdate"`
+	CanDelete         *bool              `json:"canDelete"`
+	Type              *string            `json:"type"`
+	Slug              *string            `json:"slug"`
+	ParentSlug        *string            `json:"parentSlug"`
+	IsPrivate         *bool              `json:"isPrivate"`
+	Description       *string            `json:"description"`
+	Creator           *User              `json:"creator"`
+	DateCreated       *time.Time         `json:"dateCreated"`
+	LastUpdated       *time.Time         `json:"lastUpdated"`
+	Content           *Content           `json:"content"`
+	ParentContent     *Content           `json:"parentContent"`
+	InSpace           *Space             `json:"inSpace"`
+	Avatar            *File              `json:"avatar"`
+	ImageFallbackChar *string            `json:"imageFallbackChar"`
+	Title             *string            `json:"title"`
+	Tags              []*Tag             `json:"tags"`
+	Comments          *CommentConnection `json:"comments"`
+	Commenters        []*Profile         `json:"commenters"`
+	PageViews         *int64             `json:"pageViews"`
+	Followers         *ProfileConnection `json:"followers"`
+	LikesCount        *int64             `json:"likesCount"`
+	FollowersCount    *int64             `json:"followersCount"`
+	CommentsCount     *int64             `json:"commentsCount"`
+	IsLiked           *bool              `json:"isLiked"`
+	Version           *string            `json:"version"`
+	Whitelabel        *string            `json:"whitelabel"`
+	IsFollowed        *bool              `json:"isFollowed"`
 }
 
 func (Content) IsNode() {}
@@ -905,8 +900,8 @@ func (Content) IsNode() {}
 type Context struct {
 	// The ID of the object.
 	ID        string   `json:"id"`
-	Parent    *Project `json:"parent,omitempty"`
-	ParentObj *Project `json:"parentObj,omitempty"`
+	Parent    *Project `json:"parent"`
+	ParentObj *Project `json:"parentObj"`
 }
 
 func (Context) IsNode() {}
@@ -914,13 +909,13 @@ func (Context) IsNode() {}
 type ContribFile struct {
 	// The ID of the object.
 	ID           string        `json:"id"`
-	File         *File         `json:"file,omitempty"`
-	Dirname      *string       `json:"dirname,omitempty"`
-	Filename     *string       `json:"filename,omitempty"`
-	IsFolder     *bool         `json:"isFolder,omitempty"`
-	Contribution *Contribution `json:"contribution,omitempty"`
-	Origin       *Contribution `json:"origin,omitempty"`
-	LastUpdated  *string       `json:"lastUpdated,omitempty"`
+	File         *File         `json:"file"`
+	Dirname      *string       `json:"dirname"`
+	Filename     *string       `json:"filename"`
+	IsFolder     *bool         `json:"isFolder"`
+	Contribution *Contribution `json:"contribution"`
+	Origin       *Contribution `json:"origin"`
+	LastUpdated  *string       `json:"lastUpdated"`
 }
 
 func (ContribFile) IsNode() {}
@@ -928,89 +923,88 @@ func (ContribFile) IsNode() {}
 type ContribOp struct {
 	// The ID of the object.
 	ID      string        `json:"id"`
-	File    *File         `json:"file,omitempty"`
-	OldFile *File         `json:"oldFile,omitempty"`
-	Path    *string       `json:"path,omitempty"`
-	OldPath *string       `json:"oldPath,omitempty"`
-	OpType  *string       `json:"opType,omitempty"`
-	Origin  *Contribution `json:"origin,omitempty"`
+	File    *File         `json:"file"`
+	OldFile *File         `json:"oldFile"`
+	Path    *string       `json:"path"`
+	OldPath *string       `json:"oldPath"`
+	OpType  *string       `json:"opType"`
+	Origin  *Contribution `json:"origin"`
 }
 
 func (ContribOp) IsNode() {}
 
 type Contribution struct {
 	ID                    string             `json:"id"`
-	Type                  *string            `json:"type,omitempty"`
-	Slug                  *string            `json:"slug,omitempty"`
+	Type                  *string            `json:"type"`
+	Slug                  *string            `json:"slug"`
 	CreatorID             int64              `json:"creatorId"`
-	CreatedInRegion       *string            `json:"createdInRegion,omitempty"`
-	SpaceID               *int64             `json:"spaceId,omitempty"`
-	DateCreated           *time.Time         `json:"dateCreated,omitempty"`
-	LastUpdated           *time.Time         `json:"lastUpdated,omitempty"`
-	Whitelabel            *string            `json:"whitelabel,omitempty"`
-	WhiteLabelOnlyContent *bool              `json:"whiteLabelOnlyContent,omitempty"`
-	LastCommentedAt       *time.Time         `json:"lastCommentedAt,omitempty"`
+	CreatedInRegion       *string            `json:"createdInRegion"`
+	SpaceID               *int64             `json:"spaceId"`
+	DateCreated           *time.Time         `json:"dateCreated"`
+	LastUpdated           *time.Time         `json:"lastUpdated"`
+	Whitelabel            *string            `json:"whitelabel"`
+	WhiteLabelOnlyContent *bool              `json:"whiteLabelOnlyContent"`
+	LastCommentedAt       *time.Time         `json:"lastCommentedAt"`
 	LastActivityAt        time.Time          `json:"lastActivityAt"`
-	CommentsCount         *int64             `json:"commentsCount,omitempty"`
-	LikesCount            *int64             `json:"likesCount,omitempty"`
-	FollowersCount        *int64             `json:"followersCount,omitempty"`
+	CommentsCount         *int64             `json:"commentsCount"`
+	LikesCount            *int64             `json:"likesCount"`
+	FollowersCount        *int64             `json:"followersCount"`
 	Score                 float64            `json:"score"`
 	PageviewsCount        int64              `json:"pageviewsCount"`
 	PublicRead            bool               `json:"publicRead"`
 	RegisteredRead        bool               `json:"registeredRead"`
 	ContentPtrID          string             `json:"contentPtrId"`
 	ProjectID             int64              `json:"projectId"`
-	ParentID              *int64             `json:"parentId,omitempty"`
-	Status                *string            `json:"status,omitempty"`
-	Title                 *string            `json:"title,omitempty"`
-	Description           *string            `json:"description,omitempty"`
-	Version               *string            `json:"version,omitempty"`
-	OldVersion            *int64             `json:"oldVersion,omitempty"`
-	ZipArchiveGeneratedID *int64             `json:"zipArchiveGeneratedId,omitempty"`
-	FeaturedIn            *string            `json:"featuredIn,omitempty"`
-	Project               *Project           `json:"project,omitempty"`
-	Children              []*Contribution    `json:"children,omitempty"`
-	Parent                *Contribution      `json:"parent,omitempty"`
-	ZipArchiveGenerated   *bool              `json:"zipArchiveGenerated,omitempty"`
-	Creator               *User              `json:"creator,omitempty"`
-	Space                 *Space             `json:"space,omitempty"`
-	Followers             *ProfileConnection `json:"followers,omitempty"`
-	Tags                  []*Tag             `json:"tags,omitempty"`
-	Comments              *CommentConnection `json:"comments,omitempty"`
-	ContentType           *string            `json:"contentType,omitempty"`
-	ParentSlug            *string            `json:"parentSlug,omitempty"`
-	IsPrivate             *bool              `json:"isPrivate,omitempty"`
-	Snippet               *string            `json:"snippet,omitempty"`
-	CanUpdate             *bool              `json:"canUpdate,omitempty"`
-	CanDelete             *bool              `json:"canDelete,omitempty"`
-	Content               *Content           `json:"content,omitempty"`
-	ParentContent         *Content           `json:"parentContent,omitempty"`
-	InSpace               *Space             `json:"inSpace,omitempty"`
-	Avatar                *File              `json:"avatar,omitempty"`
-	ImageFallbackChar     *string            `json:"imageFallbackChar,omitempty"`
-	Commenters            []*Profile         `json:"commenters,omitempty"`
-	PageViews             *int64             `json:"pageViews,omitempty"`
-	Operations            []*ContribOp       `json:"operations,omitempty"`
-	ZipArchiveURL         *string            `json:"zipArchiveUrl,omitempty"`
-	CreatorProfile        *Profile           `json:"creatorProfile,omitempty"`
-	FilesCount            *int64             `json:"filesCount,omitempty"`
-	Files                 []*ContribFile     `json:"files,omitempty"`
-	ContribFile           *ContribFile       `json:"contribFile,omitempty"`
+	ParentID              *int64             `json:"parentId"`
+	Status                *string            `json:"status"`
+	Title                 *string            `json:"title"`
+	Description           *string            `json:"description"`
+	Version               *string            `json:"version"`
+	OldVersion            *int64             `json:"oldVersion"`
+	ZipArchiveGeneratedID *int64             `json:"zipArchiveGeneratedId"`
+	Project               *Project           `json:"project"`
+	Children              []*Contribution    `json:"children"`
+	Parent                *Contribution      `json:"parent"`
+	ZipArchiveGenerated   *bool              `json:"zipArchiveGenerated"`
+	Creator               *User              `json:"creator"`
+	Space                 *Space             `json:"space"`
+	Followers             *ProfileConnection `json:"followers"`
+	Tags                  []*Tag             `json:"tags"`
+	Comments              *CommentConnection `json:"comments"`
+	ContentType           *string            `json:"contentType"`
+	ParentSlug            *string            `json:"parentSlug"`
+	IsPrivate             *bool              `json:"isPrivate"`
+	Snippet               *string            `json:"snippet"`
+	CanUpdate             *bool              `json:"canUpdate"`
+	CanDelete             *bool              `json:"canDelete"`
+	Content               *Content           `json:"content"`
+	ParentContent         *Content           `json:"parentContent"`
+	InSpace               *Space             `json:"inSpace"`
+	Avatar                *File              `json:"avatar"`
+	ImageFallbackChar     *string            `json:"imageFallbackChar"`
+	Commenters            []*Profile         `json:"commenters"`
+	PageViews             *int64             `json:"pageViews"`
+	Operations            []*ContribOp       `json:"operations"`
+	ZipArchiveURL         *string            `json:"zipArchiveUrl"`
+	CreatorProfile        *Profile           `json:"creatorProfile"`
+	FilesCount            *int64             `json:"filesCount"`
+	Files                 []*ContribFile     `json:"files"`
+	ContribFile           *ContribFile       `json:"contribFile"`
 }
 
+func (Contribution) IsNotificationTarget() {}
 func (Contribution) IsNode()               {}
 func (Contribution) IsContentInterface()   {}
-func (Contribution) IsNotificationTarget() {}
 
 type ContributionConnection struct {
-	PageInfo   *PageInfo           `json:"pageInfo,omitempty"`
-	Edges      []*ContributionEdge `json:"edges,omitempty"`
-	TotalCount *int64              `json:"totalCount,omitempty"`
+	PageInfo   PageInfo            `json:"pageInfo"`
+	Edges      []*ContributionEdge `json:"edges"`
+	TotalCount *int64              `json:"totalCount"`
 }
 
 type ContributionEdge struct {
 	// The item at the end of the edge
-	Node *Contribution `json:"node,omitempty"`
+	Node *Contribution `json:"node"`
 	// A cursor for use in pagination
 	Cursor string `json:"cursor"`
 }
@@ -1019,22 +1013,22 @@ type Conversation struct {
 	ID              string           `json:"id"`
 	Type            ConversationType `json:"type"`
 	ContextID       string           `json:"contextId"`
-	ResourceID      *string          `json:"resourceId,omitempty"`
-	Reference       Node             `json:"reference,omitempty"`
-	ContextContent  Node             `json:"contextContent,omitempty"`
+	ResourceID      *string          `json:"resourceId"`
+	Reference       Node             `json:"reference"`
+	ContextContent  Node             `json:"contextContent"`
 	URI             string           `json:"uri"`
-	Messages        *MessagePage     `json:"messages,omitempty"`
+	Messages        MessagePage      `json:"messages"`
 	UnreadCount     int64            `json:"unreadCount"`
-	Space           *Space           `json:"space,omitempty"`
-	LastMessage     *Message         `json:"lastMessage,omitempty"`
-	LastReadMessage *Message         `json:"lastReadMessage,omitempty"`
-	LastUpdatedAt   *time.Time       `json:"lastUpdatedAt,omitempty"`
+	Space           *Space           `json:"space"`
+	LastMessage     *Message         `json:"lastMessage"`
+	LastReadMessage *Message         `json:"lastReadMessage"`
+	LastUpdatedAt   *time.Time       `json:"lastUpdatedAt"`
 }
 
 func (Conversation) IsNode() {}
 
 type ConversationPage struct {
-	Nodes       []*Conversation `json:"nodes,omitempty"`
+	Nodes       []*Conversation `json:"nodes"`
 	Total       int64           `json:"total"`
 	TotalUnread int64           `json:"totalUnread"`
 }
@@ -1050,8 +1044,8 @@ type ConversionInput struct {
 }
 
 type ConversionMutation struct {
-	UserErrors []*UserError    `json:"userErrors,omitempty"`
-	Conversion *FileConversion `json:"conversion,omitempty"`
+	UserErrors []*UserError    `json:"userErrors"`
+	Conversion *FileConversion `json:"conversion"`
 }
 
 type CreateAddressInput struct {
@@ -1073,8 +1067,8 @@ type CreateAnnotationInput struct {
 	ResourceID   string                 `json:"resourceId"`
 	ReferenceID  *string                `json:"referenceId,omitempty"`
 	Body         string                 `json:"body"`
-	Target       *TargetInput           `json:"target,omitempty"`
-	Camera       *CameraInput           `json:"camera,omitempty"`
+	Target       TargetInput            `json:"target"`
+	Camera       CameraInput            `json:"camera"`
 	HoopsVersion *string                `json:"hoopsVersion,omitempty"`
 	ImportConfig *string                `json:"importConfig,omitempty"`
 	TempKey      *string                `json:"tempKey,omitempty"`
@@ -1104,7 +1098,7 @@ type CreateCheckoutInput struct {
 type CreateFileRequirementInput struct {
 	ForID       string          `json:"forId"`
 	Type        RequirementType `json:"type"`
-	Formats     []string        `json:"formats,omitempty"`
+	Formats     []string        `json:"formats"`
 	Operator    *Operator       `json:"operator,omitempty"`
 	ValueInt    *int64          `json:"valueInt,omitempty"`
 	ValueFloat  *float64        `json:"valueFloat,omitempty"`
@@ -1113,15 +1107,15 @@ type CreateFileRequirementInput struct {
 }
 
 type CreateIntermediatorInput struct {
-	EnquiryEmail string              `json:"enquiryEmail"`
-	InitiativeID *string             `json:"initiativeId,omitempty"`
-	SpaceID      *string             `json:"spaceId,omitempty"`
-	Address      *CreateAddressInput `json:"address,omitempty"`
+	EnquiryEmail string             `json:"enquiryEmail"`
+	InitiativeID *string            `json:"initiativeId,omitempty"`
+	SpaceID      *string            `json:"spaceId,omitempty"`
+	Address      CreateAddressInput `json:"address"`
 }
 
 type CreateInviteLink struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	InviteLink *InviteLink  `json:"inviteLink,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	InviteLink *InviteLink  `json:"inviteLink"`
 }
 
 type CreateInviteLinkInput struct {
@@ -1131,27 +1125,27 @@ type CreateInviteLinkInput struct {
 }
 
 type CreateJobSpecInput struct {
-	Build           *CreateBuildInput `json:"build,omitempty"`
-	Quantity        int64             `json:"quantity"`
-	ShippingAddress string            `json:"shippingAddress"`
-	LeadTime        int64             `json:"leadTime"`
+	Build           CreateBuildInput `json:"build"`
+	Quantity        int64            `json:"quantity"`
+	ShippingAddress string           `json:"shippingAddress"`
+	LeadTime        int64            `json:"leadTime"`
 }
 
 type CreateManufacturerInput struct {
-	EnquiryEmail string              `json:"enquiryEmail"`
-	InitiativeID *string             `json:"initiativeId,omitempty"`
-	SpaceID      *string             `json:"spaceId,omitempty"`
-	Address      *CreateAddressInput `json:"address,omitempty"`
-	ShipsTo      []string            `json:"shipsTo,omitempty"`
-	Telephone    string              `json:"telephone"`
-	FoundingYear int64               `json:"foundingYear"`
-	Industries   []string            `json:"industries,omitempty"`
-	NumEmployees *int64              `json:"numEmployees,omitempty"`
-	NumMachines  *int64              `json:"numMachines,omitempty"`
-	LeadTime     *string             `json:"leadTime,omitempty"`
-	FileFormats  []string            `json:"fileFormats,omitempty"`
-	CaseStudies  []string            `json:"caseStudies,omitempty"`
-	CompanyType  []string            `json:"companyType,omitempty"`
+	EnquiryEmail string             `json:"enquiryEmail"`
+	InitiativeID *string            `json:"initiativeId,omitempty"`
+	SpaceID      *string            `json:"spaceId,omitempty"`
+	Address      CreateAddressInput `json:"address"`
+	ShipsTo      []string           `json:"shipsTo,omitempty"`
+	Telephone    string             `json:"telephone"`
+	FoundingYear int64              `json:"foundingYear"`
+	Industries   []string           `json:"industries,omitempty"`
+	NumEmployees *int64             `json:"numEmployees,omitempty"`
+	NumMachines  *int64             `json:"numMachines,omitempty"`
+	LeadTime     *string            `json:"leadTime,omitempty"`
+	FileFormats  []string           `json:"fileFormats,omitempty"`
+	CaseStudies  []string           `json:"caseStudies,omitempty"`
+	CompanyType  []string           `json:"companyType,omitempty"`
 }
 
 type CreateManufacturerProfileInput struct {
@@ -1166,7 +1160,7 @@ type CreateMaterialInput struct {
 }
 
 type CreateMaterialsInput struct {
-	MaterialInputs []*MaterialInput `json:"materialInputs,omitempty"`
+	MaterialInputs []*MaterialInput `json:"materialInputs"`
 }
 
 type CreateMessageInput struct {
@@ -1207,14 +1201,14 @@ type CreateProcessInput struct {
 }
 
 type CreateProcessesInput struct {
-	ProcessInputs []*ProcessInput `json:"processInputs,omitempty"`
+	ProcessInputs []*ProcessInput `json:"processInputs"`
 }
 
 type CreateProductBuildInput struct {
-	AssemblyTree *CreateProductItemInput `json:"assemblyTree,omitempty"`
-	SpaceID      string                  `json:"spaceId"`
-	Name         string                  `json:"name"`
-	Tag          *string                 `json:"tag,omitempty"`
+	AssemblyTree CreateProductItemInput `json:"assemblyTree"`
+	SpaceID      string                 `json:"spaceId"`
+	Name         string                 `json:"name"`
+	Tag          *string                `json:"tag,omitempty"`
 }
 
 type CreateProductItemInput struct {
@@ -1228,15 +1222,15 @@ type CreateProductItemInput struct {
 }
 
 type CreateQuoteInput struct {
-	FromID      string                    `json:"fromId"`
-	Cost        int64                     `json:"cost"`
-	Currency    string                    `json:"currency"`
-	Shipping    *CreateShippingQuoteInput `json:"shipping,omitempty"`
-	NewJobSpec  *UpdateJobSpecInput       `json:"newJobSpec,omitempty"`
-	SupplierID  *string                   `json:"supplierId,omitempty"`
-	ValidUntil  *time.Time                `json:"validUntil,omitempty"`
-	IsEstimated *bool                     `json:"isEstimated,omitempty"`
-	Notes       *string                   `json:"notes,omitempty"`
+	FromID      string                   `json:"fromId"`
+	Cost        int64                    `json:"cost"`
+	Currency    string                   `json:"currency"`
+	Shipping    CreateShippingQuoteInput `json:"shipping"`
+	NewJobSpec  *UpdateJobSpecInput      `json:"newJobSpec,omitempty"`
+	SupplierID  *string                  `json:"supplierId,omitempty"`
+	ValidUntil  *time.Time               `json:"validUntil,omitempty"`
+	IsEstimated *bool                    `json:"isEstimated,omitempty"`
+	Notes       *string                  `json:"notes,omitempty"`
 }
 
 type CreateReleaseInput struct {
@@ -1245,9 +1239,9 @@ type CreateReleaseInput struct {
 }
 
 type CreateRequestForQuotesInput struct {
-	JobSpec            *CreateJobSpecInput `json:"jobSpec,omitempty"`
-	QuotesNeededBy     *time.Time          `json:"quotesNeededBy,omitempty"`
-	EstimatedAwardDate *time.Time          `json:"estimatedAwardDate,omitempty"`
+	JobSpec            CreateJobSpecInput `json:"jobSpec"`
+	QuotesNeededBy     *time.Time         `json:"quotesNeededBy,omitempty"`
+	EstimatedAwardDate *time.Time         `json:"estimatedAwardDate,omitempty"`
 }
 
 type CreateSelectionOptionInput struct {
@@ -1263,7 +1257,7 @@ type CreateSelectionOptionInput struct {
 
 type CreateServiceInstancesInput struct {
 	ProcessID      string   `json:"processId"`
-	MaterialIds    []string `json:"materialIds,omitempty"`
+	MaterialIds    []string `json:"materialIds"`
 	ManufacturerID string   `json:"manufacturerId"`
 }
 
@@ -1274,8 +1268,8 @@ type CreateSharedFileInput struct {
 }
 
 type CreateSharedFileMutation struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	SharedFile *SharedFile  `json:"sharedFile,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	SharedFile *SharedFile  `json:"sharedFile"`
 }
 
 type CreateShippingQuoteInput struct {
@@ -1286,13 +1280,13 @@ type CreateShippingQuoteInput struct {
 }
 
 type CreditCard struct {
-	StripeID *string `json:"stripeId,omitempty"`
+	StripeID *string `json:"stripeId"`
 	// The ID of the object.
 	ID         string  `json:"id"`
 	SpaceID    int64   `json:"spaceId"`
 	Brand      string  `json:"brand"`
-	Country    *string `json:"country,omitempty"`
-	Name       *string `json:"name,omitempty"`
+	Country    *string `json:"country"`
+	Name       *string `json:"name"`
 	ExpMonth   int64   `json:"expMonth"`
 	ExpYear    int64   `json:"expYear"`
 	LastDigits string  `json:"lastDigits"`
@@ -1310,8 +1304,8 @@ type DeleteAnnotationInput struct {
 }
 
 type DeleteInvite struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Group      *Group       `json:"group,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Group      *Group       `json:"group"`
 }
 
 type DeleteInviteInput struct {
@@ -1319,8 +1313,8 @@ type DeleteInviteInput struct {
 }
 
 type DeleteInviteLink struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Result     *string      `json:"result,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Result     *string      `json:"result"`
 }
 
 type DeleteInviteLinkInput struct {
@@ -1341,7 +1335,7 @@ type DeletePaymentMethodInput struct {
 }
 
 type DeletePaymentMutation struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
 }
 
 type DeleteProcessInput struct {
@@ -1357,36 +1351,36 @@ type DeleteSharedFileInput struct {
 }
 
 type DeleteSharedFileMutation struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Result     *string      `json:"result,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Result     *string      `json:"result"`
 }
 
 type DiffInfo struct {
-	Project             *Project `json:"project,omitempty"`
-	ContributionsAhead  *int64   `json:"contributionsAhead,omitempty"`
-	ContributionsBehind *int64   `json:"contributionsBehind,omitempty"`
+	Project             *Project `json:"project"`
+	ContributionsAhead  *int64   `json:"contributionsAhead"`
+	ContributionsBehind *int64   `json:"contributionsBehind"`
 }
 
 // Login user with email/password creates a cookies
 type EmailLogin struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Result     *string      `json:"result,omitempty"`
-	Username   *string      `json:"username,omitempty"`
-	Profile    *Profile     `json:"profile,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Result     *string      `json:"result"`
+	Username   *string      `json:"username"`
+	Profile    *Profile     `json:"profile"`
 }
 
 // create user from signup with email
 type EmailSignup struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Result     *string      `json:"result,omitempty"`
-	Profile    *Profile     `json:"profile,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Result     *string      `json:"result"`
+	Profile    *Profile     `json:"profile"`
 }
 
 type EmailType struct {
-	ID          *string `json:"id,omitempty"`
-	Description *string `json:"description,omitempty"`
-	DisplayName *string `json:"displayName,omitempty"`
-	Enabled     *bool   `json:"enabled,omitempty"`
+	ID          *string `json:"id"`
+	Description *string `json:"description"`
+	DisplayName *string `json:"displayName"`
+	Enabled     *bool   `json:"enabled"`
 }
 
 type ExtractPartsInput struct {
@@ -1401,16 +1395,16 @@ type ExtractPartsInput struct {
 type FederatedFile struct {
 	// The ID of the object.
 	ID                    string             `json:"id"`
-	Type                  *string            `json:"type,omitempty"`
-	Slug                  *string            `json:"slug,omitempty"`
+	Type                  *string            `json:"type"`
+	Slug                  *string            `json:"slug"`
 	CreatorID             int64              `json:"creatorId"`
-	CreatedInRegion       *string            `json:"createdInRegion,omitempty"`
-	SpaceID               *int64             `json:"spaceId,omitempty"`
-	DateCreated           *time.Time         `json:"dateCreated,omitempty"`
-	LastUpdated           *time.Time         `json:"lastUpdated,omitempty"`
-	Whitelabel            *string            `json:"whitelabel,omitempty"`
-	WhiteLabelOnlyContent *bool              `json:"whiteLabelOnlyContent,omitempty"`
-	LastCommentedAt       *time.Time         `json:"lastCommentedAt,omitempty"`
+	CreatedInRegion       *string            `json:"createdInRegion"`
+	SpaceID               *int64             `json:"spaceId"`
+	DateCreated           *time.Time         `json:"dateCreated"`
+	LastUpdated           *time.Time         `json:"lastUpdated"`
+	Whitelabel            *string            `json:"whitelabel"`
+	WhiteLabelOnlyContent *bool              `json:"whiteLabelOnlyContent"`
+	LastCommentedAt       *time.Time         `json:"lastCommentedAt"`
 	LastActivityAt        time.Time          `json:"lastActivityAt"`
 	CommentsCount         int64              `json:"commentsCount"`
 	LikesCount            int64              `json:"likesCount"`
@@ -1424,48 +1418,47 @@ type FederatedFile struct {
 	MimeType              string             `json:"mimeType"`
 	EncodingType          string             `json:"encodingType"`
 	Size                  float64            `json:"size"`
-	S3Size                *float64           `json:"s3Size,omitempty"`
-	FileLastModified      *time.Time         `json:"fileLastModified,omitempty"`
+	S3Size                *float64           `json:"s3Size"`
+	FileLastModified      *time.Time         `json:"fileLastModified"`
 	Completed             bool               `json:"completed"`
 	Cancelled             bool               `json:"cancelled"`
-	Private               *bool              `json:"private,omitempty"`
-	CopyOfID              *int64             `json:"copyOfId,omitempty"`
-	Source                *string            `json:"source,omitempty"`
-	Author                *string            `json:"author,omitempty"`
-	License               *string            `json:"license,omitempty"`
-	Md5                   *string            `json:"md5,omitempty"`
-	GitHash               *string            `json:"gitHash,omitempty"`
-	FeaturedIn            *string            `json:"featuredIn,omitempty"`
-	Creator               *User              `json:"creator,omitempty"`
-	Followers             *ProfileConnection `json:"followers,omitempty"`
-	Tags                  []*Tag             `json:"tags,omitempty"`
-	Comments              *CommentConnection `json:"comments,omitempty"`
-	CanUpdate             *bool              `json:"canUpdate,omitempty"`
-	CanDelete             *bool              `json:"canDelete,omitempty"`
-	ParentSlug            *string            `json:"parentSlug,omitempty"`
-	IsPrivate             *bool              `json:"isPrivate,omitempty"`
-	Description           *string            `json:"description,omitempty"`
-	Content               *Content           `json:"content,omitempty"`
-	ParentContent         *Content           `json:"parentContent,omitempty"`
-	InSpace               *Space             `json:"inSpace,omitempty"`
-	Avatar                *File              `json:"avatar,omitempty"`
-	ImageFallbackChar     *string            `json:"imageFallbackChar,omitempty"`
-	Title                 *string            `json:"title,omitempty"`
-	Commenters            []*Profile         `json:"commenters,omitempty"`
-	PageViews             *int64             `json:"pageViews,omitempty"`
-	Path                  *string            `json:"path,omitempty"`
-	URL                   *string            `json:"url,omitempty"`
-	Permalink             *string            `json:"permalink,omitempty"`
-	UploadURL             *string            `json:"uploadUrl,omitempty"`
-	IsCopy                *bool              `json:"isCopy,omitempty"`
-	OriginalFile          *File              `json:"originalFile,omitempty"`
-	CanDownload           *bool              `json:"canDownload,omitempty"`
-	ConversionScstar      *FileConversion    `json:"conversionScstar,omitempty"`
-	ConversionGltftar     *FileConversion    `json:"conversionGltftar,omitempty"`
-	ConversionGltfdgraph  *FileConversion    `json:"conversionGltfdgraph,omitempty"`
-	ConversionGltfjson    *FileConversion    `json:"conversionGltfjson,omitempty"`
-	Conversion360Gif      *FileConversion    `json:"conversion360Gif,omitempty"`
-	Conversion360Video    *FileConversion    `json:"conversion360Video,omitempty"`
+	Private               *bool              `json:"private"`
+	CopyOfID              *int64             `json:"copyOfId"`
+	Source                *string            `json:"source"`
+	Author                *string            `json:"author"`
+	License               *string            `json:"license"`
+	Md5                   *string            `json:"md5"`
+	GitHash               *string            `json:"gitHash"`
+	Creator               *User              `json:"creator"`
+	Followers             *ProfileConnection `json:"followers"`
+	Tags                  []*Tag             `json:"tags"`
+	Comments              *CommentConnection `json:"comments"`
+	CanUpdate             *bool              `json:"canUpdate"`
+	CanDelete             *bool              `json:"canDelete"`
+	ParentSlug            *string            `json:"parentSlug"`
+	IsPrivate             *bool              `json:"isPrivate"`
+	Description           *string            `json:"description"`
+	Content               *Content           `json:"content"`
+	ParentContent         *Content           `json:"parentContent"`
+	InSpace               *Space             `json:"inSpace"`
+	Avatar                *File              `json:"avatar"`
+	ImageFallbackChar     *string            `json:"imageFallbackChar"`
+	Title                 *string            `json:"title"`
+	Commenters            []*Profile         `json:"commenters"`
+	PageViews             *int64             `json:"pageViews"`
+	Path                  *string            `json:"path"`
+	URL                   *string            `json:"url"`
+	Permalink             *string            `json:"permalink"`
+	UploadURL             *string            `json:"uploadUrl"`
+	IsCopy                *bool              `json:"isCopy"`
+	OriginalFile          *File              `json:"originalFile"`
+	CanDownload           *bool              `json:"canDownload"`
+	ConversionScstar      *FileConversion    `json:"conversionScstar"`
+	ConversionGltftar     *FileConversion    `json:"conversionGltftar"`
+	ConversionGltfdgraph  *FileConversion    `json:"conversionGltfdgraph"`
+	ConversionGltfjson    *FileConversion    `json:"conversionGltfjson"`
+	Conversion360Gif      *FileConversion    `json:"conversion360Gif"`
+	Conversion360Video    *FileConversion    `json:"conversion360Video"`
 }
 
 func (FederatedFile) IsNode() {}
@@ -1474,16 +1467,16 @@ func (FederatedFile) IsNode() {}
 type FederatedInitiative struct {
 	// The ID of the object.
 	ID                             string                 `json:"id"`
-	Type                           *string                `json:"type,omitempty"`
-	Slug                           *string                `json:"slug,omitempty"`
+	Type                           *string                `json:"type"`
+	Slug                           *string                `json:"slug"`
 	CreatorID                      int64                  `json:"creatorId"`
-	CreatedInRegion                *string                `json:"createdInRegion,omitempty"`
-	SpaceID                        *int64                 `json:"spaceId,omitempty"`
-	DateCreated                    *time.Time             `json:"dateCreated,omitempty"`
-	LastUpdated                    *time.Time             `json:"lastUpdated,omitempty"`
-	Whitelabel                     *string                `json:"whitelabel,omitempty"`
-	WhiteLabelOnlyContent          *bool                  `json:"whiteLabelOnlyContent,omitempty"`
-	LastCommentedAt                *time.Time             `json:"lastCommentedAt,omitempty"`
+	CreatedInRegion                *string                `json:"createdInRegion"`
+	SpaceID                        *int64                 `json:"spaceId"`
+	DateCreated                    *time.Time             `json:"dateCreated"`
+	LastUpdated                    *time.Time             `json:"lastUpdated"`
+	Whitelabel                     *string                `json:"whitelabel"`
+	WhiteLabelOnlyContent          *bool                  `json:"whiteLabelOnlyContent"`
+	LastCommentedAt                *time.Time             `json:"lastCommentedAt"`
 	LastActivityAt                 time.Time              `json:"lastActivityAt"`
 	CommentsCount                  int64                  `json:"commentsCount"`
 	LikesCount                     int64                  `json:"likesCount"`
@@ -1492,80 +1485,79 @@ type FederatedInitiative struct {
 	PageviewsCount                 int64                  `json:"pageviewsCount"`
 	PublicRead                     bool                   `json:"publicRead"`
 	RegisteredRead                 bool                   `json:"registeredRead"`
-	CountryCode                    *string                `json:"countryCode,omitempty"`
-	TaxID                          *string                `json:"taxId,omitempty"`
+	CountryCode                    *string                `json:"countryCode"`
+	TaxID                          *string                `json:"taxId"`
 	ContentPtrID                   string                 `json:"contentPtrId"`
-	AvatarID                       *int64                 `json:"avatarId,omitempty"`
-	Title                          *string                `json:"title,omitempty"`
-	Description                    *string                `json:"description,omitempty"`
-	OrganizationTypeID             *int64                 `json:"organizationTypeId,omitempty"`
-	Manufacturer                   *Manufacturer          `json:"manufacturer,omitempty"`
-	PreferedPlanID                 *int64                 `json:"preferedPlanId,omitempty"`
-	IsConfirmed                    *string                `json:"isConfirmed,omitempty"`
-	HasAvatar                      *string                `json:"hasAvatar,omitempty"`
-	FeaturedIn                     *string                `json:"featuredIn,omitempty"`
-	Avatar                         *File                  `json:"avatar,omitempty"`
-	OrganizationType               *OrganizationType      `json:"organizationType,omitempty"`
-	PreferedPlan                   *BillingPlan           `json:"preferedPlan,omitempty"`
-	Creator                        *User                  `json:"creator,omitempty"`
-	Followers                      *ProfileConnection     `json:"followers,omitempty"`
-	Tags                           []*Tag                 `json:"tags,omitempty"`
-	Comments                       *CommentConnection     `json:"comments,omitempty"`
-	InviteLink                     *InviteLink            `json:"inviteLink,omitempty"`
-	Invoices                       []*BillingInvoice      `json:"invoices,omitempty"`
-	BillingSubscriptions           []*BillingSubscription `json:"billingSubscriptions,omitempty"`
-	HasPrivateProjectsSubscription *bool                  `json:"hasPrivateProjectsSubscription,omitempty"`
-	HasPaidSubscription            *bool                  `json:"hasPaidSubscription,omitempty"`
-	HasBillingPermissions          *bool                  `json:"hasBillingPermissions,omitempty"`
-	HasValidPaymentMethod          *bool                  `json:"hasValidPaymentMethod,omitempty"`
-	SeatsUsage                     *SeatsUsage            `json:"seatsUsage,omitempty"`
-	SubscriptionPreview            *SubscriptionPreview   `json:"subscriptionPreview,omitempty"`
-	CreditCards                    []*CreditCard          `json:"creditCards,omitempty"`
-	TrialPeriodEnd                 *time.Time             `json:"trialPeriodEnd,omitempty"`
-	RemainingSharedFiles           *int64                 `json:"remainingSharedFiles,omitempty"`
-	SocialAccounts                 []*Social              `json:"socialAccounts,omitempty"`
-	Forum                          *Forum                 `json:"forum,omitempty"`
-	FollowingCount                 *int64                 `json:"followingCount,omitempty"`
-	CanUpdate                      *bool                  `json:"canUpdate,omitempty"`
-	CanDelete                      *bool                  `json:"canDelete,omitempty"`
-	ParentSlug                     *string                `json:"parentSlug,omitempty"`
-	IsPrivate                      *bool                  `json:"isPrivate,omitempty"`
-	Content                        *Content               `json:"content,omitempty"`
-	ParentContent                  *Content               `json:"parentContent,omitempty"`
-	InSpace                        *Space                 `json:"inSpace,omitempty"`
-	ImageFallbackChar              *string                `json:"imageFallbackChar,omitempty"`
-	Commenters                     []*Profile             `json:"commenters,omitempty"`
-	PageViews                      *int64                 `json:"pageViews,omitempty"`
-	Projects                       *ProjectConnection     `json:"projects,omitempty"`
-	SharedFiles                    *SharedFileConnection  `json:"sharedFiles,omitempty"`
-	Stories                        *StoryConnection       `json:"stories,omitempty"`
-	Collections                    *CollectionConnection  `json:"collections,omitempty"`
-	Groups                         []*Group               `json:"groups,omitempty"`
-	Members                        *ProfileConnection     `json:"members,omitempty"`
-	ProjectsCount                  *int64                 `json:"projectsCount,omitempty"`
-	StoriesCount                   *int64                 `json:"storiesCount,omitempty"`
-	CollectionsCount               *int64                 `json:"collectionsCount,omitempty"`
-	ThreadsCount                   *int64                 `json:"threadsCount,omitempty"`
+	AvatarID                       *int64                 `json:"avatarId"`
+	Title                          *string                `json:"title"`
+	Description                    *string                `json:"description"`
+	OrganizationTypeID             *int64                 `json:"organizationTypeId"`
+	Manufacturer                   *Manufacturer          `json:"manufacturer"`
+	PreferedPlanID                 *int64                 `json:"preferedPlanId"`
+	IsConfirmed                    *string                `json:"isConfirmed"`
+	HasAvatar                      *string                `json:"hasAvatar"`
+	Avatar                         *File                  `json:"avatar"`
+	OrganizationType               *OrganizationType      `json:"organizationType"`
+	PreferedPlan                   *BillingPlan           `json:"preferedPlan"`
+	Creator                        *User                  `json:"creator"`
+	Followers                      *ProfileConnection     `json:"followers"`
+	Tags                           []*Tag                 `json:"tags"`
+	Comments                       *CommentConnection     `json:"comments"`
+	InviteLink                     *InviteLink            `json:"inviteLink"`
+	Invoices                       []*BillingInvoice      `json:"invoices"`
+	BillingSubscriptions           []*BillingSubscription `json:"billingSubscriptions"`
+	HasPrivateProjectsSubscription *bool                  `json:"hasPrivateProjectsSubscription"`
+	HasPaidSubscription            *bool                  `json:"hasPaidSubscription"`
+	HasBillingPermissions          *bool                  `json:"hasBillingPermissions"`
+	HasValidPaymentMethod          *bool                  `json:"hasValidPaymentMethod"`
+	SeatsUsage                     *SeatsUsage            `json:"seatsUsage"`
+	SubscriptionPreview            *SubscriptionPreview   `json:"subscriptionPreview"`
+	CreditCards                    []*CreditCard          `json:"creditCards"`
+	TrialPeriodEnd                 *time.Time             `json:"trialPeriodEnd"`
+	RemainingSharedFiles           *int64                 `json:"remainingSharedFiles"`
+	SocialAccounts                 []*Social              `json:"socialAccounts"`
+	Forum                          *Forum                 `json:"forum"`
+	FollowingCount                 *int64                 `json:"followingCount"`
+	CanUpdate                      *bool                  `json:"canUpdate"`
+	CanDelete                      *bool                  `json:"canDelete"`
+	ParentSlug                     *string                `json:"parentSlug"`
+	IsPrivate                      *bool                  `json:"isPrivate"`
+	Content                        *Content               `json:"content"`
+	ParentContent                  *Content               `json:"parentContent"`
+	InSpace                        *Space                 `json:"inSpace"`
+	ImageFallbackChar              *string                `json:"imageFallbackChar"`
+	Commenters                     []*Profile             `json:"commenters"`
+	PageViews                      *int64                 `json:"pageViews"`
+	Projects                       *ProjectConnection     `json:"projects"`
+	SharedFiles                    *SharedFileConnection  `json:"sharedFiles"`
+	Stories                        *StoryConnection       `json:"stories"`
+	Collections                    *CollectionConnection  `json:"collections"`
+	Groups                         []*Group               `json:"groups"`
+	Members                        *ProfileConnection     `json:"members"`
+	ProjectsCount                  *int64                 `json:"projectsCount"`
+	StoriesCount                   *int64                 `json:"storiesCount"`
+	CollectionsCount               *int64                 `json:"collectionsCount"`
+	ThreadsCount                   *int64                 `json:"threadsCount"`
 }
 
 func (FederatedInitiative) IsNode() {}
 
 type File struct {
 	ID                    string             `json:"id"`
-	Type                  *string            `json:"type,omitempty"`
-	Slug                  *string            `json:"slug,omitempty"`
+	Type                  *string            `json:"type"`
+	Slug                  *string            `json:"slug"`
 	CreatorID             int64              `json:"creatorId"`
-	CreatedInRegion       *string            `json:"createdInRegion,omitempty"`
-	SpaceID               *int64             `json:"spaceId,omitempty"`
-	DateCreated           *time.Time         `json:"dateCreated,omitempty"`
-	LastUpdated           *time.Time         `json:"lastUpdated,omitempty"`
-	Whitelabel            *string            `json:"whitelabel,omitempty"`
-	WhiteLabelOnlyContent *bool              `json:"whiteLabelOnlyContent,omitempty"`
-	LastCommentedAt       *time.Time         `json:"lastCommentedAt,omitempty"`
+	CreatedInRegion       *string            `json:"createdInRegion"`
+	SpaceID               *int64             `json:"spaceId"`
+	DateCreated           *time.Time         `json:"dateCreated"`
+	LastUpdated           *time.Time         `json:"lastUpdated"`
+	Whitelabel            *string            `json:"whitelabel"`
+	WhiteLabelOnlyContent *bool              `json:"whiteLabelOnlyContent"`
+	LastCommentedAt       *time.Time         `json:"lastCommentedAt"`
 	LastActivityAt        time.Time          `json:"lastActivityAt"`
-	CommentsCount         *int64             `json:"commentsCount,omitempty"`
-	LikesCount            *int64             `json:"likesCount,omitempty"`
-	FollowersCount        *int64             `json:"followersCount,omitempty"`
+	CommentsCount         *int64             `json:"commentsCount"`
+	LikesCount            *int64             `json:"likesCount"`
+	FollowersCount        *int64             `json:"followersCount"`
 	Score                 float64            `json:"score"`
 	PageviewsCount        int64              `json:"pageviewsCount"`
 	PublicRead            bool               `json:"publicRead"`
@@ -1575,51 +1567,50 @@ type File struct {
 	MimeType              string             `json:"mimeType"`
 	EncodingType          string             `json:"encodingType"`
 	Size                  float64            `json:"size"`
-	S3Size                *float64           `json:"s3Size,omitempty"`
-	FileLastModified      *time.Time         `json:"fileLastModified,omitempty"`
+	S3Size                *float64           `json:"s3Size"`
+	FileLastModified      *time.Time         `json:"fileLastModified"`
 	Completed             bool               `json:"completed"`
 	Cancelled             bool               `json:"cancelled"`
-	Private               *bool              `json:"private,omitempty"`
-	CopyOfID              *int64             `json:"copyOfId,omitempty"`
-	Source                *string            `json:"source,omitempty"`
-	Author                *string            `json:"author,omitempty"`
-	License               *string            `json:"license,omitempty"`
-	Md5                   *string            `json:"md5,omitempty"`
-	GitHash               *string            `json:"gitHash,omitempty"`
-	FeaturedIn            *string            `json:"featuredIn,omitempty"`
-	Creator               *User              `json:"creator,omitempty"`
-	Space                 *Space             `json:"space,omitempty"`
-	Followers             *ProfileConnection `json:"followers,omitempty"`
-	Tags                  []*Tag             `json:"tags,omitempty"`
-	Comments              *CommentConnection `json:"comments,omitempty"`
-	ContentType           *string            `json:"contentType,omitempty"`
-	ParentSlug            *string            `json:"parentSlug,omitempty"`
-	IsPrivate             *bool              `json:"isPrivate,omitempty"`
-	Description           *string            `json:"description,omitempty"`
-	Snippet               *string            `json:"snippet,omitempty"`
-	CanUpdate             *bool              `json:"canUpdate,omitempty"`
-	CanDelete             *bool              `json:"canDelete,omitempty"`
-	Content               *Content           `json:"content,omitempty"`
-	ParentContent         *Content           `json:"parentContent,omitempty"`
-	InSpace               *Space             `json:"inSpace,omitempty"`
-	Avatar                *File              `json:"avatar,omitempty"`
-	ImageFallbackChar     *string            `json:"imageFallbackChar,omitempty"`
-	Title                 *string            `json:"title,omitempty"`
-	Commenters            []*Profile         `json:"commenters,omitempty"`
-	PageViews             *int64             `json:"pageViews,omitempty"`
-	Path                  *string            `json:"path,omitempty"`
-	URL                   *string            `json:"url,omitempty"`
-	Permalink             *string            `json:"permalink,omitempty"`
-	UploadURL             *string            `json:"uploadUrl,omitempty"`
-	IsCopy                *bool              `json:"isCopy,omitempty"`
-	OriginalFile          *File              `json:"originalFile,omitempty"`
-	CanDownload           *bool              `json:"canDownload,omitempty"`
-	ConversionScstar      *FileConversion    `json:"conversionScstar,omitempty"`
-	ConversionGltftar     *FileConversion    `json:"conversionGltftar,omitempty"`
-	ConversionGltfdgraph  *FileConversion    `json:"conversionGltfdgraph,omitempty"`
-	ConversionGltfjson    *FileConversion    `json:"conversionGltfjson,omitempty"`
-	Conversion360Gif      *FileConversion    `json:"conversion360Gif,omitempty"`
-	Conversion360Video    *FileConversion    `json:"conversion360Video,omitempty"`
+	Private               *bool              `json:"private"`
+	CopyOfID              *int64             `json:"copyOfId"`
+	Source                *string            `json:"source"`
+	Author                *string            `json:"author"`
+	License               *string            `json:"license"`
+	Md5                   *string            `json:"md5"`
+	GitHash               *string            `json:"gitHash"`
+	Creator               *User              `json:"creator"`
+	Space                 *Space             `json:"space"`
+	Followers             *ProfileConnection `json:"followers"`
+	Tags                  []*Tag             `json:"tags"`
+	Comments              *CommentConnection `json:"comments"`
+	ContentType           *string            `json:"contentType"`
+	ParentSlug            *string            `json:"parentSlug"`
+	IsPrivate             *bool              `json:"isPrivate"`
+	Description           *string            `json:"description"`
+	Snippet               *string            `json:"snippet"`
+	CanUpdate             *bool              `json:"canUpdate"`
+	CanDelete             *bool              `json:"canDelete"`
+	Content               *Content           `json:"content"`
+	ParentContent         *Content           `json:"parentContent"`
+	InSpace               *Space             `json:"inSpace"`
+	Avatar                *File              `json:"avatar"`
+	ImageFallbackChar     *string            `json:"imageFallbackChar"`
+	Title                 *string            `json:"title"`
+	Commenters            []*Profile         `json:"commenters"`
+	PageViews             *int64             `json:"pageViews"`
+	Path                  *string            `json:"path"`
+	URL                   *string            `json:"url"`
+	Permalink             *string            `json:"permalink"`
+	UploadURL             *string            `json:"uploadUrl"`
+	IsCopy                *bool              `json:"isCopy"`
+	OriginalFile          *File              `json:"originalFile"`
+	CanDownload           *bool              `json:"canDownload"`
+	ConversionScstar      *FileConversion    `json:"conversionScstar"`
+	ConversionGltftar     *FileConversion    `json:"conversionGltftar"`
+	ConversionGltfdgraph  *FileConversion    `json:"conversionGltfdgraph"`
+	ConversionGltfjson    *FileConversion    `json:"conversionGltfjson"`
+	Conversion360Gif      *FileConversion    `json:"conversion360Gif"`
+	Conversion360Video    *FileConversion    `json:"conversion360Video"`
 }
 
 func (File) IsNode()             {}
@@ -1630,12 +1621,12 @@ type FileConversion struct {
 	ID              string    `json:"id"`
 	ViewerSemver    string    `json:"viewerSemver"`
 	ConversionType  string    `json:"conversionType"`
-	ConvertedFileID *int64    `json:"convertedFileId,omitempty"`
+	ConvertedFileID *int64    `json:"convertedFileId"`
 	DateCreated     time.Time `json:"dateCreated"`
-	ConvertedFile   *File     `json:"convertedFile,omitempty"`
-	Status          *string   `json:"status,omitempty"`
-	Buffers         []string  `json:"buffers,omitempty"`
-	OriginalFile    *File     `json:"originalFile,omitempty"`
+	ConvertedFile   *File     `json:"convertedFile"`
+	Status          *string   `json:"status"`
+	Buffers         []string  `json:"buffers"`
+	OriginalFile    *File     `json:"originalFile"`
 }
 
 func (FileConversion) IsNode() {}
@@ -1656,25 +1647,25 @@ type FileInput struct {
 }
 
 type FileMutation struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	File       *File        `json:"file,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	File       *File        `json:"file"`
 }
 
 type FileRequirement struct {
 	ID          string          `json:"id"`
-	For         Requirable      `json:"for,omitempty"`
-	Formats     []string        `json:"formats,omitempty"`
+	For         Requirable      `json:"for"`
+	Formats     []string        `json:"formats"`
 	Type        RequirementType `json:"type"`
-	Operator    *Operator       `json:"operator,omitempty"`
-	ValueInt    *int64          `json:"valueInt,omitempty"`
-	ValueFloat  *float64        `json:"valueFloat,omitempty"`
-	ValueString *string         `json:"valueString,omitempty"`
-	ValueBool   *bool           `json:"valueBool,omitempty"`
+	Operator    *Operator       `json:"operator"`
+	ValueInt    *int64          `json:"valueInt"`
+	ValueFloat  *float64        `json:"valueFloat"`
+	ValueString *string         `json:"valueString"`
+	ValueBool   *bool           `json:"valueBool"`
 }
 
 type FilterInput struct {
 	Field    string        `json:"field"`
-	Values   []*ValueInput `json:"values,omitempty"`
+	Values   []*ValueInput `json:"values"`
 	Operator Operator      `json:"operator"`
 }
 
@@ -1684,8 +1675,8 @@ type FollowInput struct {
 }
 
 type FollowMutation struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Content    *Content     `json:"content,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Content    *Content     `json:"content"`
 }
 
 type ForkProjectInput struct {
@@ -1695,8 +1686,8 @@ type ForkProjectInput struct {
 }
 
 type ForkProjectMutation struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Project    *Project     `json:"project,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Project    *Project     `json:"project"`
 }
 
 type Forum struct {
@@ -1706,32 +1697,31 @@ type Forum struct {
 	Description         string            `json:"description"`
 	ThreadsCount        int64             `json:"threadsCount"`
 	ThreadsCountPublic  int64             `json:"threadsCountPublic"`
-	FeaturedIn          *string           `json:"featuredIn,omitempty"`
-	Categories          []*Category       `json:"categories,omitempty"`
-	Pinned              []*Thread         `json:"pinned,omitempty"`
-	Threads             *ThreadConnection `json:"threads,omitempty"`
-	ParentContent       *Content          `json:"parentContent,omitempty"`
-	PrivateThreadsCount *int64            `json:"privateThreadsCount,omitempty"`
-	Name                *string           `json:"name,omitempty"`
-	IsMember            *bool             `json:"isMember,omitempty"`
+	Categories          []*Category       `json:"categories"`
+	Pinned              []*Thread         `json:"pinned"`
+	Threads             *ThreadConnection `json:"threads"`
+	ParentContent       *Content          `json:"parentContent"`
+	PrivateThreadsCount *int64            `json:"privateThreadsCount"`
+	Name                *string           `json:"name"`
+	IsMember            *bool             `json:"isMember"`
 }
 
 func (Forum) IsNode() {}
 
 type ForumConnection struct {
-	PageInfo   *PageInfo    `json:"pageInfo,omitempty"`
-	Edges      []*ForumEdge `json:"edges,omitempty"`
-	TotalCount *int64       `json:"totalCount,omitempty"`
+	PageInfo   PageInfo     `json:"pageInfo"`
+	Edges      []*ForumEdge `json:"edges"`
+	TotalCount *int64       `json:"totalCount"`
 }
 
 type ForumConnectionErrorHandler struct {
-	UserErrors []*UserError     `json:"userErrors,omitempty"`
-	Result     *ForumConnection `json:"result,omitempty"`
+	UserErrors []*UserError     `json:"userErrors"`
+	Result     *ForumConnection `json:"result"`
 }
 
 type ForumEdge struct {
 	// The item at the end of the edge
-	Node *Forum `json:"node,omitempty"`
+	Node *Forum `json:"node"`
 	// A cursor for use in pagination
 	Cursor string `json:"cursor"`
 }
@@ -1742,8 +1732,8 @@ type ForumInput struct {
 }
 
 type ForumMutation struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Forum      *Forum       `json:"forum,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Forum      *Forum       `json:"forum"`
 }
 
 type GeolocationInput struct {
@@ -1783,24 +1773,24 @@ type GetProductBuildsInput struct {
 }
 
 type Group struct {
-	Permissions *string `json:"permissions,omitempty"`
+	Permissions *string `json:"permissions"`
 	// The ID of the object.
 	ID             string                     `json:"id"`
-	Name           *string                    `json:"name,omitempty"`
-	SpaceID        *int64                     `json:"spaceId,omitempty"`
-	ParentID       *int64                     `json:"parentId,omitempty"`
+	Name           *string                    `json:"name"`
+	SpaceID        *int64                     `json:"spaceId"`
+	ParentID       *int64                     `json:"parentId"`
 	Level          int64                      `json:"level"`
-	Space          *Space                     `json:"space,omitempty"`
-	Parent         *Group                     `json:"parent,omitempty"`
-	Children       *AutoGroupConnection       `json:"children,omitempty"`
-	InviteLinks    *AutoInviteLinkConnection  `json:"inviteLinks,omitempty"`
-	GroupInvites   *AutoGroupInviteConnection `json:"groupInvites,omitempty"`
-	Members        []*GroupMember             `json:"members,omitempty"`
-	CanUpdate      *bool                      `json:"canUpdate,omitempty"`
-	CanDelete      *bool                      `json:"canDelete,omitempty"`
-	Content        ContentInterface           `json:"content,omitempty"`
-	CanAddMember   *bool                      `json:"canAddMember,omitempty"`
-	PendingInvites []*GroupInvite             `json:"pendingInvites,omitempty"`
+	Space          *Space                     `json:"space"`
+	Parent         *Group                     `json:"parent"`
+	Children       *AutoGroupConnection       `json:"children"`
+	InviteLinks    *AutoInviteLinkConnection  `json:"inviteLinks"`
+	GroupInvites   *AutoGroupInviteConnection `json:"groupInvites"`
+	Members        []*GroupMember             `json:"members"`
+	CanUpdate      *bool                      `json:"canUpdate"`
+	CanDelete      *bool                      `json:"canDelete"`
+	Content        ContentInterface           `json:"content"`
+	CanAddMember   *bool                      `json:"canAddMember"`
+	PendingInvites []*GroupInvite             `json:"pendingInvites"`
 }
 
 func (Group) IsNode() {}
@@ -1809,49 +1799,49 @@ type GroupInvite struct {
 	// The ID of the object.
 	ID                      string     `json:"id"`
 	GroupID                 int64      `json:"groupId"`
-	Status                  *string    `json:"status,omitempty"`
-	UserID                  *int64     `json:"userId,omitempty"`
-	Email                   *string    `json:"email,omitempty"`
-	InviterID               *int64     `json:"inviterId,omitempty"`
-	InviteDate              *time.Time `json:"inviteDate,omitempty"`
-	Info                    *string    `json:"info,omitempty"`
-	IntercomLeadID          *string    `json:"intercomLeadId,omitempty"`
-	Group                   *Group     `json:"group,omitempty"`
-	Username                *string    `json:"username,omitempty"`
-	Profile                 *Profile   `json:"profile,omitempty"`
-	MoreInvitesRequested    *bool      `json:"moreInvitesRequested,omitempty"`
-	InvitesLeft             *int64     `json:"invitesLeft,omitempty"`
-	GroupName               *string    `json:"groupName,omitempty"`
-	GroupSpaceType          *string    `json:"groupSpaceType,omitempty"`
-	GroupSpacePrivate       *bool      `json:"groupSpacePrivate,omitempty"`
-	GroupSpaceSlug          *string    `json:"groupSpaceSlug,omitempty"`
-	GroupSlug               *string    `json:"groupSlug,omitempty"`
-	GroupTitle              *string    `json:"groupTitle,omitempty"`
-	GroupDescriptionSnippet *string    `json:"groupDescriptionSnippet,omitempty"`
-	GroupAvatar             *File      `json:"groupAvatar,omitempty"`
+	Status                  *string    `json:"status"`
+	UserID                  *int64     `json:"userId"`
+	Email                   *string    `json:"email"`
+	InviterID               *int64     `json:"inviterId"`
+	InviteDate              *time.Time `json:"inviteDate"`
+	Info                    *string    `json:"info"`
+	IntercomLeadID          *string    `json:"intercomLeadId"`
+	Group                   *Group     `json:"group"`
+	Username                *string    `json:"username"`
+	Profile                 *Profile   `json:"profile"`
+	MoreInvitesRequested    *bool      `json:"moreInvitesRequested"`
+	InvitesLeft             *int64     `json:"invitesLeft"`
+	GroupName               *string    `json:"groupName"`
+	GroupSpaceType          *string    `json:"groupSpaceType"`
+	GroupSpacePrivate       *bool      `json:"groupSpacePrivate"`
+	GroupSpaceSlug          *string    `json:"groupSpaceSlug"`
+	GroupSlug               *string    `json:"groupSlug"`
+	GroupTitle              *string    `json:"groupTitle"`
+	GroupDescriptionSnippet *string    `json:"groupDescriptionSnippet"`
+	GroupAvatar             *File      `json:"groupAvatar"`
 }
 
-func (GroupInvite) IsNode()               {}
 func (GroupInvite) IsNotificationTarget() {}
+func (GroupInvite) IsNode()               {}
 
 type GroupMember struct {
 	GroupID      string      `json:"groupId"`
 	UserID       string      `json:"userId"`
 	Intrinsic    bool        `json:"intrinsic"`
-	InviteLinkID *int64      `json:"inviteLinkId,omitempty"`
-	Group        *Group      `json:"group,omitempty"`
-	InviteLink   *InviteLink `json:"inviteLink,omitempty"`
-	CanUpdate    *bool       `json:"canUpdate,omitempty"`
-	CanDelete    *bool       `json:"canDelete,omitempty"`
-	ID           *string     `json:"id,omitempty"`
-	Profile      *Profile    `json:"profile,omitempty"`
+	InviteLinkID *int64      `json:"inviteLinkId"`
+	Group        *Group      `json:"group"`
+	InviteLink   *InviteLink `json:"inviteLink"`
+	CanUpdate    *bool       `json:"canUpdate"`
+	CanDelete    *bool       `json:"canDelete"`
+	ID           *string     `json:"id"`
+	Profile      *Profile    `json:"profile"`
 }
 
 type HTMLNotification struct {
 	ID    string  `json:"id"`
-	HTML  *string `json:"html,omitempty"`
-	URL   *string `json:"url,omitempty"`
-	Level *string `json:"level,omitempty"`
+	HTML  *string `json:"html"`
+	URL   *string `json:"url"`
+	Level *string `json:"level"`
 }
 
 func (HTMLNotification) IsNotificationTarget() {}
@@ -1865,114 +1855,113 @@ type ImportProjectInput struct {
 }
 
 type ImportProjectMutation struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Project    *Project     `json:"project,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Project    *Project     `json:"project"`
 }
 
 type ImportStatus struct {
-	GeneralProgress *float64 `json:"generalProgress,omitempty"`
-	StatusProgress  *float64 `json:"statusProgress,omitempty"`
-	Status          *string  `json:"status,omitempty"`
-	ImportService   *string  `json:"importService,omitempty"`
+	GeneralProgress *float64 `json:"generalProgress"`
+	StatusProgress  *float64 `json:"statusProgress"`
+	Status          *string  `json:"status"`
+	ImportService   *string  `json:"importService"`
 }
 
 type Initiative struct {
 	ID                             string                 `json:"id"`
-	Type                           *string                `json:"type,omitempty"`
-	Slug                           *string                `json:"slug,omitempty"`
+	Type                           *string                `json:"type"`
+	Slug                           *string                `json:"slug"`
 	CreatorID                      int64                  `json:"creatorId"`
-	CreatedInRegion                *string                `json:"createdInRegion,omitempty"`
-	SpaceID                        *int64                 `json:"spaceId,omitempty"`
-	DateCreated                    *time.Time             `json:"dateCreated,omitempty"`
-	LastUpdated                    *time.Time             `json:"lastUpdated,omitempty"`
-	Whitelabel                     *string                `json:"whitelabel,omitempty"`
-	WhiteLabelOnlyContent          *bool                  `json:"whiteLabelOnlyContent,omitempty"`
-	LastCommentedAt                *time.Time             `json:"lastCommentedAt,omitempty"`
+	CreatedInRegion                *string                `json:"createdInRegion"`
+	SpaceID                        *int64                 `json:"spaceId"`
+	DateCreated                    *time.Time             `json:"dateCreated"`
+	LastUpdated                    *time.Time             `json:"lastUpdated"`
+	Whitelabel                     *string                `json:"whitelabel"`
+	WhiteLabelOnlyContent          *bool                  `json:"whiteLabelOnlyContent"`
+	LastCommentedAt                *time.Time             `json:"lastCommentedAt"`
 	LastActivityAt                 time.Time              `json:"lastActivityAt"`
-	CommentsCount                  *int64                 `json:"commentsCount,omitempty"`
-	LikesCount                     *int64                 `json:"likesCount,omitempty"`
-	FollowersCount                 *int64                 `json:"followersCount,omitempty"`
+	CommentsCount                  *int64                 `json:"commentsCount"`
+	LikesCount                     *int64                 `json:"likesCount"`
+	FollowersCount                 *int64                 `json:"followersCount"`
 	Score                          float64                `json:"score"`
 	PageviewsCount                 int64                  `json:"pageviewsCount"`
 	PublicRead                     bool                   `json:"publicRead"`
 	RegisteredRead                 bool                   `json:"registeredRead"`
-	CountryCode                    *string                `json:"countryCode,omitempty"`
-	TaxID                          *string                `json:"taxId,omitempty"`
+	CountryCode                    *string                `json:"countryCode"`
+	TaxID                          *string                `json:"taxId"`
 	ContentPtrID                   string                 `json:"contentPtrId"`
-	AvatarID                       *int64                 `json:"avatarId,omitempty"`
-	Title                          *string                `json:"title,omitempty"`
-	Description                    *string                `json:"description,omitempty"`
-	OrganizationTypeID             *int64                 `json:"organizationTypeId,omitempty"`
-	Manufacturer                   *Manufacturer          `json:"manufacturer,omitempty"`
-	PreferedPlanID                 *int64                 `json:"preferedPlanId,omitempty"`
-	IsConfirmed                    *string                `json:"isConfirmed,omitempty"`
-	HasAvatar                      *string                `json:"hasAvatar,omitempty"`
-	FeaturedIn                     *string                `json:"featuredIn,omitempty"`
-	Avatar                         *File                  `json:"avatar,omitempty"`
-	OrganizationType               *OrganizationType      `json:"organizationType,omitempty"`
-	PreferedPlan                   *BillingPlan           `json:"preferedPlan,omitempty"`
-	Creator                        *User                  `json:"creator,omitempty"`
-	Space                          *Space                 `json:"space,omitempty"`
-	Followers                      *ProfileConnection     `json:"followers,omitempty"`
-	Tags                           []*Tag                 `json:"tags,omitempty"`
-	Comments                       *CommentConnection     `json:"comments,omitempty"`
-	ContentType                    *string                `json:"contentType,omitempty"`
-	ParentSlug                     *string                `json:"parentSlug,omitempty"`
-	IsPrivate                      *bool                  `json:"isPrivate,omitempty"`
-	Snippet                        *string                `json:"snippet,omitempty"`
-	InviteLink                     *InviteLink            `json:"inviteLink,omitempty"`
-	Invoices                       []*BillingInvoice      `json:"invoices,omitempty"`
-	BillingSubscriptions           []*BillingSubscription `json:"billingSubscriptions,omitempty"`
-	HasPrivateProjectsSubscription *bool                  `json:"hasPrivateProjectsSubscription,omitempty"`
-	HasPaidSubscription            *bool                  `json:"hasPaidSubscription,omitempty"`
-	HasBillingPermissions          *bool                  `json:"hasBillingPermissions,omitempty"`
-	HasValidPaymentMethod          *bool                  `json:"hasValidPaymentMethod,omitempty"`
-	SeatsUsage                     *SeatsUsage            `json:"seatsUsage,omitempty"`
-	SubscriptionPreview            *SubscriptionPreview   `json:"subscriptionPreview,omitempty"`
-	CreditCards                    []*CreditCard          `json:"creditCards,omitempty"`
-	TrialPeriodEnd                 *time.Time             `json:"trialPeriodEnd,omitempty"`
-	RemainingSharedFiles           *int64                 `json:"remainingSharedFiles,omitempty"`
-	SocialAccounts                 []*Social              `json:"socialAccounts,omitempty"`
-	Forum                          *Forum                 `json:"forum,omitempty"`
-	FollowingCount                 *int64                 `json:"followingCount,omitempty"`
-	CanUpdate                      *bool                  `json:"canUpdate,omitempty"`
-	CanDelete                      *bool                  `json:"canDelete,omitempty"`
-	Content                        *Content               `json:"content,omitempty"`
-	ParentContent                  *Content               `json:"parentContent,omitempty"`
-	InSpace                        *Space                 `json:"inSpace,omitempty"`
-	ImageFallbackChar              *string                `json:"imageFallbackChar,omitempty"`
-	Commenters                     []*Profile             `json:"commenters,omitempty"`
-	PageViews                      *int64                 `json:"pageViews,omitempty"`
-	Projects                       *ProjectConnection     `json:"projects,omitempty"`
-	SharedFiles                    *SharedFileConnection  `json:"sharedFiles,omitempty"`
-	Stories                        *StoryConnection       `json:"stories,omitempty"`
-	Collections                    *CollectionConnection  `json:"collections,omitempty"`
-	Groups                         []*Group               `json:"groups,omitempty"`
-	Members                        *ProfileConnection     `json:"members,omitempty"`
-	ProjectsCount                  *int64                 `json:"projectsCount,omitempty"`
-	StoriesCount                   *int64                 `json:"storiesCount,omitempty"`
-	CollectionsCount               *int64                 `json:"collectionsCount,omitempty"`
-	ThreadsCount                   *int64                 `json:"threadsCount,omitempty"`
+	AvatarID                       *int64                 `json:"avatarId"`
+	Title                          *string                `json:"title"`
+	Description                    *string                `json:"description"`
+	OrganizationTypeID             *int64                 `json:"organizationTypeId"`
+	Manufacturer                   *Manufacturer          `json:"manufacturer"`
+	PreferedPlanID                 *int64                 `json:"preferedPlanId"`
+	IsConfirmed                    *string                `json:"isConfirmed"`
+	HasAvatar                      *string                `json:"hasAvatar"`
+	Avatar                         *File                  `json:"avatar"`
+	OrganizationType               *OrganizationType      `json:"organizationType"`
+	PreferedPlan                   *BillingPlan           `json:"preferedPlan"`
+	Creator                        *User                  `json:"creator"`
+	Space                          *Space                 `json:"space"`
+	Followers                      *ProfileConnection     `json:"followers"`
+	Tags                           []*Tag                 `json:"tags"`
+	Comments                       *CommentConnection     `json:"comments"`
+	ContentType                    *string                `json:"contentType"`
+	ParentSlug                     *string                `json:"parentSlug"`
+	IsPrivate                      *bool                  `json:"isPrivate"`
+	Snippet                        *string                `json:"snippet"`
+	InviteLink                     *InviteLink            `json:"inviteLink"`
+	Invoices                       []*BillingInvoice      `json:"invoices"`
+	BillingSubscriptions           []*BillingSubscription `json:"billingSubscriptions"`
+	HasPrivateProjectsSubscription *bool                  `json:"hasPrivateProjectsSubscription"`
+	HasPaidSubscription            *bool                  `json:"hasPaidSubscription"`
+	HasBillingPermissions          *bool                  `json:"hasBillingPermissions"`
+	HasValidPaymentMethod          *bool                  `json:"hasValidPaymentMethod"`
+	SeatsUsage                     *SeatsUsage            `json:"seatsUsage"`
+	SubscriptionPreview            *SubscriptionPreview   `json:"subscriptionPreview"`
+	CreditCards                    []*CreditCard          `json:"creditCards"`
+	TrialPeriodEnd                 *time.Time             `json:"trialPeriodEnd"`
+	RemainingSharedFiles           *int64                 `json:"remainingSharedFiles"`
+	SocialAccounts                 []*Social              `json:"socialAccounts"`
+	Forum                          *Forum                 `json:"forum"`
+	FollowingCount                 *int64                 `json:"followingCount"`
+	CanUpdate                      *bool                  `json:"canUpdate"`
+	CanDelete                      *bool                  `json:"canDelete"`
+	Content                        *Content               `json:"content"`
+	ParentContent                  *Content               `json:"parentContent"`
+	InSpace                        *Space                 `json:"inSpace"`
+	ImageFallbackChar              *string                `json:"imageFallbackChar"`
+	Commenters                     []*Profile             `json:"commenters"`
+	PageViews                      *int64                 `json:"pageViews"`
+	Projects                       *ProjectConnection     `json:"projects"`
+	SharedFiles                    *SharedFileConnection  `json:"sharedFiles"`
+	Stories                        *StoryConnection       `json:"stories"`
+	Collections                    *CollectionConnection  `json:"collections"`
+	Groups                         []*Group               `json:"groups"`
+	Members                        *ProfileConnection     `json:"members"`
+	ProjectsCount                  *int64                 `json:"projectsCount"`
+	StoriesCount                   *int64                 `json:"storiesCount"`
+	CollectionsCount               *int64                 `json:"collectionsCount"`
+	ThreadsCount                   *int64                 `json:"threadsCount"`
 }
 
+func (Initiative) IsNotificationTarget() {}
 func (Initiative) IsNode()               {}
 func (Initiative) IsContentInterface()   {}
-func (Initiative) IsNotificationTarget() {}
 
 type InitiativeConnection struct {
-	PageInfo   *PageInfo         `json:"pageInfo,omitempty"`
-	Edges      []*InitiativeEdge `json:"edges,omitempty"`
-	TotalCount *int64            `json:"totalCount,omitempty"`
+	PageInfo   PageInfo          `json:"pageInfo"`
+	Edges      []*InitiativeEdge `json:"edges"`
+	TotalCount *int64            `json:"totalCount"`
 }
 
 type InitiativeConnectionErrorHandler struct {
-	UserErrors []*UserError          `json:"userErrors,omitempty"`
-	Result     *InitiativeConnection `json:"result,omitempty"`
+	UserErrors []*UserError          `json:"userErrors"`
+	Result     *InitiativeConnection `json:"result"`
 }
 
 type InitiativeEdge struct {
 	// The item at the end of the edge
-	Node *Initiative `json:"node,omitempty"`
+	Node *Initiative `json:"node"`
 	// A cursor for use in pagination
 	Cursor string `json:"cursor"`
 }
@@ -1992,21 +1981,21 @@ type InitiativeInput struct {
 }
 
 type InitiativeMutation struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Initiative *Initiative  `json:"initiative,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Initiative *Initiative  `json:"initiative"`
 }
 
 type InitiativeProfileMutation struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Initiative *Initiative  `json:"initiative,omitempty"`
-	Profile    *Profile     `json:"profile,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Initiative *Initiative  `json:"initiative"`
+	Profile    *Profile     `json:"profile"`
 }
 
 type Intermediator struct {
 	ID          string               `json:"id"`
-	Initiative  *FederatedInitiative `json:"initiative,omitempty"`
-	Address     *Address             `json:"address,omitempty"`
-	CompanyName *string              `json:"companyName,omitempty"`
+	Initiative  *FederatedInitiative `json:"initiative"`
+	Address     *Address             `json:"address"`
+	CompanyName *string              `json:"companyName"`
 }
 
 func (Intermediator) IsNode()     {}
@@ -2016,29 +2005,29 @@ type InviteLink struct {
 	// The ID of the object.
 	ID        string         `json:"id"`
 	GroupID   int64          `json:"groupId"`
-	ExpiresAt *time.Time     `json:"expiresAt,omitempty"`
-	Accepted  []*GroupMember `json:"accepted,omitempty"`
-	Content   *Content       `json:"content,omitempty"`
-	URL       *string        `json:"url,omitempty"`
+	ExpiresAt *time.Time     `json:"expiresAt"`
+	Accepted  []*GroupMember `json:"accepted"`
+	Content   *Content       `json:"content"`
+	URL       *string        `json:"url"`
 }
 
 func (InviteLink) IsNode() {}
 
 type InviteUsersToGroup struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Group      *Group       `json:"group,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Group      *Group       `json:"group"`
 }
 
 type InviteUsersToSignup struct {
-	UserErrors  []*UserError   `json:"userErrors,omitempty"`
-	Result      *string        `json:"result,omitempty"`
-	Invites     []*GroupInvite `json:"invites,omitempty"`
-	InvitesLeft *int64         `json:"invitesLeft,omitempty"`
+	UserErrors  []*UserError   `json:"userErrors"`
+	Result      *string        `json:"result"`
+	Invites     []*GroupInvite `json:"invites"`
+	InvitesLeft *int64         `json:"invitesLeft"`
 }
 
 type InvitesRequest struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Result     *string      `json:"result,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Result     *string      `json:"result"`
 }
 
 type InvitesRequestInput struct {
@@ -2047,56 +2036,55 @@ type InvitesRequestInput struct {
 
 type Issue struct {
 	ID                    string             `json:"id"`
-	Type                  *string            `json:"type,omitempty"`
-	Slug                  *string            `json:"slug,omitempty"`
+	Type                  *string            `json:"type"`
+	Slug                  *string            `json:"slug"`
 	CreatorID             int64              `json:"creatorId"`
-	CreatedInRegion       *string            `json:"createdInRegion,omitempty"`
-	SpaceID               *int64             `json:"spaceId,omitempty"`
-	DateCreated           *time.Time         `json:"dateCreated,omitempty"`
-	LastUpdated           *time.Time         `json:"lastUpdated,omitempty"`
-	Whitelabel            *string            `json:"whitelabel,omitempty"`
-	WhiteLabelOnlyContent *bool              `json:"whiteLabelOnlyContent,omitempty"`
-	LastCommentedAt       *time.Time         `json:"lastCommentedAt,omitempty"`
+	CreatedInRegion       *string            `json:"createdInRegion"`
+	SpaceID               *int64             `json:"spaceId"`
+	DateCreated           *time.Time         `json:"dateCreated"`
+	LastUpdated           *time.Time         `json:"lastUpdated"`
+	Whitelabel            *string            `json:"whitelabel"`
+	WhiteLabelOnlyContent *bool              `json:"whiteLabelOnlyContent"`
+	LastCommentedAt       *time.Time         `json:"lastCommentedAt"`
 	LastActivityAt        time.Time          `json:"lastActivityAt"`
-	CommentsCount         *int64             `json:"commentsCount,omitempty"`
-	LikesCount            *int64             `json:"likesCount,omitempty"`
-	FollowersCount        *int64             `json:"followersCount,omitempty"`
+	CommentsCount         *int64             `json:"commentsCount"`
+	LikesCount            *int64             `json:"likesCount"`
+	FollowersCount        *int64             `json:"followersCount"`
 	Score                 float64            `json:"score"`
 	PageviewsCount        int64              `json:"pageviewsCount"`
 	PublicRead            bool               `json:"publicRead"`
 	RegisteredRead        bool               `json:"registeredRead"`
 	ContentPtrID          string             `json:"contentPtrId"`
-	Number                *int64             `json:"number,omitempty"`
-	Title                 *string            `json:"title,omitempty"`
-	Description           *string            `json:"description,omitempty"`
+	Number                *int64             `json:"number"`
+	Title                 *string            `json:"title"`
+	Description           *string            `json:"description"`
 	DescriptionWordCount  int64              `json:"descriptionWordCount"`
-	Status                *string            `json:"status,omitempty"`
+	Status                *string            `json:"status"`
 	ProjectID             int64              `json:"projectId"`
-	CanAppearOnHome       *string            `json:"canAppearOnHome,omitempty"`
-	FeaturedIn            *string            `json:"featuredIn,omitempty"`
-	Project               *Project           `json:"project,omitempty"`
-	Creator               *User              `json:"creator,omitempty"`
-	Space                 *Space             `json:"space,omitempty"`
-	Followers             *ProfileConnection `json:"followers,omitempty"`
-	Tags                  []*Tag             `json:"tags,omitempty"`
-	Comments              *CommentConnection `json:"comments,omitempty"`
-	ContentType           *string            `json:"contentType,omitempty"`
-	ParentSlug            *string            `json:"parentSlug,omitempty"`
-	IsPrivate             *bool              `json:"isPrivate,omitempty"`
-	Snippet               *string            `json:"snippet,omitempty"`
-	CanUpdate             *bool              `json:"canUpdate,omitempty"`
-	CanDelete             *bool              `json:"canDelete,omitempty"`
-	Content               *Content           `json:"content,omitempty"`
-	ParentContent         *Content           `json:"parentContent,omitempty"`
-	InSpace               *Space             `json:"inSpace,omitempty"`
-	Avatar                *File              `json:"avatar,omitempty"`
-	ImageFallbackChar     *string            `json:"imageFallbackChar,omitempty"`
-	Commenters            []*Profile         `json:"commenters,omitempty"`
-	PageViews             *int64             `json:"pageViews,omitempty"`
-	Labels                []*Label           `json:"labels,omitempty"`
-	Assignees             []*Profile         `json:"assignees,omitempty"`
-	CreatorProfile        *Profile           `json:"creatorProfile,omitempty"`
-	CanAddDeleteLabels    *bool              `json:"canAddDeleteLabels,omitempty"`
+	CanAppearOnHome       *string            `json:"canAppearOnHome"`
+	Project               *Project           `json:"project"`
+	Creator               *User              `json:"creator"`
+	Space                 *Space             `json:"space"`
+	Followers             *ProfileConnection `json:"followers"`
+	Tags                  []*Tag             `json:"tags"`
+	Comments              *CommentConnection `json:"comments"`
+	ContentType           *string            `json:"contentType"`
+	ParentSlug            *string            `json:"parentSlug"`
+	IsPrivate             *bool              `json:"isPrivate"`
+	Snippet               *string            `json:"snippet"`
+	CanUpdate             *bool              `json:"canUpdate"`
+	CanDelete             *bool              `json:"canDelete"`
+	Content               *Content           `json:"content"`
+	ParentContent         *Content           `json:"parentContent"`
+	InSpace               *Space             `json:"inSpace"`
+	Avatar                *File              `json:"avatar"`
+	ImageFallbackChar     *string            `json:"imageFallbackChar"`
+	Commenters            []*Profile         `json:"commenters"`
+	PageViews             *int64             `json:"pageViews"`
+	Labels                []*Label           `json:"labels"`
+	Assignees             []*Profile         `json:"assignees"`
+	CreatorProfile        *Profile           `json:"creatorProfile"`
+	CanAddDeleteLabels    *bool              `json:"canAddDeleteLabels"`
 }
 
 func (Issue) IsNode()               {}
@@ -2109,19 +2097,19 @@ type IssueAssigneeInput struct {
 }
 
 type IssueConnection struct {
-	PageInfo   *PageInfo    `json:"pageInfo,omitempty"`
-	Edges      []*IssueEdge `json:"edges,omitempty"`
-	TotalCount *int64       `json:"totalCount,omitempty"`
+	PageInfo   PageInfo     `json:"pageInfo"`
+	Edges      []*IssueEdge `json:"edges"`
+	TotalCount *int64       `json:"totalCount"`
 }
 
 type IssueConnectionErrorHandler struct {
-	UserErrors []*UserError     `json:"userErrors,omitempty"`
-	Result     *IssueConnection `json:"result,omitempty"`
+	UserErrors []*UserError     `json:"userErrors"`
+	Result     *IssueConnection `json:"result"`
 }
 
 type IssueEdge struct {
 	// The item at the end of the edge
-	Node *Issue `json:"node,omitempty"`
+	Node *Issue `json:"node"`
 	// A cursor for use in pagination
 	Cursor string `json:"cursor"`
 }
@@ -2144,17 +2132,17 @@ type IssueLabelInput struct {
 }
 
 type IssueMutation struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Issue      *Issue       `json:"issue,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Issue      *Issue       `json:"issue"`
 }
 
 type JobSpec struct {
 	ID              string   `json:"id"`
-	Build           *Build   `json:"build,omitempty"`
+	Build           Build    `json:"build"`
 	Quantity        int64    `json:"quantity"`
 	LeadTime        int64    `json:"leadTime"`
-	Quotes          []*Quote `json:"quotes,omitempty"`
-	ShippingAddress *Address `json:"shippingAddress,omitempty"`
+	Quotes          []*Quote `json:"quotes"`
+	ShippingAddress *Address `json:"shippingAddress"`
 }
 
 func (JobSpec) IsNode() {}
@@ -2162,14 +2150,14 @@ func (JobSpec) IsNode() {}
 type Label struct {
 	// The ID of the object.
 	ID          string   `json:"id"`
-	Name        *string  `json:"name,omitempty"`
-	Color       *string  `json:"color,omitempty"`
-	Restricted  *bool    `json:"restricted,omitempty"`
+	Name        *string  `json:"name"`
+	Color       *string  `json:"color"`
+	Restricted  *bool    `json:"restricted"`
 	ProjectID   int64    `json:"projectId"`
-	Project     *Project `json:"project,omitempty"`
-	CanUpdate   *bool    `json:"canUpdate,omitempty"`
-	CanDelete   *bool    `json:"canDelete,omitempty"`
-	CanBeUsedBy *bool    `json:"canBeUsedBy,omitempty"`
+	Project     *Project `json:"project"`
+	CanUpdate   *bool    `json:"canUpdate"`
+	CanDelete   *bool    `json:"canDelete"`
+	CanBeUsedBy *bool    `json:"canBeUsedBy"`
 }
 
 func (Label) IsNode() {}
@@ -2184,16 +2172,16 @@ type LabelInput struct {
 }
 
 type LabelMutation struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Label      *Label       `json:"label,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Label      *Label       `json:"label"`
 }
 
 type License struct {
-	Name        *string `json:"name,omitempty"`
-	Title       *string `json:"title,omitempty"`
-	Link        *string `json:"link,omitempty"`
-	IsHeader    *bool   `json:"isHeader,omitempty"`
-	Abreviation *string `json:"abreviation,omitempty"`
+	Name        *string `json:"name"`
+	Title       *string `json:"title"`
+	Link        *string `json:"link"`
+	IsHeader    *bool   `json:"isHeader"`
+	Abreviation *string `json:"abreviation"`
 }
 
 type LikeInput struct {
@@ -2202,27 +2190,27 @@ type LikeInput struct {
 }
 
 type LikeMutation struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Content    *Content     `json:"content,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Content    *Content     `json:"content"`
 }
 
 type LoggedInUser struct {
 	// The ID of the object.
 	ID                       string              `json:"id"`
-	Username                 *string             `json:"username,omitempty"`
-	Email                    *string             `json:"email,omitempty"`
-	Locale                   *string             `json:"locale,omitempty"`
-	Profile                  *Profile            `json:"profile,omitempty"`
-	EmailsEnabled            *bool               `json:"emailsEnabled,omitempty"`
-	AsSpace                  []*Space            `json:"asSpace,omitempty"`
-	PendingOperationProjects []*Project          `json:"pendingOperationProjects,omitempty"`
-	PendingInvites           []*GroupInvite      `json:"pendingInvites,omitempty"`
-	EmailsPreferences        []*EmailType        `json:"emailsPreferences,omitempty"`
-	NotificationCenter       *NotificationCenter `json:"notificationCenter,omitempty"`
-	IsStaff                  *bool               `json:"isStaff,omitempty"`
-	IsSuperuser              *bool               `json:"isSuperuser,omitempty"`
-	Flags                    *string             `json:"flags,omitempty"`
-	Source                   *string             `json:"source,omitempty"`
+	Username                 *string             `json:"username"`
+	Email                    *string             `json:"email"`
+	Locale                   *string             `json:"locale"`
+	Profile                  *Profile            `json:"profile"`
+	EmailsEnabled            *bool               `json:"emailsEnabled"`
+	AsSpace                  []*Space            `json:"asSpace"`
+	PendingOperationProjects []*Project          `json:"pendingOperationProjects"`
+	PendingInvites           []*GroupInvite      `json:"pendingInvites"`
+	EmailsPreferences        []*EmailType        `json:"emailsPreferences"`
+	NotificationCenter       *NotificationCenter `json:"notificationCenter"`
+	IsStaff                  *bool               `json:"isStaff"`
+	IsSuperuser              *bool               `json:"isSuperuser"`
+	Flags                    *string             `json:"flags"`
+	Source                   *string             `json:"source"`
 }
 
 func (LoggedInUser) IsNode() {}
@@ -2233,27 +2221,27 @@ type MakeDefaultPaymentMethodInput struct {
 }
 
 type MakeDefaultPaymentMethodMutation struct {
-	UserErrors    []*UserError `json:"userErrors,omitempty"`
-	PaymentMethod *CreditCard  `json:"paymentMethod,omitempty"`
+	UserErrors    []*UserError `json:"userErrors"`
+	PaymentMethod *CreditCard  `json:"paymentMethod"`
 }
 
 type Manufacturer struct {
 	ID           string               `json:"id"`
 	EnquiryEmail string               `json:"enquiryEmail"`
-	Initiative   *FederatedInitiative `json:"initiative,omitempty"`
-	Address      *Address             `json:"address,omitempty"`
-	CompanyName  *string              `json:"companyName,omitempty"`
-	ShipsTo      []string             `json:"shipsTo,omitempty"`
-	Telephone    *string              `json:"telephone,omitempty"`
-	FoundingYear *int64               `json:"foundingYear,omitempty"`
-	Industries   []string             `json:"industries,omitempty"`
-	NumEmployees *int64               `json:"numEmployees,omitempty"`
-	NumMachines  *int64               `json:"numMachines,omitempty"`
-	FileFormats  []string             `json:"fileFormats,omitempty"`
-	CaseStudies  []string             `json:"caseStudies,omitempty"`
-	CompanyType  []string             `json:"companyType,omitempty"`
-	Certificates []*Certificate       `json:"certificates,omitempty"`
-	Services     []*Service           `json:"services,omitempty"`
+	Initiative   *FederatedInitiative `json:"initiative"`
+	Address      *Address             `json:"address"`
+	CompanyName  *string              `json:"companyName"`
+	ShipsTo      []string             `json:"shipsTo"`
+	Telephone    *string              `json:"telephone"`
+	FoundingYear *int64               `json:"foundingYear"`
+	Industries   []string             `json:"industries"`
+	NumEmployees *int64               `json:"numEmployees"`
+	NumMachines  *int64               `json:"numMachines"`
+	FileFormats  []string             `json:"fileFormats"`
+	CaseStudies  []string             `json:"caseStudies"`
+	CompanyType  []string             `json:"companyType"`
+	Certificates []*Certificate       `json:"certificates"`
+	Services     []*Service           `json:"services"`
 }
 
 func (Manufacturer) IsNode() {}
@@ -2268,9 +2256,9 @@ type ManufacturerFilter struct {
 }
 
 type ManufacturerInitiativeProfileMutation struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Initiative *Initiative  `json:"initiative,omitempty"`
-	Profile    *Profile     `json:"profile,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Initiative *Initiative  `json:"initiative"`
+	Profile    *Profile     `json:"profile"`
 }
 
 type ManufacturerInput struct {
@@ -2292,27 +2280,27 @@ type ManufacturerInput struct {
 }
 
 type ManufacturerPage struct {
-	Nodes []*Manufacturer `json:"nodes,omitempty"`
+	Nodes []*Manufacturer `json:"nodes"`
 	Total int64           `json:"total"`
 }
 
 func (ManufacturerPage) IsPage() {}
 
 type MarkAllAsReadMutation struct {
-	UserErrors        []*UserError `json:"userErrors,omitempty"`
-	Result            *string      `json:"result,omitempty"`
-	PendingCount      *int64       `json:"pendingCount,omitempty"`
-	MarkedAsReadCount *int64       `json:"markedAsReadCount,omitempty"`
+	UserErrors        []*UserError `json:"userErrors"`
+	Result            *string      `json:"result"`
+	PendingCount      *int64       `json:"pendingCount"`
+	MarkedAsReadCount *int64       `json:"markedAsReadCount"`
 }
 
 type Material struct {
 	ID             string      `json:"id"`
 	Name           string      `json:"name"`
-	ParentMaterial *Material   `json:"parentMaterial,omitempty"`
-	ChildMaterials []*Material `json:"childMaterials,omitempty"`
+	ParentMaterial *Material   `json:"parentMaterial"`
+	ChildMaterials []*Material `json:"childMaterials"`
 	Count          int64       `json:"count"`
 	IsSelectable   bool        `json:"isSelectable"`
-	Options        []Option    `json:"options,omitempty"`
+	Options        []Option    `json:"options"`
 }
 
 func (Material) IsNode()       {}
@@ -2336,18 +2324,18 @@ type Message struct {
 	Body        string     `json:"body"`
 	Snippet     string     `json:"snippet"`
 	ContextID   string     `json:"contextId"`
-	ReferenceID *string    `json:"referenceId,omitempty"`
-	ResourceID  *string    `json:"resourceId,omitempty"`
-	TempKey     *string    `json:"tempKey,omitempty"`
-	CreatedBy   *User      `json:"createdBy,omitempty"`
-	UpdatedAt   *time.Time `json:"updatedAt,omitempty"`
+	ReferenceID *string    `json:"referenceId"`
+	ResourceID  *string    `json:"resourceId"`
+	TempKey     *string    `json:"tempKey"`
+	CreatedBy   *User      `json:"createdBy"`
+	UpdatedAt   *time.Time `json:"updatedAt"`
 	Timestamp   string     `json:"timestamp"`
 }
 
 func (Message) IsNode() {}
 
 type MessagePage struct {
-	Nodes []*Message `json:"nodes,omitempty"`
+	Nodes []*Message `json:"nodes"`
 	Total int64      `json:"total"`
 }
 
@@ -2356,16 +2344,16 @@ func (MessagePage) IsPage() {}
 type MinMaxOption struct {
 	ID        string            `json:"id"`
 	Name      string            `json:"name"`
-	For       Optionable        `json:"for,omitempty"`
+	For       Optionable        `json:"for"`
 	ValueType OptionValueType   `json:"valueType"`
 	Required  bool              `json:"required"`
 	Type      MinMaxType        `json:"type"`
 	Step      float64           `json:"step"`
-	Unit      *string           `json:"unit,omitempty"`
-	NilLabel  *string           `json:"nilLabel,omitempty"`
-	Prefix    *string           `json:"prefix,omitempty"`
-	Instances []*OptionInstance `json:"instances,omitempty"`
-	Values    []*OptionValue    `json:"values,omitempty"`
+	Unit      *string           `json:"unit"`
+	NilLabel  *string           `json:"nilLabel"`
+	Prefix    *string           `json:"prefix"`
+	Instances []*OptionInstance `json:"instances"`
+	Values    []*OptionValue    `json:"values"`
 }
 
 func (MinMaxOption) IsNode()       {}
@@ -2373,10 +2361,10 @@ func (MinMaxOption) IsOption()     {}
 func (MinMaxOption) IsRequirable() {}
 
 type MoveGroupInvite struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Result     *string      `json:"result,omitempty"`
-	FromGroup  *Group       `json:"fromGroup,omitempty"`
-	ToGroup    *Group       `json:"toGroup,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Result     *string      `json:"result"`
+	FromGroup  *Group       `json:"fromGroup"`
+	ToGroup    *Group       `json:"toGroup"`
 }
 
 type MoveGroupInviteInput struct {
@@ -2385,10 +2373,10 @@ type MoveGroupInviteInput struct {
 }
 
 type MoveGroupMember struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Result     *string      `json:"result,omitempty"`
-	FromGroup  *Group       `json:"fromGroup,omitempty"`
-	ToGroup    *Group       `json:"toGroup,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Result     *string      `json:"result"`
+	FromGroup  *Group       `json:"fromGroup"`
+	ToGroup    *Group       `json:"toGroup"`
 }
 
 type MoveGroupMemberInput struct {
@@ -2398,9 +2386,9 @@ type MoveGroupMemberInput struct {
 }
 
 type NewPassword struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Result     *string      `json:"result,omitempty"`
-	Msg        *string      `json:"msg,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Result     *string      `json:"result"`
+	Msg        *string      `json:"msg"`
 }
 
 type NewPasswordInput struct {
@@ -2411,29 +2399,29 @@ type NewPasswordInput struct {
 }
 
 type Notification struct {
-	ID     *string            `json:"id,omitempty"`
-	Type   *NotificationType  `json:"type,omitempty"`
-	When   *time.Time         `json:"when,omitempty"`
-	Author *Profile           `json:"author,omitempty"`
-	Target NotificationTarget `json:"target,omitempty"`
-	Read   *bool              `json:"read,omitempty"`
+	ID     *string            `json:"id"`
+	Type   *NotificationType  `json:"type"`
+	When   *time.Time         `json:"when"`
+	Author *Profile           `json:"author"`
+	Target NotificationTarget `json:"target"`
+	Read   *bool              `json:"read"`
 }
 
 type NotificationCenter struct {
-	ID            *string                 `json:"id,omitempty"`
-	PendingCount  *int64                  `json:"pendingCount,omitempty"`
-	Notifications *NotificationConnection `json:"notifications,omitempty"`
+	ID            *string                 `json:"id"`
+	PendingCount  *int64                  `json:"pendingCount"`
+	Notifications *NotificationConnection `json:"notifications"`
 }
 
 type NotificationConnection struct {
-	PageInfo   *PageInfo           `json:"pageInfo,omitempty"`
-	Edges      []*NotificationEdge `json:"edges,omitempty"`
-	TotalCount *int64              `json:"totalCount,omitempty"`
+	PageInfo   PageInfo            `json:"pageInfo"`
+	Edges      []*NotificationEdge `json:"edges"`
+	TotalCount *int64              `json:"totalCount"`
 }
 
 type NotificationEdge struct {
 	// The item at the end of the edge
-	Node *Notification `json:"node,omitempty"`
+	Node *Notification `json:"node"`
 	// A cursor for use in pagination
 	Cursor string `json:"cursor"`
 }
@@ -2447,19 +2435,19 @@ type OperationInput struct {
 }
 
 type OperationMutation struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Project    *Project     `json:"project,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Project    *Project     `json:"project"`
 }
 
 type OpsConnection struct {
-	PageInfo   *PageInfo  `json:"pageInfo,omitempty"`
-	Edges      []*OpsEdge `json:"edges,omitempty"`
-	TotalCount *int64     `json:"totalCount,omitempty"`
+	PageInfo   PageInfo   `json:"pageInfo"`
+	Edges      []*OpsEdge `json:"edges"`
+	TotalCount *int64     `json:"totalCount"`
 }
 
 type OpsEdge struct {
 	// The item at the end of the edge
-	Node *ContribOp `json:"node,omitempty"`
+	Node *ContribOp `json:"node"`
 	// A cursor for use in pagination
 	Cursor string `json:"cursor"`
 }
@@ -2471,15 +2459,15 @@ type OptionFilter struct {
 }
 
 type OptionInstance struct {
-	ID           string        `json:"id"`
-	Option       Option        `json:"option,omitempty"`
-	Manufacturer *Manufacturer `json:"manufacturer,omitempty"`
-	ForMaterial  *Material     `json:"ForMaterial,omitempty"`
-	ForProcess   *Process      `json:"ForProcess,omitempty"`
-	ValueInt     *int64        `json:"valueInt,omitempty"`
-	ValueFloat   *float64      `json:"valueFloat,omitempty"`
-	ValueString  *string       `json:"valueString,omitempty"`
-	ValueBool    *bool         `json:"valueBool,omitempty"`
+	ID           string       `json:"id"`
+	Option       Option       `json:"option"`
+	Manufacturer Manufacturer `json:"manufacturer"`
+	ForMaterial  *Material    `json:"ForMaterial"`
+	ForProcess   *Process     `json:"ForProcess"`
+	ValueInt     *int64       `json:"valueInt"`
+	ValueFloat   *float64     `json:"valueFloat"`
+	ValueString  *string      `json:"valueString"`
+	ValueBool    *bool        `json:"valueBool"`
 }
 
 func (OptionInstance) IsNode() {}
@@ -2492,38 +2480,38 @@ type OptionInstanceFilter struct {
 
 type OptionValue struct {
 	ID          string   `json:"id"`
-	Option      Option   `json:"option,omitempty"`
-	Default     *bool    `json:"default,omitempty"`
-	ValueInt    *int64   `json:"valueInt,omitempty"`
-	ValueFloat  *float64 `json:"valueFloat,omitempty"`
-	ValueString *string  `json:"valueString,omitempty"`
-	ValueBool   *bool    `json:"valueBool,omitempty"`
+	Option      Option   `json:"option"`
+	Default     *bool    `json:"default"`
+	ValueInt    *int64   `json:"valueInt"`
+	ValueFloat  *float64 `json:"valueFloat"`
+	ValueString *string  `json:"valueString"`
+	ValueBool   *bool    `json:"valueBool"`
 }
 
 type Order struct {
-	ID             string          `json:"id"`
-	Quote          *Quote          `json:"quote,omitempty"`
-	PaymentStatus  PaymentStatus   `json:"paymentStatus"`
-	OrderStatus    OrderStatus     `json:"orderStatus"`
-	Payments       []*Payment      `json:"payments,omitempty"`
-	ShippingDetail *ShippingDetail `json:"shippingDetail,omitempty"`
-	Supplier       Supplier        `json:"supplier,omitempty"`
-	Confirmation   *Confirmation   `json:"confirmation,omitempty"`
-	CreatedAt      time.Time       `json:"createdAt"`
+	ID             string         `json:"id"`
+	Quote          Quote          `json:"quote"`
+	PaymentStatus  PaymentStatus  `json:"paymentStatus"`
+	OrderStatus    OrderStatus    `json:"orderStatus"`
+	Payments       []*Payment     `json:"payments"`
+	ShippingDetail ShippingDetail `json:"shippingDetail"`
+	Supplier       Supplier       `json:"supplier"`
+	Confirmation   *Confirmation  `json:"confirmation"`
+	CreatedAt      time.Time      `json:"createdAt"`
 }
 
 func (Order) IsNode() {}
 
 type OrderPage struct {
-	Nodes []*Order `json:"nodes,omitempty"`
+	Nodes []*Order `json:"nodes"`
 	Total int64    `json:"total"`
 }
 
 func (OrderPage) IsPage() {}
 
 type OrganizationType struct {
-	ID   *string `json:"id,omitempty"`
-	Name *string `json:"name,omitempty"`
+	ID   *string `json:"id"`
+	Name *string `json:"name"`
 }
 
 type PageInfo struct {
@@ -2532,9 +2520,9 @@ type PageInfo struct {
 	// When paginating backwards, are there more items?
 	HasPreviousPage bool `json:"hasPreviousPage"`
 	// When paginating backwards, the cursor to continue.
-	StartCursor *string `json:"startCursor,omitempty"`
+	StartCursor *string `json:"startCursor"`
 	// When paginating forwards, the cursor to continue.
-	EndCursor *string `json:"endCursor,omitempty"`
+	EndCursor *string `json:"endCursor"`
 }
 
 type Part struct {
@@ -2542,21 +2530,21 @@ type Part struct {
 	SrcFileID string         `json:"srcFileId"`
 	CadID     string         `json:"cadId"`
 	Status    string         `json:"status"`
-	Error     *string        `json:"error,omitempty"`
-	File      *FederatedFile `json:"file,omitempty"`
+	Error     *string        `json:"error"`
+	File      *FederatedFile `json:"file"`
 }
 
 func (Part) IsNode() {}
 
 type Payment struct {
 	ID             string           `json:"id"`
-	For            *Order           `json:"for,omitempty"`
+	For            Order            `json:"for"`
 	Type           PaymentType      `json:"type"`
-	BillingAddress *BillingAddress  `json:"billingAddress,omitempty"`
-	Card           *CardInformation `json:"card,omitempty"`
-	Amount         *int64           `json:"amount,omitempty"`
-	Currency       *string          `json:"currency,omitempty"`
-	ReceiptURL     *string          `json:"receiptUrl,omitempty"`
+	BillingAddress BillingAddress   `json:"billingAddress"`
+	Card           *CardInformation `json:"card"`
+	Amount         *int64           `json:"amount"`
+	Currency       *string          `json:"currency"`
+	ReceiptURL     *string          `json:"receiptUrl"`
 	CreatedAt      time.Time        `json:"createdAt"`
 }
 
@@ -2569,23 +2557,23 @@ type PinInput struct {
 }
 
 type PinMutation struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Thread     *Thread      `json:"thread,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Thread     *Thread      `json:"thread"`
 }
 
 type Post struct {
 	// The ID of the object.
 	ID                    string             `json:"id"`
-	Type                  *string            `json:"type,omitempty"`
-	Slug                  *string            `json:"slug,omitempty"`
+	Type                  *string            `json:"type"`
+	Slug                  *string            `json:"slug"`
 	CreatorID             int64              `json:"creatorId"`
-	CreatedInRegion       *string            `json:"createdInRegion,omitempty"`
-	SpaceID               *int64             `json:"spaceId,omitempty"`
-	DateCreated           *time.Time         `json:"dateCreated,omitempty"`
-	LastUpdated           *time.Time         `json:"lastUpdated,omitempty"`
-	Whitelabel            *string            `json:"whitelabel,omitempty"`
-	WhiteLabelOnlyContent *bool              `json:"whiteLabelOnlyContent,omitempty"`
-	LastCommentedAt       *time.Time         `json:"lastCommentedAt,omitempty"`
+	CreatedInRegion       *string            `json:"createdInRegion"`
+	SpaceID               *int64             `json:"spaceId"`
+	DateCreated           *time.Time         `json:"dateCreated"`
+	LastUpdated           *time.Time         `json:"lastUpdated"`
+	Whitelabel            *string            `json:"whitelabel"`
+	WhiteLabelOnlyContent *bool              `json:"whiteLabelOnlyContent"`
+	LastCommentedAt       *time.Time         `json:"lastCommentedAt"`
 	LastActivityAt        time.Time          `json:"lastActivityAt"`
 	CommentsCount         int64              `json:"commentsCount"`
 	LikesCount            int64              `json:"likesCount"`
@@ -2595,47 +2583,46 @@ type Post struct {
 	PublicRead            bool               `json:"publicRead"`
 	RegisteredRead        bool               `json:"registeredRead"`
 	ContentPtrID          string             `json:"contentPtrId"`
-	Title                 *string            `json:"title,omitempty"`
+	Title                 *string            `json:"title"`
 	Msg                   string             `json:"msg"`
-	Source                *string            `json:"source,omitempty"`
-	URL                   *string            `json:"url,omitempty"`
-	ForumID               *float64           `json:"forumId,omitempty"`
-	CategoryID            *float64           `json:"categoryId,omitempty"`
+	Source                *string            `json:"source"`
+	URL                   *string            `json:"url"`
+	ForumID               *float64           `json:"forumId"`
+	CategoryID            *float64           `json:"categoryId"`
 	MembersOnly           bool               `json:"membersOnly"`
-	UpvoteCount           *int64             `json:"upvoteCount,omitempty"`
-	FeaturedIn            *string            `json:"featuredIn,omitempty"`
-	Creator               *User              `json:"creator,omitempty"`
-	Followers             *ProfileConnection `json:"followers,omitempty"`
-	Tags                  []*Tag             `json:"tags,omitempty"`
-	Upvotes               []*Upvote          `json:"upvotes,omitempty"`
-	Comments              *CommentConnection `json:"comments,omitempty"`
-	CanUpdate             *bool              `json:"canUpdate,omitempty"`
-	CanDelete             *bool              `json:"canDelete,omitempty"`
-	ParentSlug            *string            `json:"parentSlug,omitempty"`
-	IsPrivate             *bool              `json:"isPrivate,omitempty"`
-	Description           *string            `json:"description,omitempty"`
-	Content               *Content           `json:"content,omitempty"`
-	ParentContent         *Content           `json:"parentContent,omitempty"`
-	InSpace               *Space             `json:"inSpace,omitempty"`
-	Avatar                *File              `json:"avatar,omitempty"`
-	ImageFallbackChar     *string            `json:"imageFallbackChar,omitempty"`
-	Commenters            []*Profile         `json:"commenters,omitempty"`
-	PageViews             *int64             `json:"pageViews,omitempty"`
-	IsUpvoted             *bool              `json:"isUpvoted,omitempty"`
-	CreatorProfile        *Profile           `json:"creatorProfile,omitempty"`
+	UpvoteCount           *int64             `json:"upvoteCount"`
+	Creator               *User              `json:"creator"`
+	Followers             *ProfileConnection `json:"followers"`
+	Tags                  []*Tag             `json:"tags"`
+	Upvotes               []*Upvote          `json:"upvotes"`
+	Comments              *CommentConnection `json:"comments"`
+	CanUpdate             *bool              `json:"canUpdate"`
+	CanDelete             *bool              `json:"canDelete"`
+	ParentSlug            *string            `json:"parentSlug"`
+	IsPrivate             *bool              `json:"isPrivate"`
+	Description           *string            `json:"description"`
+	Content               *Content           `json:"content"`
+	ParentContent         *Content           `json:"parentContent"`
+	InSpace               *Space             `json:"inSpace"`
+	Avatar                *File              `json:"avatar"`
+	ImageFallbackChar     *string            `json:"imageFallbackChar"`
+	Commenters            []*Profile         `json:"commenters"`
+	PageViews             *int64             `json:"pageViews"`
+	IsUpvoted             *bool              `json:"isUpvoted"`
+	CreatorProfile        *Profile           `json:"creatorProfile"`
 }
 
 func (Post) IsNode() {}
 
 type PostConnection struct {
-	PageInfo   *PageInfo   `json:"pageInfo,omitempty"`
-	Edges      []*PostEdge `json:"edges,omitempty"`
-	TotalCount *int64      `json:"totalCount,omitempty"`
+	PageInfo   PageInfo    `json:"pageInfo"`
+	Edges      []*PostEdge `json:"edges"`
+	TotalCount *int64      `json:"totalCount"`
 }
 
 type PostEdge struct {
 	// The item at the end of the edge
-	Node *Post `json:"node,omitempty"`
+	Node *Post `json:"node"`
 	// A cursor for use in pagination
 	Cursor string `json:"cursor"`
 }
@@ -2651,18 +2638,18 @@ type PostInput struct {
 }
 
 type PostMutation struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Post       *Post        `json:"post,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Post       *Post        `json:"post"`
 }
 
 type Process struct {
 	ID             string     `json:"id"`
 	Name           string     `json:"name"`
-	ParentProcess  *Process   `json:"parentProcess,omitempty"`
-	ChildProcesses []*Process `json:"childProcesses,omitempty"`
+	ParentProcess  *Process   `json:"parentProcess"`
+	ChildProcesses []*Process `json:"childProcesses"`
 	Count          int64      `json:"count"`
 	IsSelectable   bool       `json:"isSelectable"`
-	Options        []Option   `json:"options,omitempty"`
+	Options        []Option   `json:"options"`
 }
 
 func (Process) IsNode()       {}
@@ -2683,23 +2670,23 @@ type ProcessInput struct {
 type ProductBuild struct {
 	ID           string               `json:"id"`
 	Name         string               `json:"name"`
-	Space        *Space               `json:"space,omitempty"`
-	AssemblyTree *ProductItem         `json:"assemblyTree,omitempty"`
-	AssemblyList []*ProductItem       `json:"assemblyList,omitempty"`
-	Builds       []*Build             `json:"builds,omitempty"`
-	Quantities   []*BuildWithQuantity `json:"quantities,omitempty"`
-	Releases     []*Release           `json:"releases,omitempty"`
+	Space        Space                `json:"space"`
+	AssemblyTree ProductItem          `json:"assemblyTree"`
+	AssemblyList []*ProductItem       `json:"assemblyList"`
+	Builds       []*Build             `json:"builds"`
+	Quantities   []*BuildWithQuantity `json:"quantities"`
+	Releases     []*Release           `json:"releases"`
 }
 
-func (ProductBuild) IsNode()        {}
 func (ProductBuild) IsProductNode() {}
+func (ProductBuild) IsNode()        {}
 
 type ProductItem struct {
 	ID        string         `json:"id"`
-	Transform []float64      `json:"transform,omitempty"`
-	Parent    ProductNode    `json:"parent,omitempty"`
-	Children  []*ProductItem `json:"children,omitempty"`
-	Build     *Build         `json:"build,omitempty"`
+	Transform []float64      `json:"transform"`
+	Parent    ProductNode    `json:"parent"`
+	Children  []*ProductItem `json:"children"`
+	Build     Build          `json:"build"`
 }
 
 func (ProductItem) IsNode()        {}
@@ -2707,100 +2694,99 @@ func (ProductItem) IsProductNode() {}
 
 type Profile struct {
 	ID                             string                  `json:"id"`
-	Type                           *string                 `json:"type,omitempty"`
-	Slug                           *string                 `json:"slug,omitempty"`
+	Type                           *string                 `json:"type"`
+	Slug                           *string                 `json:"slug"`
 	CreatorID                      int64                   `json:"creatorId"`
-	CreatedInRegion                *string                 `json:"createdInRegion,omitempty"`
-	SpaceID                        *int64                  `json:"spaceId,omitempty"`
-	DateCreated                    *time.Time              `json:"dateCreated,omitempty"`
-	LastUpdated                    *time.Time              `json:"lastUpdated,omitempty"`
-	Whitelabel                     *string                 `json:"whitelabel,omitempty"`
-	WhiteLabelOnlyContent          *bool                   `json:"whiteLabelOnlyContent,omitempty"`
-	LastCommentedAt                *time.Time              `json:"lastCommentedAt,omitempty"`
+	CreatedInRegion                *string                 `json:"createdInRegion"`
+	SpaceID                        *int64                  `json:"spaceId"`
+	DateCreated                    *time.Time              `json:"dateCreated"`
+	LastUpdated                    *time.Time              `json:"lastUpdated"`
+	Whitelabel                     *string                 `json:"whitelabel"`
+	WhiteLabelOnlyContent          *bool                   `json:"whiteLabelOnlyContent"`
+	LastCommentedAt                *time.Time              `json:"lastCommentedAt"`
 	LastActivityAt                 time.Time               `json:"lastActivityAt"`
-	CommentsCount                  *int64                  `json:"commentsCount,omitempty"`
-	LikesCount                     *int64                  `json:"likesCount,omitempty"`
-	FollowersCount                 *int64                  `json:"followersCount,omitempty"`
+	CommentsCount                  *int64                  `json:"commentsCount"`
+	LikesCount                     *int64                  `json:"likesCount"`
+	FollowersCount                 *int64                  `json:"followersCount"`
 	Score                          float64                 `json:"score"`
 	PageviewsCount                 int64                   `json:"pageviewsCount"`
 	PublicRead                     bool                    `json:"publicRead"`
 	RegisteredRead                 bool                    `json:"registeredRead"`
-	CountryCode                    *string                 `json:"countryCode,omitempty"`
-	TaxID                          *string                 `json:"taxId,omitempty"`
+	CountryCode                    *string                 `json:"countryCode"`
+	TaxID                          *string                 `json:"taxId"`
 	ContentPtrID                   string                  `json:"contentPtrId"`
-	AvatarID                       *int64                  `json:"avatarId,omitempty"`
-	Bio                            *string                 `json:"bio,omitempty"`
-	PreferredName                  *string                 `json:"preferredName,omitempty"`
-	UserTypeID                     *int64                  `json:"userTypeId,omitempty"`
-	IntentID                       *int64                  `json:"intentId,omitempty"`
+	AvatarID                       *int64                  `json:"avatarId"`
+	Bio                            *string                 `json:"bio"`
+	PreferredName                  *string                 `json:"preferredName"`
+	UserTypeID                     *int64                  `json:"userTypeId"`
+	IntentID                       *int64                  `json:"intentId"`
 	UserID                         int64                   `json:"userId"`
-	PreferedPlanID                 *int64                  `json:"preferedPlanId,omitempty"`
-	IsConfirmed                    *string                 `json:"isConfirmed,omitempty"`
-	HasAvatar                      *string                 `json:"hasAvatar,omitempty"`
-	HasBio                         *string                 `json:"hasBio,omitempty"`
-	FeaturedIn                     *string                 `json:"featuredIn,omitempty"`
-	Avatar                         *File                   `json:"avatar,omitempty"`
-	UserType                       *ProfileUserType        `json:"userType,omitempty"`
-	Intent                         *ProfileIntent          `json:"intent,omitempty"`
-	User                           *User                   `json:"user,omitempty"`
-	PreferedPlan                   *BillingPlan            `json:"preferedPlan,omitempty"`
-	Creator                        *User                   `json:"creator,omitempty"`
-	Space                          *Space                  `json:"space,omitempty"`
-	Followers                      *ProfileConnection      `json:"followers,omitempty"`
-	Tags                           []*Tag                  `json:"tags,omitempty"`
-	Comments                       *CommentConnection      `json:"comments,omitempty"`
-	ContentType                    *string                 `json:"contentType,omitempty"`
-	ParentSlug                     *string                 `json:"parentSlug,omitempty"`
-	IsPrivate                      *bool                   `json:"isPrivate,omitempty"`
-	Description                    *string                 `json:"description,omitempty"`
-	Snippet                        *string                 `json:"snippet,omitempty"`
-	Invoices                       []*BillingInvoice       `json:"invoices,omitempty"`
-	BillingSubscriptions           []*BillingSubscription  `json:"billingSubscriptions,omitempty"`
-	HasPrivateProjectsSubscription *bool                   `json:"hasPrivateProjectsSubscription,omitempty"`
-	HasPaidSubscription            *bool                   `json:"hasPaidSubscription,omitempty"`
-	HasBillingPermissions          *bool                   `json:"hasBillingPermissions,omitempty"`
-	HasValidPaymentMethod          *bool                   `json:"hasValidPaymentMethod,omitempty"`
-	SeatsUsage                     *SeatsUsage             `json:"seatsUsage,omitempty"`
-	SubscriptionPreview            *SubscriptionPreview    `json:"subscriptionPreview,omitempty"`
-	CreditCards                    []*CreditCard           `json:"creditCards,omitempty"`
-	TrialPeriodEnd                 *time.Time              `json:"trialPeriodEnd,omitempty"`
-	RemainingSharedFiles           *int64                  `json:"remainingSharedFiles,omitempty"`
-	SocialAccounts                 []*Social               `json:"socialAccounts,omitempty"`
-	Forum                          *Forum                  `json:"forum,omitempty"`
-	FollowingCount                 *int64                  `json:"followingCount,omitempty"`
-	CanUpdate                      *bool                   `json:"canUpdate,omitempty"`
-	CanDelete                      *bool                   `json:"canDelete,omitempty"`
-	Content                        *Content                `json:"content,omitempty"`
-	ParentContent                  *Content                `json:"parentContent,omitempty"`
-	InSpace                        *Space                  `json:"inSpace,omitempty"`
-	ImageFallbackChar              *string                 `json:"imageFallbackChar,omitempty"`
-	Title                          *string                 `json:"title,omitempty"`
-	Commenters                     []*Profile              `json:"commenters,omitempty"`
-	PageViews                      *int64                  `json:"pageViews,omitempty"`
-	Management                     *string                 `json:"management,omitempty"`
-	Username                       *string                 `json:"username,omitempty"`
-	Email                          *string                 `json:"email,omitempty"`
-	FullName                       *string                 `json:"fullName,omitempty"`
-	Locale                         *string                 `json:"locale,omitempty"`
-	InvitesLeft                    *int64                  `json:"invitesLeft,omitempty"`
-	ProfileConfirmed               *bool                   `json:"profileConfirmed,omitempty"`
-	Skills                         []*Tag                  `json:"skills,omitempty"`
-	Initiatives                    *InitiativeConnection   `json:"initiatives,omitempty"`
-	Projects                       *ProjectConnection      `json:"projects,omitempty"`
-	SharedFiles                    *SharedFileConnection   `json:"sharedFiles,omitempty"`
-	Threads                        *ThreadConnection       `json:"threads,omitempty"`
-	Stories                        *StoryConnection        `json:"stories,omitempty"`
-	Collections                    *CollectionConnection   `json:"collections,omitempty"`
-	Contributions                  *ContributionConnection `json:"contributions,omitempty"`
-	FollowingProfiles              *ProfileConnection      `json:"followingProfiles,omitempty"`
-	FollowingInitiatives           *InitiativeConnection   `json:"followingInitiatives,omitempty"`
-	FollowingChannels              *ChannelConnection      `json:"followingChannels,omitempty"`
-	FollowingProjects              *ProjectConnection      `json:"followingProjects,omitempty"`
-	ContributedProjects            *ProjectConnection      `json:"contributedProjects,omitempty"`
-	Teams                          []*GroupMember          `json:"teams,omitempty"`
-	ProjectsCount                  *int64                  `json:"projectsCount,omitempty"`
-	StoriesCount                   *int64                  `json:"storiesCount,omitempty"`
-	CollectionsCount               *int64                  `json:"collectionsCount,omitempty"`
+	PreferedPlanID                 *int64                  `json:"preferedPlanId"`
+	IsConfirmed                    *string                 `json:"isConfirmed"`
+	HasAvatar                      *string                 `json:"hasAvatar"`
+	HasBio                         *string                 `json:"hasBio"`
+	Avatar                         *File                   `json:"avatar"`
+	UserType                       *ProfileUserType        `json:"userType"`
+	Intent                         *ProfileIntent          `json:"intent"`
+	User                           *User                   `json:"user"`
+	PreferedPlan                   *BillingPlan            `json:"preferedPlan"`
+	Creator                        *User                   `json:"creator"`
+	Space                          *Space                  `json:"space"`
+	Followers                      *ProfileConnection      `json:"followers"`
+	Tags                           []*Tag                  `json:"tags"`
+	Comments                       *CommentConnection      `json:"comments"`
+	ContentType                    *string                 `json:"contentType"`
+	ParentSlug                     *string                 `json:"parentSlug"`
+	IsPrivate                      *bool                   `json:"isPrivate"`
+	Description                    *string                 `json:"description"`
+	Snippet                        *string                 `json:"snippet"`
+	Invoices                       []*BillingInvoice       `json:"invoices"`
+	BillingSubscriptions           []*BillingSubscription  `json:"billingSubscriptions"`
+	HasPrivateProjectsSubscription *bool                   `json:"hasPrivateProjectsSubscription"`
+	HasPaidSubscription            *bool                   `json:"hasPaidSubscription"`
+	HasBillingPermissions          *bool                   `json:"hasBillingPermissions"`
+	HasValidPaymentMethod          *bool                   `json:"hasValidPaymentMethod"`
+	SeatsUsage                     *SeatsUsage             `json:"seatsUsage"`
+	SubscriptionPreview            *SubscriptionPreview    `json:"subscriptionPreview"`
+	CreditCards                    []*CreditCard           `json:"creditCards"`
+	TrialPeriodEnd                 *time.Time              `json:"trialPeriodEnd"`
+	RemainingSharedFiles           *int64                  `json:"remainingSharedFiles"`
+	SocialAccounts                 []*Social               `json:"socialAccounts"`
+	Forum                          *Forum                  `json:"forum"`
+	FollowingCount                 *int64                  `json:"followingCount"`
+	CanUpdate                      *bool                   `json:"canUpdate"`
+	CanDelete                      *bool                   `json:"canDelete"`
+	Content                        *Content                `json:"content"`
+	ParentContent                  *Content                `json:"parentContent"`
+	InSpace                        *Space                  `json:"inSpace"`
+	ImageFallbackChar              *string                 `json:"imageFallbackChar"`
+	Title                          *string                 `json:"title"`
+	Commenters                     []*Profile              `json:"commenters"`
+	PageViews                      *int64                  `json:"pageViews"`
+	Management                     *string                 `json:"management"`
+	Username                       *string                 `json:"username"`
+	Email                          *string                 `json:"email"`
+	FullName                       *string                 `json:"fullName"`
+	Locale                         *string                 `json:"locale"`
+	InvitesLeft                    *int64                  `json:"invitesLeft"`
+	ProfileConfirmed               *bool                   `json:"profileConfirmed"`
+	Skills                         []*Tag                  `json:"skills"`
+	Initiatives                    *InitiativeConnection   `json:"initiatives"`
+	Projects                       *ProjectConnection      `json:"projects"`
+	SharedFiles                    *SharedFileConnection   `json:"sharedFiles"`
+	Threads                        *ThreadConnection       `json:"threads"`
+	Stories                        *StoryConnection        `json:"stories"`
+	Collections                    *CollectionConnection   `json:"collections"`
+	Contributions                  *ContributionConnection `json:"contributions"`
+	FollowingProfiles              *ProfileConnection      `json:"followingProfiles"`
+	FollowingInitiatives           *InitiativeConnection   `json:"followingInitiatives"`
+	FollowingChannels              *ChannelConnection      `json:"followingChannels"`
+	FollowingProjects              *ProjectConnection      `json:"followingProjects"`
+	ContributedProjects            *ProjectConnection      `json:"contributedProjects"`
+	Teams                          []*GroupMember          `json:"teams"`
+	ProjectsCount                  *int64                  `json:"projectsCount"`
+	StoriesCount                   *int64                  `json:"storiesCount"`
+	CollectionsCount               *int64                  `json:"collectionsCount"`
 }
 
 func (Profile) IsNode()               {}
@@ -2808,19 +2794,19 @@ func (Profile) IsContentInterface()   {}
 func (Profile) IsNotificationTarget() {}
 
 type ProfileConnection struct {
-	PageInfo   *PageInfo      `json:"pageInfo,omitempty"`
-	Edges      []*ProfileEdge `json:"edges,omitempty"`
-	TotalCount *int64         `json:"totalCount,omitempty"`
+	PageInfo   PageInfo       `json:"pageInfo"`
+	Edges      []*ProfileEdge `json:"edges"`
+	TotalCount *int64         `json:"totalCount"`
 }
 
 type ProfileConnectionErrorHandler struct {
-	UserErrors []*UserError       `json:"userErrors,omitempty"`
-	Result     *ProfileConnection `json:"result,omitempty"`
+	UserErrors []*UserError       `json:"userErrors"`
+	Result     *ProfileConnection `json:"result"`
 }
 
 type ProfileEdge struct {
 	// The item at the end of the edge
-	Node *Profile `json:"node,omitempty"`
+	Node *Profile `json:"node"`
 	// A cursor for use in pagination
 	Cursor string `json:"cursor"`
 }
@@ -2839,137 +2825,136 @@ type ProfileInput struct {
 }
 
 type ProfileIntent struct {
-	ID   *string `json:"id,omitempty"`
-	Name *string `json:"name,omitempty"`
+	ID   *string `json:"id"`
+	Name *string `json:"name"`
 }
 
 type ProfileUserType struct {
-	ID   *string `json:"id,omitempty"`
-	Name *string `json:"name,omitempty"`
+	ID   *string `json:"id"`
+	Name *string `json:"name"`
 }
 
 type Project struct {
 	ID                        string                  `json:"id"`
-	Type                      *string                 `json:"type,omitempty"`
-	Slug                      *string                 `json:"slug,omitempty"`
+	Type                      *string                 `json:"type"`
+	Slug                      *string                 `json:"slug"`
 	CreatorID                 int64                   `json:"creatorId"`
-	CreatedInRegion           *string                 `json:"createdInRegion,omitempty"`
-	SpaceID                   *int64                  `json:"spaceId,omitempty"`
-	DateCreated               *time.Time              `json:"dateCreated,omitempty"`
-	LastUpdated               *time.Time              `json:"lastUpdated,omitempty"`
-	Whitelabel                *string                 `json:"whitelabel,omitempty"`
-	WhiteLabelOnlyContent     *bool                   `json:"whiteLabelOnlyContent,omitempty"`
-	LastCommentedAt           *time.Time              `json:"lastCommentedAt,omitempty"`
+	CreatedInRegion           *string                 `json:"createdInRegion"`
+	SpaceID                   *int64                  `json:"spaceId"`
+	DateCreated               *time.Time              `json:"dateCreated"`
+	LastUpdated               *time.Time              `json:"lastUpdated"`
+	Whitelabel                *string                 `json:"whitelabel"`
+	WhiteLabelOnlyContent     *bool                   `json:"whiteLabelOnlyContent"`
+	LastCommentedAt           *time.Time              `json:"lastCommentedAt"`
 	LastActivityAt            time.Time               `json:"lastActivityAt"`
-	CommentsCount             *int64                  `json:"commentsCount,omitempty"`
-	LikesCount                *int64                  `json:"likesCount,omitempty"`
-	FollowersCount            *int64                  `json:"followersCount,omitempty"`
+	CommentsCount             *int64                  `json:"commentsCount"`
+	LikesCount                *int64                  `json:"likesCount"`
+	FollowersCount            *int64                  `json:"followersCount"`
 	Score                     float64                 `json:"score"`
 	PageviewsCount            int64                   `json:"pageviewsCount"`
 	PublicRead                bool                    `json:"publicRead"`
 	RegisteredRead            bool                    `json:"registeredRead"`
 	ContentPtrID              string                  `json:"contentPtrId"`
-	Name                      *string                 `json:"name,omitempty"`
-	Description               *string                 `json:"description,omitempty"`
-	ImageID                   *int64                  `json:"imageId,omitempty"`
-	License                   *License                `json:"license,omitempty"`
-	ContributionCount         *int64                  `json:"contributionCount,omitempty"`
+	Name                      *string                 `json:"name"`
+	Description               *string                 `json:"description"`
+	ImageID                   *int64                  `json:"imageId"`
+	License                   *License                `json:"license"`
+	ContributionCount         *int64                  `json:"contributionCount"`
 	ArchiveDownloadCount      int64                   `json:"archiveDownloadCount"`
 	ContextID                 int64                   `json:"contextId"`
 	ProjectType               ProjectType             `json:"projectType"`
-	ImportStatus              *ImportStatus           `json:"importStatus,omitempty"`
-	ImportJobID               *string                 `json:"importJobId,omitempty"`
-	SlackThreadTs             *string                 `json:"slackThreadTs,omitempty"`
+	ImportStatus              *ImportStatus           `json:"importStatus"`
+	ImportJobID               *string                 `json:"importJobId"`
+	SlackThreadTs             *string                 `json:"slackThreadTs"`
 	SlackContributionThreadTs string                  `json:"slackContributionThreadTs"`
-	HasImage                  *string                 `json:"hasImage,omitempty"`
-	CanAppearOnHome           *string                 `json:"canAppearOnHome,omitempty"`
-	HasContributions          *string                 `json:"hasContributions,omitempty"`
-	StarCount                 *int64                  `json:"starCount,omitempty"`
-	IsExactForkCopy           *string                 `json:"isExactForkCopy,omitempty"`
-	HeadContribution          *string                 `json:"headContribution,omitempty"`
-	FeaturedIn                *string                 `json:"featuredIn,omitempty"`
-	Image                     *File                   `json:"image,omitempty"`
-	Phase                     *ProjectPhase           `json:"phase,omitempty"`
-	Context                   *Context                `json:"context,omitempty"`
-	Creator                   *User                   `json:"creator,omitempty"`
-	Space                     *Space                  `json:"space,omitempty"`
-	Followers                 *ProfileConnection      `json:"followers,omitempty"`
-	Tags                      []*Tag                  `json:"tags,omitempty"`
-	Collections               []*Collection           `json:"collections,omitempty"`
-	Comments                  *CommentConnection      `json:"comments,omitempty"`
-	Contributions             *ContributionConnection `json:"contributions,omitempty"`
-	ContentType               *string                 `json:"contentType,omitempty"`
-	ParentSlug                *string                 `json:"parentSlug,omitempty"`
-	IsPrivate                 *bool                   `json:"isPrivate,omitempty"`
-	Snippet                   *string                 `json:"snippet,omitempty"`
-	InviteLink                *InviteLink             `json:"inviteLink,omitempty"`
-	SocialAccounts            []*Social               `json:"socialAccounts,omitempty"`
-	Forum                     *Forum                  `json:"forum,omitempty"`
-	FollowingCount            *int64                  `json:"followingCount,omitempty"`
-	CanUpdate                 *bool                   `json:"canUpdate,omitempty"`
-	CanDelete                 *bool                   `json:"canDelete,omitempty"`
-	Content                   *Content                `json:"content,omitempty"`
-	ParentContent             *Content                `json:"parentContent,omitempty"`
-	InSpace                   *Space                  `json:"inSpace,omitempty"`
-	Avatar                    *File                   `json:"avatar,omitempty"`
-	ImageFallbackChar         *string                 `json:"imageFallbackChar,omitempty"`
-	Title                     *string                 `json:"title,omitempty"`
-	Commenters                []*Profile              `json:"commenters,omitempty"`
-	PageViews                 *int64                  `json:"pageViews,omitempty"`
-	DescriptionSnippet        *string                 `json:"descriptionSnippet,omitempty"`
-	Private                   *bool                   `json:"private,omitempty"`
-	ForkedFrom                *DiffInfo               `json:"forkedFrom,omitempty"`
-	PendingOperations         []*ContribOp            `json:"pendingOperations,omitempty"`
-	Conflicts                 []*Conflict             `json:"conflicts,omitempty"`
-	ConflictsParent           *string                 `json:"conflictsParent,omitempty"`
-	ContributionUpstream      *Contribution           `json:"contributionUpstream,omitempty"`
-	LastZipGenerated          *bool                   `json:"lastZipGenerated,omitempty"`
-	FilesInfo                 *ProjectFilesInfo       `json:"filesInfo,omitempty"`
-	Tracker                   *Tracker                `json:"tracker,omitempty"`
-	CreatorProfile            *Profile                `json:"creatorProfile,omitempty"`
-	IsStarred                 *bool                   `json:"isStarred,omitempty"`
-	ForkCount                 *int64                  `json:"forkCount,omitempty"`
-	Contribution              *Contribution           `json:"contribution,omitempty"`
-	Contributors              *ProfileConnection      `json:"contributors,omitempty"`
-	FileHistory               *OpsConnection          `json:"fileHistory,omitempty"`
+	HasImage                  *string                 `json:"hasImage"`
+	HeadContribution          *string                 `json:"headContribution"`
+	CanAppearOnHome           *string                 `json:"canAppearOnHome"`
+	StarCount                 *int64                  `json:"starCount"`
+	HasContributions          *string                 `json:"hasContributions"`
+	IsExactForkCopy           *string                 `json:"isExactForkCopy"`
+	Image                     *File                   `json:"image"`
+	Phase                     *ProjectPhase           `json:"phase"`
+	Context                   *Context                `json:"context"`
+	Creator                   *User                   `json:"creator"`
+	Space                     *Space                  `json:"space"`
+	Followers                 *ProfileConnection      `json:"followers"`
+	Tags                      []*Tag                  `json:"tags"`
+	Collections               []*Collection           `json:"collections"`
+	Comments                  *CommentConnection      `json:"comments"`
+	Contributions             *ContributionConnection `json:"contributions"`
+	ContentType               *string                 `json:"contentType"`
+	ParentSlug                *string                 `json:"parentSlug"`
+	IsPrivate                 *bool                   `json:"isPrivate"`
+	Snippet                   *string                 `json:"snippet"`
+	InviteLink                *InviteLink             `json:"inviteLink"`
+	SocialAccounts            []*Social               `json:"socialAccounts"`
+	Forum                     *Forum                  `json:"forum"`
+	FollowingCount            *int64                  `json:"followingCount"`
+	CanUpdate                 *bool                   `json:"canUpdate"`
+	CanDelete                 *bool                   `json:"canDelete"`
+	Content                   *Content                `json:"content"`
+	ParentContent             *Content                `json:"parentContent"`
+	InSpace                   *Space                  `json:"inSpace"`
+	Avatar                    *File                   `json:"avatar"`
+	ImageFallbackChar         *string                 `json:"imageFallbackChar"`
+	Title                     *string                 `json:"title"`
+	Commenters                []*Profile              `json:"commenters"`
+	PageViews                 *int64                  `json:"pageViews"`
+	DescriptionSnippet        *string                 `json:"descriptionSnippet"`
+	Private                   *bool                   `json:"private"`
+	ForkedFrom                *DiffInfo               `json:"forkedFrom"`
+	PendingOperations         []*ContribOp            `json:"pendingOperations"`
+	Conflicts                 []*Conflict             `json:"conflicts"`
+	ConflictsParent           *string                 `json:"conflictsParent"`
+	ContributionUpstream      *Contribution           `json:"contributionUpstream"`
+	LastZipGenerated          *bool                   `json:"lastZipGenerated"`
+	FilesInfo                 *ProjectFilesInfo       `json:"filesInfo"`
+	Tracker                   *Tracker                `json:"tracker"`
+	CreatorProfile            *Profile                `json:"creatorProfile"`
+	IsStarred                 *bool                   `json:"isStarred"`
+	ForkCount                 *int64                  `json:"forkCount"`
+	Contribution              *Contribution           `json:"contribution"`
+	Contributors              *ProfileConnection      `json:"contributors"`
+	FileHistory               *OpsConnection          `json:"fileHistory"`
 }
 
+func (Project) IsNotificationTarget() {}
 func (Project) IsNode()               {}
 func (Project) IsContentInterface()   {}
-func (Project) IsNotificationTarget() {}
 
 type ProjectConnection struct {
-	PageInfo   *PageInfo      `json:"pageInfo,omitempty"`
-	Edges      []*ProjectEdge `json:"edges,omitempty"`
-	TotalCount *int64         `json:"totalCount,omitempty"`
+	PageInfo   PageInfo       `json:"pageInfo"`
+	Edges      []*ProjectEdge `json:"edges"`
+	TotalCount *int64         `json:"totalCount"`
 }
 
 type ProjectConnectionErrorHandler struct {
-	UserErrors []*UserError       `json:"userErrors,omitempty"`
-	Result     *ProjectConnection `json:"result,omitempty"`
+	UserErrors []*UserError       `json:"userErrors"`
+	Result     *ProjectConnection `json:"result"`
 }
 
 type ProjectEdge struct {
 	// The item at the end of the edge
-	Node *Project `json:"node,omitempty"`
+	Node *Project `json:"node"`
 	// A cursor for use in pagination
 	Cursor string `json:"cursor"`
 }
 
 type ProjectFilesInfo struct {
-	TotalFiles         *int64   `json:"totalFiles,omitempty"`
-	EcadFiles          *int64   `json:"ecadFiles,omitempty"`
-	McadFiles          *int64   `json:"mcadFiles,omitempty"`
-	ImageFiles         *int64   `json:"imageFiles,omitempty"`
-	DataFiles          *int64   `json:"dataFiles,omitempty"`
-	DocumentFiles      *int64   `json:"documentFiles,omitempty"`
-	OtherFiles         *int64   `json:"otherFiles,omitempty"`
-	EcadProportion     *float64 `json:"ecadProportion,omitempty"`
-	McadProportion     *float64 `json:"mcadProportion,omitempty"`
-	ImageProportion    *float64 `json:"imageProportion,omitempty"`
-	DataProportion     *float64 `json:"dataProportion,omitempty"`
-	DocumentProportion *float64 `json:"documentProportion,omitempty"`
-	OtherProportion    *float64 `json:"otherProportion,omitempty"`
+	TotalFiles         *int64   `json:"totalFiles"`
+	EcadFiles          *int64   `json:"ecadFiles"`
+	McadFiles          *int64   `json:"mcadFiles"`
+	ImageFiles         *int64   `json:"imageFiles"`
+	DataFiles          *int64   `json:"dataFiles"`
+	DocumentFiles      *int64   `json:"documentFiles"`
+	OtherFiles         *int64   `json:"otherFiles"`
+	EcadProportion     *float64 `json:"ecadProportion"`
+	McadProportion     *float64 `json:"mcadProportion"`
+	ImageProportion    *float64 `json:"imageProportion"`
+	DataProportion     *float64 `json:"dataProportion"`
+	DocumentProportion *float64 `json:"documentProportion"`
+	OtherProportion    *float64 `json:"otherProportion"`
 }
 
 type ProjectInput struct {
@@ -2989,15 +2974,15 @@ type ProjectInput struct {
 }
 
 type ProjectMutation struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Project    *Project     `json:"project,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Project    *Project     `json:"project"`
 }
 
 type ProjectPhase struct {
-	ID    *string `json:"id,omitempty"`
-	Name  *string `json:"name,omitempty"`
-	Color *string `json:"color,omitempty"`
-	Order *int64  `json:"order,omitempty"`
+	ID    *string `json:"id"`
+	Name  *string `json:"name"`
+	Color *string `json:"color"`
+	Order *int64  `json:"order"`
 }
 
 type ProjectVisibilityInput struct {
@@ -3009,33 +2994,33 @@ type ProjectVisibilityInput struct {
 }
 
 type ProjectVisibilityMutation struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Result     *string      `json:"result,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Result     *string      `json:"result"`
 }
 
 type Quote struct {
-	ID                string           `json:"id"`
-	For               *JobSpec         `json:"for,omitempty"`
-	From              *RequestForQuote `json:"from,omitempty"`
-	Supplier          Supplier         `json:"supplier,omitempty"`
-	Cost              int64            `json:"cost"`
-	Currency          string           `json:"currency"`
-	ValidUntil        time.Time        `json:"validUntil"`
-	ShippingQuote     *ShippingQuote   `json:"shippingQuote,omitempty"`
-	Orders            []*Order         `json:"orders,omitempty"`
-	RejectReason      *string          `json:"rejectReason,omitempty"`
-	RejectDescription *string          `json:"rejectDescription,omitempty"`
-	Notes             *string          `json:"notes,omitempty"`
-	IsEstimated       bool             `json:"isEstimated"`
-	IsVoid            bool             `json:"isVoid"`
-	CreatedBy         Supplier         `json:"createdBy,omitempty"`
-	CreatedAt         time.Time        `json:"createdAt"`
+	ID                string          `json:"id"`
+	For               JobSpec         `json:"for"`
+	From              RequestForQuote `json:"from"`
+	Supplier          Supplier        `json:"supplier"`
+	Cost              int64           `json:"cost"`
+	Currency          string          `json:"currency"`
+	ValidUntil        time.Time       `json:"validUntil"`
+	ShippingQuote     ShippingQuote   `json:"shippingQuote"`
+	Orders            []*Order        `json:"orders"`
+	RejectReason      *string         `json:"rejectReason"`
+	RejectDescription *string         `json:"rejectDescription"`
+	Notes             *string         `json:"notes"`
+	IsEstimated       bool            `json:"isEstimated"`
+	IsVoid            bool            `json:"isVoid"`
+	CreatedBy         Supplier        `json:"createdBy"`
+	CreatedAt         time.Time       `json:"createdAt"`
 }
 
 func (Quote) IsNode() {}
 
 type QuotePage struct {
-	Nodes []*Quote `json:"nodes,omitempty"`
+	Nodes []*Quote `json:"nodes"`
 	Total int64    `json:"total"`
 }
 
@@ -3046,8 +3031,8 @@ type ReadMessageInput struct {
 }
 
 type RejectInvite struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Result     *string      `json:"result,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Result     *string      `json:"result"`
 }
 
 type RejectInviteInput struct {
@@ -3061,52 +3046,52 @@ type RejectQuoteInput struct {
 }
 
 type Release struct {
-	ID           string        `json:"id"`
-	Tag          string        `json:"tag"`
-	ProductBuild *ProductBuild `json:"productBuild,omitempty"`
+	ID           string       `json:"id"`
+	Tag          string       `json:"tag"`
+	ProductBuild ProductBuild `json:"productBuild"`
 }
 
 func (Release) IsNode() {}
 
 type RemoveUserFromGroup struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Group      *Group       `json:"group,omitempty"`
-	Result     *string      `json:"result,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Group      *Group       `json:"group"`
+	Result     *string      `json:"result"`
 }
 
 type RequestForQuote struct {
 	ID                   string               `json:"id"`
 	State                RequestForQuoteState `json:"state"`
 	Type                 RequestForQuoteType  `json:"type"`
-	JobSpec              *JobSpec             `json:"jobSpec,omitempty"`
-	IntermediatorSession *Session             `json:"intermediatorSession,omitempty"`
-	Sessions             []*Session           `json:"sessions,omitempty"`
-	Quotes               []*Quote             `json:"quotes,omitempty"`
-	QuotingPriorityData  *string              `json:"quotingPriorityData,omitempty"`
-	QuotesNeededBy       *time.Time           `json:"quotesNeededBy,omitempty"`
-	EstimatedAwardDate   *time.Time           `json:"estimatedAwardDate,omitempty"`
-	FileRequirements     []*FileRequirement   `json:"fileRequirements,omitempty"`
-	CustomerSpace        *Space               `json:"customerSpace,omitempty"`
+	JobSpec              JobSpec              `json:"jobSpec"`
+	IntermediatorSession *Session             `json:"intermediatorSession"`
+	Sessions             []*Session           `json:"sessions"`
+	Quotes               []*Quote             `json:"quotes"`
+	QuotingPriorityData  *string              `json:"quotingPriorityData"`
+	QuotesNeededBy       *time.Time           `json:"quotesNeededBy"`
+	EstimatedAwardDate   *time.Time           `json:"estimatedAwardDate"`
+	FileRequirements     []*FileRequirement   `json:"fileRequirements"`
+	CustomerSpace        Space                `json:"customerSpace"`
 	CreatedAt            time.Time            `json:"createdAt"`
 }
 
 func (RequestForQuote) IsNode() {}
 
 type RequestForQuotePage struct {
-	Nodes []*RequestForQuote `json:"nodes,omitempty"`
+	Nodes []*RequestForQuote `json:"nodes"`
 	Total int64              `json:"total"`
 }
 
 func (RequestForQuotePage) IsPage() {}
 
 type RequestResetPassword struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Result     *string      `json:"result,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Result     *string      `json:"result"`
 }
 
 type ResendInvite struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Result     *string      `json:"result,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Result     *string      `json:"result"`
 }
 
 type ResendInviteInput struct {
@@ -3119,30 +3104,30 @@ type ResetContributionInput struct {
 }
 
 type ResetContributionMutation struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Project    *Project     `json:"project,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Project    *Project     `json:"project"`
 }
 
 type SearchResult struct {
-	Profiles    *ProfileConnection    `json:"profiles,omitempty"`
-	Projects    *ProjectConnection    `json:"projects,omitempty"`
-	Initiatives *InitiativeConnection `json:"initiatives,omitempty"`
-	Stories     *StoryConnection      `json:"stories,omitempty"`
-	Collections *CollectionConnection `json:"collections,omitempty"`
-	Threads     *ThreadConnection     `json:"threads,omitempty"`
-	Channels    *ChannelConnection    `json:"channels,omitempty"`
+	Profiles    *ProfileConnection    `json:"profiles"`
+	Projects    *ProjectConnection    `json:"projects"`
+	Initiatives *InitiativeConnection `json:"initiatives"`
+	Stories     *StoryConnection      `json:"stories"`
+	Collections *CollectionConnection `json:"collections"`
+	Threads     *ThreadConnection     `json:"threads"`
+	Channels    *ChannelConnection    `json:"channels"`
 }
 
 type SeatsUsage struct {
-	ID                *string `json:"id,omitempty"`
-	UsedSpaceSeats    *int64  `json:"usedSpaceSeats,omitempty"`
-	UsedProjectsSeats *int64  `json:"usedProjectsSeats,omitempty"`
-	UsedInvitesSeats  *int64  `json:"usedInvitesSeats,omitempty"`
-	UnusedSeats       *int64  `json:"unusedSeats,omitempty"`
-	IncludedPlanSeats *int64  `json:"includedPlanSeats,omitempty"`
-	PurchasedSeats    *int64  `json:"purchasedSeats,omitempty"`
-	TotalSubSeats     *int64  `json:"totalSubSeats,omitempty"`
-	SeatsChange       *int64  `json:"seatsChange,omitempty"`
+	ID                *string `json:"id"`
+	UsedSpaceSeats    *int64  `json:"usedSpaceSeats"`
+	UsedProjectsSeats *int64  `json:"usedProjectsSeats"`
+	UsedInvitesSeats  *int64  `json:"usedInvitesSeats"`
+	UnusedSeats       *int64  `json:"unusedSeats"`
+	IncludedPlanSeats *int64  `json:"includedPlanSeats"`
+	PurchasedSeats    *int64  `json:"purchasedSeats"`
+	TotalSubSeats     *int64  `json:"totalSubSeats"`
+	SeatsChange       *int64  `json:"seatsChange"`
 }
 
 type SelectedOptionValueInput struct {
@@ -3160,15 +3145,15 @@ type SelectedValueInput struct {
 type SelectionOption struct {
 	ID        string            `json:"id"`
 	Name      string            `json:"name"`
-	For       Optionable        `json:"for,omitempty"`
+	For       Optionable        `json:"for"`
 	ValueType OptionValueType   `json:"valueType"`
 	Required  bool              `json:"required"`
-	Order     *string           `json:"order,omitempty"`
-	Unit      *string           `json:"unit,omitempty"`
-	NilLabel  *string           `json:"nilLabel,omitempty"`
-	Prefix    *string           `json:"prefix,omitempty"`
-	Instances []*OptionInstance `json:"instances,omitempty"`
-	Values    []*OptionValue    `json:"values,omitempty"`
+	Order     *string           `json:"order"`
+	Unit      *string           `json:"unit"`
+	NilLabel  *string           `json:"nilLabel"`
+	Prefix    *string           `json:"prefix"`
+	Instances []*OptionInstance `json:"instances"`
+	Values    []*OptionValue    `json:"values"`
 }
 
 func (SelectionOption) IsNode()       {}
@@ -3176,10 +3161,10 @@ func (SelectionOption) IsOption()     {}
 func (SelectionOption) IsRequirable() {}
 
 type Service struct {
-	ID       string    `json:"id"`
-	IsActive bool      `json:"isActive"`
-	Process  *Process  `json:"process,omitempty"`
-	Material *Material `json:"material,omitempty"`
+	ID       string   `json:"id"`
+	IsActive bool     `json:"isActive"`
+	Process  Process  `json:"process"`
+	Material Material `json:"material"`
 }
 
 func (Service) IsNode() {}
@@ -3191,29 +3176,29 @@ type ServiceFilter struct {
 }
 
 type ServiceInstance struct {
-	ID           string        `json:"id"`
-	IsArchived   bool          `json:"isArchived"`
-	Service      *Service      `json:"service,omitempty"`
-	Manufacturer *Manufacturer `json:"manufacturer,omitempty"`
+	ID           string       `json:"id"`
+	IsArchived   bool         `json:"isArchived"`
+	Service      Service      `json:"service"`
+	Manufacturer Manufacturer `json:"manufacturer"`
 }
 
 func (ServiceInstance) IsNode() {}
 
 type ServicePage struct {
-	Nodes []*Service `json:"nodes,omitempty"`
+	Nodes []*Service `json:"nodes"`
 	Total int64      `json:"total"`
 }
 
 func (ServicePage) IsPage() {}
 
 type Session struct {
-	ID              string           `json:"id"`
-	Supplier        Supplier         `json:"supplier,omitempty"`
-	State           SessionState     `json:"state"`
-	RequestForQuote *RequestForQuote `json:"requestForQuote,omitempty"`
-	JobSpecs        []*JobSpec       `json:"jobSpecs,omitempty"`
-	ShareFile       *SharedFile      `json:"shareFile,omitempty"`
-	CreatedAt       time.Time        `json:"createdAt"`
+	ID              string          `json:"id"`
+	Supplier        Supplier        `json:"supplier"`
+	State           SessionState    `json:"state"`
+	RequestForQuote RequestForQuote `json:"requestForQuote"`
+	JobSpecs        []*JobSpec      `json:"jobSpecs"`
+	ShareFile       *SharedFile     `json:"shareFile"`
+	CreatedAt       time.Time       `json:"createdAt"`
 }
 
 func (Session) IsNode() {}
@@ -3225,7 +3210,7 @@ type SessionFilterInput struct {
 }
 
 type SessionPage struct {
-	Nodes []*Session `json:"nodes,omitempty"`
+	Nodes []*Session `json:"nodes"`
 	Total int64      `json:"total"`
 }
 
@@ -3233,67 +3218,67 @@ func (SessionPage) IsPage() {}
 
 type SharedFile struct {
 	ID        string                        `json:"id"`
-	Name      *string                       `json:"name,omitempty"`
-	Revision  *SharedFileRevision           `json:"revision,omitempty"`
-	Revisions *SharedFileRevisionConnection `json:"revisions,omitempty"`
-	Groups    []*Group                      `json:"groups,omitempty"`
-	Creator   *User                         `json:"creator,omitempty"`
-	Context   *Context                      `json:"context,omitempty"`
-	Space     *Space                        `json:"space,omitempty"`
-	InSpace   *Space                        `json:"inSpace,omitempty"`
-	CanUpdate *bool                         `json:"canUpdate,omitempty"`
-	CanDelete *bool                         `json:"canDelete,omitempty"`
-	IsPrivate *bool                         `json:"isPrivate,omitempty"`
-	Slug      *string                       `json:"slug,omitempty"`
-	FirstFile *File                         `json:"firstFile,omitempty"`
+	Name      *string                       `json:"name"`
+	Revision  *SharedFileRevision           `json:"revision"`
+	Revisions *SharedFileRevisionConnection `json:"revisions"`
+	Groups    []*Group                      `json:"groups"`
+	Creator   *User                         `json:"creator"`
+	Context   *Context                      `json:"context"`
+	Space     *Space                        `json:"space"`
+	InSpace   *Space                        `json:"inSpace"`
+	CanUpdate *bool                         `json:"canUpdate"`
+	CanDelete *bool                         `json:"canDelete"`
+	IsPrivate *bool                         `json:"isPrivate"`
+	Slug      *string                       `json:"slug"`
+	FirstFile *File                         `json:"firstFile"`
 }
 
 func (SharedFile) IsNode() {}
 
 type SharedFileConnection struct {
-	PageInfo   *PageInfo         `json:"pageInfo,omitempty"`
-	Edges      []*SharedFileEdge `json:"edges,omitempty"`
-	TotalCount *int64            `json:"totalCount,omitempty"`
+	PageInfo   PageInfo          `json:"pageInfo"`
+	Edges      []*SharedFileEdge `json:"edges"`
+	TotalCount *int64            `json:"totalCount"`
 }
 
 type SharedFileEdge struct {
 	// The item at the end of the edge
-	Node *SharedFile `json:"node,omitempty"`
+	Node *SharedFile `json:"node"`
 	// A cursor for use in pagination
 	Cursor string `json:"cursor"`
 }
 
 type SharedFileRevision struct {
 	ID             string     `json:"id"`
-	Version        *string    `json:"version,omitempty"`
-	DateCreated    *time.Time `json:"dateCreated,omitempty"`
-	LastUpdated    *time.Time `json:"lastUpdated,omitempty"`
-	Title          *string    `json:"title,omitempty"`
-	SharedFileName *string    `json:"sharedFileName,omitempty"`
-	Creator        *User      `json:"creator,omitempty"`
-	File           *File      `json:"file,omitempty"`
+	Version        *string    `json:"version"`
+	DateCreated    *time.Time `json:"dateCreated"`
+	LastUpdated    *time.Time `json:"lastUpdated"`
+	Title          *string    `json:"title"`
+	SharedFileName *string    `json:"sharedFileName"`
+	Creator        *User      `json:"creator"`
+	File           *File      `json:"file"`
 }
 
 func (SharedFileRevision) IsNode() {}
 
 type SharedFileRevisionConnection struct {
-	PageInfo   *PageInfo                 `json:"pageInfo,omitempty"`
-	Edges      []*SharedFileRevisionEdge `json:"edges,omitempty"`
-	TotalCount *int64                    `json:"totalCount,omitempty"`
+	PageInfo   PageInfo                  `json:"pageInfo"`
+	Edges      []*SharedFileRevisionEdge `json:"edges"`
+	TotalCount *int64                    `json:"totalCount"`
 }
 
 type SharedFileRevisionEdge struct {
 	// The item at the end of the edge
-	Node *SharedFileRevision `json:"node,omitempty"`
+	Node *SharedFileRevision `json:"node"`
 	// A cursor for use in pagination
 	Cursor string `json:"cursor"`
 }
 
 type ShippingDetail struct {
-	ID             string   `json:"id"`
-	Address        *Address `json:"address,omitempty"`
-	Provider       *string  `json:"provider,omitempty"`
-	TrackingNumber *string  `json:"trackingNumber,omitempty"`
+	ID             string  `json:"id"`
+	Address        Address `json:"address"`
+	Provider       *string `json:"provider"`
+	TrackingNumber *string `json:"trackingNumber"`
 }
 
 func (ShippingDetail) IsNode() {}
@@ -3304,7 +3289,7 @@ type ShippingQuote struct {
 	Currency       string  `json:"currency"`
 	Cost           int64   `json:"cost"`
 	DeliveryTime   int64   `json:"deliveryTime"`
-	Provider       *string `json:"provider,omitempty"`
+	Provider       *string `json:"provider"`
 }
 
 func (ShippingQuote) IsNode() {}
@@ -3338,8 +3323,8 @@ type SignupInviteInput struct {
 }
 
 type SignupRequest struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Result     *string      `json:"result,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Result     *string      `json:"result"`
 }
 
 type SignupRequestInput struct {
@@ -3350,9 +3335,9 @@ type SignupRequestInput struct {
 type Skill struct {
 	// The ID of the object.
 	ID          string  `json:"id"`
-	Content     *string `json:"content,omitempty"`
-	DisplayName *string `json:"displayName,omitempty"`
-	SkillType   *string `json:"skillType,omitempty"`
+	Content     *string `json:"content"`
+	DisplayName *string `json:"displayName"`
+	SkillType   *string `json:"skillType"`
 }
 
 func (Skill) IsNode() {}
@@ -3364,15 +3349,15 @@ type SlugInput struct {
 }
 
 type SlugUnique struct {
-	Value  *string `json:"value,omitempty"`
-	Unique *bool   `json:"unique,omitempty"`
+	Value  *string `json:"value"`
+	Unique *bool   `json:"unique"`
 }
 
 type Social struct {
 	// The ID of the object.
 	ID          string  `json:"id"`
-	AccountName *string `json:"accountName,omitempty"`
-	AccountType *string `json:"accountType,omitempty"`
+	AccountName *string `json:"accountName"`
+	AccountType *string `json:"accountType"`
 }
 
 func (Social) IsNode() {}
@@ -3387,89 +3372,88 @@ type SocialAccountInput struct {
 type Space struct {
 	// The ID of the object.
 	ID                             string     `json:"id"`
-	Parent                         *Space     `json:"parent,omitempty"`
-	Content                        *Content   `json:"content,omitempty"`
-	SpaceType                      *string    `json:"spaceType,omitempty"`
-	HasPrivateProjectsSubscription *bool      `json:"hasPrivateProjectsSubscription,omitempty"`
-	HasPaidSubscription            *bool      `json:"hasPaidSubscription,omitempty"`
-	HasBillingPermissions          *bool      `json:"hasBillingPermissions,omitempty"`
-	HasValidPaymentMethod          *bool      `json:"hasValidPaymentMethod,omitempty"`
-	TrialPeriodEnd                 *time.Time `json:"trialPeriodEnd,omitempty"`
-	RemainingSharedFiles           *int64     `json:"remainingSharedFiles,omitempty"`
-	WhichTypes                     []*string  `json:"whichTypes,omitempty"`
+	Parent                         *Space     `json:"parent"`
+	Content                        *Content   `json:"content"`
+	SpaceType                      *string    `json:"spaceType"`
+	HasPrivateProjectsSubscription *bool      `json:"hasPrivateProjectsSubscription"`
+	HasPaidSubscription            *bool      `json:"hasPaidSubscription"`
+	HasBillingPermissions          *bool      `json:"hasBillingPermissions"`
+	HasValidPaymentMethod          *bool      `json:"hasValidPaymentMethod"`
+	TrialPeriodEnd                 *time.Time `json:"trialPeriodEnd"`
+	RemainingSharedFiles           *int64     `json:"remainingSharedFiles"`
+	WhichTypes                     []*string  `json:"whichTypes"`
 }
 
 func (Space) IsNode() {}
 
 type Story struct {
 	ID                    string             `json:"id"`
-	Type                  *string            `json:"type,omitempty"`
-	Slug                  *string            `json:"slug,omitempty"`
+	Type                  *string            `json:"type"`
+	Slug                  *string            `json:"slug"`
 	CreatorID             int64              `json:"creatorId"`
-	CreatedInRegion       *string            `json:"createdInRegion,omitempty"`
-	SpaceID               *int64             `json:"spaceId,omitempty"`
-	DateCreated           *time.Time         `json:"dateCreated,omitempty"`
-	LastUpdated           *time.Time         `json:"lastUpdated,omitempty"`
-	Whitelabel            *string            `json:"whitelabel,omitempty"`
-	WhiteLabelOnlyContent *bool              `json:"whiteLabelOnlyContent,omitempty"`
-	LastCommentedAt       *time.Time         `json:"lastCommentedAt,omitempty"`
+	CreatedInRegion       *string            `json:"createdInRegion"`
+	SpaceID               *int64             `json:"spaceId"`
+	DateCreated           *time.Time         `json:"dateCreated"`
+	LastUpdated           *time.Time         `json:"lastUpdated"`
+	Whitelabel            *string            `json:"whitelabel"`
+	WhiteLabelOnlyContent *bool              `json:"whiteLabelOnlyContent"`
+	LastCommentedAt       *time.Time         `json:"lastCommentedAt"`
 	LastActivityAt        time.Time          `json:"lastActivityAt"`
-	CommentsCount         *int64             `json:"commentsCount,omitempty"`
-	LikesCount            *int64             `json:"likesCount,omitempty"`
-	FollowersCount        *int64             `json:"followersCount,omitempty"`
+	CommentsCount         *int64             `json:"commentsCount"`
+	LikesCount            *int64             `json:"likesCount"`
+	FollowersCount        *int64             `json:"followersCount"`
 	Score                 float64            `json:"score"`
 	PageviewsCount        int64              `json:"pageviewsCount"`
 	PublicRead            bool               `json:"publicRead"`
 	RegisteredRead        bool               `json:"registeredRead"`
 	ContentPtrID          string             `json:"contentPtrId"`
-	AvatarID              *int64             `json:"avatarId,omitempty"`
-	Title                 *string            `json:"title,omitempty"`
-	Body                  *string            `json:"body,omitempty"`
+	AvatarID              *int64             `json:"avatarId"`
+	Title                 *string            `json:"title"`
+	Body                  *string            `json:"body"`
 	BodyWordCount         int64              `json:"bodyWordCount"`
-	CanAppearOnHome       *string            `json:"canAppearOnHome,omitempty"`
-	FeaturedIn            *string            `json:"featuredIn,omitempty"`
-	Avatar                *File              `json:"avatar,omitempty"`
-	Creator               *User              `json:"creator,omitempty"`
-	Space                 *Space             `json:"space,omitempty"`
-	Followers             *ProfileConnection `json:"followers,omitempty"`
-	Tags                  []*Tag             `json:"tags,omitempty"`
-	Comments              *CommentConnection `json:"comments,omitempty"`
-	ContentType           *string            `json:"contentType,omitempty"`
-	ParentSlug            *string            `json:"parentSlug,omitempty"`
-	IsPrivate             *bool              `json:"isPrivate,omitempty"`
-	Description           *string            `json:"description,omitempty"`
-	Snippet               *string            `json:"snippet,omitempty"`
-	CanUpdate             *bool              `json:"canUpdate,omitempty"`
-	CanDelete             *bool              `json:"canDelete,omitempty"`
-	Content               *Content           `json:"content,omitempty"`
-	ParentContent         *Content           `json:"parentContent,omitempty"`
-	InSpace               *Space             `json:"inSpace,omitempty"`
-	ImageFallbackChar     *string            `json:"imageFallbackChar,omitempty"`
-	Commenters            []*Profile         `json:"commenters,omitempty"`
-	PageViews             *int64             `json:"pageViews,omitempty"`
-	BodySnippet           *string            `json:"bodySnippet,omitempty"`
-	ReadLength            *int64             `json:"readLength,omitempty"`
-	CreatorProfile        *Profile           `json:"creatorProfile,omitempty"`
+	CanAppearOnHome       *string            `json:"canAppearOnHome"`
+	Avatar                *File              `json:"avatar"`
+	Creator               *User              `json:"creator"`
+	Space                 *Space             `json:"space"`
+	Followers             *ProfileConnection `json:"followers"`
+	Tags                  []*Tag             `json:"tags"`
+	Comments              *CommentConnection `json:"comments"`
+	ContentType           *string            `json:"contentType"`
+	ParentSlug            *string            `json:"parentSlug"`
+	IsPrivate             *bool              `json:"isPrivate"`
+	Description           *string            `json:"description"`
+	Snippet               *string            `json:"snippet"`
+	CanUpdate             *bool              `json:"canUpdate"`
+	CanDelete             *bool              `json:"canDelete"`
+	Content               *Content           `json:"content"`
+	ParentContent         *Content           `json:"parentContent"`
+	InSpace               *Space             `json:"inSpace"`
+	ImageFallbackChar     *string            `json:"imageFallbackChar"`
+	Commenters            []*Profile         `json:"commenters"`
+	PageViews             *int64             `json:"pageViews"`
+	BodySnippet           *string            `json:"bodySnippet"`
+	ReadLength            *int64             `json:"readLength"`
+	CreatorProfile        *Profile           `json:"creatorProfile"`
 }
 
+func (Story) IsNotificationTarget() {}
 func (Story) IsNode()               {}
 func (Story) IsContentInterface()   {}
-func (Story) IsNotificationTarget() {}
 
 type StoryConnection struct {
-	PageInfo   *PageInfo    `json:"pageInfo,omitempty"`
-	Edges      []*StoryEdge `json:"edges,omitempty"`
-	TotalCount *int64       `json:"totalCount,omitempty"`
+	PageInfo   PageInfo     `json:"pageInfo"`
+	Edges      []*StoryEdge `json:"edges"`
+	TotalCount *int64       `json:"totalCount"`
 }
 
 type StoryConnectionErrorHandler struct {
-	UserErrors []*UserError     `json:"userErrors,omitempty"`
-	Result     *StoryConnection `json:"result,omitempty"`
+	UserErrors []*UserError     `json:"userErrors"`
+	Result     *StoryConnection `json:"result"`
 }
 
 type StoryEdge struct {
 	// The item at the end of the edge
-	Node *Story `json:"node,omitempty"`
+	Node *Story `json:"node"`
 	// A cursor for use in pagination
 	Cursor string `json:"cursor"`
 }
@@ -3487,36 +3471,36 @@ type StoryInput struct {
 }
 
 type StoryMutation struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Story      *Story       `json:"story,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Story      *Story       `json:"story"`
 }
 
 type SubscriptionPreview struct {
-	ID                 *string     `json:"id,omitempty"`
-	TotalAmount        *int64      `json:"totalAmount,omitempty"`
-	PerSeatAmount      *int64      `json:"perSeatAmount,omitempty"`
-	InitialAmount      *int64      `json:"initialAmount,omitempty"`
-	BillingStarts      *time.Time  `json:"billingStarts,omitempty"`
-	ProrationAmount    *int64      `json:"prorationAmount,omitempty"`
-	ProrationTimestamp *int64      `json:"prorationTimestamp,omitempty"`
-	DiscountAmount     *int64      `json:"discountAmount,omitempty"`
-	Seats              *SeatsUsage `json:"seats,omitempty"`
+	ID                 *string     `json:"id"`
+	TotalAmount        *int64      `json:"totalAmount"`
+	PerSeatAmount      *int64      `json:"perSeatAmount"`
+	InitialAmount      *int64      `json:"initialAmount"`
+	BillingStarts      *time.Time  `json:"billingStarts"`
+	ProrationAmount    *int64      `json:"prorationAmount"`
+	ProrationTimestamp *int64      `json:"prorationTimestamp"`
+	DiscountAmount     *int64      `json:"discountAmount"`
+	Seats              *SeatsUsage `json:"seats"`
 }
 
 type SuggestedProjectConnection struct {
-	PageInfo   *PageInfo               `json:"pageInfo,omitempty"`
-	Edges      []*SuggestedProjectEdge `json:"edges,omitempty"`
-	TotalCount *int64                  `json:"totalCount,omitempty"`
+	PageInfo   PageInfo                `json:"pageInfo"`
+	Edges      []*SuggestedProjectEdge `json:"edges"`
+	TotalCount *int64                  `json:"totalCount"`
 }
 
 type SuggestedProjectConnectionErrorHandler struct {
-	UserErrors []*UserError                `json:"userErrors,omitempty"`
-	Result     *SuggestedProjectConnection `json:"result,omitempty"`
+	UserErrors []*UserError                `json:"userErrors"`
+	Result     *SuggestedProjectConnection `json:"result"`
 }
 
 type SuggestedProjectEdge struct {
 	// The item at the end of the edge
-	Node *Project `json:"node,omitempty"`
+	Node *Project `json:"node"`
 	// A cursor for use in pagination
 	Cursor string `json:"cursor"`
 }
@@ -3524,7 +3508,7 @@ type SuggestedProjectEdge struct {
 type Tag struct {
 	// The ID of the object.
 	ID   string  `json:"id"`
-	Name *string `json:"name,omitempty"`
+	Name *string `json:"name"`
 }
 
 func (Tag) IsNode() {}
@@ -3542,15 +3526,15 @@ type Target struct {
 	BrepIx     int64   `json:"brepIx"`
 	BodyIx     int64   `json:"bodyIx"`
 	PrcPath    string  `json:"prcPath"`
-	FaceHit    *bool   `json:"faceHit,omitempty"`
-	FaceIx     *int64  `json:"faceIx,omitempty"`
-	LoopIx     *int64  `json:"loopIx,omitempty"`
-	EdgeIx     *int64  `json:"edgeIx,omitempty"`
-	PointHit   *bool   `json:"pointHit,omitempty"`
-	PointIx    *int64  `json:"pointIx,omitempty"`
-	TriangleIx *int64  `json:"triangleIx,omitempty"`
-	TrianglePt *Vector `json:"trianglePt,omitempty"`
-	TriangleNr *Vector `json:"triangleNr,omitempty"`
+	FaceHit    *bool   `json:"faceHit"`
+	FaceIx     *int64  `json:"faceIx"`
+	LoopIx     *int64  `json:"loopIx"`
+	EdgeIx     *int64  `json:"edgeIx"`
+	PointHit   *bool   `json:"pointHit"`
+	PointIx    *int64  `json:"pointIx"`
+	TriangleIx *int64  `json:"triangleIx"`
+	TrianglePt *Vector `json:"trianglePt"`
+	TriangleNr *Vector `json:"triangleNr"`
 }
 
 type TargetInput struct {
@@ -3573,76 +3557,75 @@ type TargetInput struct {
 
 type Thread struct {
 	ID                    string             `json:"id"`
-	Type                  *string            `json:"type,omitempty"`
-	Slug                  *string            `json:"slug,omitempty"`
+	Type                  *string            `json:"type"`
+	Slug                  *string            `json:"slug"`
 	CreatorID             int64              `json:"creatorId"`
-	CreatedInRegion       *string            `json:"createdInRegion,omitempty"`
-	SpaceID               *int64             `json:"spaceId,omitempty"`
-	DateCreated           *time.Time         `json:"dateCreated,omitempty"`
-	LastUpdated           *time.Time         `json:"lastUpdated,omitempty"`
-	Whitelabel            *string            `json:"whitelabel,omitempty"`
-	WhiteLabelOnlyContent *bool              `json:"whiteLabelOnlyContent,omitempty"`
-	LastCommentedAt       *time.Time         `json:"lastCommentedAt,omitempty"`
+	CreatedInRegion       *string            `json:"createdInRegion"`
+	SpaceID               *int64             `json:"spaceId"`
+	DateCreated           *time.Time         `json:"dateCreated"`
+	LastUpdated           *time.Time         `json:"lastUpdated"`
+	Whitelabel            *string            `json:"whitelabel"`
+	WhiteLabelOnlyContent *bool              `json:"whiteLabelOnlyContent"`
+	LastCommentedAt       *time.Time         `json:"lastCommentedAt"`
 	LastActivityAt        time.Time          `json:"lastActivityAt"`
-	CommentsCount         *int64             `json:"commentsCount,omitempty"`
-	LikesCount            *int64             `json:"likesCount,omitempty"`
-	FollowersCount        *int64             `json:"followersCount,omitempty"`
+	CommentsCount         *int64             `json:"commentsCount"`
+	LikesCount            *int64             `json:"likesCount"`
+	FollowersCount        *int64             `json:"followersCount"`
 	PageviewsCount        int64              `json:"pageviewsCount"`
 	PublicRead            bool               `json:"publicRead"`
 	RegisteredRead        bool               `json:"registeredRead"`
 	ContentPtrID          string             `json:"contentPtrId"`
-	Title                 *string            `json:"title,omitempty"`
+	Title                 *string            `json:"title"`
 	Msg                   string             `json:"msg"`
-	ForumID               *float64           `json:"forumId,omitempty"`
-	CategoryID            *string            `json:"categoryId,omitempty"`
+	ForumID               *float64           `json:"forumId"`
+	CategoryID            *string            `json:"categoryId"`
 	MembersOnly           bool               `json:"membersOnly"`
-	UpvoteCount           *string            `json:"upvoteCount,omitempty"`
-	FeaturedIn            *string            `json:"featuredIn,omitempty"`
-	Forum                 *Forum             `json:"forum,omitempty"`
-	Category              *Category          `json:"category,omitempty"`
-	Creator               *User              `json:"creator,omitempty"`
-	Space                 *Space             `json:"space,omitempty"`
-	Followers             *ProfileConnection `json:"followers,omitempty"`
-	Tags                  []*Tag             `json:"tags,omitempty"`
-	Comments              *CommentConnection `json:"comments,omitempty"`
-	ContentType           *string            `json:"contentType,omitempty"`
-	ParentSlug            *string            `json:"parentSlug,omitempty"`
-	IsPrivate             *bool              `json:"isPrivate,omitempty"`
-	Description           *string            `json:"description,omitempty"`
-	Snippet               *string            `json:"snippet,omitempty"`
-	URLID                 *string            `json:"urlId,omitempty"`
-	CanUpdate             *bool              `json:"canUpdate,omitempty"`
-	CanDelete             *bool              `json:"canDelete,omitempty"`
-	Content               *Content           `json:"content,omitempty"`
-	ParentContent         *Content           `json:"parentContent,omitempty"`
-	InSpace               *Space             `json:"inSpace,omitempty"`
-	Avatar                *File              `json:"avatar,omitempty"`
-	ImageFallbackChar     *string            `json:"imageFallbackChar,omitempty"`
-	Commenters            []*Profile         `json:"commenters,omitempty"`
-	PageViews             *int64             `json:"pageViews,omitempty"`
-	IsPinned              *bool              `json:"isPinned,omitempty"`
-	CanPin                *bool              `json:"canPin,omitempty"`
-	CreatorProfile        *Profile           `json:"creatorProfile,omitempty"`
+	UpvoteCount           *string            `json:"upvoteCount"`
+	Forum                 *Forum             `json:"forum"`
+	Category              *Category          `json:"category"`
+	Creator               *User              `json:"creator"`
+	Space                 *Space             `json:"space"`
+	Followers             *ProfileConnection `json:"followers"`
+	Tags                  []*Tag             `json:"tags"`
+	Comments              *CommentConnection `json:"comments"`
+	ContentType           *string            `json:"contentType"`
+	ParentSlug            *string            `json:"parentSlug"`
+	IsPrivate             *bool              `json:"isPrivate"`
+	Description           *string            `json:"description"`
+	Snippet               *string            `json:"snippet"`
+	URLID                 *string            `json:"urlId"`
+	CanUpdate             *bool              `json:"canUpdate"`
+	CanDelete             *bool              `json:"canDelete"`
+	Content               *Content           `json:"content"`
+	ParentContent         *Content           `json:"parentContent"`
+	InSpace               *Space             `json:"inSpace"`
+	Avatar                *File              `json:"avatar"`
+	ImageFallbackChar     *string            `json:"imageFallbackChar"`
+	Commenters            []*Profile         `json:"commenters"`
+	PageViews             *int64             `json:"pageViews"`
+	IsPinned              *bool              `json:"isPinned"`
+	CanPin                *bool              `json:"canPin"`
+	CreatorProfile        *Profile           `json:"creatorProfile"`
 }
 
+func (Thread) IsNotificationTarget() {}
 func (Thread) IsNode()               {}
 func (Thread) IsContentInterface()   {}
-func (Thread) IsNotificationTarget() {}
 
 type ThreadConnection struct {
-	PageInfo   *PageInfo     `json:"pageInfo,omitempty"`
-	Edges      []*ThreadEdge `json:"edges,omitempty"`
-	TotalCount *int64        `json:"totalCount,omitempty"`
+	PageInfo   PageInfo      `json:"pageInfo"`
+	Edges      []*ThreadEdge `json:"edges"`
+	TotalCount *int64        `json:"totalCount"`
 }
 
 type ThreadConnectionErrorHandler struct {
-	UserErrors []*UserError      `json:"userErrors,omitempty"`
-	Result     *ThreadConnection `json:"result,omitempty"`
+	UserErrors []*UserError      `json:"userErrors"`
+	Result     *ThreadConnection `json:"result"`
 }
 
 type ThreadEdge struct {
 	// The item at the end of the edge
-	Node *Thread `json:"node,omitempty"`
+	Node *Thread `json:"node"`
 	// A cursor for use in pagination
 	Cursor string `json:"cursor"`
 }
@@ -3658,18 +3641,18 @@ type ThreadInput struct {
 }
 
 type ThreadMutation struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Thread     *Thread      `json:"thread,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Thread     *Thread      `json:"thread"`
 }
 
 type Tracker struct {
 	// The ID of the object.
 	ID                string           `json:"id"`
-	Issues            *IssueConnection `json:"issues,omitempty"`
-	Issue             *Issue           `json:"issue,omitempty"`
-	Labels            []*Label         `json:"labels,omitempty"`
-	OpenIssuesCount   *int64           `json:"openIssuesCount,omitempty"`
-	ClosedIssuesCount *int64           `json:"closedIssuesCount,omitempty"`
+	Issues            *IssueConnection `json:"issues"`
+	Issue             *Issue           `json:"issue"`
+	Labels            []*Label         `json:"labels"`
+	OpenIssuesCount   *int64           `json:"openIssuesCount"`
+	ClosedIssuesCount *int64           `json:"closedIssuesCount"`
 }
 
 func (Tracker) IsNode() {}
@@ -3681,8 +3664,8 @@ type TransferProjectInput struct {
 }
 
 type TransferProjectMutation struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Project    *Project     `json:"project,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Project    *Project     `json:"project"`
 }
 
 type UpdateAddressInput struct {
@@ -3704,8 +3687,8 @@ type UpdateImportProjectInput struct {
 }
 
 type UpdateImportProjectMutation struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Result     *string      `json:"result,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Result     *string      `json:"result"`
 }
 
 type UpdateJobSpecInput struct {
@@ -3763,8 +3746,8 @@ type UpdateProcessInput struct {
 }
 
 type UpdateProfile struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Profile    *Profile     `json:"profile,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Profile    *Profile     `json:"profile"`
 }
 
 type UpdateRequestForQuoteInput struct {
@@ -3786,8 +3769,8 @@ type UpdateSharedFileInput struct {
 }
 
 type UpdateSharedFileMutation struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	SharedFile *SharedFile  `json:"sharedFile,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	SharedFile *SharedFile  `json:"sharedFile"`
 }
 
 type UpdateSupportingFilesInput struct {
@@ -3801,8 +3784,8 @@ type Upvote struct {
 	UserID      int64     `json:"userId"`
 	PostID      int64     `json:"postId"`
 	DateCreated time.Time `json:"dateCreated"`
-	User        *User     `json:"user,omitempty"`
-	Post        *Post     `json:"post,omitempty"`
+	User        *User     `json:"user"`
+	Post        *Post     `json:"post"`
 }
 
 func (Upvote) IsNode() {}
@@ -3810,20 +3793,20 @@ func (Upvote) IsNode() {}
 type User struct {
 	// The ID of the object.
 	ID            string   `json:"id"`
-	Username      *string  `json:"username,omitempty"`
-	Email         *string  `json:"email,omitempty"`
-	Locale        *string  `json:"locale,omitempty"`
-	Profile       *Profile `json:"profile,omitempty"`
-	EmailsEnabled *bool    `json:"emailsEnabled,omitempty"`
-	AsSpace       []*Space `json:"asSpace,omitempty"`
+	Username      *string  `json:"username"`
+	Email         *string  `json:"email"`
+	Locale        *string  `json:"locale"`
+	Profile       *Profile `json:"profile"`
+	EmailsEnabled *bool    `json:"emailsEnabled"`
+	AsSpace       []*Space `json:"asSpace"`
 }
 
 func (User) IsNode() {}
 
 type UserError struct {
-	Code    *ErrorCodes `json:"code,omitempty"`
-	Message *string     `json:"message,omitempty"`
-	Key     *string     `json:"key,omitempty"`
+	Code    *ErrorCodes `json:"code"`
+	Message *string     `json:"message"`
+	Key     *string     `json:"key"`
 }
 
 type UserGroupActionInput struct {
@@ -3860,87 +3843,87 @@ type VectorInput struct {
 }
 
 type ViewerState struct {
-	Blob map[string]interface{} `json:"blob,omitempty"`
+	Blob map[string]interface{} `json:"blob"`
 }
 
 type ViralResponseIssueConnectionErrorHandler struct {
-	UserErrors []*UserError     `json:"userErrors,omitempty"`
-	Result     *IssueConnection `json:"result,omitempty"`
+	UserErrors []*UserError     `json:"userErrors"`
+	Result     *IssueConnection `json:"result"`
 }
 
 type ChannelErrorHandler struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Result     *Channel     `json:"result,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Result     *Channel     `json:"result"`
 }
 
 type CollectionErrorHandler struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Result     *Collection  `json:"result,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Result     *Collection  `json:"result"`
 }
 
 type ContributionFileErrorHandler struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Result     *ContribFile `json:"result,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Result     *ContribFile `json:"result"`
 }
 
 type FileErrorHandler struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Result     *File        `json:"result,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Result     *File        `json:"result"`
 }
 
 type ForumErrorHandler struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Result     *Forum       `json:"result,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Result     *Forum       `json:"result"`
 }
 
 type ForumCategoryErrorHandler struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Result     *Category    `json:"result,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Result     *Category    `json:"result"`
 }
 
 type GroupErrorHandler struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Result     *Group       `json:"result,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Result     *Group       `json:"result"`
 }
 
 type InitiativeErrorHandler struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Result     *Initiative  `json:"result,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Result     *Initiative  `json:"result"`
 }
 
 type InviteLinkErrorHandler struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Result     *InviteLink  `json:"result,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Result     *InviteLink  `json:"result"`
 }
 
 type PostErrorHandler struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Result     *Post        `json:"result,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Result     *Post        `json:"result"`
 }
 
 type ProfileErrorHandler struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Result     *Profile     `json:"result,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Result     *Profile     `json:"result"`
 }
 
 type ProjectErrorHandler struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Result     *Project     `json:"result,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Result     *Project     `json:"result"`
 }
 
 type SharedFileErrorHandler struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Result     *SharedFile  `json:"result,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Result     *SharedFile  `json:"result"`
 }
 
 type StoryErrorHandler struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Result     *Story       `json:"result,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Result     *Story       `json:"result"`
 }
 
 type ThreadErrorHandler struct {
-	UserErrors []*UserError `json:"userErrors,omitempty"`
-	Result     *Thread      `json:"result,omitempty"`
+	UserErrors []*UserError `json:"userErrors"`
+	Result     *Thread      `json:"result"`
 }
 
 type Certification string

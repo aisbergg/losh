@@ -2,21 +2,23 @@ package wikifactory
 
 import (
 	"context"
+	"encoding/json"
 	"net/http"
 	"time"
 
 	"losh/crawler/core/validator"
 	"losh/crawler/core/wikifactory/wfclient"
 	"losh/internal/core/product/models"
-	"losh/internal/infra/dgraph"
+	"losh/internal/core/product/services"
+	lerrors "losh/internal/lib/errors"
 	"losh/internal/lib/log"
 	"losh/internal/lib/net/download"
 	"losh/internal/lib/net/ratelimit"
 	"losh/internal/lib/net/request"
-	"losh/internal/license"
 
 	gql "github.com/Yamashou/gqlgenc/clientv2"
 	"github.com/aisbergg/go-errors/pkg/errors"
+	"github.com/aisbergg/go-pathlib/pkg/pathlib"
 
 	"go.uber.org/zap"
 
@@ -36,31 +38,26 @@ const (
 )
 
 type CrawlerState struct {
-	Timestamp   time.Time
-	StartTime   time.Time
-	ElapsedTime time.Time
-	NumCrawled  int64
-	NumIndexed  int64
-	Cursor      string
-	Page        int64
-	BatchSize   int64
+	StartTime   time.Time     `json:"startTime"`
+	ElapsedTime time.Duration `json:"elapsedTime"`
+	NumCrawled  int64         `json:"numCrawled"`
+	NumIndexed  int64         `json:"numIndexed"`
+	Cursor      string        `json:"cursor"`
+	Page        int64         `json:"page"`
 }
 
 // WikifactoryCrawler is a product crawler for Wikifactory.
 type WikifactoryCrawler struct {
-	repository *dgraph.DgraphRepository
-	validator  *validator.Validator
-	normalizer *WikifactoryNormalizer
+	productService *services.Service
+	validator      *validator.Validator
 
 	fileDownloader *download.Downloader
-	wfGqlClient    wfclient.WikifactoryGraphQLClient
+	wfClient       wfclient.WikifactoryGraphQLClient
 	log            *zap.SugaredLogger
 }
 
 // NewWikifactoryCrawler creates a new WikifactoryCrawler.
-func NewWikifactoryCrawler(repository *dgraph.DgraphRepository, licenseCache *license.LicenseCache, userAgent string) *WikifactoryCrawler {
-	normalizer := NewWikifactoryNormalizer(licenseCache)
-	validator := validator.NewValidator(licenseCache)
+func NewWikifactoryCrawler(productService *services.Service, userAgent string) *WikifactoryCrawler {
 	log := log.NewLogger("crawler-wikifactory")
 
 	// clients for external requests
@@ -84,19 +81,130 @@ func NewWikifactoryCrawler(repository *dgraph.DgraphRepository, licenseCache *li
 		SetLogger(log).
 		SetRetryCount(uint64(retries)).
 		SetMaxWaitTime(maxWaitTime).
-		AddRateLimiter(ratelimit.NewTimedeltaRateLimiter(5*time.Second, 5))
-	graphQLClient := wfclient.NewClient(graphQLRequester)
+		AddRateLimiter(ratelimit.NewTimedeltaRateLimiter(5*time.Second, 20))
+	wfClient := wfclient.NewClient(graphQLRequester)
+
+	validator := validator.NewValidator(productService)
 
 	return &WikifactoryCrawler{
-		repository: repository,
-		validator:  validator,
-		normalizer: normalizer,
+		productService: productService,
+		validator:      validator,
 
 		fileDownloader: fileDownloader,
-		wfGqlClient:    graphQLClient,
+		wfClient:       wfClient,
 
 		log: log,
 	}
+}
+
+func (c *WikifactoryCrawler) DiscoverProducts(ctx context.Context) error {
+	c.log.Infof("discovering products on %s", crawlerName)
+
+	// TODO: make state file configurable
+	stateFilePath := pathlib.NewPath("crawler-state.json")
+	state, err := c.loadState(stateFilePath)
+	if err != nil {
+		return lerrors.NewAppErrorWrap(err, "failed to load state")
+	}
+
+	runStartedAt := time.Now()
+	prevElapsedTime := state.ElapsedTime
+	page := state.Page
+	cursor := state.Cursor
+	hasNextPage := true
+	for hasNextPage {
+		c.log.Debugf("getting %d results from page %d (cursor: %s)", batchSize, page, cursor)
+
+		// get project information
+		queryProjects, err := c.wfClient.QueryProjects(ctx, batchSize, cursor)
+		if err != nil {
+			return lerrors.NewAppErrorWrap(err, "failed to get project information")
+		}
+		discoveredAt := time.Now()
+		wfPrjsInfo := queryProjects.Projects.Result.Edges
+
+		// check each project and index if compliant
+		for _, edge := range wfPrjsInfo {
+			wfPrjInfo := edge.Node
+			productID := models.NewProductID(crawlerName, *wfPrjInfo.ParentSlug, *wfPrjInfo.Slug, "")
+
+			// check mandatory fields for compliance
+			err = c.checkMandatory(wfPrjInfo)
+			if err != nil {
+				c.log.Debugf("skipping (%s): %s", productID.String(), err.Error())
+				continue
+			}
+
+			// get full product information
+			c.log.Debugf("getting full product info (%s)", productID.String())
+			prd, err := c.getProduct(ctx, productID, discoveredAt)
+			if err != nil {
+				if vldErr, ok := err.(*validator.ValidationError); ok {
+					c.log.Debugf("skipping (%s): %s", productID.String(), vldErr.Error())
+					continue
+				}
+				return lerrors.NewAppErrorWrap(err, "failed to get product").Add("crawlerProductID", productID.String())
+			}
+
+			// save product
+			c.log.Debugf("saving product (%s)", productID.String())
+			err = c.productService.SaveNode(ctx, prd)
+			if err != nil {
+				return lerrors.NewAppErrorWrap(err, "failed to save product").Add("crawlerProductID", productID.String())
+			}
+
+			state.NumIndexed++
+		}
+
+		pageInfo := queryProjects.Projects.Result.PageInfo
+		hasNextPage = pageInfo.HasNextPage
+		page++
+		cursor = *pageInfo.EndCursor
+
+		// save state
+		state.Cursor = cursor
+		state.Page = page
+		state.NumCrawled += int64(len(wfPrjsInfo))
+		state.ElapsedTime = prevElapsedTime + time.Now().Sub(runStartedAt)
+		err = c.saveState(stateFilePath, state)
+		if err != nil {
+			return lerrors.NewAppErrorWrap(err, "failed to save state")
+		}
+	}
+
+	// TODO
+	// remove state file
+
+	return nil
+}
+
+func (c *WikifactoryCrawler) UpdateProducts(ctx context.Context) error {
+	return nil
+}
+
+func (c *WikifactoryCrawler) getProduct(ctx context.Context, prdID models.ProductID, discoveredAt time.Time) (*models.Product, error) {
+	// get full project information
+	getProjectFullBySlug, err := c.wfClient.GetProjectFullBySlug(ctx, prdID.Owner, prdID.Repo)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to get Wikifactory project information")
+	}
+	if getProjectFullBySlug == nil {
+		return nil, errors.New("Wikifactory project not found")
+	}
+
+	product, err := c.NormalizeProduct(ctx, discoveredAt, getProjectFullBySlug.Project.Result)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to normalize product information")
+	}
+
+	// validate product
+	err = c.validator.ValidateProduct(product)
+	if err != nil {
+		return nil, err
+	}
+
+	// return normalized product
+	return product, nil
 }
 
 func (c *WikifactoryCrawler) GetProduct(ctx context.Context, productID models.ProductID) (*models.Product, error) {
@@ -111,79 +219,107 @@ func (c *WikifactoryCrawler) GetProduct(ctx context.Context, productID models.Pr
 	// discoveredAt := time.Now()
 
 	// get basic product information
-	getMandatoryProjectBySlug, err := c.wfGqlClient.GetMandatoryProjectBySlug(ctx, &productID.Owner, &productID.Repo)
+	getProjectMandatoryBySlug, err := c.wfClient.GetProjectMandatoryBySlug(ctx, productID.Owner, productID.Repo)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to get project information")
 	}
-	if getMandatoryProjectBySlug == nil {
+	projectInfo := getProjectMandatoryBySlug.Project.Result
+	if projectInfo == nil {
 		return nil, errors.New("project not found")
 	}
 	discoveredAt := time.Now()
 
-	// quick check if mandatory fields are present
-	mdtFlds := validator.MandatoryFields{
-		OKHV:                  "OKH-LOSHv1.0",
-		Name:                  *getMandatoryProjectBySlug.Project.Result.Name,
-		Description:           *getMandatoryProjectBySlug.Project.Result.Description,
-		Version:               *getMandatoryProjectBySlug.Project.Result.Contribution.Version,
-		Repository:            "https://wikifactory.com", // just to pass the check
-		License:               c.normalizer.translateLicense(*getMandatoryProjectBySlug.Project.Result.License.Abreviation),
-		Licensor:              *getMandatoryProjectBySlug.Project.Result.Creator.Profile.Username,
-		DocumentationLanguage: c.normalizer.getDocumentationLanguage(*getMandatoryProjectBySlug.Project.Result.Description),
-	}
-	vldErr := c.validator.ValidateMandatory(mdtFlds)
-	if vldErr != nil {
-		return nil, errors.Wrap(vldErr, "invalid mandatory fields")
+	// check mandatory fields
+	err = c.checkMandatory(projectInfo)
+	if err != nil {
+		return nil, err
 	}
 
 	// get full project information
-	getFullProjectBySlug, err := c.wfGqlClient.GetFullProjectBySlug(ctx, &productID.Owner, &productID.Repo)
+	getProjectFullBySlug, err := c.wfClient.GetProjectFullBySlug(ctx, productID.Owner, productID.Repo)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to get project information")
 	}
-	if getFullProjectBySlug == nil {
+	if getProjectFullBySlug == nil {
 		return nil, errors.New("project not found")
 	}
 
-	// normalize project information
-	product := c.normalizer.NormalizeProduct(discoveredAt, getFullProjectBySlug)
+	product, err := c.NormalizeProduct(ctx, discoveredAt, getProjectFullBySlug.Project.Result)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to normalize project information")
+	}
 
 	// validate product
-	vldErr = c.validator.ValidateProduct(product)
+	vldErr := c.validator.ValidateProduct(product)
 	if vldErr != nil {
 		return nil, errors.Wrap(vldErr, "invalid product")
 	}
-
-	// // save product
-	// err = c.repository.SaveProducts([]*models.Product{product})
-	// if err != nil {
-	// 	return nil, errors.Wrap(err, "failed to save product")
-	// }
 
 	// return normalized product
 	return product, nil
 }
 
-// UploadPlatformInfo uploads platform information to the database.
-func (c *WikifactoryCrawler) UploadPlatformInfo(ctx context.Context) error {
-	host := &models.Host{
-		Name:   "Wikifactory",
-		Domain: "wikifactory.com",
-	}
-	c.repository.SaveHosts([]*models.Host{host})
-	return nil
-}
-
-func (c *WikifactoryCrawler) DiscoverProducts(ctx context.Context) error {
+// loadState loads the crawler state from the state file.
+func (c *WikifactoryCrawler) loadState(path pathlib.Path) (CrawlerState, error) {
 	// load state
-	// state := CrawlerState{}
+	exists, err := path.Exists()
+	if err != nil {
+		return CrawlerState{}, errors.Wrap(err, "failed to check file existence")
+	}
+	// new state
+	state := CrawlerState{
+		StartTime: time.Now(),
+		Page:      1,
+		Cursor:    "",
+	}
+	if !exists {
+		return state, nil
+	}
+	fileContent, err := path.ReadFile()
+	if err != nil {
+		return CrawlerState{}, errors.Wrap(err, "failed to read state file")
+	}
+	err = json.Unmarshal(fileContent, &state)
+	if err != nil {
+		return CrawlerState{}, errors.Wrap(err, "failed to unmarshal state file")
+	}
+	return state, nil
+}
 
-	// numRetriesAfterIncompleteResults := 0
-	// page := state.Page
-
+// saveState saves the crawler state to the state file.
+func (c *WikifactoryCrawler) saveState(path pathlib.Path, state CrawlerState) error {
+	fileContent, err := json.Marshal(state)
+	if err != nil {
+		return errors.Wrap(err, "failed to marshal state")
+	}
+	err = path.WriteFile(fileContent)
+	if err != nil {
+		return errors.Wrap(err, "failed to write state file")
+	}
 	return nil
 }
 
-func (c *WikifactoryCrawler) UpdateProducts(ctx context.Context) error {
-	return nil
+// checkMandatory checks if mandatory fields are present.
+func (c *WikifactoryCrawler) checkMandatory(projectInfo *wfclient.ProjectMandatoryFragment) error {
+	license := ""
+	if projectInfo.License != nil {
+		license = *projectInfo.License.Abreviation
+	}
+	version := ""
+	if projectInfo.Contribution != nil {
+		version = *projectInfo.Contribution.Version
+	}
+
+	// quick check if mandatory fields are present
+	mdtFlds := validator.MandatoryFields{
+		OKHV:                  "OKH-LOSHv1.0",
+		Name:                  stringOrEmpty(projectInfo.Name),
+		Description:           stringOrEmpty(projectInfo.Description),
+		Version:               version,
+		Repository:            "https://wikifactory.com", // just to pass the check
+		License:               c.translateLicense(license),
+		Licensor:              stringOrEmpty(projectInfo.Creator.Profile.Username),
+		DocumentationLanguage: *c.normDocumentationLanguage(stringOrEmpty(projectInfo.Description)),
+	}
+	return c.validator.ValidateMandatory(mdtFlds)
 }

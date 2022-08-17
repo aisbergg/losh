@@ -10,11 +10,12 @@ import (
 )
 
 type WikifactoryGraphQLClient interface {
-	QueryProjects(ctx context.Context, batchSize *int64, cursor *string) (*QueryProjects, error)
-	GetFullProjectByID(ctx context.Context, id *string) (*GetFullProjectByID, error)
-	GetFullProjectBySlug(ctx context.Context, space *string, slug *string) (*GetFullProjectBySlug, error)
-	GetMandatoryProjectByID(ctx context.Context, id *string) (*GetMandatoryProjectByID, error)
-	GetMandatoryProjectBySlug(ctx context.Context, space *string, slug *string) (*GetMandatoryProjectBySlug, error)
+	QueryProjects(ctx context.Context, batchSize int64, cursor string) (*QueryProjects, error)
+	GetProjectFullByID(ctx context.Context, id string) (*GetProjectFullByID, error)
+	GetProjectFullBySlug(ctx context.Context, space string, slug string) (*GetProjectFullBySlug, error)
+	GetProjectMandatoryByID(ctx context.Context, id string) (*GetProjectMandatoryByID, error)
+	GetProjectMandatoryBySlug(ctx context.Context, space string, slug string) (*GetProjectMandatoryBySlug, error)
+	GetGroup(ctx context.Context, slug string) (*GetGroup, error)
 }
 
 type Client struct {
@@ -216,6 +217,8 @@ type ContributionFragment struct {
 }
 type ProjectMandatoryFragment struct {
 	ID           string                                 "json:\"id\" graphql:\"id\""
+	ParentSlug   *string                                "json:\"parentSlug\" graphql:\"parentSlug\""
+	Slug         *string                                "json:\"slug\" graphql:\"slug\""
 	Name         *string                                "json:\"name\" graphql:\"name\""
 	Description  *string                                "json:\"description\" graphql:\"description\""
 	Creator      *ProjectMandatoryFragment_Creator      "json:\"creator\" graphql:\"creator\""
@@ -306,8 +309,8 @@ type ProjectFullFragment_ForkedFrom struct {
 	Project *ProjectFullFragment_ForkedFrom_Project "json:\"project\" graphql:\"project\""
 }
 type ProjectFullFragment_ParentContent struct {
-	Type  *string "json:\"type\" graphql:\"type\""
-	Title *string "json:\"title\" graphql:\"title\""
+	Type *string "json:\"type\" graphql:\"type\""
+	Slug *string "json:\"slug\" graphql:\"slug\""
 }
 type QueryProjects_Projects_Result_Edges_Node_ProjectMandatoryFragment_Creator_Profile struct {
 	Username *string "json:\"username\" graphql:\"username\""
@@ -331,151 +334,172 @@ type QueryProjects_Projects_Result struct {
 type QueryProjects_Projects struct {
 	Result *QueryProjects_Projects_Result "json:\"result\" graphql:\"result\""
 }
-type GetFullProjectByID_Project_Result_ProjectFullFragment_Creator_Profile struct {
+type GetProjectFullByID_Project_Result_ProjectFullFragment_Creator_Profile struct {
 	FullName *string       "json:\"fullName\" graphql:\"fullName\""
 	Username *string       "json:\"username\" graphql:\"username\""
 	Email    *string       "json:\"email\" graphql:\"email\""
 	Locale   *string       "json:\"locale\" graphql:\"locale\""
 	Avatar   *FileFragment "json:\"avatar\" graphql:\"avatar\""
 }
-type GetFullProjectByID_Project_Result_ProjectFullFragment_Creator struct {
+type GetProjectFullByID_Project_Result_ProjectFullFragment_Creator struct {
 	ID      string                                                                 "json:\"id\" graphql:\"id\""
-	Profile *GetFullProjectByID_Project_Result_ProjectFullFragment_Creator_Profile "json:\"profile\" graphql:\"profile\""
+	Profile *GetProjectFullByID_Project_Result_ProjectFullFragment_Creator_Profile "json:\"profile\" graphql:\"profile\""
 }
-type GetFullProjectByID_Project_Result_ProjectFullFragment_License struct {
+type GetProjectFullByID_Project_Result_ProjectFullFragment_License struct {
 	Abreviation *string "json:\"abreviation\" graphql:\"abreviation\""
 }
-type GetFullProjectByID_Project_Result_ProjectFullFragment_Contributions_Edges_Node_ContributionFragment_Files struct {
+type GetProjectFullByID_Project_Result_ProjectFullFragment_Contributions_Edges_Node_ContributionFragment_Files struct {
 	Dirname *string       "json:\"dirname\" graphql:\"dirname\""
 	File    *FileFragment "json:\"file\" graphql:\"file\""
 }
-type GetFullProjectByID_Project_Result_ProjectFullFragment_Contributions_Edges struct {
+type GetProjectFullByID_Project_Result_ProjectFullFragment_Contributions_Edges struct {
 	Node *ContributionFragment "json:\"node\" graphql:\"node\""
 }
-type GetFullProjectByID_Project_Result_ProjectFullFragment_Contributions struct {
-	Edges []*GetFullProjectByID_Project_Result_ProjectFullFragment_Contributions_Edges "json:\"edges\" graphql:\"edges\""
+type GetProjectFullByID_Project_Result_ProjectFullFragment_Contributions struct {
+	Edges []*GetProjectFullByID_Project_Result_ProjectFullFragment_Contributions_Edges "json:\"edges\" graphql:\"edges\""
 }
-type GetFullProjectByID_Project_Result_ProjectFullFragment_Contributors_Edges_Node struct {
+type GetProjectFullByID_Project_Result_ProjectFullFragment_Contributors_Edges_Node struct {
 	FullName *string "json:\"fullName\" graphql:\"fullName\""
 	Username *string "json:\"username\" graphql:\"username\""
 	Email    *string "json:\"email\" graphql:\"email\""
 }
-type GetFullProjectByID_Project_Result_ProjectFullFragment_Contributors_Edges struct {
-	Node *GetFullProjectByID_Project_Result_ProjectFullFragment_Contributors_Edges_Node "json:\"node\" graphql:\"node\""
+type GetProjectFullByID_Project_Result_ProjectFullFragment_Contributors_Edges struct {
+	Node *GetProjectFullByID_Project_Result_ProjectFullFragment_Contributors_Edges_Node "json:\"node\" graphql:\"node\""
 }
-type GetFullProjectByID_Project_Result_ProjectFullFragment_Contributors struct {
-	Edges []*GetFullProjectByID_Project_Result_ProjectFullFragment_Contributors_Edges "json:\"edges\" graphql:\"edges\""
+type GetProjectFullByID_Project_Result_ProjectFullFragment_Contributors struct {
+	Edges []*GetProjectFullByID_Project_Result_ProjectFullFragment_Contributors_Edges "json:\"edges\" graphql:\"edges\""
 }
-type GetFullProjectByID_Project_Result_ProjectFullFragment_ForkedFrom_Project struct {
+type GetProjectFullByID_Project_Result_ProjectFullFragment_ForkedFrom_Project struct {
 	ParentSlug *string "json:\"parentSlug\" graphql:\"parentSlug\""
 	Slug       *string "json:\"slug\" graphql:\"slug\""
 }
-type GetFullProjectByID_Project_Result_ProjectFullFragment_ForkedFrom struct {
-	Project *GetFullProjectByID_Project_Result_ProjectFullFragment_ForkedFrom_Project "json:\"project\" graphql:\"project\""
+type GetProjectFullByID_Project_Result_ProjectFullFragment_ForkedFrom struct {
+	Project *GetProjectFullByID_Project_Result_ProjectFullFragment_ForkedFrom_Project "json:\"project\" graphql:\"project\""
 }
-type GetFullProjectByID_Project_Result_ProjectFullFragment_ParentContent struct {
-	Type  *string "json:\"type\" graphql:\"type\""
-	Title *string "json:\"title\" graphql:\"title\""
+type GetProjectFullByID_Project_Result_ProjectFullFragment_ParentContent struct {
+	Type *string "json:\"type\" graphql:\"type\""
+	Slug *string "json:\"slug\" graphql:\"slug\""
 }
-type GetFullProjectByID_Project struct {
+type GetProjectFullByID_Project struct {
 	Result *ProjectFullFragment "json:\"result\" graphql:\"result\""
 }
-type GetFullProjectBySlug_Project_Result_ProjectFullFragment_Creator_Profile struct {
+type GetProjectFullBySlug_Project_Result_ProjectFullFragment_Creator_Profile struct {
 	FullName *string       "json:\"fullName\" graphql:\"fullName\""
 	Username *string       "json:\"username\" graphql:\"username\""
 	Email    *string       "json:\"email\" graphql:\"email\""
 	Locale   *string       "json:\"locale\" graphql:\"locale\""
 	Avatar   *FileFragment "json:\"avatar\" graphql:\"avatar\""
 }
-type GetFullProjectBySlug_Project_Result_ProjectFullFragment_Creator struct {
+type GetProjectFullBySlug_Project_Result_ProjectFullFragment_Creator struct {
 	ID      string                                                                   "json:\"id\" graphql:\"id\""
-	Profile *GetFullProjectBySlug_Project_Result_ProjectFullFragment_Creator_Profile "json:\"profile\" graphql:\"profile\""
+	Profile *GetProjectFullBySlug_Project_Result_ProjectFullFragment_Creator_Profile "json:\"profile\" graphql:\"profile\""
 }
-type GetFullProjectBySlug_Project_Result_ProjectFullFragment_License struct {
+type GetProjectFullBySlug_Project_Result_ProjectFullFragment_License struct {
 	Abreviation *string "json:\"abreviation\" graphql:\"abreviation\""
 }
-type GetFullProjectBySlug_Project_Result_ProjectFullFragment_Contributions_Edges_Node_ContributionFragment_Files struct {
+type GetProjectFullBySlug_Project_Result_ProjectFullFragment_Contributions_Edges_Node_ContributionFragment_Files struct {
 	Dirname *string       "json:\"dirname\" graphql:\"dirname\""
 	File    *FileFragment "json:\"file\" graphql:\"file\""
 }
-type GetFullProjectBySlug_Project_Result_ProjectFullFragment_Contributions_Edges struct {
+type GetProjectFullBySlug_Project_Result_ProjectFullFragment_Contributions_Edges struct {
 	Node *ContributionFragment "json:\"node\" graphql:\"node\""
 }
-type GetFullProjectBySlug_Project_Result_ProjectFullFragment_Contributions struct {
-	Edges []*GetFullProjectBySlug_Project_Result_ProjectFullFragment_Contributions_Edges "json:\"edges\" graphql:\"edges\""
+type GetProjectFullBySlug_Project_Result_ProjectFullFragment_Contributions struct {
+	Edges []*GetProjectFullBySlug_Project_Result_ProjectFullFragment_Contributions_Edges "json:\"edges\" graphql:\"edges\""
 }
-type GetFullProjectBySlug_Project_Result_ProjectFullFragment_Contributors_Edges_Node struct {
+type GetProjectFullBySlug_Project_Result_ProjectFullFragment_Contributors_Edges_Node struct {
 	FullName *string "json:\"fullName\" graphql:\"fullName\""
 	Username *string "json:\"username\" graphql:\"username\""
 	Email    *string "json:\"email\" graphql:\"email\""
 }
-type GetFullProjectBySlug_Project_Result_ProjectFullFragment_Contributors_Edges struct {
-	Node *GetFullProjectBySlug_Project_Result_ProjectFullFragment_Contributors_Edges_Node "json:\"node\" graphql:\"node\""
+type GetProjectFullBySlug_Project_Result_ProjectFullFragment_Contributors_Edges struct {
+	Node *GetProjectFullBySlug_Project_Result_ProjectFullFragment_Contributors_Edges_Node "json:\"node\" graphql:\"node\""
 }
-type GetFullProjectBySlug_Project_Result_ProjectFullFragment_Contributors struct {
-	Edges []*GetFullProjectBySlug_Project_Result_ProjectFullFragment_Contributors_Edges "json:\"edges\" graphql:\"edges\""
+type GetProjectFullBySlug_Project_Result_ProjectFullFragment_Contributors struct {
+	Edges []*GetProjectFullBySlug_Project_Result_ProjectFullFragment_Contributors_Edges "json:\"edges\" graphql:\"edges\""
 }
-type GetFullProjectBySlug_Project_Result_ProjectFullFragment_ForkedFrom_Project struct {
+type GetProjectFullBySlug_Project_Result_ProjectFullFragment_ForkedFrom_Project struct {
 	ParentSlug *string "json:\"parentSlug\" graphql:\"parentSlug\""
 	Slug       *string "json:\"slug\" graphql:\"slug\""
 }
-type GetFullProjectBySlug_Project_Result_ProjectFullFragment_ForkedFrom struct {
-	Project *GetFullProjectBySlug_Project_Result_ProjectFullFragment_ForkedFrom_Project "json:\"project\" graphql:\"project\""
+type GetProjectFullBySlug_Project_Result_ProjectFullFragment_ForkedFrom struct {
+	Project *GetProjectFullBySlug_Project_Result_ProjectFullFragment_ForkedFrom_Project "json:\"project\" graphql:\"project\""
 }
-type GetFullProjectBySlug_Project_Result_ProjectFullFragment_ParentContent struct {
-	Type  *string "json:\"type\" graphql:\"type\""
-	Title *string "json:\"title\" graphql:\"title\""
+type GetProjectFullBySlug_Project_Result_ProjectFullFragment_ParentContent struct {
+	Type *string "json:\"type\" graphql:\"type\""
+	Slug *string "json:\"slug\" graphql:\"slug\""
 }
-type GetFullProjectBySlug_Project struct {
+type GetProjectFullBySlug_Project struct {
 	Result *ProjectFullFragment "json:\"result\" graphql:\"result\""
 }
-type GetMandatoryProjectByID_Project_Result_ProjectMandatoryFragment_Creator_Profile struct {
+type GetProjectMandatoryByID_Project_Result_ProjectMandatoryFragment_Creator_Profile struct {
 	Username *string "json:\"username\" graphql:\"username\""
 }
-type GetMandatoryProjectByID_Project_Result_ProjectMandatoryFragment_Creator struct {
-	Profile *GetMandatoryProjectByID_Project_Result_ProjectMandatoryFragment_Creator_Profile "json:\"profile\" graphql:\"profile\""
+type GetProjectMandatoryByID_Project_Result_ProjectMandatoryFragment_Creator struct {
+	Profile *GetProjectMandatoryByID_Project_Result_ProjectMandatoryFragment_Creator_Profile "json:\"profile\" graphql:\"profile\""
 }
-type GetMandatoryProjectByID_Project_Result_ProjectMandatoryFragment_License struct {
+type GetProjectMandatoryByID_Project_Result_ProjectMandatoryFragment_License struct {
 	Abreviation *string "json:\"abreviation\" graphql:\"abreviation\""
 }
-type GetMandatoryProjectByID_Project_Result_ProjectMandatoryFragment_Contribution struct {
+type GetProjectMandatoryByID_Project_Result_ProjectMandatoryFragment_Contribution struct {
 	Version *string "json:\"version\" graphql:\"version\""
 }
-type GetMandatoryProjectByID_Project struct {
+type GetProjectMandatoryByID_Project struct {
 	Result *ProjectMandatoryFragment "json:\"result\" graphql:\"result\""
 }
-type GetMandatoryProjectBySlug_Project_Result_ProjectMandatoryFragment_Creator_Profile struct {
+type GetProjectMandatoryBySlug_Project_Result_ProjectMandatoryFragment_Creator_Profile struct {
 	Username *string "json:\"username\" graphql:\"username\""
 }
-type GetMandatoryProjectBySlug_Project_Result_ProjectMandatoryFragment_Creator struct {
-	Profile *GetMandatoryProjectBySlug_Project_Result_ProjectMandatoryFragment_Creator_Profile "json:\"profile\" graphql:\"profile\""
+type GetProjectMandatoryBySlug_Project_Result_ProjectMandatoryFragment_Creator struct {
+	Profile *GetProjectMandatoryBySlug_Project_Result_ProjectMandatoryFragment_Creator_Profile "json:\"profile\" graphql:\"profile\""
 }
-type GetMandatoryProjectBySlug_Project_Result_ProjectMandatoryFragment_License struct {
+type GetProjectMandatoryBySlug_Project_Result_ProjectMandatoryFragment_License struct {
 	Abreviation *string "json:\"abreviation\" graphql:\"abreviation\""
 }
-type GetMandatoryProjectBySlug_Project_Result_ProjectMandatoryFragment_Contribution struct {
+type GetProjectMandatoryBySlug_Project_Result_ProjectMandatoryFragment_Contribution struct {
 	Version *string "json:\"version\" graphql:\"version\""
 }
-type GetMandatoryProjectBySlug_Project struct {
+type GetProjectMandatoryBySlug_Project struct {
 	Result *ProjectMandatoryFragment "json:\"result\" graphql:\"result\""
+}
+type GetGroup_Initiative_Result_Members_Edges_Node struct {
+	Username *string "json:\"username\" graphql:\"username\""
+}
+type GetGroup_Initiative_Result_Members_Edges struct {
+	Node *GetGroup_Initiative_Result_Members_Edges_Node "json:\"node\" graphql:\"node\""
+}
+type GetGroup_Initiative_Result_Members struct {
+	Edges []*GetGroup_Initiative_Result_Members_Edges "json:\"edges\" graphql:\"edges\""
+}
+type GetGroup_Initiative_Result struct {
+	Slug    *string                             "json:\"slug\" graphql:\"slug\""
+	Title   *string                             "json:\"title\" graphql:\"title\""
+	Avatar  *FileFragment                       "json:\"avatar\" graphql:\"avatar\""
+	Members *GetGroup_Initiative_Result_Members "json:\"members\" graphql:\"members\""
+}
+type GetGroup_Initiative struct {
+	Result *GetGroup_Initiative_Result "json:\"result\" graphql:\"result\""
 }
 type QueryProjects struct {
 	Projects *QueryProjects_Projects "json:\"projects\" graphql:\"projects\""
 }
-type GetFullProjectByID struct {
-	Project *GetFullProjectByID_Project "json:\"project\" graphql:\"project\""
+type GetProjectFullByID struct {
+	Project *GetProjectFullByID_Project "json:\"project\" graphql:\"project\""
 }
-type GetFullProjectBySlug struct {
-	Project *GetFullProjectBySlug_Project "json:\"project\" graphql:\"project\""
+type GetProjectFullBySlug struct {
+	Project *GetProjectFullBySlug_Project "json:\"project\" graphql:\"project\""
 }
-type GetMandatoryProjectByID struct {
-	Project *GetMandatoryProjectByID_Project "json:\"project\" graphql:\"project\""
+type GetProjectMandatoryByID struct {
+	Project *GetProjectMandatoryByID_Project "json:\"project\" graphql:\"project\""
 }
-type GetMandatoryProjectBySlug struct {
-	Project *GetMandatoryProjectBySlug_Project "json:\"project\" graphql:\"project\""
+type GetProjectMandatoryBySlug struct {
+	Project *GetProjectMandatoryBySlug_Project "json:\"project\" graphql:\"project\""
+}
+type GetGroup struct {
+	Initiative *GetGroup_Initiative "json:\"initiative\" graphql:\"initiative\""
 }
 
-const QueryProjectsDocument = `query QueryProjects ($batchSize: Int, $cursor: String) {
+const QueryProjectsDocument = `query QueryProjects ($batchSize: Int!, $cursor: String!) {
 	projects(first: $batchSize, after: $cursor) {
 		result {
 			pageInfo {
@@ -497,6 +521,8 @@ fragment PageInfoFragment on PageInfo {
 }
 fragment ProjectMandatoryFragment on Project {
 	id
+	parentSlug
+	slug
 	name
 	description
 	creator {
@@ -513,7 +539,7 @@ fragment ProjectMandatoryFragment on Project {
 }
 `
 
-func (c *Client) QueryProjects(ctx context.Context, batchSize *int64, cursor *string) (*QueryProjects, error) {
+func (c *Client) QueryProjects(ctx context.Context, batchSize int64, cursor string) (*QueryProjects, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
 		OperationName: "QueryProjects",
@@ -532,21 +558,28 @@ func (c *Client) QueryProjects(ctx context.Context, batchSize *int64, cursor *st
 	return &resp, nil
 }
 
-const GetFullProjectByIDDocument = `query GetFullProjectByID ($id: ID) {
+func (c *Client) QueryProjectsWithResponse(ctx context.Context, batchSize int64, cursor string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "QueryProjects",
+		Query:         QueryProjectsDocument,
+		Variables: map[string]interface{}{
+			"batchSize": batchSize,
+			"cursor":    cursor,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetProjectFullByIDDocument = `query GetProjectFullByID ($id: ID!) {
 	project(id: $id) {
 		result {
 			... ProjectFullFragment
-		}
-	}
-}
-fragment ContributionFragment on Contribution {
-	title
-	dateCreated
-	version
-	files {
-		dirname
-		file {
-			... FileFragment
 		}
 	}
 }
@@ -603,7 +636,7 @@ fragment ProjectFullFragment on Project {
 	parentSlug
 	parentContent {
 		type
-		title
+		slug
 	}
 }
 fragment FileFragment on File {
@@ -616,19 +649,30 @@ fragment FileFragment on File {
 	lastUpdated
 	license
 }
+fragment ContributionFragment on Contribution {
+	title
+	dateCreated
+	version
+	files {
+		dirname
+		file {
+			... FileFragment
+		}
+	}
+}
 `
 
-func (c *Client) GetFullProjectByID(ctx context.Context, id *string) (*GetFullProjectByID, error) {
+func (c *Client) GetProjectFullByID(ctx context.Context, id string) (*GetProjectFullByID, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
-		OperationName: "GetFullProjectByID",
-		Query:         GetFullProjectByIDDocument,
+		OperationName: "GetProjectFullByID",
+		Query:         GetProjectFullByIDDocument,
 		Variables: map[string]interface{}{
 			"id": id,
 		},
 	}
 
-	var resp GetFullProjectByID
+	var resp GetProjectFullByID
 	err := c.Requester.Do(req, &resp)
 	if err != nil {
 		return nil, err
@@ -636,7 +680,24 @@ func (c *Client) GetFullProjectByID(ctx context.Context, id *string) (*GetFullPr
 	return &resp, nil
 }
 
-const GetFullProjectBySlugDocument = `query GetFullProjectBySlug ($space: String, $slug: String) {
+func (c *Client) GetProjectFullByIDWithResponse(ctx context.Context, id string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetProjectFullByID",
+		Query:         GetProjectFullByIDDocument,
+		Variables: map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetProjectFullBySlugDocument = `query GetProjectFullBySlug ($space: String!, $slug: String!) {
 	project(space: $space, slug: $slug) {
 		result {
 			... ProjectFullFragment
@@ -696,7 +757,7 @@ fragment ProjectFullFragment on Project {
 	parentSlug
 	parentContent {
 		type
-		title
+		slug
 	}
 }
 fragment FileFragment on File {
@@ -722,18 +783,18 @@ fragment ContributionFragment on Contribution {
 }
 `
 
-func (c *Client) GetFullProjectBySlug(ctx context.Context, space *string, slug *string) (*GetFullProjectBySlug, error) {
+func (c *Client) GetProjectFullBySlug(ctx context.Context, space string, slug string) (*GetProjectFullBySlug, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
-		OperationName: "GetFullProjectBySlug",
-		Query:         GetFullProjectBySlugDocument,
+		OperationName: "GetProjectFullBySlug",
+		Query:         GetProjectFullBySlugDocument,
 		Variables: map[string]interface{}{
 			"space": space,
 			"slug":  slug,
 		},
 	}
 
-	var resp GetFullProjectBySlug
+	var resp GetProjectFullBySlug
 	err := c.Requester.Do(req, &resp)
 	if err != nil {
 		return nil, err
@@ -741,7 +802,25 @@ func (c *Client) GetFullProjectBySlug(ctx context.Context, space *string, slug *
 	return &resp, nil
 }
 
-const GetMandatoryProjectByIDDocument = `query GetMandatoryProjectByID ($id: ID) {
+func (c *Client) GetProjectFullBySlugWithResponse(ctx context.Context, space string, slug string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetProjectFullBySlug",
+		Query:         GetProjectFullBySlugDocument,
+		Variables: map[string]interface{}{
+			"space": space,
+			"slug":  slug,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetProjectMandatoryByIDDocument = `query GetProjectMandatoryByID ($id: ID!) {
 	project(id: $id) {
 		result {
 			... ProjectMandatoryFragment
@@ -750,6 +829,8 @@ const GetMandatoryProjectByIDDocument = `query GetMandatoryProjectByID ($id: ID)
 }
 fragment ProjectMandatoryFragment on Project {
 	id
+	parentSlug
+	slug
 	name
 	description
 	creator {
@@ -766,17 +847,17 @@ fragment ProjectMandatoryFragment on Project {
 }
 `
 
-func (c *Client) GetMandatoryProjectByID(ctx context.Context, id *string) (*GetMandatoryProjectByID, error) {
+func (c *Client) GetProjectMandatoryByID(ctx context.Context, id string) (*GetProjectMandatoryByID, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
-		OperationName: "GetMandatoryProjectByID",
-		Query:         GetMandatoryProjectByIDDocument,
+		OperationName: "GetProjectMandatoryByID",
+		Query:         GetProjectMandatoryByIDDocument,
 		Variables: map[string]interface{}{
 			"id": id,
 		},
 	}
 
-	var resp GetMandatoryProjectByID
+	var resp GetProjectMandatoryByID
 	err := c.Requester.Do(req, &resp)
 	if err != nil {
 		return nil, err
@@ -784,7 +865,24 @@ func (c *Client) GetMandatoryProjectByID(ctx context.Context, id *string) (*GetM
 	return &resp, nil
 }
 
-const GetMandatoryProjectBySlugDocument = `query GetMandatoryProjectBySlug ($space: String, $slug: String) {
+func (c *Client) GetProjectMandatoryByIDWithResponse(ctx context.Context, id string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetProjectMandatoryByID",
+		Query:         GetProjectMandatoryByIDDocument,
+		Variables: map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetProjectMandatoryBySlugDocument = `query GetProjectMandatoryBySlug ($space: String!, $slug: String!) {
 	project(space: $space, slug: $slug) {
 		result {
 			... ProjectMandatoryFragment
@@ -793,6 +891,8 @@ const GetMandatoryProjectBySlugDocument = `query GetMandatoryProjectBySlug ($spa
 }
 fragment ProjectMandatoryFragment on Project {
 	id
+	parentSlug
+	slug
 	name
 	description
 	creator {
@@ -809,21 +909,104 @@ fragment ProjectMandatoryFragment on Project {
 }
 `
 
-func (c *Client) GetMandatoryProjectBySlug(ctx context.Context, space *string, slug *string) (*GetMandatoryProjectBySlug, error) {
+func (c *Client) GetProjectMandatoryBySlug(ctx context.Context, space string, slug string) (*GetProjectMandatoryBySlug, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
-		OperationName: "GetMandatoryProjectBySlug",
-		Query:         GetMandatoryProjectBySlugDocument,
+		OperationName: "GetProjectMandatoryBySlug",
+		Query:         GetProjectMandatoryBySlugDocument,
 		Variables: map[string]interface{}{
 			"space": space,
 			"slug":  slug,
 		},
 	}
 
-	var resp GetMandatoryProjectBySlug
+	var resp GetProjectMandatoryBySlug
 	err := c.Requester.Do(req, &resp)
 	if err != nil {
 		return nil, err
 	}
 	return &resp, nil
+}
+
+func (c *Client) GetProjectMandatoryBySlugWithResponse(ctx context.Context, space string, slug string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetProjectMandatoryBySlug",
+		Query:         GetProjectMandatoryBySlugDocument,
+		Variables: map[string]interface{}{
+			"space": space,
+			"slug":  slug,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+const GetGroupDocument = `query GetGroup ($slug: String!) {
+	initiative(slug: $slug) {
+		result {
+			slug
+			title
+			avatar {
+				... FileFragment
+			}
+			members {
+				edges {
+					node {
+						username
+					}
+				}
+			}
+		}
+	}
+}
+fragment FileFragment on File {
+	filename
+	path
+	mimeType
+	url
+	permalink
+	dateCreated
+	lastUpdated
+	license
+}
+`
+
+func (c *Client) GetGroup(ctx context.Context, slug string) (*GetGroup, error) {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetGroup",
+		Query:         GetGroupDocument,
+		Variables: map[string]interface{}{
+			"slug": slug,
+		},
+	}
+
+	var resp GetGroup
+	err := c.Requester.Do(req, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (c *Client) GetGroupWithResponse(ctx context.Context, slug string, resp interface{}) error {
+	req := request.GraphQLRequest{
+		Ctx:           ctx,
+		OperationName: "GetGroup",
+		Query:         GetGroupDocument,
+		Variables: map[string]interface{}{
+			"slug": slug,
+		},
+	}
+
+	err := c.Requester.Do(req, resp)
+	if err != nil {
+		return err
+	}
+	return nil
 }

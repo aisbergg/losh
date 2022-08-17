@@ -1,17 +1,21 @@
 package wikifactory
 
 import (
+	"context"
 	"fmt"
+	"html"
+	"net/url"
 	"path/filepath"
 	"strings"
 	"time"
 
 	"losh/crawler/core/wikifactory/wfclient"
 	"losh/internal/core/product/models"
+	"losh/internal/infra/dgraph/dgclient"
 	"losh/internal/lib/fileformats"
-	"losh/internal/license"
 
 	"github.com/abadojack/whatlanggo"
+	"github.com/aisbergg/go-errors/pkg/errors"
 	"github.com/aisbergg/go-pathlib/pkg/pathlib"
 	"github.com/microcosm-cc/bluemonday"
 )
@@ -44,26 +48,29 @@ var licenseMapping = map[string]string{
 	"OHL":          "TAPR-OHL-1.0",
 	"CERN OHL":     "CERN-OHL-1.2",
 }
-
-type WikifactoryNormalizer struct {
-	licenseCache *license.LicenseCache
+var host = &models.Host{
+	Domain: p("wikifactory.com"),
+	Name:   p("Wikifactory"),
 }
 
-// NewWikifactoryNormalizer creates a new WikifactoryNormalizer.
-func NewWikifactoryNormalizer(licenseCache *license.LicenseCache) *WikifactoryNormalizer {
-	return &WikifactoryNormalizer{
-		licenseCache: licenseCache,
-	}
+type rawData struct {
+	timestamp   time.Time
+	projectInfo *wfclient.ProjectFullFragment
+	// group information, because I can't seem to get the group information from the project info
+	groupInfo *wfclient.GetGroup_Initiative_Result
 }
 
 // NormalizeProduct creates a normalized product from the given Wikifactory
 // project information.
-func (wn *WikifactoryNormalizer) NormalizeProduct(timestamp time.Time, wfProjectInfo *wfclient.GetFullProjectBySlug) *models.Product {
+func (c *WikifactoryCrawler) NormalizeProduct(ctx context.Context, timestamp time.Time, wfPrjInfo *wfclient.ProjectFullFragment) (*models.Product, error) {
 	product := &models.Product{}
 
 	// releases
-	owner := wn.getOwner(wfProjectInfo, timestamp)
-	releases := wn.getReleases(wfProjectInfo, owner, timestamp)
+	licensor, err := c.normLicensor(ctx, wfPrjInfo, timestamp)
+	if err != nil {
+		return nil, err
+	}
+	releases := c.normReleases(wfPrjInfo, licensor, timestamp)
 	latestRelease := releases[0] // latest release is always the first
 
 	// crawler info
@@ -74,17 +81,24 @@ func (wn *WikifactoryNormalizer) NormalizeProduct(timestamp time.Time, wfProject
 	// product info
 	productURL := &models.ProductURL{
 		Domain: "wikifactory.com",
-		Owner:  *wfProjectInfo.Project.Result.ParentSlug,
-		Repo:   *wfProjectInfo.Project.Result.Slug,
+		Owner:  *wfPrjInfo.ParentSlug,
+		Repo:   *wfPrjInfo.Slug,
 	}
-	product.Xid = fmt.Sprintf("%s/%s/%s", productURL.Domain, productURL.Owner, productURL.Repo)
+	// Xid format: domain.tld/owner/repo/file-path
+	product.Xid = asXid(productURL.Domain, productURL.Owner, productURL.Repo, "")
 	product.Name = latestRelease.Name
-	product.Owner = owner
 	product.Description = latestRelease.Description
-	product.Website = &product.DataSource.URL
+	product.DocumentationLanguage = latestRelease.DocumentationLanguage
 	product.Version = latestRelease.Version
+	product.License = latestRelease.License
+	product.Licensor = licensor
+	product.Website = product.DataSource.URL
 	product.Release = latestRelease
 	product.Releases = releases
+	for _, release := range releases {
+		release.Product = product
+	}
+
 	// product.RenamedTo = "XXX"   // TODO
 	// product.RenamedFrom = "XXX" // TODO
 	// product.ForkOf = "XXX"      // TODO
@@ -92,68 +106,66 @@ func (wn *WikifactoryNormalizer) NormalizeProduct(timestamp time.Time, wfProject
 	// product.Tags = "XXX"     // TODO
 	// product.Category = "XXX" // TODO
 
-	return product
-
-	// Crawler Start:
-	// - Upload Host
-	// - [check diagram]
-
-	// Add
-	// - Get Product Entry from DB
-	// - Exists -> Skip
-	// - Update Product Entry
-	// - Add Product to DB
+	return product, nil
 }
 
-// getReleases returns the release of the product.
-func (wn *WikifactoryNormalizer) getReleases(wfProjectInfo *wfclient.GetFullProjectBySlug, owner models.UserOrGroup, timestamp time.Time) []*models.Component {
-	wfContribs := wfProjectInfo.Project.Result.Contributions.Edges
+// normReleases returns the release of the product.
+func (c *WikifactoryCrawler) normReleases(prjInfo *wfclient.ProjectFullFragment, owner models.UserOrGroup, timestamp time.Time) []*models.Component {
+	wfContribs := prjInfo.Contributions.Edges
 	releases := make([]*models.Component, 0, len(wfContribs))
+
+	// image (same for every release)
+	var image *models.File
 
 	for i, edge := range wfContribs {
 		wfContrib := edge.Node
-		version := *wfContrib.Version
+		version := wfContrib.Version
 		crawlerMeta := &models.CrawlerMetaImpl{
-			DiscoveredAt:  timestamp,
-			LastIndexedAt: timestamp,
-			DataSource:    wn.getRepository(owner, version, wfProjectInfo),
+			DiscoveredAt:  &timestamp,
+			LastIndexedAt: &timestamp,
+			DataSource:    c.normRepository(owner, *version, prjInfo),
 		}
-		files := wn.getFiles(wfContrib, crawlerMeta)
+		files := c.normFiles(wfContrib, crawlerMeta)
 
 		release := &models.Component{}
 		release.DiscoveredAt = crawlerMeta.DiscoveredAt
 		release.LastIndexedAt = crawlerMeta.LastIndexedAt
 		release.DataSource = crawlerMeta.DataSource
 
-		release.Name = *wfProjectInfo.Project.Result.Name
-		release.Description = wn.getDescription(wfProjectInfo)
-		release.Owner = owner
-		release.Version = *wfContrib.Version
-		release.CreatedAt = *wfProjectInfo.Project.Result.DateCreated
-		release.Releases = []*models.Component{} // TODO
+		// Xid format: domain.tld/owner/repo/ref/file-path/component-name
+		// release.Xid = *release.DataSource.Xid + "/" + asXid(*prjInfo.Name)
+		release.Xid = asXid(*release.DataSource.Host.Domain, *release.DataSource.Owner.GetName(), *release.DataSource.Name, *release.DataSource.Reference, "", *prjInfo.Name)
+		release.Name = prjInfo.Name
+		release.Description = c.normDescription(prjInfo)
+		release.Version = wfContrib.Version
+		release.CreatedAt = prjInfo.DateCreated
+		release.Releases = make([]*models.Component, 0, len(wfContribs))
 		if i == 0 {
-			release.IsLatest = true
+			release.IsLatest = p(true)
 		}
 		release.Repository = crawlerMeta.DataSource
-		release.License = wn.getLicense(wfProjectInfo.Project.Result.License.Abreviation)
+		release.License = c.normLicense(prjInfo.License)
 		release.Licensor = owner
-		release.DocumentationLanguage = wn.getDocumentationLanguage(release.Description)
-		// release.TechnologyReadinessLevel = "XXX" // TODO
-		// release.DocumentationReadinessLevel = "XXX" // TODO
+		release.DocumentationLanguage = c.normDocumentationLanguage(*release.Description)
+		release.TechnologyReadinessLevel = p(dgclient.TechnologyReadinessLevelUndetermined)
+		release.DocumentationReadinessLevel = p(dgclient.DocumentationReadinessLevelUndetermined)
 		// release.Attestation = "XXX" // TODO
 		// release.Publication = "XXX" // TODO
 		// release.CompliesWith = "XXX" // TODO
 		// release.CpcPatentClass = "XXX" // TODO
 		// release.Tsdc = "XXX" // TODO
-		// subComponents := wn.getSubComponents(files, wfProjectInfo)
+		// subComponents := c.getSubComponents(files, prjInfo)
 		release.Components = []*models.Component{} // TODO
 		release.Software = []*models.Software{}
-		release.Image = wn.getFile(wfProjectInfo.Project.Result.Image, crawlerMeta)
-		release.Readme = wn.getInfoFile([]string{"README"}, files)
-		release.ContributionGuide = wn.getInfoFile([]string{"CONTRIBUTING"}, files)
-		release.Bom = wn.getInfoFile([]string{"BOM", "BILLOFMATERIALS"}, files)
-		release.ManufacturingInstructions = wn.getInfoFile([]string{"MANUFACTURINGINSTRUCTIONS", "MANUFACTURING"}, files)
-		release.UserManual = wn.getInfoFile([]string{"USERGUIDE", "USERMANUAL"}, files)
+		if image == nil {
+			image = c.getImage(prjInfo.Image, crawlerMeta)
+		}
+		release.Image = image
+		release.Readme = c.normInfoFile([]string{"README"}, files)
+		release.ContributionGuide = c.normInfoFile([]string{"CONTRIBUTING"}, files)
+		release.Bom = c.normInfoFile([]string{"BOM", "BILLOFMATERIALS"}, files)
+		release.ManufacturingInstructions = c.normInfoFile([]string{"MANUFACTURINGINSTRUCTIONS", "MANUFACTURING"}, files)
+		release.UserManual = c.normInfoFile([]string{"USERGUIDE", "USERMANUAL"}, files)
 		// release.Product = "XXX" // TODO
 		// release.UsedIn = "XXX" // TODO
 		// release.Source = "XXX" // TODO
@@ -169,57 +181,93 @@ func (wn *WikifactoryNormalizer) getReleases(wfProjectInfo *wfclient.GetFullProj
 		releases = append(releases, release)
 	}
 
+	// link releases to each other
+	for i := 0; i < len(releases); i++ {
+		release := releases[i]
+		for j := 0; j < len(releases); j++ {
+			release.Releases = append(release.Releases, releases[j])
+		}
+	}
+	// for _, release := range releases {
+	// 	release.Releases = append(release.Releases, release)
+	// }
+
 	return releases
 }
 
-// getRepository returns the source of the component.
-func (wn *WikifactoryNormalizer) getRepository(owner models.UserOrGroup, version string, wfProjectInfo *wfclient.GetFullProjectBySlug) models.Repository {
+// normRepository returns the source of the component.
+func (c *WikifactoryCrawler) normRepository(owner models.UserOrGroup, ref string, prjInfo *wfclient.ProjectFullFragment) *models.Repository {
 	productURL := &models.ProductURL{
 		Domain: "wikifactory.com",
-		Owner:  *wfProjectInfo.Project.Result.ParentSlug,
-		Repo:   *wfProjectInfo.Project.Result.Slug,
-		Tag:    version,
+		Owner:  *prjInfo.ParentSlug,
+		Repo:   *prjInfo.Slug,
+		Ref:    ref,
 	}
 	repoURL := productURL.RepositoryURL()
 	permaURL := productURL.PermaURL()
-	xid := strings.Join([]string{productURL.Domain, productURL.Owner, productURL.Repo, productURL.Tag}, "/")
-	return models.Repository{
-		Xid:      xid,                               // TODO
-		URL:      repoURL,                           // TODO
-		PermaURL: permaURL,                          // TODO
-		Host:     wn.getHost(),                      // TODO
-		Owner:    owner,                             // TODO
-		Name:     wfProjectInfo.Project.Result.Slug, // TODO
-		Tag:      stringOrNil(&version),             // TODO
+	// Xid format: domain.tld/owner/repo/ref/file-path
+	xid := strings.Join([]string{productURL.Domain, productURL.Owner, productURL.Repo, productURL.Ref, "-"}, "/")
+	return &models.Repository{
+		Xid:       p(xid),            // TODO
+		URL:       p(repoURL),        // TODO
+		PermaURL:  p(permaURL),       // TODO
+		Host:      host,              // TODO
+		Owner:     owner,             // TODO
+		Name:      prjInfo.Slug,      // TODO
+		Reference: stringOrNil(&ref), // TODO
 	}
 }
 
-// getDescription returns the getDescription of the product.
-func (wn *WikifactoryNormalizer) getDescription(wfProjectInfo *wfclient.GetFullProjectBySlug) string {
-	htmlDescription := wfProjectInfo.Project.Result.Description
+// func (c *WikifactoryCrawler) normRepository(owner models.UserOrGroup, repo, ref *string, prjInfo *wfclient.ProjectFullFragment) *models.Repository {
+// 	productURL := &models.ProductURL{
+// 		Domain: "wikifactory.com",
+// 		Owner:  *prjInfo.ParentSlug,
+// 		Repo:   *prjInfo.Slug,
+// 		Ref:    ref,
+// 	}
+// 	repoURL := productURL.RepositoryURL()
+// 	permaURL := productURL.PermaURL()
+// 	// Xid format: domain.tld/owner/repo/ref/file-path
+// 	// xid := strings.Join([]string{productURL.Domain, productURL.Owner, productURL.Repo, productURL.Ref, "-"}, "/")
+
+// 	xid := asXid(*host.Domain, owner, *productURL.Repo, *productURL.Ref, "")
+// 	return &models.Repository{
+// 		Xid:       xid,
+// 		URL:       p(repoURL),
+// 		PermaURL:  p(permaURL),
+// 		Host:      host,
+// 		Owner:     owner,
+// 		Name:      prjInfo.Slug,
+// 		Reference: stringOrNil(ref),
+// 	}
+// }
+
+// normDescription returns the normDescription of the product.
+func (c *WikifactoryCrawler) normDescription(prjInfo *wfclient.ProjectFullFragment) *string {
+	htmlDescription := prjInfo.Description
 	if htmlDescription == nil || *htmlDescription == "" {
-		return ""
+		return nil
 	}
 
 	// sanitize description by removing all HTML tags
-	return stripHTMLTags(*htmlDescription)
+	return p(stripHTMLTags(*htmlDescription))
 }
 
-// getDocumentationLanguage returns the documentation language of the product.
-func (wn *WikifactoryNormalizer) getDocumentationLanguage(documentation string) string {
+// normDocumentationLanguage returns the documentation language of the product.
+func (c *WikifactoryCrawler) normDocumentationLanguage(documentation string) *string {
 	defaultLang := "en"
 	if documentation == "" {
-		return defaultLang
+		return &defaultLang
 	}
 	lang := whatlanggo.DetectLang(documentation).Iso6391()
 	if lang == "" {
-		return defaultLang
+		return &defaultLang
 	}
-	return lang
+	return &lang
 }
 
-// getFiles returns the files in the Wikifactory project.
-func (wn *WikifactoryNormalizer) getFiles(contrib *wfclient.ContributionFragment, crawlerMeta *models.CrawlerMetaImpl) []*models.File {
+// normFiles returns the files in the Wikifactory project.
+func (c *WikifactoryCrawler) normFiles(contrib *wfclient.ContributionFragment, crawlerMeta *models.CrawlerMetaImpl) []*models.File {
 	files := make([]*models.File, 0, 10)
 	for _, wfFileMeta := range contrib.Files {
 		wfFile := wfFileMeta.File
@@ -232,47 +280,62 @@ func (wn *WikifactoryNormalizer) getFiles(contrib *wfclient.ContributionFragment
 			path := fmt.Sprintf("%s/%s", *dirName, wfFile.Filename)
 			wfFile.Path = &path // reuse field, it doesn't contain usable data
 		}
-		file := wn.getFile(wfFile, crawlerMeta)
+		file := c.normFile(wfFile, crawlerMeta)
 		files = append(files, file)
 	}
 	return files
 }
 
-// getFile returns a file from the Wikifactory project.
-func (wn *WikifactoryNormalizer) getFile(wfFile *wfclient.FileFragment, crawlerMeta *models.CrawlerMetaImpl) *models.File {
+// normFile returns a file from the Wikifactory project.
+func (c *WikifactoryCrawler) normFile(wfFile *wfclient.FileFragment, crawlerMeta *models.CrawlerMetaImpl) *models.File {
 	if wfFile == nil {
 		return nil
 	}
 	file := &models.File{}
-	file.Path = *wfFile.Path
-	file.Name = filepath.Base(file.Path)
+	file.Path = wfFile.Path
+	file.Name = p(filepath.Base(*file.Path))
 	file.MimeType = stringOrNil(&wfFile.MimeType)
-	file.URL = *wfFile.Permalink
+	file.URL = wfFile.URL
 	file.CreatedAt = wfFile.DateCreated
 	file.DiscoveredAt = crawlerMeta.DiscoveredAt
 	file.LastIndexedAt = crawlerMeta.LastIndexedAt
 	file.DataSource = crawlerMeta.DataSource
+
+	owner := ""
+	if crawlerMeta.DataSource.Owner != nil {
+		owner = *crawlerMeta.DataSource.Owner.GetName()
+	}
+	repo := ""
+	if crawlerMeta.DataSource.Name != nil {
+		repo = *crawlerMeta.DataSource.Name
+	}
+	ref := ""
+	if crawlerMeta.DataSource.Reference != nil {
+		ref = *crawlerMeta.DataSource.Reference
+	}
+	file.Xid = asXid(*crawlerMeta.DataSource.Host.Domain, owner, repo, ref, *file.Path)
+
 	return file
 }
 
-// getHost returns the host of the product.
-func (wn *WikifactoryNormalizer) getHost() models.Host {
-	return models.Host{
-		Domain: "wikifactory.com",
-		Name:   "Wikifactory",
-	}
+// normInfoFile returns the info file of the product.
+func (c *WikifactoryCrawler) getImage(wfFile *wfclient.FileFragment, crawlerMeta *models.CrawlerMetaImpl) *models.File {
+	image := c.normFile(wfFile, crawlerMeta)
+	// TODO: handle nil image
+	image.Xid = asXid(*crawlerMeta.DataSource.Host.Domain, *crawlerMeta.DataSource.Owner.GetName(), "", "", *image.Path)
+	return image
 }
 
-// getInfoFile returns the info file of the product.
-func (wn *WikifactoryNormalizer) getInfoFile(names []string, files []*models.File) *models.File {
+// normInfoFile returns the info file of the product.
+func (c *WikifactoryCrawler) normInfoFile(names []string, files []*models.File) *models.File {
 	for _, file := range files {
 		// only consider files in root dir
-		parts := strings.Split(strings.TrimLeft(file.Path, "/"), "/")
+		parts := strings.Split(strings.TrimLeft(*file.Path, "/"), "/")
 		if len(parts) > 1 {
 			continue
 		}
 		for _, name := range names {
-			filename := file.Name
+			filename := *file.Name
 			if pos := strings.LastIndexByte(filename, '.'); pos != -1 {
 				filename = filename[:pos]
 			}
@@ -291,7 +354,7 @@ func (wn *WikifactoryNormalizer) getInfoFile(names []string, files []*models.Fil
 
 // translateLicense translates the license IDs used by Wikifactory into SPDX
 // license IDs.
-func (*WikifactoryNormalizer) translateLicense(wfLcsStr string) string {
+func (*WikifactoryCrawler) translateLicense(wfLcsStr string) string {
 	wfLcsStr = strings.TrimSpace(wfLcsStr)
 	if lcsStr, ok := licenseMapping[strings.ToUpper(wfLcsStr)]; ok {
 		return lcsStr
@@ -299,94 +362,90 @@ func (*WikifactoryNormalizer) translateLicense(wfLcsStr string) string {
 	return wfLcsStr
 }
 
-// getLicense returns the license of the product.
-func (wn *WikifactoryNormalizer) getLicense(wfLicenseString *string) models.License {
-	if wfLicenseString == nil {
-		return models.License{}
-	}
-	*wfLicenseString = wn.translateLicense(*wfLicenseString)
-	license := wn.licenseCache.GetByIDOrName(*wfLicenseString)
-	if license == nil {
-		return models.License{}
-	}
-	return *license
-}
-
-// getOwner returns the owner of the product.
-func (wn *WikifactoryNormalizer) getOwner(wfProjectInfo *wfclient.GetFullProjectBySlug, timestamp time.Time) (owner models.UserOrGroup) {
-	creator := wfProjectInfo.Project.Result.Creator
-	platform := wn.getHost()
-	xid := platform.Domain + "/" + *creator.Profile.Username
-	url := "https://" + xid
-	var avatar *models.File
-	if wfProjectInfo.Project.Result.Creator.Profile.Avatar != nil {
-		crawlerMeta := &models.CrawlerMetaImpl{
-			DiscoveredAt:  timestamp,
-			LastIndexedAt: timestamp,
-			DataSource:    models.Repository{},
-		}
-		avatar = wn.getFile(wfProjectInfo.Project.Result.Creator.Profile.Avatar, crawlerMeta)
-	}
-
-	// is group
-	if *wfProjectInfo.Project.Result.ParentContent.Type == "initiative" {
-		owner = &models.Group{
-			Xid:     xid,
-			Host:    platform,
-			Name:    *creator.Profile.Username,
-			Email:   stringOrNil(creator.Profile.Email),
-			Members: []models.UserOrGroup{},
-			Avatar:  avatar,
-			URL:     &url, // TODO
-			// MemberOf: "", // TODO
-			Products: []*models.Product{}, // TODO
-		}
-
-	} else {
-		// is user
-		owner = models.User{
-			Xid:      xid,
-			Host:     platform,
-			Name:     *creator.Profile.Username,
-			FullName: stringOrNil(creator.Profile.FullName),
-			Email:    stringOrNil(creator.Profile.Email),
-			Locale:   stringOrNil(creator.Profile.Locale),
-			Avatar:   avatar,
-			URL:      &url,
-			// MemberOf: "", // TODO
-			Products: []*models.Product{}, // TODO
-		}
-	}
-
-	if avatar != nil {
-		avatar.DataSource = wn.getRepository(owner, "latest", wfProjectInfo)
-	}
-
-	return
-}
-
-// stringOrNil returns the string pointer if it is non nil and contains a string
-// else returns nil.
-func stringOrNil(s *string) *string {
-	if s == nil || *s == "" {
+// normLicense returns the license of the product.
+func (c *WikifactoryCrawler) normLicense(wfLicense *wfclient.ProjectFullFragment_License) *models.License {
+	if wfLicense == nil {
 		return nil
 	}
-	return s
+	lcsStr := c.translateLicense(*wfLicense.Abreviation)
+	return c.productService.GetCachedLicenseByIDOrName(lcsStr)
 }
 
-func stringOrEmpty(s *string) string {
-	if s == nil {
-		return ""
+// normLicensor returns the owner of the product.
+func (c *WikifactoryCrawler) normLicensor(ctx context.Context, prjInfo *wfclient.ProjectFullFragment, timestamp time.Time) (models.UserOrGroup, error) {
+	switch *prjInfo.ParentContent.Type {
+	case "initiative": // is group
+		// need more information
+		getGroup, err := c.wfClient.GetGroup(ctx, *prjInfo.ParentSlug)
+		if err != nil || getGroup.Initiative.Result == nil {
+			return nil, errors.Wrapf(err, "failed to get information of group '%s'", *prjInfo.ParentContent.Slug)
+		}
+		groupInfo := getGroup.Initiative.Result
+
+		xid := asXid(*host.Domain, *groupInfo.Slug)
+		url := "https://" + *xid
+		group := &models.Group{
+			Xid:      xid,
+			Host:     host,
+			Name:     groupInfo.Slug,
+			FullName: groupInfo.Title,
+			Members:  []models.UserOrGroup{}, //TODO
+			URL:      &url,
+		}
+
+		if groupInfo.Avatar != nil {
+			crawlerMeta := &models.CrawlerMetaImpl{
+				DiscoveredAt:  &timestamp,
+				LastIndexedAt: &timestamp,
+				DataSource:    c.normRepository(group, "latest", prjInfo),
+			}
+			avatar := c.normFile(groupInfo.Avatar, crawlerMeta)
+			if avatar != nil {
+				// Xid format: domain.tld/owner/repo/ref/file-path
+				avatar.Xid = asXid(*host.Domain, *group.Name, "", "", *avatar.Path)
+				group.Avatar = avatar
+			}
+		}
+
+		return group, nil
+
+	default: // is user
+		xid := asXid(*host.Domain, *prjInfo.Creator.Profile.Username)
+		url := "https://" + *xid
+		user := &models.User{
+			Xid:      xid,
+			Host:     host,
+			Name:     prjInfo.Creator.Profile.Username,
+			FullName: stringOrNil(prjInfo.Creator.Profile.FullName),
+			Email:    stringOrNil(prjInfo.Creator.Profile.Email),
+			Locale:   stringOrNil(prjInfo.Creator.Profile.Locale),
+			URL:      &url,
+		}
+
+		if prjInfo.Creator.Profile.Avatar != nil {
+			crawlerMeta := &models.CrawlerMetaImpl{
+				DiscoveredAt:  &timestamp,
+				LastIndexedAt: &timestamp,
+				DataSource:    c.normRepository(user, "latest", prjInfo),
+			}
+			avatar := c.normFile(prjInfo.Creator.Profile.Avatar, crawlerMeta)
+			if avatar != nil {
+				// Xid format: domain.tld/owner/repo/ref/file-path
+				avatar.Xid = asXid(*host.Domain, *user.Name, "", "", *avatar.Path)
+				user.Avatar = avatar
+			}
+		}
+
+		return user, nil
 	}
-	return *s
 }
 
 // getSubComponents returns the sub components of the release.
-func (wn *WikifactoryNormalizer) getSubComponents(files []*models.File, wfProjectInfo *wfclient.GetFullProjectBySlug) []*models.Component {
+func (c *WikifactoryCrawler) getSubComponents(files []*models.File, prjInfo *wfclient.ProjectFullFragment) []*models.Component {
 	// filter out readme and other files
 	filtered := make([]*models.File, 0, len(files))
 	for _, file := range files {
-		filename := file.Name
+		filename := *file.Name
 		if pos := strings.LastIndexByte(filename, '.'); pos != -1 {
 			filename = filename[:pos]
 		}
@@ -410,7 +469,7 @@ func (wn *WikifactoryNormalizer) getSubComponents(files []*models.File, wfProjec
 
 	fileWraps := make([]FileWrap, 0, len(filtered))
 	for _, file := range filtered {
-		fileWraps = append(fileWraps, FileWrap{file, pathlib.NewPurePosixPath(file.Path)})
+		fileWraps = append(fileWraps, FileWrap{file, pathlib.NewPurePosixPath(*file.Path)})
 	}
 
 	// put files in buckets
@@ -484,6 +543,22 @@ func (wn *WikifactoryNormalizer) getSubComponents(files []*models.File, wfProjec
 	return parts
 }
 
+// stringOrNil returns the string pointer if it is non nil and contains a string
+// else returns nil.
+func stringOrNil(s *string) *string {
+	if s == nil || *s == "" {
+		return nil
+	}
+	return s
+}
+
+func stringOrEmpty(s *string) string {
+	if s == nil {
+		return ""
+	}
+	return *s
+}
+
 // stripHTMLTags removes HTML tags from the given string.
 func stripHTMLTags(h string) string {
 	p := bluemonday.StrictPolicy()
@@ -491,4 +566,26 @@ func stripHTMLTags(h string) string {
 	h = html.UnescapeString(h)
 	return h
 }
+
+func p[T any](v T) *T {
+	return &v
+}
+
+func asXid(args ...string) *string {
+	if args == nil || len(args) == 0 {
+		return nil
+	}
+	var b strings.Builder
+	for i := 0; i < len(args); i++ {
+		if i > 0 {
+			b.WriteString("/")
+		}
+		if args[i] == "" {
+			b.WriteString("-")
+		} else {
+			b.WriteString(url.PathEscape(args[i]))
+		}
+	}
+	xid := b.String()
+	return &xid
 }

@@ -24,6 +24,8 @@ fragment ContributionFragment on Contribution {
 # ProjectMandatoryFragment represents a set of mandatory project information.
 fragment ProjectMandatoryFragment on Project {
 	id
+	parentSlug
+  slug
 	name
 	description
 	creator {
@@ -93,7 +95,7 @@ fragment ProjectFullFragment on Project {
 	parentSlug
 	parentContent {
 		type  # used to determine, if owner is an organization
-		title # nice name of organization
+		slug  # name of organization
 	}
 }
 
@@ -105,7 +107,7 @@ fragment PageInfoFragment on PageInfo {
 }
 
 # QueryProjects returns a batch Wikifactory projects with only mandatory information.
-query QueryProjects($batchSize: Int, $cursor: String) {
+query QueryProjects($batchSize: Int!, $cursor: String!) {
 	projects(first: $batchSize, after: $cursor) {
 		result {
 			pageInfo {
@@ -120,8 +122,8 @@ query QueryProjects($batchSize: Int, $cursor: String) {
 	}
 }
 
-# GetFullProjectByID returns a Wikifactory project with full information.
-query GetFullProjectByID($id: ID) {
+# GetProjectFullByID returns a Wikifactory project with full information.
+query GetProjectFullByID($id: ID!) {
 	project(id: $id) {
 		result {
 			...ProjectFullFragment
@@ -129,8 +131,8 @@ query GetFullProjectByID($id: ID) {
 	}
 }
 
-# GetFullProjectBySlug returns a Wikifactory project with full information.
-query GetFullProjectBySlug($space: String, $slug: String) {
+# GetProjectFullBySlug returns a Wikifactory project with full information.
+query GetProjectFullBySlug($space: String!, $slug: String!) {
 	project(space: $space, slug: $slug) {
 		result {
 			...ProjectFullFragment
@@ -138,8 +140,8 @@ query GetFullProjectBySlug($space: String, $slug: String) {
 	}
 }
 
-# GetMandatoryProjectByID returns a Wikifactory project with mandatory information.
-query GetMandatoryProjectByID($id: ID) {
+# GetProjectMandatoryByID returns a Wikifactory project with mandatory information.
+query GetProjectMandatoryByID($id: ID!) {
 	project(id: $id) {
 		result {
 			...ProjectMandatoryFragment
@@ -147,11 +149,28 @@ query GetMandatoryProjectByID($id: ID) {
 	}
 }
 
-# GetMandatoryProjectBySlug returns a Wikifactory project with mandatory information.
-query GetMandatoryProjectBySlug($space: String, $slug: String) {
+# GetProjectMandatoryBySlug returns a Wikifactory project with mandatory information.
+query GetProjectMandatoryBySlug($space: String!, $slug: String!) {
 	project(space: $space, slug: $slug) {
 		result {
 			...ProjectMandatoryFragment
 		}
 	}
+}
+
+query GetGroup($slug: String!) {
+  initiative(slug: $slug) {
+    result {
+      slug
+      title
+			avatar {...FileFragment}
+      members {
+        edges {
+          node {
+            username
+          }
+        }
+      }
+    }
+  }
 }
