@@ -4,7 +4,7 @@
   color: inherit;
 }
 
-@for $i from 1 to 3 {
+@for $i from 1 to 6 {
   .text-ellipses-line-#{$i} {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -44,3 +44,8 @@
   }
 }
 
+.no-results-icon {
+  width: 3.5rem;
+  height: 3.5rem;
+  stroke-width: 1.3;
+}

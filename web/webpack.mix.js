@@ -9,6 +9,7 @@ let { optimize } = require('svgo');
 
 let ImageminPlugin = require('imagemin-webpack-plugin').default;
 
+let assetsSrcPath = "intf/http/assets"
 let outputPath = "build/assets"
 let staticPath = path.join(outputPath, "static")
 
@@ -107,9 +108,9 @@ mix.extend("copyTemplates", function (_webpackConfig, src, dest) {
 // for loading/embedding the assets in the app.
 mix.extend("genAssetsGo", function (_webpackConfig, dest) {
     if (mix.inProduction()) {
-        exec(`go run resources/gen_assets_fs.go prod '${dest}'`)
+        exec(`go run ${assetsSrcPath}/gen_assets_fs.go prod '${dest}'`)
     } else {
-        exec(`go run resources/gen_assets_fs.go dev '${dest}'`)
+        exec(`go run ${assetsSrcPath}/gen_assets_fs.go dev '${dest}'`)
     }
 })
 
@@ -147,9 +148,9 @@ mix.sourceMaps()
     .imagemin( // copy and minify icons
         "node_modules/@tabler/icons/icons",
         "node_modules/@tabler/icons/icons/*.svg",
-        outputPath + "/icons",
+        `${outputPath}/icons`,
         {
-            cacheFolder: outputPath + "/.cache",
+            cacheFolder: `${outputPath}/.cache`,
             svgo: {
                 plugins: [
                     { removeViewBox: false },
@@ -157,23 +158,23 @@ mix.sourceMaps()
             },
         }
     )
-    .sass("resources/scss/tabler-icons.scss", "css")
+    // .sass(`${assetsSrcPath}/scss/tabler/tabler-icons.scss`, "css")
 
     // tabler.io
-    .js("resources/js/tabler.js", "js")
-    .sass("resources/scss/tabler.scss", "css")
-    .sass("resources/scss/tabler-vendors.scss", "css")
+    .js(`${assetsSrcPath}/js/tabler.js`, "js")
+    .sass(`${assetsSrcPath}/scss/tabler/tabler.scss`, "css")
+    .sass(`${assetsSrcPath}/scss/tabler/tabler-vendors.scss`, "css")
 
     // libs
 
     // app
-    .copyTemplates("resources/views", outputPath + "/templates")
+    .copyTemplates(`${assetsSrcPath}/tpl`, `${outputPath}/templates`)
     .imagemin( // copy and minify images
-        "resources",
-        "resources/img/**/*(*.svg|*.jpg|*.png)",
+        `${assetsSrcPath}`,
+        `${assetsSrcPath}/img/**/*(*.svg|*.jpg|*.png)`,
         staticPath,
         {
-            cacheFolder: outputPath + "/.cache",
+            cacheFolder: `${outputPath}/.cache`,
             svgo: {
                 plugins: [
                     { removeViewBox: false },
@@ -184,8 +185,6 @@ mix.sourceMaps()
             },
         }
     )
-    .sass("resources/scss/app.scss", "css")
-    .js("resources/js/app.js", "js")
-    .js("resources/js/demo.js", "js")
-    .sass("resources/scss/demo.scss", "css")
+    .sass(`${assetsSrcPath}/scss/app.scss`, "css")
+    .js(`${assetsSrcPath}/js/app.js`, "js")
     .genAssetsGo(outputPath + "/assets.go");
