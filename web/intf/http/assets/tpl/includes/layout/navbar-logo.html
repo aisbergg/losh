@@ -5,9 +5,9 @@
 
 {% if include.header %}
 <h1 {{ class-attr }}>
-	<a href="{{ site.base }}">
+	<a href="{{ site.base | default: '/' }}">
 {% else %}
-	<a href="{{ site.base }}" {{ class-attr }}>
+	<a href="{{ site.base | default: '/' }}" {{ class-attr }}>
 {% endif %}
 		{% unless include.hide-logo %}
 		{% if include.small-logo %}
