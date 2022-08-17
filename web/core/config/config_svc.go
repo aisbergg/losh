@@ -9,7 +9,7 @@ type Service struct {
 
 // NewService creates a new configuration service.
 func NewService(path string) Service {
-	defCfgFn := func() interface{} { return DefaultConfig() }
+	defCfgFn := func() interface{} { cfg := DefaultConfig(); return &cfg }
 	return Service{
 		Service: config.NewService(path, defCfgFn),
 	}
@@ -21,7 +21,7 @@ func (s Service) Get() (Config, error) {
 	if err != nil {
 		return Config{}, err
 	}
-	return cfg.(Config), nil
+	return *cfg.(*Config), nil
 }
 
 // Save saves the configuration to the configured file.

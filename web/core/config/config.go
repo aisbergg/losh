@@ -1,6 +1,7 @@
 package config
 
 import (
+	"io/fs"
 	"time"
 
 	"losh/internal/infra/dgraph"
@@ -40,16 +41,32 @@ func DefaultDebugConfig() DebugConfig {
 }
 
 type AccessLogConfig struct {
-	log.Config
-	Enabled bool     `json:"enabled"`
-	Fields  []string `json:"fields"`
+	Format      string      `json:"format" filter:"trim,lower" validate:"in:console,json"`
+	Filename    string      `json:"filename"`
+	Rotate      bool        `json:"rotate"`
+	MaxSize     int         `json:"maxSize"`
+	MaxAge      int         `json:"maxAge"`
+	MaxBackups  int         `json:"maxBackups"`
+	LocalTime   bool        `json:"localTime"`
+	Compress    bool        `json:"compress"`
+	Permissions fs.FileMode `json:"permissions"`
+	Enabled     bool        `json:"enabled"`
+	Fields      []string    `json:"fields"`
 }
 
 func DefaultAccessLogConfig() AccessLogConfig {
 	return AccessLogConfig{
-		Config:  log.DefaultConfig(),
-		Enabled: false,
-		Fields:  []string{},
+		Format:      "json",
+		Filename:    "",
+		Rotate:      false,
+		MaxSize:     5,
+		MaxAge:      0,
+		MaxBackups:  0,
+		LocalTime:   true,
+		Compress:    false,
+		Permissions: 0,
+		Enabled:     true,
+		Fields:      []string{},
 	}
 }
 
