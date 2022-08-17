@@ -21,6 +21,7 @@ func main() {
 
 	// register commands
 	app.Add(cmd.DevCommand)
+	app.Add(cmd.DiscoverCommand)
 	app.Add(cmd.ConfigCommand)
 	app.Add(cmd.ManageCommand)
 
