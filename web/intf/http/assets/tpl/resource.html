@@ -1,0 +1,32 @@
+<div class="card">
+	<div class="table-responsive">
+		<table class="table">
+			<thead>
+				<tr>
+				<th scope="col" class="w-25">Property</th>
+				<th scope="col" class="w-75">Value</th>
+				</tr>
+			</thead>
+			<tbody>
+				{%- for field in page.resource %}
+				<tr>
+					<td>{{ field.name | escape }}</td>
+					<td>
+						{% unless (field.value | is_nil) %}
+						{%- if field.type == "list" %}
+						<ul>
+						{%- for item in field.value %}
+							<li>{% if item.link %}<a href="{{ item.link }}">{% endif %}{{ item.value | escape }}{% if item.link %}</a>{% endif %}{% if item.type %} <span class="text-muted">({{ item.type }})</span>{% endif %}</li>
+						{%- endfor %}
+						</ul>
+						{%- else %}
+						<div>{% if field.link %}<a href="{{ field.link }}">{% endif %}{{ field.value | escape }}{% if field.link %}</a>{% endif %}{% if field.type %} <span class="text-muted">({{ field.type }})</span>{% endif %}</div>
+						{%- endif %}
+						{% endunless %}
+					</td>
+				</tr>
+				{%- endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
