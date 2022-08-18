@@ -24,7 +24,7 @@ var ConfigShowCommand = &gcli.Command{
 	},
 	Func: func(cmd *gcli.Command, args []string) error {
 		// load configuration
-		cfgSvc := config.NewService(configInitOptions.Output)
+		cfgSvc := config.NewService(configShowOptions.Path)
 		cfg, err := cfgSvc.Get()
 		if err != nil {
 			return errors.Wrap(err, "failed to load configuration")
