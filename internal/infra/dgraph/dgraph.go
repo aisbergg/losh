@@ -39,10 +39,9 @@ type DgraphRepository struct {
 // NewDgraphRepository creates a new DgraphRepository.
 func NewDgraphRepository(dbConfig Config) (*DgraphRepository, error) {
 	log := log.NewLogger("repo-dgraph")
-	timeout := 30 * time.Second
 
 	// create HTTP client
-	httpClient := &http.Client{Timeout: timeout}
+	httpClient := &http.Client{Timeout: dbConfig.Timeout}
 	if dbConfig.TLS.Enabled {
 		tlsConfig := &tls.Config{
 			InsecureSkipVerify: !dbConfig.TLS.Verify,
@@ -94,7 +93,7 @@ func NewDgraphRepository(dbConfig Config) (*DgraphRepository, error) {
 	gqlClient := gql.NewClient(httpClient, address)
 	graphQLRequester := request.NewGraphQLRequester(gqlClient).
 		SetRetryCount(5).
-		SetMaxWaitTime(timeout)
+		SetMaxWaitTime(dbConfig.Timeout)
 	// client := dgclient.NewClient(graphQLRequester)
 	client := &dgclient.Client{
 		Requester: graphQLRequester,
@@ -113,6 +112,7 @@ func NewDgraphRepository(dbConfig Config) (*DgraphRepository, error) {
 	})
 
 	dgraphRepo := &DgraphRepository{
+		timeout:    dbConfig.Timeout,
 		httpClient: httpClient,
 		requester:  graphQLRequester,
 		client:     client,

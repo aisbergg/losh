@@ -1,16 +1,20 @@
 package dgraph
 
+import "time"
+
 type Config struct {
-	Host string          `json:"host"`
-	Port uint64          `json:"port"`
-	TLS  ClientTLSConfig `json:"tls"`
+	Host    string          `json:"host"`
+	Port    uint64          `json:"port"`
+	TLS     ClientTLSConfig `json:"tls"`
+	Timeout time.Duration   `json:"timeout"`
 }
 
 func DefaultConfig() Config {
 	return Config{
-		Host: "localhost",
-		Port: 8080,
-		TLS:  DefaultClientTLSConfig(),
+		Host:    "localhost",
+		Port:    8080,
+		TLS:     DefaultClientTLSConfig(),
+		Timeout: 60 * time.Second,
 	}
 }
 
