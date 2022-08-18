@@ -1,0 +1,35 @@
+debug:
+  enabled: true
+  pprof: false
+  expvar: false
+
+log:
+  level: info
+  format: json
+
+accessLog:
+  enabled: true
+  level: info
+  format: json
+
+server:
+  interface: 0.0.0.0
+  port: 3000
+  trustedDomains: []
+  trustedProxies:
+    - 172.10.10.10
+  compress: -1
+  cache:
+    enabled: false
+  tls:
+    enabled: false
+
+database:
+  host: dgraph-alpha
+  port: 8080
+  tls:
+    enabled: false
+    verify: false
+    cert: ""
+    key: ""
+    caCertificates: []

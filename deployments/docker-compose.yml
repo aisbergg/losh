@@ -1,0 +1,72 @@
+# see: https://github.com/dgraph-io/dgraph/blob/master/contrib/config/docker/docker-compose-multi.yml
+x-dgraph: &dgraph
+  image: dgraph/dgraph:v21.12.0
+  volumes:
+    - dgraph:/dgraph
+  restart: on-failure
+  user: "999"
+  networks:
+    - database
+  depends_on:
+    - volume-permissions
+
+services:
+  volume-permissions:
+    image: alpine
+    command: ["chown", "999:999", "/dgraph", "/losh-web"]
+    volumes:
+      - dgraph:/dgraph
+      - losh-web:/losh-web
+    restart: "no"
+
+  # Dgraph Zero controls the Dgraph cluster, and stores information about it. It
+  # automatically moves data between different Dgraph Alpha instances based on
+  # the size of the data served by each Alpha instance.
+  dgraph-zero:
+    <<: *dgraph
+    command: dgraph zero --my=dgraph-zero:5080
+    expose:
+      - 5080  # internal, private gRPC interface used for cluster communication
+      - 6080  # external, private admin interface
+
+  # Dgraph Alpha hosts and serves the actual data. Each node also hosts an
+  # /admin HTTP and GRPC endpoint that can be used for data and node
+  # administration tasks such as backup, export, draining, and shutdown.
+  dgraph-alpha:
+    <<: *dgraph
+    command: dgraph alpha
+      --my=dgraph-alpha:7080
+      --zero=dgraph-zero:5080
+      --security whitelist=172.16.0.0/12
+    expose:
+      - 7070  # internal, private gRPC interface
+      - 8080  # external, public HTTP interface used for GraphQL queries
+      - 9080  # external, public gRPC interface used by Dgraph clients to modify or query the database
+    depends_on:
+      - volume-permissions
+      - dgraph-zero
+
+  losh-web:
+    image: losh-web:latest
+    command: run -c /config.yml
+    volumes:
+      - losh-web:/upload
+      - ./losh-web-config.yml:/config.yml:ro
+    restart: on-failure
+    user: "999"
+    networks:
+      - database
+      - frontend
+    ports:
+      - 3000:3000
+    depends_on:
+      - volume-permissions
+      - dgraph-alpha
+
+volumes:
+  dgraph:
+  losh-web:
+
+networks:
+  database: {}
+  frontend: {}
