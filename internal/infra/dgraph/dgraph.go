@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/tls"
 	"crypto/x509"
+	goerrors "errors"
 	"net/http"
 	"strconv"
 	"strings"
@@ -17,6 +18,7 @@ import (
 
 	"github.com/aisbergg/go-copier/pkg/copier"
 	"github.com/aisbergg/go-errors/pkg/errors"
+	"github.com/aisbergg/go-retry/pkg/retry"
 
 	gql "github.com/Yamashou/gqlgenc/clientv2"
 	"go.uber.org/zap"
@@ -28,6 +30,7 @@ type DgraphRepository struct {
 	address string
 
 	// used internally
+	timeout    time.Duration
 	httpClient *http.Client
 	requester  *request.GraphQLRequester
 	client     *dgclient.Client
@@ -139,4 +142,49 @@ func (dr *DgraphRepository) IsReachable() bool {
 	}
 
 	return true
+}
+
+// WaitUntilReachable waits until the Dgraph repository is reachable. It returns
+// an error if the database could not be reached after the configured timeout.
+func (dr *DgraphRepository) WaitUntilReachable() error {
+	b := retry.NewConstant(5 * time.Second)
+	b = request.WithRetryable(b)
+	if dr.timeout > 0 {
+		b = request.WithDelayLimit(dr.timeout, b)
+	}
+	b = request.WithHook(func(delay time.Duration, err error) (time.Duration, error) {
+		dr.log.Errorf("failed to reach database at %s, waiting %ss and try again: %s", dr.address, delay, err.Error())
+		return delay, nil
+	}, b)
+
+	// create wrapper for request execution
+	retryFunc := func(ctx context.Context) (err error) {
+		// check if the request was cancelled
+		if ctx.Err() != nil {
+			return ctx.Err()
+		}
+
+		// can a HTTP connection be established?
+		canCon := net.CheckHTTPConnection(dr.httpClient, dr.address)
+		if !canCon {
+			return request.NewRetryableError(goerrors.New("no network connection"))
+		}
+
+		// can a GraphQL query be issued?
+		_, err = dr.client.TestConnection(context.Background())
+		if err != nil {
+			return request.NewRetryableError(goerrors.New("GraphQL request failed"))
+		}
+
+		// stop on success
+		return nil
+	}
+
+	// execute the request with retries
+	err := retry.Do(context.Background(), b, retryFunc)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

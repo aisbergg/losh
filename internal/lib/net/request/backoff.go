@@ -169,6 +169,22 @@ func WithLogging(log *zap.SugaredLogger, next retry.Backoff) retry.Backoff {
 	})
 }
 
+// Hook represents that can be used with the WithHooks backoff middleware.
+type Hook func(delay time.Duration, err error) (time.Duration, error)
+
+// WithHook wraps a backoff function and executes a hook function before each
+// retry.
+func WithHook(hook Hook, next retry.Backoff) retry.Backoff {
+	return retry.BackoffFunc(func(err error) (time.Duration, error) {
+		delay, err := next.Next(err)
+		if retry.IsStopped(delay) {
+			return retry.Stop, err
+		}
+
+		return hook(delay, err)
+	})
+}
+
 // RetryAfter returns a delay based on the Retry-After header of the response.
 // If the header is not present or cannot be parsed, the default delay is
 // returned.

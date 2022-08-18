@@ -36,7 +36,8 @@ func initConfigAndDatabase(cfgPth string) (config.Config, *dgraph.DgraphReposito
 	if err != nil {
 		return config.Config{}, nil, errors.Wrap(err, "failed to initialize Dgraph database connection")
 	}
-	if !db.IsReachable() {
+
+	if err = db.WaitUntilReachable(); err != nil {
 		return config.Config{}, nil, errors.New("failed to connect to Dgraph database")
 	}
 
