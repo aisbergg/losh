@@ -105,6 +105,7 @@ database:
     cert: ""
     key: ""
     caCertificates: []
+    timeout: 60s
 
 # database:
 #   driver: mysql
