@@ -3,7 +3,6 @@
 let fs = require("fs");
 let glob = require("glob");
 let path = require("path");
-let exec = require("child_process").execSync;
 let mix = require("laravel-mix");
 let { optimize } = require('svgo');
 
@@ -106,11 +105,11 @@ mix.extend("copyTemplates", function (_webpackConfig, src, dest) {
 
 // Generates the assets.go file inside the assets directory that is responsible
 // for loading/embedding the assets in the app.
-mix.extend("genAssetsGo", function (_webpackConfig, dest) {
+mix.extend("includeGoAssets", function (_webpackConfig, dest) {
     if (mix.inProduction()) {
-        exec(`go run ${assetsSrcPath}/gen_assets_fs.go prod '${dest}'`)
+        mix.copy(`${assetsSrcPath}/assets_prod.go.inc`, `${outputPath}/assets.go`);
     } else {
-        exec(`go run ${assetsSrcPath}/gen_assets_fs.go dev '${dest}'`)
+        mix.copy(`${assetsSrcPath}/assets_dev.go.inc`, `${outputPath}/assets.go`);
     }
 })
 
@@ -187,4 +186,4 @@ mix.sourceMaps()
     )
     .sass(`${assetsSrcPath}/scss/app.scss`, "css")
     .js(`${assetsSrcPath}/js/app.js`, "js")
-    .genAssetsGo(outputPath + "/assets.go");
+    .includeGoAssets(outputPath + "/assets.go");
