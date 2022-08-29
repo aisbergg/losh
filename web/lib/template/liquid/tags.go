@@ -82,7 +82,7 @@ func captureGlobalBlock(rc render.Context) (string, error) {
 	if content, err = rc.InnerString(); err != nil {
 		return "", err
 	}
-	captureGlobal, ok := rc.Get("capture_global").(map[string][]string)
+	captureGlobal, ok := rc.Get("captured_global").(map[string][]string)
 	if !ok {
 		return "", errors.New("capture_global has a wrong type, did you overwrite it?")
 	}
@@ -93,6 +93,7 @@ func captureGlobalBlock(rc render.Context) (string, error) {
 		captured = []string{content}
 	}
 	captureGlobal[name] = captured
+	rc.Set("captured_global", captureGlobal)
 
 	// block returns nothing
 	return "", nil

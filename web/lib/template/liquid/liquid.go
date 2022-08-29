@@ -143,7 +143,7 @@ func getLiquidBinding(binding interface{}) (liquid.Bindings, error) {
 		}
 	}
 	// for capture_global tag
-	liqBinding["capture_global"] = make(map[string][]string)
+	liqBinding["captured_global"] = make(map[string][]string)
 
 	return liqBinding, nil
 }
