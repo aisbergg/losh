@@ -1,0 +1,12 @@
+debug:
+  enabled: true
+  pprof: true
+  expvar: true
+
+log:
+  level: debug
+  format: console
+
+accessLog:
+  format: console
+  enabled: false
