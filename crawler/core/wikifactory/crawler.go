@@ -136,7 +136,7 @@ func (c *WikifactoryCrawler) DiscoverProducts(ctx context.Context) error {
 			}
 
 			// get full product information
-			c.log.Debugf("getting full product info (%s)", productID.String())
+			c.log.Infof("indexing product (%s)", productID.String())
 			prd, err := c.getProduct(ctx, productID, discoveredAt)
 			if err != nil {
 				if vldErr, ok := err.(*validator.ValidationError); ok {
@@ -170,6 +170,7 @@ func (c *WikifactoryCrawler) DiscoverProducts(ctx context.Context) error {
 		if err != nil {
 			return lerrors.NewAppErrorWrap(err, "failed to save state")
 		}
+		c.log.Debugf("indexed %d of %d products on %s this far", state.NumIndexed, state.NumCrawled, crawlerName)
 	}
 
 	// TODO
@@ -301,13 +302,27 @@ func (c *WikifactoryCrawler) saveState(path pathlib.Path, state CrawlerState) er
 
 // checkMandatory checks if mandatory fields are present.
 func (c *WikifactoryCrawler) checkMandatory(projectInfo *wfclient.ProjectMandatoryFragment) error {
-	license := ""
+	var (
+		version   string
+		license   string
+		filePaths []string
+	)
 	if projectInfo.License != nil {
 		license = *projectInfo.License.Abreviation
 	}
-	version := ""
 	if projectInfo.Contribution != nil {
 		version = *projectInfo.Contribution.Version
+		filePaths = make([]string, 0, len(projectInfo.Contribution.Files))
+		for _, file := range projectInfo.Contribution.Files {
+			if file == nil || file.File == nil {
+				continue
+			}
+			if file.Dirname != nil && *file.Dirname != "" {
+				filePaths = append(filePaths, *file.Dirname+"/"+file.File.Filename)
+			} else {
+				filePaths = append(filePaths, file.File.Filename)
+			}
+		}
 	}
 
 	// quick check if mandatory fields are present
@@ -320,6 +335,7 @@ func (c *WikifactoryCrawler) checkMandatory(projectInfo *wfclient.ProjectMandato
 		License:               c.translateLicense(license),
 		Licensor:              stringOrEmpty(projectInfo.Creator.Profile.Username),
 		DocumentationLanguage: *c.normDocumentationLanguage(stringOrEmpty(projectInfo.Description)),
+		FilePaths:             filePaths,
 	}
 	return c.validator.ValidateMandatory(mdtFlds)
 }

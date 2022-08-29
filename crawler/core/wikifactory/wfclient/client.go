@@ -87,9 +87,11 @@ type Query struct {
 	Materials             []*Material                               "json:\"materials\" graphql:\"materials\""
 	Processes             []*Process                                "json:\"processes\" graphql:\"processes\""
 	Services              ServicePage                               "json:\"services\" graphql:\"services\""
+	Option                Option                                    "json:\"option\" graphql:\"option\""
 	Options               []Option                                  "json:\"options\" graphql:\"options\""
 	OptionInstances       []*OptionInstance                         "json:\"optionInstances\" graphql:\"optionInstances\""
 	FileRequirements      []*FileRequirement                        "json:\"fileRequirements\" graphql:\"fileRequirements\""
+	TooltipTags           []*TooltipTag                             "json:\"tooltipTags\" graphql:\"tooltipTags\""
 	Messages              MessagePage                               "json:\"messages\" graphql:\"messages\""
 	Conversations         ConversationPage                          "json:\"conversations\" graphql:\"conversations\""
 	ConversationByContext *Conversation                             "json:\"conversationByContext,omitempty\" graphql:\"conversationByContext\""
@@ -176,7 +178,7 @@ type Mutation struct {
 	CreateServiceInstances              []*ServiceInstance                     "json:\"createServiceInstances\" graphql:\"createServiceInstances\""
 	UpdateServiceInstance               ServiceInstance                        "json:\"updateServiceInstance\" graphql:\"updateServiceInstance\""
 	CreateOptionInstances               []*OptionInstance                      "json:\"createOptionInstances\" graphql:\"createOptionInstances\""
-	UpdateOptionInstance                OptionInstance                         "json:\"updateOptionInstance\" graphql:\"updateOptionInstance\""
+	DeleteOptionInstance                OptionInstance                         "json:\"deleteOptionInstance\" graphql:\"deleteOptionInstance\""
 	CreateMaterials                     []*Material                            "json:\"createMaterials\" graphql:\"createMaterials\""
 	CreateMaterial                      Material                               "json:\"createMaterial\" graphql:\"createMaterial\""
 	UpdateMaterial                      Material                               "json:\"updateMaterial\" graphql:\"updateMaterial\""
@@ -187,7 +189,11 @@ type Mutation struct {
 	DeleteProcess                       Process                                "json:\"deleteProcess\" graphql:\"deleteProcess\""
 	CreateMinMaxOption                  MinMaxOption                           "json:\"createMinMaxOption\" graphql:\"createMinMaxOption\""
 	CreateSelectionOption               SelectionOption                        "json:\"createSelectionOption\" graphql:\"createSelectionOption\""
+	UpdateOption                        Option                                 "json:\"updateOption\" graphql:\"updateOption\""
+	DeleteOption                        Option                                 "json:\"deleteOption\" graphql:\"deleteOption\""
 	CreateFileRequirement               FileRequirement                        "json:\"createFileRequirement\" graphql:\"createFileRequirement\""
+	CreateTooltipTag                    TooltipTag                             "json:\"createTooltipTag\" graphql:\"createTooltipTag\""
+	UpdateTooltipTag                    TooltipTag                             "json:\"updateTooltipTag\" graphql:\"updateTooltipTag\""
 	CreateMessage                       Message                                "json:\"createMessage\" graphql:\"createMessage\""
 	UpdateMessage                       Message                                "json:\"updateMessage\" graphql:\"updateMessage\""
 	DeleteMessage                       Message                                "json:\"deleteMessage\" graphql:\"deleteMessage\""
@@ -263,8 +269,16 @@ type ProjectMandatoryFragment_Creator struct {
 type ProjectMandatoryFragment_License struct {
 	Abreviation *string "json:\"abreviation\" graphql:\"abreviation\""
 }
+type ProjectMandatoryFragment_Contribution_Files_File struct {
+	Filename string "json:\"filename\" graphql:\"filename\""
+}
+type ProjectMandatoryFragment_Contribution_Files struct {
+	Dirname *string                                           "json:\"dirname\" graphql:\"dirname\""
+	File    *ProjectMandatoryFragment_Contribution_Files_File "json:\"file\" graphql:\"file\""
+}
 type ProjectMandatoryFragment_Contribution struct {
-	Version *string "json:\"version\" graphql:\"version\""
+	Version *string                                        "json:\"version\" graphql:\"version\""
+	Files   []*ProjectMandatoryFragment_Contribution_Files "json:\"files\" graphql:\"files\""
 }
 type ProjectFullFragment_Creator_Profile struct {
 	FullName *string       "json:\"fullName\" graphql:\"fullName\""
@@ -321,8 +335,16 @@ type QueryProjects_Projects_Result_Edges_Node_ProjectMandatoryFragment_Creator s
 type QueryProjects_Projects_Result_Edges_Node_ProjectMandatoryFragment_License struct {
 	Abreviation *string "json:\"abreviation\" graphql:\"abreviation\""
 }
+type QueryProjects_Projects_Result_Edges_Node_ProjectMandatoryFragment_Contribution_Files_File struct {
+	Filename string "json:\"filename\" graphql:\"filename\""
+}
+type QueryProjects_Projects_Result_Edges_Node_ProjectMandatoryFragment_Contribution_Files struct {
+	Dirname *string                                                                                    "json:\"dirname\" graphql:\"dirname\""
+	File    *QueryProjects_Projects_Result_Edges_Node_ProjectMandatoryFragment_Contribution_Files_File "json:\"file\" graphql:\"file\""
+}
 type QueryProjects_Projects_Result_Edges_Node_ProjectMandatoryFragment_Contribution struct {
-	Version *string "json:\"version\" graphql:\"version\""
+	Version *string                                                                                 "json:\"version\" graphql:\"version\""
+	Files   []*QueryProjects_Projects_Result_Edges_Node_ProjectMandatoryFragment_Contribution_Files "json:\"files\" graphql:\"files\""
 }
 type QueryProjects_Projects_Result_Edges struct {
 	Node *ProjectMandatoryFragment "json:\"node\" graphql:\"node\""
@@ -441,8 +463,16 @@ type GetProjectMandatoryByID_Project_Result_ProjectMandatoryFragment_Creator str
 type GetProjectMandatoryByID_Project_Result_ProjectMandatoryFragment_License struct {
 	Abreviation *string "json:\"abreviation\" graphql:\"abreviation\""
 }
+type GetProjectMandatoryByID_Project_Result_ProjectMandatoryFragment_Contribution_Files_File struct {
+	Filename string "json:\"filename\" graphql:\"filename\""
+}
+type GetProjectMandatoryByID_Project_Result_ProjectMandatoryFragment_Contribution_Files struct {
+	Dirname *string                                                                                  "json:\"dirname\" graphql:\"dirname\""
+	File    *GetProjectMandatoryByID_Project_Result_ProjectMandatoryFragment_Contribution_Files_File "json:\"file\" graphql:\"file\""
+}
 type GetProjectMandatoryByID_Project_Result_ProjectMandatoryFragment_Contribution struct {
-	Version *string "json:\"version\" graphql:\"version\""
+	Version *string                                                                               "json:\"version\" graphql:\"version\""
+	Files   []*GetProjectMandatoryByID_Project_Result_ProjectMandatoryFragment_Contribution_Files "json:\"files\" graphql:\"files\""
 }
 type GetProjectMandatoryByID_Project struct {
 	Result *ProjectMandatoryFragment "json:\"result\" graphql:\"result\""
@@ -456,8 +486,16 @@ type GetProjectMandatoryBySlug_Project_Result_ProjectMandatoryFragment_Creator s
 type GetProjectMandatoryBySlug_Project_Result_ProjectMandatoryFragment_License struct {
 	Abreviation *string "json:\"abreviation\" graphql:\"abreviation\""
 }
+type GetProjectMandatoryBySlug_Project_Result_ProjectMandatoryFragment_Contribution_Files_File struct {
+	Filename string "json:\"filename\" graphql:\"filename\""
+}
+type GetProjectMandatoryBySlug_Project_Result_ProjectMandatoryFragment_Contribution_Files struct {
+	Dirname *string                                                                                    "json:\"dirname\" graphql:\"dirname\""
+	File    *GetProjectMandatoryBySlug_Project_Result_ProjectMandatoryFragment_Contribution_Files_File "json:\"file\" graphql:\"file\""
+}
 type GetProjectMandatoryBySlug_Project_Result_ProjectMandatoryFragment_Contribution struct {
-	Version *string "json:\"version\" graphql:\"version\""
+	Version *string                                                                                 "json:\"version\" graphql:\"version\""
+	Files   []*GetProjectMandatoryBySlug_Project_Result_ProjectMandatoryFragment_Contribution_Files "json:\"files\" graphql:\"files\""
 }
 type GetProjectMandatoryBySlug_Project struct {
 	Result *ProjectMandatoryFragment "json:\"result\" graphql:\"result\""
@@ -535,6 +573,12 @@ fragment ProjectMandatoryFragment on Project {
 	}
 	contribution {
 		version
+		files {
+			dirname
+			file {
+				filename
+			}
+		}
 	}
 }
 `
@@ -580,6 +624,17 @@ const GetProjectFullByIDDocument = `query GetProjectFullByID ($id: ID!) {
 	project(id: $id) {
 		result {
 			... ProjectFullFragment
+		}
+	}
+}
+fragment ContributionFragment on Contribution {
+	title
+	dateCreated
+	version
+	files {
+		dirname
+		file {
+			... FileFragment
 		}
 	}
 }
@@ -648,17 +703,6 @@ fragment FileFragment on File {
 	dateCreated
 	lastUpdated
 	license
-}
-fragment ContributionFragment on Contribution {
-	title
-	dateCreated
-	version
-	files {
-		dirname
-		file {
-			... FileFragment
-		}
-	}
 }
 `
 
@@ -843,6 +887,12 @@ fragment ProjectMandatoryFragment on Project {
 	}
 	contribution {
 		version
+		files {
+			dirname
+			file {
+				filename
+			}
+		}
 	}
 }
 `
@@ -905,6 +955,12 @@ fragment ProjectMandatoryFragment on Project {
 	}
 	contribution {
 		version
+		files {
+			dirname
+			file {
+				filename
+			}
+		}
 	}
 }
 `

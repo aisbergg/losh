@@ -82,7 +82,7 @@ type Product implements Node & CrawlerMeta {
   """
   The license used for the component.
   """
-  license: License!
+  license: License
 
   """
   The license holder of the product.
@@ -190,7 +190,7 @@ type Component implements Node & CrawlerMeta {
   """
   The license used for the component.
   """
-  license: License!
+  license: License
 
   """
   The additional licenses used for the documentation and other assets, if any.

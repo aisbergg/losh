@@ -38,6 +38,12 @@ fragment ProjectMandatoryFragment on Project {
 	}
 	contribution { # latest version
 		version
+		files {
+			dirname
+			file {
+				filename
+			}
+		}
 	}
 }
 

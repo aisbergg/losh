@@ -10,26 +10,7 @@ import (
 var _ Node = (*Product)(nil)
 
 type Product struct {
-	ID                    *string      `id:"true" mandatory:"true" json:"id,omitempty" graphql:"id"`
-	DiscoveredAt          *time.Time   `mandatory:"true" json:"discoveredAt,omitempty" graphql:"discoveredAt"`
-	LastIndexedAt         *time.Time   `mandatory:"true" json:"lastIndexedAt,omitempty" graphql:"lastIndexedAt"`
-	DataSource            *Repository  `mandatory:"true" json:"dataSource,omitempty" graphql:"dataSource"`
-	Xid                   *string      `altID:"true" mandatory:"true" json:"xid,omitempty" graphql:"xid"`
-	Name                  *string      `mandatory:"true" json:"name,omitempty" graphql:"name"`
-	Description           *string      `mandatory:"true" json:"description,omitempty" graphql:"description"`
-	DocumentationLanguage *string      `mandatory:"true" json:"documentationLanguage,omitempty" graphql:"documentationLanguage"`
-	Version               *string      `mandatory:"true" json:"version,omitempty" graphql:"version"`
-	License               *License     `mandatory:"true" json:"license,omitempty" graphql:"license"`
-	Licensor              UserOrGroup  `mandatory:"true" json:"licensor,omitempty" graphql:"licensor"`
-	Website               *string      `json:"website,omitempty" graphql:"website"`
-	Release               *Component   `mandatory:"true" json:"release,omitempty" graphql:"release"`
-	Releases              []*Component `mandatory:"true" json:"releases,omitempty" graphql:"releases"`
-	RenamedTo             *Product     `json:"renamedTo,omitempty" graphql:"renamedTo"`
-	RenamedFrom           *Product     `json:"renamedFrom,omitempty" graphql:"renamedFrom"`
-	ForkOf                *Product     `json:"forkOf,omitempty" graphql:"forkOf"`
-	Forks                 []*Product   `json:"forks,omitempty" graphql:"forks"`
-	Tags                  []*Tag       `json:"tags,omitempty" graphql:"tags"`
-	Category              *Category    `json:"category,omitempty" graphql:"category"`
+	License               *License               `json:"license,omitempty" graphql:"license" dql:"Product.license"`
 }
 
 // GetID returns the ID of the node.

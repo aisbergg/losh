@@ -22,8 +22,8 @@ type Component struct {
 	Releases                    []*Component                             `json:"releases,omitempty" graphql:"releases"`
 	IsLatest                    *bool                                    `mandatory:"true" json:"isLatest,omitempty" graphql:"isLatest"`
 	Repository                  *Repository                              `mandatory:"true" json:"repository,omitempty" graphql:"repository"`
-	License                     *License                                 `mandatory:"true" json:"license,omitempty" graphql:"license"`
-	AdditionalLicenses          []*License                               `mandatory:"true" json:"additionalLicenses,omitempty" graphql:"additionalLicenses"`
+	License                     *License                                 `json:"license,omitempty" graphql:"license" dql:"Component.license"`
+	AdditionalLicenses          []*License                               `json:"additionalLicenses,omitempty" graphql:"additionalLicenses" dql:"Component.additionalLicenses"`
 	Licensor                    UserOrGroup                              `mandatory:"true" json:"licensor,omitempty" graphql:"licensor"`
 	DocumentationLanguage       *string                                  `mandatory:"true" json:"documentationLanguage,omitempty" graphql:"documentationLanguage"`
 	TechnologyReadinessLevel    *dgclient.TechnologyReadinessLevel       `mandatory:"true" json:"technologyReadinessLevel,omitempty" graphql:"technologyReadinessLevel"`

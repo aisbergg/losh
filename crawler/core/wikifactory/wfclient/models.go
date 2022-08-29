@@ -83,6 +83,7 @@ type ActivityContent struct {
 	PageviewsCount        int64              `json:"pageviewsCount"`
 	PublicRead            bool               `json:"publicRead"`
 	RegisteredRead        bool               `json:"registeredRead"`
+	FeaturedIn            *string            `json:"featuredIn"`
 	Creator               *User              `json:"creator"`
 	Followers             *ProfileConnection `json:"followers"`
 	Tags                  []*Tag             `json:"tags"`
@@ -142,6 +143,7 @@ type ActivityOrigin struct {
 	PageviewsCount        int64              `json:"pageviewsCount"`
 	PublicRead            bool               `json:"publicRead"`
 	RegisteredRead        bool               `json:"registeredRead"`
+	FeaturedIn            *string            `json:"featuredIn"`
 	Creator               *User              `json:"creator"`
 	Followers             *ProfileConnection `json:"followers"`
 	Tags                  []*Tag             `json:"tags"`
@@ -582,6 +584,7 @@ type Channel struct {
 	Ctas                  *string               `json:"ctas"`
 	Configuration         *string               `json:"configuration"`
 	TaggedCount           *int64                `json:"taggedCount"`
+	FeaturedIn            *string               `json:"featuredIn"`
 	Avatar                *File                 `json:"avatar"`
 	Story                 *Story                `json:"story"`
 	Creator               *User                 `json:"creator"`
@@ -665,6 +668,7 @@ type Collection struct {
 	Name                  *string            `json:"name"`
 	Description           *string            `json:"description"`
 	ProjectsCount         *int64             `json:"projectsCount"`
+	FeaturedIn            *string            `json:"featuredIn"`
 	Creator               *User              `json:"creator"`
 	Space                 *Space             `json:"space"`
 	Followers             *ProfileConnection `json:"followers"`
@@ -752,6 +756,7 @@ type Comment struct {
 	Body                  string             `json:"body"`
 	OriginID              int64              `json:"originId"`
 	ReplytoID             *int64             `json:"replytoId"`
+	FeaturedIn            *string            `json:"featuredIn"`
 	Origin                ContentInterface   `json:"origin"`
 	Replyto               *Comment           `json:"replyto"`
 	Creator               *User              `json:"creator"`
@@ -777,9 +782,9 @@ type Comment struct {
 	CreatorProfile        *Profile           `json:"creatorProfile"`
 }
 
+func (Comment) IsNotificationTarget() {}
 func (Comment) IsNode()               {}
 func (Comment) IsContentInterface()   {}
-func (Comment) IsNotificationTarget() {}
 
 type CommentConnection struct {
 	PageInfo   PageInfo       `json:"pageInfo"`
@@ -962,6 +967,7 @@ type Contribution struct {
 	Version               *string            `json:"version"`
 	OldVersion            *int64             `json:"oldVersion"`
 	ZipArchiveGeneratedID *int64             `json:"zipArchiveGeneratedId"`
+	FeaturedIn            *string            `json:"featuredIn"`
 	Project               *Project           `json:"project"`
 	Children              []*Contribution    `json:"children"`
 	Parent                *Contribution      `json:"parent"`
@@ -1154,9 +1160,12 @@ type CreateManufacturerProfileInput struct {
 }
 
 type CreateMaterialInput struct {
-	Name         string  `json:"name"`
-	ParentID     *string `json:"parentId,omitempty"`
-	IsSelectable *bool   `json:"isSelectable,omitempty"`
+	Name             string   `json:"name"`
+	ParentID         *string  `json:"parentId,omitempty"`
+	IsSelectable     *bool    `json:"isSelectable,omitempty"`
+	ShortDescription *string  `json:"shortDescription,omitempty"`
+	Price            *int64   `json:"price,omitempty"`
+	TagIds           []string `json:"tagIds,omitempty"`
 }
 
 type CreateMaterialsInput struct {
@@ -1195,9 +1204,12 @@ type CreateOptionInstancesInput struct {
 }
 
 type CreateProcessInput struct {
-	Name         string  `json:"name"`
-	ParentID     *string `json:"parentId,omitempty"`
-	IsSelectable *bool   `json:"isSelectable,omitempty"`
+	Name             string   `json:"name"`
+	ParentID         *string  `json:"parentId,omitempty"`
+	IsSelectable     *bool    `json:"isSelectable,omitempty"`
+	ShortDescription *string  `json:"shortDescription,omitempty"`
+	Price            *int64   `json:"price,omitempty"`
+	TagIds           []string `json:"tagIds,omitempty"`
 }
 
 type CreateProcessesInput struct {
@@ -1279,6 +1291,10 @@ type CreateShippingQuoteInput struct {
 	IsTaxInclusive *bool   `json:"isTaxInclusive,omitempty"`
 }
 
+type CreateTooltipTagInput struct {
+	Label string `json:"label"`
+}
+
 type CreditCard struct {
 	StripeID *string `json:"stripeId"`
 	// The ID of the object.
@@ -1327,6 +1343,14 @@ type DeleteMaterialInput struct {
 
 type DeleteMessageInput struct {
 	MessageID string `json:"messageId"`
+}
+
+type DeleteOptionInput struct {
+	ID string `json:"id"`
+}
+
+type DeleteOptionInstanceInput struct {
+	ID string `json:"id"`
 }
 
 type DeletePaymentMethodInput struct {
@@ -1429,6 +1453,7 @@ type FederatedFile struct {
 	License               *string            `json:"license"`
 	Md5                   *string            `json:"md5"`
 	GitHash               *string            `json:"gitHash"`
+	FeaturedIn            *string            `json:"featuredIn"`
 	Creator               *User              `json:"creator"`
 	Followers             *ProfileConnection `json:"followers"`
 	Tags                  []*Tag             `json:"tags"`
@@ -1494,8 +1519,9 @@ type FederatedInitiative struct {
 	OrganizationTypeID             *int64                 `json:"organizationTypeId"`
 	Manufacturer                   *Manufacturer          `json:"manufacturer"`
 	PreferedPlanID                 *int64                 `json:"preferedPlanId"`
-	IsConfirmed                    *string                `json:"isConfirmed"`
 	HasAvatar                      *string                `json:"hasAvatar"`
+	IsConfirmed                    *string                `json:"isConfirmed"`
+	FeaturedIn                     *string                `json:"featuredIn"`
 	Avatar                         *File                  `json:"avatar"`
 	OrganizationType               *OrganizationType      `json:"organizationType"`
 	PreferedPlan                   *BillingPlan           `json:"preferedPlan"`
@@ -1578,6 +1604,7 @@ type File struct {
 	License               *string            `json:"license"`
 	Md5                   *string            `json:"md5"`
 	GitHash               *string            `json:"gitHash"`
+	FeaturedIn            *string            `json:"featuredIn"`
 	Creator               *User              `json:"creator"`
 	Space                 *Space             `json:"space"`
 	Followers             *ProfileConnection `json:"followers"`
@@ -1697,6 +1724,7 @@ type Forum struct {
 	Description         string            `json:"description"`
 	ThreadsCount        int64             `json:"threadsCount"`
 	ThreadsCountPublic  int64             `json:"threadsCountPublic"`
+	FeaturedIn          *string           `json:"featuredIn"`
 	Categories          []*Category       `json:"categories"`
 	Pinned              []*Thread         `json:"pinned"`
 	Threads             *ThreadConnection `json:"threads"`
@@ -1895,8 +1923,9 @@ type Initiative struct {
 	OrganizationTypeID             *int64                 `json:"organizationTypeId"`
 	Manufacturer                   *Manufacturer          `json:"manufacturer"`
 	PreferedPlanID                 *int64                 `json:"preferedPlanId"`
-	IsConfirmed                    *string                `json:"isConfirmed"`
 	HasAvatar                      *string                `json:"hasAvatar"`
+	IsConfirmed                    *string                `json:"isConfirmed"`
+	FeaturedIn                     *string                `json:"featuredIn"`
 	Avatar                         *File                  `json:"avatar"`
 	OrganizationType               *OrganizationType      `json:"organizationType"`
 	PreferedPlan                   *BillingPlan           `json:"preferedPlan"`
@@ -2062,6 +2091,7 @@ type Issue struct {
 	Status                *string            `json:"status"`
 	ProjectID             int64              `json:"projectId"`
 	CanAppearOnHome       *string            `json:"canAppearOnHome"`
+	FeaturedIn            *string            `json:"featuredIn"`
 	Project               *Project           `json:"project"`
 	Creator               *User              `json:"creator"`
 	Space                 *Space             `json:"space"`
@@ -2087,9 +2117,9 @@ type Issue struct {
 	CanAddDeleteLabels    *bool              `json:"canAddDeleteLabels"`
 }
 
+func (Issue) IsNotificationTarget() {}
 func (Issue) IsNode()               {}
 func (Issue) IsContentInterface()   {}
-func (Issue) IsNotificationTarget() {}
 
 type IssueAssigneeInput struct {
 	ProfileID string `json:"profileId"`
@@ -2294,13 +2324,16 @@ type MarkAllAsReadMutation struct {
 }
 
 type Material struct {
-	ID             string      `json:"id"`
-	Name           string      `json:"name"`
-	ParentMaterial *Material   `json:"parentMaterial"`
-	ChildMaterials []*Material `json:"childMaterials"`
-	Count          int64       `json:"count"`
-	IsSelectable   bool        `json:"isSelectable"`
-	Options        []Option    `json:"options"`
+	ID               string        `json:"id"`
+	Name             string        `json:"name"`
+	ParentMaterial   *Material     `json:"parentMaterial"`
+	ChildMaterials   []*Material   `json:"childMaterials"`
+	Count            int64         `json:"count"`
+	IsSelectable     bool          `json:"isSelectable"`
+	Options          []Option      `json:"options"`
+	Tags             []*TooltipTag `json:"tags"`
+	ShortDescription *string       `json:"shortDescription"`
+	Price            *int64        `json:"price"`
 }
 
 func (Material) IsNode()       {}
@@ -2591,6 +2624,7 @@ type Post struct {
 	CategoryID            *float64           `json:"categoryId"`
 	MembersOnly           bool               `json:"membersOnly"`
 	UpvoteCount           *int64             `json:"upvoteCount"`
+	FeaturedIn            *string            `json:"featuredIn"`
 	Creator               *User              `json:"creator"`
 	Followers             *ProfileConnection `json:"followers"`
 	Tags                  []*Tag             `json:"tags"`
@@ -2643,13 +2677,16 @@ type PostMutation struct {
 }
 
 type Process struct {
-	ID             string     `json:"id"`
-	Name           string     `json:"name"`
-	ParentProcess  *Process   `json:"parentProcess"`
-	ChildProcesses []*Process `json:"childProcesses"`
-	Count          int64      `json:"count"`
-	IsSelectable   bool       `json:"isSelectable"`
-	Options        []Option   `json:"options"`
+	ID               string        `json:"id"`
+	Name             string        `json:"name"`
+	ParentProcess    *Process      `json:"parentProcess"`
+	ChildProcesses   []*Process    `json:"childProcesses"`
+	Count            int64         `json:"count"`
+	IsSelectable     bool          `json:"isSelectable"`
+	Options          []Option      `json:"options"`
+	Tags             []*TooltipTag `json:"tags"`
+	ShortDescription *string       `json:"shortDescription"`
+	Price            *int64        `json:"price"`
 }
 
 func (Process) IsNode()       {}
@@ -2678,8 +2715,8 @@ type ProductBuild struct {
 	Releases     []*Release           `json:"releases"`
 }
 
-func (ProductBuild) IsProductNode() {}
 func (ProductBuild) IsNode()        {}
+func (ProductBuild) IsProductNode() {}
 
 type ProductItem struct {
 	ID        string         `json:"id"`
@@ -2722,9 +2759,10 @@ type Profile struct {
 	IntentID                       *int64                  `json:"intentId"`
 	UserID                         int64                   `json:"userId"`
 	PreferedPlanID                 *int64                  `json:"preferedPlanId"`
-	IsConfirmed                    *string                 `json:"isConfirmed"`
 	HasAvatar                      *string                 `json:"hasAvatar"`
+	IsConfirmed                    *string                 `json:"isConfirmed"`
 	HasBio                         *string                 `json:"hasBio"`
+	FeaturedIn                     *string                 `json:"featuredIn"`
 	Avatar                         *File                   `json:"avatar"`
 	UserType                       *ProfileUserType        `json:"userType"`
 	Intent                         *ProfileIntent          `json:"intent"`
@@ -2789,9 +2827,9 @@ type Profile struct {
 	CollectionsCount               *int64                  `json:"collectionsCount"`
 }
 
+func (Profile) IsNotificationTarget() {}
 func (Profile) IsNode()               {}
 func (Profile) IsContentInterface()   {}
-func (Profile) IsNotificationTarget() {}
 
 type ProfileConnection struct {
 	PageInfo   PageInfo       `json:"pageInfo"`
@@ -2867,12 +2905,13 @@ type Project struct {
 	ImportJobID               *string                 `json:"importJobId"`
 	SlackThreadTs             *string                 `json:"slackThreadTs"`
 	SlackContributionThreadTs string                  `json:"slackContributionThreadTs"`
-	HasImage                  *string                 `json:"hasImage"`
-	HeadContribution          *string                 `json:"headContribution"`
-	CanAppearOnHome           *string                 `json:"canAppearOnHome"`
-	StarCount                 *int64                  `json:"starCount"`
-	HasContributions          *string                 `json:"hasContributions"`
 	IsExactForkCopy           *string                 `json:"isExactForkCopy"`
+	HasImage                  *string                 `json:"hasImage"`
+	HasContributions          *string                 `json:"hasContributions"`
+	CanAppearOnHome           *string                 `json:"canAppearOnHome"`
+	HeadContribution          *string                 `json:"headContribution"`
+	StarCount                 *int64                  `json:"starCount"`
+	FeaturedIn                *string                 `json:"featuredIn"`
 	Image                     *File                   `json:"image"`
 	Phase                     *ProjectPhase           `json:"phase"`
 	Context                   *Context                `json:"context"`
@@ -2919,9 +2958,9 @@ type Project struct {
 	FileHistory               *OpsConnection          `json:"fileHistory"`
 }
 
-func (Project) IsNotificationTarget() {}
 func (Project) IsNode()               {}
 func (Project) IsContentInterface()   {}
+func (Project) IsNotificationTarget() {}
 
 type ProjectConnection struct {
 	PageInfo   PageInfo       `json:"pageInfo"`
@@ -3412,6 +3451,7 @@ type Story struct {
 	Body                  *string            `json:"body"`
 	BodyWordCount         int64              `json:"bodyWordCount"`
 	CanAppearOnHome       *string            `json:"canAppearOnHome"`
+	FeaturedIn            *string            `json:"featuredIn"`
 	Avatar                *File              `json:"avatar"`
 	Creator               *User              `json:"creator"`
 	Space                 *Space             `json:"space"`
@@ -3581,6 +3621,7 @@ type Thread struct {
 	CategoryID            *string            `json:"categoryId"`
 	MembersOnly           bool               `json:"membersOnly"`
 	UpvoteCount           *string            `json:"upvoteCount"`
+	FeaturedIn            *string            `json:"featuredIn"`
 	Forum                 *Forum             `json:"forum"`
 	Category              *Category          `json:"category"`
 	Creator               *User              `json:"creator"`
@@ -3643,6 +3684,12 @@ type ThreadInput struct {
 type ThreadMutation struct {
 	UserErrors []*UserError `json:"userErrors"`
 	Thread     *Thread      `json:"thread"`
+}
+
+type TooltipTag struct {
+	ID      string `json:"id"`
+	Label   string `json:"label"`
+	UsedFor []Node `json:"usedFor"`
 }
 
 type Tracker struct {
@@ -3713,10 +3760,13 @@ type UpdateManufacturerInput struct {
 }
 
 type UpdateMaterialInput struct {
-	ID           string  `json:"id"`
-	Name         *string `json:"name,omitempty"`
-	ParentID     *string `json:"parentId,omitempty"`
-	IsSelectable *bool   `json:"isSelectable,omitempty"`
+	ID               string   `json:"id"`
+	Name             *string  `json:"name,omitempty"`
+	ParentID         *string  `json:"parentId,omitempty"`
+	IsSelectable     *bool    `json:"isSelectable,omitempty"`
+	ShortDescription *string  `json:"shortDescription,omitempty"`
+	Price            *int64   `json:"price,omitempty"`
+	TagIds           []string `json:"tagIds,omitempty"`
 }
 
 type UpdateMessageInput struct {
@@ -3724,13 +3774,9 @@ type UpdateMessageInput struct {
 	Body      string `json:"body"`
 }
 
-type UpdateOptionInstanceInput struct {
-	OptionInstanceID string   `json:"optionInstanceId"`
-	OptionID         *string  `json:"optionId,omitempty"`
-	ValueInt         *int64   `json:"valueInt,omitempty"`
-	ValueFloat       *float64 `json:"valueFloat,omitempty"`
-	ValueString      *string  `json:"valueString,omitempty"`
-	ValueBool        *bool    `json:"valueBool,omitempty"`
+type UpdateOptionInput struct {
+	ID   string  `json:"id"`
+	Name *string `json:"name,omitempty"`
 }
 
 type UpdateOrderInput struct {
@@ -3739,10 +3785,13 @@ type UpdateOrderInput struct {
 }
 
 type UpdateProcessInput struct {
-	ID           string  `json:"id"`
-	Name         *string `json:"name,omitempty"`
-	ParentID     *string `json:"parentId,omitempty"`
-	IsSelectable *bool   `json:"isSelectable,omitempty"`
+	ID               string   `json:"id"`
+	Name             *string  `json:"name,omitempty"`
+	ParentID         *string  `json:"parentId,omitempty"`
+	IsSelectable     *bool    `json:"isSelectable,omitempty"`
+	ShortDescription *string  `json:"shortDescription,omitempty"`
+	Price            *int64   `json:"price,omitempty"`
+	TagIds           []string `json:"tagIds,omitempty"`
 }
 
 type UpdateProfile struct {
@@ -3776,6 +3825,11 @@ type UpdateSharedFileMutation struct {
 type UpdateSupportingFilesInput struct {
 	ToDelete []string `json:"toDelete,omitempty"`
 	ToAdd    []string `json:"toAdd,omitempty"`
+}
+
+type UpdateTooltipTagInput struct {
+	ID    string  `json:"id"`
+	Label *string `json:"label,omitempty"`
 }
 
 type Upvote struct {
