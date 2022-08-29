@@ -52,6 +52,7 @@ var host = &models.Host{
 	Domain: p("wikifactory.com"),
 	Name:   p("Wikifactory"),
 }
+var activeTimeThreshold = 2 * 365 * 24 * time.Hour // 2 years
 
 type rawData struct {
 	timestamp   time.Time
@@ -93,6 +94,7 @@ func (c *WikifactoryCrawler) NormalizeProduct(ctx context.Context, timestamp tim
 	product.License = latestRelease.License
 	product.Licensor = licensor
 	product.Website = product.DataSource.URL
+	product.State = c.normState(wfPrjInfo)
 	product.Release = latestRelease
 	product.Releases = releases
 	for _, release := range releases {
@@ -103,10 +105,23 @@ func (c *WikifactoryCrawler) NormalizeProduct(ctx context.Context, timestamp tim
 	// product.RenamedFrom = "XXX" // TODO
 	// product.ForkOf = "XXX"      // TODO
 	product.Forks = []*models.Product{} // TODO
+	product.ForkCount = wfPrjInfo.ForkCount
+	product.StarCount = wfPrjInfo.StarCount
 	// product.Tags = "XXX"     // TODO
 	// product.Category = "XXX" // TODO
 
 	return product, nil
+}
+
+func (c *WikifactoryCrawler) normState(prjInfo *wfclient.ProjectFullFragment) *dgclient.ProductState {
+	state := dgclient.ProductStateUndetermined
+	// states other active/inactive are not reported by Wikifactory
+	if time.Now().Sub(*prjInfo.LastUpdated) < activeTimeThreshold {
+		state = dgclient.ProductStateActive
+	} else {
+		state = dgclient.ProductStateInactive
+	}
+	return &state
 }
 
 // normReleases returns the release of the product.
@@ -135,7 +150,7 @@ func (c *WikifactoryCrawler) normReleases(prjInfo *wfclient.ProjectFullFragment,
 		// Xid format: domain.tld/owner/repo/ref/file-path/component-name
 		// release.Xid = *release.DataSource.Xid + "/" + asXid(*prjInfo.Name)
 		release.Xid = asXid(*release.DataSource.Host.Domain, *release.DataSource.Owner.GetName(), *release.DataSource.Name, *release.DataSource.Reference, "", *prjInfo.Name)
-		release.Name = prjInfo.Name
+		release.Name = sp(prjInfo.Name)
 		release.Description = c.normDescription(prjInfo)
 		release.Version = wfContrib.Version
 		release.CreatedAt = prjInfo.DateCreated
@@ -154,8 +169,11 @@ func (c *WikifactoryCrawler) normReleases(prjInfo *wfclient.ProjectFullFragment,
 		// release.CompliesWith = "XXX" // TODO
 		// release.CpcPatentClass = "XXX" // TODO
 		// release.Tsdc = "XXX" // TODO
-		// subComponents := c.getSubComponents(files, prjInfo)
-		release.Components = []*models.Component{} // TODO
+
+		// TODO: mandatory information need to be added to subcomponents
+		// subCmps := c.getSubComponents(files, prjInfo)
+		// release.Components = subCmps
+
 		release.Software = []*models.Software{}
 		if image == nil {
 			image = c.getImage(prjInfo.Image, crawlerMeta)
@@ -244,7 +262,7 @@ func (c *WikifactoryCrawler) normRepository(owner models.UserOrGroup, ref string
 
 // normDescription returns the normDescription of the product.
 func (c *WikifactoryCrawler) normDescription(prjInfo *wfclient.ProjectFullFragment) *string {
-	htmlDescription := prjInfo.Description
+	htmlDescription := sp(prjInfo.Description)
 	if htmlDescription == nil || *htmlDescription == "" {
 		return nil
 	}
@@ -321,7 +339,9 @@ func (c *WikifactoryCrawler) normFile(wfFile *wfclient.FileFragment, crawlerMeta
 // normInfoFile returns the info file of the product.
 func (c *WikifactoryCrawler) getImage(wfFile *wfclient.FileFragment, crawlerMeta *models.CrawlerMetaImpl) *models.File {
 	image := c.normFile(wfFile, crawlerMeta)
-	// TODO: handle nil image
+	if image == nil {
+		return nil
+	}
 	image.Xid = asXid(*crawlerMeta.DataSource.Host.Domain, *crawlerMeta.DataSource.Owner.GetName(), "", "", *image.Path)
 	return image
 }
@@ -416,8 +436,8 @@ func (c *WikifactoryCrawler) normLicensor(ctx context.Context, prjInfo *wfclient
 			Xid:      xid,
 			Host:     host,
 			Name:     prjInfo.Creator.Profile.Username,
-			FullName: stringOrNil(prjInfo.Creator.Profile.FullName),
-			Email:    stringOrNil(prjInfo.Creator.Profile.Email),
+			FullName: stringOrNil(sp(prjInfo.Creator.Profile.FullName)),
+			Email:    stringOrNil(sp(prjInfo.Creator.Profile.Email)),
 			Locale:   stringOrNil(prjInfo.Creator.Profile.Locale),
 			URL:      &url,
 		}
@@ -441,6 +461,7 @@ func (c *WikifactoryCrawler) normLicensor(ctx context.Context, prjInfo *wfclient
 }
 
 // getSubComponents returns the sub components of the release.
+// XXX: need a better way of identifying components
 func (c *WikifactoryCrawler) getSubComponents(files []*models.File, prjInfo *wfclient.ProjectFullFragment) []*models.Component {
 	// filter out readme and other files
 	filtered := make([]*models.File, 0, len(files))
@@ -485,9 +506,9 @@ func (c *WikifactoryCrawler) getSubComponents(files []*models.File, prjInfo *wfc
 	}
 
 	// figure out what files are the sources, the exports and the images
-	parts := make([]*models.Component, 0, len(buckets))
+	cmps := make([]*models.Component, 0, len(buckets))
 	for _, bucket := range buckets {
-		part := &models.Component{}
+		cmp := &models.Component{}
 		for _, fileWrap := range bucket {
 			ext := fileWrap.path.Suffix()
 
@@ -495,52 +516,55 @@ func (c *WikifactoryCrawler) getSubComponents(files []*models.File, prjInfo *wfc
 			if fileformats.IsCADFile(ext) {
 				isSource := fileformats.IsSourceFile(ext)
 				if isSource {
-					if part.Source == nil {
-						part.Source = fileWrap.file
+					if cmp.Source == nil {
+						cmp.Source = fileWrap.file
 					} else {
-						part.Export = append(part.Export, fileWrap.file)
+						cmp.Export = append(cmp.Export, fileWrap.file)
 					}
 				} else {
-					part.Export = append(part.Export, fileWrap.file)
+					cmp.Export = append(cmp.Export, fileWrap.file)
 				}
 				continue
 			} else if fileformats.IsPCBFile(ext) {
 				isSource := fileformats.IsSourceFile(ext)
 				if isSource {
-					if part.Source == nil {
-						part.Source = fileWrap.file
+					if cmp.Source == nil {
+						cmp.Source = fileWrap.file
 					} else {
-						part.Export = append(part.Export, fileWrap.file)
+						cmp.Export = append(cmp.Export, fileWrap.file)
 					}
 				} else {
-					part.Export = append(part.Export, fileWrap.file)
+					cmp.Export = append(cmp.Export, fileWrap.file)
 				}
 				continue
 			}
 
 			// get first image by extension
 			if fileformats.IsImageFile(ext) {
-				if part.Image == nil {
-					part.Image = fileWrap.file
+				if cmp.Image == nil {
+					cmp.Image = fileWrap.file
 				}
 				continue
 			}
 		}
 
 		// if no source file was identified, but exports, then use the exports instead
-		if part.Source == nil && len(part.Export) > 0 {
-			part.Source = part.Export[0]
-			part.Export = part.Export[1:]
+		if cmp.Source == nil && len(cmp.Export) > 0 {
+			cmp.Source = cmp.Export[0]
+			cmp.Export = cmp.Export[1:]
 		}
 
 		// # only add, if a source file was identified
-		if part.Source != nil {
-			part.Name = part.Source.Name
-			parts = append(parts, part)
+		if cmp.Source != nil {
+			cmp.Name = cmp.Source.Name
+			cmps = append(cmps, cmp)
 		}
 	}
 
-	return parts
+	if len(cmps) == 0 {
+		return nil
+	}
+	return cmps
 }
 
 // stringOrNil returns the string pointer if it is non nil and contains a string
@@ -565,6 +589,18 @@ func stripHTMLTags(h string) string {
 	h = p.Sanitize(h)
 	h = html.UnescapeString(h)
 	return h
+}
+
+func sp(s *string) *string {
+	if s == nil {
+		return nil
+	}
+	*s = strings.TrimSpace(*s)
+	return s
+}
+
+func s(s string) string {
+	return strings.TrimSpace(s)
 }
 
 func p[T any](v T) *T {
