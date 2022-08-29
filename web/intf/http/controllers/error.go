@@ -255,7 +255,7 @@ func (c ErrorController) handleControllerError(ctx *fiber.Ctx, code int, message
 func (c ErrorController) logError(err error) {
 	errCnt := losherrors.GetFullContext(err)
 	if terr, ok := err.(interface{ FullStack() errors.Stack }); ok {
-		errCnt["stack"] = terr.FullStack()
+		errCnt["stack"] = terr.FullStack().First(8)
 	}
 	ctxKV := make([]interface{}, 0, len(errCnt)*2)
 	for k, v := range errCnt {
