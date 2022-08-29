@@ -69,11 +69,11 @@ func (c DetailsController) Handle(ctx *fiber.Ctx) error {
 		page["title"] = "License Details"
 		page["page-header"] = "License Details"
 	case *models.User:
-		tplNme = "details-user.html"
+		tplNme = "details-user-group.html"
 		page["title"] = "User Details"
 		page["page-header"] = "User Details"
 	case *models.Group:
-		tplNme = "details-group.html"
+		tplNme = "details-user-group.html"
 		page["title"] = "Group Details"
 		page["page-header"] = "Group Details"
 	default:
