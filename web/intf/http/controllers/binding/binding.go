@@ -14,15 +14,20 @@ type ColorsItem struct {
 	Title string `json:"title" liquid:"title"`
 }
 
+type CopyRight struct {
+	Name string `json:"name" liquid:"name"`
+	Link string `json:"link" liquid:"link"`
+}
+
 // Site contains the site configuration, which is used in the tabler.io
 // HTML templates.
 type Site struct {
 	Debug            bool                   `json:"debug" liquid:"debug"`
 	UseIconfont      bool                   `json:"useIconfont" liquid:"use-iconfont"`
 	Title            string                 `json:"title" liquid:"title"`
-	CopyRight        string                 `json:"copyRight" liquid:"copy-right"`
+	CopyRight        CopyRight              `json:"copyRight" liquid:"copyRight"`
 	Description      string                 `json:"description" liquid:"description"`
-	IssueURL         string                 `json:"issueUrl" liquid:"issue-url"`
+	IssueURL         string                 `json:"issueUrl" liquid:"issueUrl"`
 	LayoutDark       bool                   `json:"layoutDark" liquid:"layout-dark"`
 	TablerCSSPlugins []interface{}          `json:"tablerCssPlugins" liquid:"tabler-css-plugins"`
 	Data             map[string]interface{} `json:"data" liquid:"data"`
@@ -54,7 +59,7 @@ func newSiteBinding(config *config.Config) *Site {
 		Debug:            config.Debug.Enabled,
 		UseIconfont:      false, // TODO: use built-in
 		Title:            "LOSH",
-		CopyRight:        "André Lehmann",
+		CopyRight:        CopyRight{Name: "André Lehmann", Link: "https://www.linkedin.com/in/andre-lehmann-97408221a/"},
 		Description:      "Library of Open Source Hardware",
 		IssueURL:         "https://github.com/aisbergg/losh/issues",
 		LayoutDark:       false,
