@@ -7,8 +7,8 @@
 {%- comment %} windowEnd = min(numPages, windowStart + 4) {% endcomment %}
 {%- assign windowEnd = numPages | min: (windowStart | plus: 4) | int %}
 
-<div class="pagination-cnt">
-	<form name="resultsPerPage" class="results-per-page" data-bs-toggle="tooltip" data-bs-placement="top" title="Number of results to display on each page">
+<div class="d-inline-flex align-items-center m-0">
+	<form name="resultsPerPage" data-bs-toggle="tooltip" data-bs-placement="top" title="Number of results to display on each page">
 		<select name="rpp" class="form-select w-auto" onchange="this.form.submit(); return handleResultsPerPage();">
 			{% for rpp in "10,25,50,100" | split: "," %}
 			<option value="{{ rpp }}"{% if (resultsPerPage | string) == rpp %} selected{% endif %}>{{ rpp }} / Page</option>
@@ -16,53 +16,53 @@
 		</select>
 	</form>
 
-	<form name="goToPage" class="input-group go-to-page" onSubmit="return handleGoToPage();" data-bs-toggle="tooltip" data-bs-placement="top" title="Go to specific page">
-		<input id="go-to-page-input" type="text" name="page" data-number-mask data-number-mask-min=1 class="form-control go-to-page-input">
+	<form name="goToPage" class="input-group flex-nowrap ms-2" onSubmit="return handleGoToPage();" data-bs-toggle="tooltip" data-bs-placement="top" title="Go to specific page">
+		<input id="go-to-page-input" type="text" name="page" data-number-mask data-number-mask-min=1 class="form-control" style="width: 3.7rem;">
 		<button class="btn btn-sm" type="submit">Go</button>
 	</form>
-
-	<ul class="pagination">
-		<li class="page-item{% if curPage <= 1 %} disabled{% endif %}">
-			<a class="page-link" href="{{ req.url | url_with_params: 'page', (curPage | minus: 1) }}" tabindex="-1" aria-disabled="{{ curPage <= 1 }}">
-				{% if include.icons %}{% include ui/icon.html icon="chevron-left" %}{% else %}{% include ui/icon.html
-				icon="chevron-left" %} prev{% endif %}
-			</a>
-		</li>
-
-		{% if windowStart > 1 %}
-		<li class="page-item"><a class="page-link" href="{{ req.url | url_with_params: 'page', 1 }}">1</a></li>
-		{% endif %}
-		{% if windowStart > 2 %}
-		{% if windowStart > 3 %}
-		<li class="page-item"><span class="page-link">…</span></li>
-		{% else %}
-		<li class="page-item"><a class="page-link" href="{{ req.url | url_with_params: 'page', 2 }}">2</a></li>
-		{% endif %}
-		{% endif %}
-
-		{% for i in (windowStart..windowEnd) %}
-		<li class="page-item{% if i == curPage %} active{% endif %}"><a class="page-link" href="{{ req.url | url_with_params: 'page', i }}">{{ i }}</a></li>
-		{% endfor %}
-
-		{% if windowEnd < (numPages | minus: 1) %}
-		{% if windowEnd < (numPages | minus: 2) %}
-		<li class="page-item"><span class="page-link">…</span></li>
-		{% else %}
-		<li class="page-item"><a class="page-link" href="{{ req.url | url_with_params: 'page', (numPages | minus: 1) }}">{{ numPages | minus: 1 }}</a></li>
-		{% endif %}
-		{% endif %}
-		{% if windowEnd < numPages %}
-		<li class="page-item"><a class="page-link" href="{{ req.url | url_with_params: 'page', numPages }}">{{ numPages }}</a></li>
-		{% endif %}
-
-		<li class="page-item{% if curPage >= numPages %} disabled{% endif %}">
-			<a class="page-link" href="{{ req.url | url_with_params: 'page', (curPage | plus: 1) }}" aria-disabled="{{ curPage >= numPages }}">
-				{% if include.icons %}{% include ui/icon.html icon="chevron-right" %}{% else %}next {% include ui/icon.html
-				icon="chevron-right" %}{% endif %}
-			</a>
-		</li>
-	</ul>
 </div>
+
+<ul class="pagination m-0 ms-2">
+	<li class="page-item{% if curPage <= 1 %} disabled{% endif %}">
+		<a class="page-link" href="{{ req.url | url_with_params: 'page', (curPage | minus: 1) }}" tabindex="-1" aria-disabled="{{ curPage <= 1 }}">
+			{% if include.icons %}{% include ui/icon.html icon="chevron-left" %}{% else %}{% include ui/icon.html
+			icon="chevron-left" %} prev{% endif %}
+		</a>
+	</li>
+
+	{% if windowStart > 1 %}
+	<li class="page-item"><a class="page-link" href="{{ req.url | url_with_params: 'page', 1 }}">1</a></li>
+	{% endif %}
+	{% if windowStart > 2 %}
+	{% if windowStart > 3 %}
+	<li class="page-item"><span class="page-link">…</span></li>
+	{% else %}
+	<li class="page-item"><a class="page-link" href="{{ req.url | url_with_params: 'page', 2 }}">2</a></li>
+	{% endif %}
+	{% endif %}
+
+	{% for i in (windowStart..windowEnd) %}
+	<li class="page-item{% if i == curPage %} active{% endif %}"><a class="page-link" href="{{ req.url | url_with_params: 'page', i }}">{{ i }}</a></li>
+	{% endfor %}
+
+	{% if windowEnd < (numPages | minus: 1) %}
+	{% if windowEnd < (numPages | minus: 2) %}
+	<li class="page-item"><span class="page-link">…</span></li>
+	{% else %}
+	<li class="page-item"><a class="page-link" href="{{ req.url | url_with_params: 'page', (numPages | minus: 1) }}">{{ numPages | minus: 1 }}</a></li>
+	{% endif %}
+	{% endif %}
+	{% if windowEnd < numPages %}
+	<li class="page-item"><a class="page-link" href="{{ req.url | url_with_params: 'page', numPages }}">{{ numPages }}</a></li>
+	{% endif %}
+
+	<li class="page-item{% if curPage >= numPages %} disabled{% endif %}">
+		<a class="page-link" href="{{ req.url | url_with_params: 'page', (curPage | plus: 1) }}" aria-disabled="{{ curPage >= numPages }}">
+			{% if include.icons %}{% include ui/icon.html icon="chevron-right" %}{% else %}next {% include ui/icon.html
+			icon="chevron-right" %}{% endif %}
+		</a>
+	</li>
+</ul>
 
 <script>
 	function handleResultsPerPage(event) {
