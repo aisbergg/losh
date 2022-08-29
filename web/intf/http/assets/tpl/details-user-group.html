@@ -1,0 +1,20 @@
+{% assign entity = page.data %}
+<div class="container-xl d-flex justify-content-center">
+	<div class="p-4 position-relative d-flex flex-column align-items-center">
+		{%- if entity.Avatar.URL %}
+		<span class="avatar avatar-xl mb-3 avatar-rounded" style="background-image: url({{ entity.Avatar.URL }})"></span>
+		{%- else %}
+		<span class="avatar avatar-xl mb-3 avatar-rounded text-bg-primary">{{ entity.FullName | first_letters | escape }}</span>
+		{%- endif %}
+
+		<h3 class="m-0 mb-1">{% if entity.FullName %}{{ entity.FullName | escape }}{% else %}{{ entity.Name | escape }}{% endif %}</h3>
+		<div class="text-muted">{{ entity.Name | escape }}</div>
+		<a class="stretched-link" href="{{ entity.URL }}"></a>
+	</div>
+</div>
+
+<div class="d-print-none mt-3">
+	<h2>Products</h2>
+</div>
+
+<!-- TODO: add same card style view like on search page -->

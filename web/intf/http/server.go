@@ -160,7 +160,7 @@ func (s *Server) registerRoutes() error {
 	tplBndPrv := binding.NewTemplateBindingProvider(s.config)
 	web := s.Group("")
 	controllers.NewHomeController(tplBndPrv).Register(web)
-	controllers.NewSearchController(s.db, tplBndPrv).Register(web)
+	controllers.NewSearchController(s.db, tplBndPrv, s.config.Debug.Enabled).Register(web)
 	controllers.NewDetailsController(s.prdSvc, tplBndPrv).Register(web)
 	controllers.NewAboutController(tplBndPrv).Register(web)
 	controllers.NewRDFController(s.prdSvc, tplBndPrv).Register(web)

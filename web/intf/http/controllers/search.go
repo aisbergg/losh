@@ -8,6 +8,7 @@ import (
 	"losh/internal/infra/dgraph"
 	"losh/internal/lib/util/mathutil"
 	"losh/web/core/search"
+	searchmodels "losh/web/core/search/models"
 	"losh/web/intf/http/controllers/binding"
 
 	gourl "net/url"
@@ -28,8 +29,8 @@ type SearchController struct {
 }
 
 // NewSearchController creates a new SearchController.
-func NewSearchController(db *dgraph.DgraphRepository, tplBndPrv binding.TemplateBindingProvider) SearchController {
-	return SearchController{search.NewService(db), tplBndPrv}
+func NewSearchController(db *dgraph.DgraphRepository, tplBndPrv binding.TemplateBindingProvider, debug bool) SearchController {
+	return SearchController{search.NewService(db, debug), tplBndPrv}
 }
 
 // Register registers the controller with the given router.
@@ -55,13 +56,26 @@ func (c SearchController) Handle(ctx *fiber.Ctx) error {
 	params := reqInfo.QueryParams.(SearchQueryParams)
 	first := mathutil.Max(1, params.ResultsPerPage)
 	offset := mathutil.Max(0, (params.Page-1)*params.ResultsPerPage)
-	results, err := c.searchService.Search(svcCtx, params.Query, params.Order, true, first, offset)
+	results, err := c.searchService.Search3(svcCtx, params.Query, searchmodels.OrderByFromCombinedStr(params.Order), searchmodels.Pagination{First: first, Offset: offset})
 	if err != nil {
-		if serr, ok := err.(*search.Error); ok {
-			// display error message
-			// TODO
-			_ = serr
+		if serr, ok := err.(*search.Error); ok && serr.Type == search.ErrorLimitExceeded {
+			tplBnd := c.tplBndPrv.Get()
+			tplBnd["req"] = reqInfo
+			page := tplBnd["page"].(map[string]interface{})
+			page["title"] = "Search"
+			page["menu"] = "search"
+			page["error"] = serr.Error()
+			page["results"] = 0
+			page["curPage"] = 1
+			page["numPages"] = 0
+			if preferredColorScheme == "dark" {
+				page["body-class"] = "theme-dark"
+			} else {
+				page["body-class"] = "theme-light"
+			}
+			return ctx.Render("search", tplBnd)
 		}
+		// if not a search error handle it as an internal server error
 		return err
 	}
 
@@ -69,7 +83,7 @@ func (c SearchController) Handle(ctx *fiber.Ctx) error {
 	if params.Export != "" {
 		switch params.Export {
 		case "csv":
-			b, err := c.searchService.ExportResults(params.Query, results, search.ExportTypeCSV)
+			b, err := c.searchService.ExportUpTo300Results(searchmodels.ExportTypeCSV, svcCtx, params.Query, searchmodels.OrderByFromCombinedStr(params.Order))
 			if err != nil {
 				return errors.CEWrap(err, "failed to export results as CSV").
 					Add("query", params.Query).
@@ -82,7 +96,7 @@ func (c SearchController) Handle(ctx *fiber.Ctx) error {
 			return ctx.Send(b)
 
 		case "tsv":
-			b, err := c.searchService.ExportResults(params.Query, results, search.ExportTypeTSV)
+			b, err := c.searchService.ExportUpTo300Results(searchmodels.ExportTypeTSV, svcCtx, params.Query, searchmodels.OrderByFromCombinedStr(params.Order))
 			if err != nil {
 				return errors.CEWrap(err, "failed to export results as TSV").
 					Add("query", params.Query).
@@ -100,7 +114,7 @@ func (c SearchController) Handle(ctx *fiber.Ctx) error {
 	// display results page
 
 	// TODO: update query params with new values
-	numPages := int64(math.Ceil(float64(results.Count) / float64(params.ResultsPerPage)))
+	numPages := int(math.Ceil(float64(results.Count) / float64(params.ResultsPerPage)))
 	if params.Page > numPages {
 		params.Page = numPages
 	}
@@ -142,8 +156,8 @@ func (SearchController) parseQueryParams(ctx *fiber.Ctx) interface{} {
 type SearchQueryParams struct {
 	Query          string `query:"q" json:"query" liquid:"query"`
 	Order          string `query:"o" json:"order" liquid:"order"`
-	Page           int64  `query:"page" json:"page" liquid:"page"`
-	ResultsPerPage int64  `query:"rpp" json:"resultsPerPage" liquid:"resultsPerPage"`
+	Page           int    `query:"page" json:"page" liquid:"page"`
+	ResultsPerPage int    `query:"rpp" json:"resultsPerPage" liquid:"resultsPerPage"`
 	DisplayMode    string `query:"dm" json:"displayMode" liquid:"displayMode"`
 	Export         string `query:"export" json:"export" liquid:"export"`
 }
@@ -152,7 +166,7 @@ func (p SearchQueryParams) String() string {
 	v := gourl.Values{}
 	v.Set("q", p.Query)
 	v.Set("o", p.Order)
-	v.Set("page", strconv.FormatInt(p.Page, 10))
-	v.Set("rpp", strconv.FormatInt(p.ResultsPerPage, 10))
+	v.Set("page", strconv.Itoa(p.Page))
+	v.Set("rpp", strconv.Itoa(p.ResultsPerPage))
 	return v.Encode()
 }

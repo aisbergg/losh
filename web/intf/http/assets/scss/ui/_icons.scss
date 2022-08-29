@@ -1,0 +1,17 @@
+.icon-light {
+  stroke-width: 1 !important;
+}
+
+.icon-hover-light:hover, .icon-hover-light:focus {
+  stroke-width: 2 !important;
+  @include transition(stroke-width $transition-time);
+}
+
+.icon-bold {
+  stroke-width: 2 !important;
+}
+
+.icon-hover-bold:hover, .icon-hover-bold:focus {
+  stroke-width: 2 !important;
+  @include transition(stroke-width $transition-time);
+}

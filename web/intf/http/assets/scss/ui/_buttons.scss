@@ -1,0 +1,18 @@
+.btn-unstyled {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  outline: inherit;
+}
+
+.btn-circle {
+  border-radius: 50%;
+  aspect-ratio: 1;
+  padding: calc($input-btn-padding-y*0.8) calc($input-btn-padding-x*0.8);
+
+  &[class*="btn-icon"] {
+    padding: 0.375rem 15px;
+  }
+}

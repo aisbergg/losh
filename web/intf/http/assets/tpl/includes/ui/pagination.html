@@ -8,7 +8,7 @@
 {%- assign windowEnd = numPages | min: (windowStart | plus: 4) | int %}
 
 <div class="pagination-cnt">
-	<form name="resultsPerPage" class="results-per-page">
+	<form name="resultsPerPage" class="results-per-page" data-bs-toggle="tooltip" data-bs-placement="top" title="Number of results to display on each page">
 		<select name="rpp" class="form-select w-auto" onchange="this.form.submit(); return handleResultsPerPage();">
 			{% for rpp in "10,25,50,100" | split: "," %}
 			<option value="{{ rpp }}"{% if (resultsPerPage | string) == rpp %} selected{% endif %}>{{ rpp }} / Page</option>
@@ -16,7 +16,7 @@
 		</select>
 	</form>
 
-	<form name="goToPage" class="input-group go-to-page" onSubmit="return handleGoToPage();">
+	<form name="goToPage" class="input-group go-to-page" onSubmit="return handleGoToPage();" data-bs-toggle="tooltip" data-bs-placement="top" title="Go to specific page">
 		<input id="go-to-page-input" type="text" name="page" data-number-mask data-number-mask-min=1 class="form-control go-to-page-input">
 		<button class="btn btn-sm" type="submit">Go</button>
 	</form>

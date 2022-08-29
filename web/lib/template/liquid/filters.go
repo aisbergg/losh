@@ -2,12 +2,14 @@ package liquid
 
 import (
 	"fmt"
-	"losh/internal/lib/util/reflectutil"
 	"math"
 	gourl "net/url"
 	"regexp"
 	"strings"
 	"unicode/utf8"
+
+	"losh/internal/lib/util/reflectutil"
+	"losh/internal/lib/util/stringutil"
 
 	"github.com/golang-module/carbon/v2"
 	"github.com/osteele/liquid"
@@ -27,6 +29,7 @@ func addFilters(e *liquid.Engine) {
 	e.RegisterFilter("format_number", formatNumberFilter)
 
 	// string filters
+	e.RegisterFilter("ellipses", ellipsesFilter)
 	e.RegisterFilter("first_letter", firstLetterFilter)
 	e.RegisterFilter("first_letters", firstLettersFilter)
 	e.RegisterFilter("replace_regex", replaceRegexFilter)
@@ -63,6 +66,13 @@ func dict2itemsFilter(value map[string]interface{}) []interface{} {
 		items = append(items, item)
 	}
 	return items
+}
+
+func ellipsesFilter(input string, length int) string {
+	if len(input) == 0 {
+		return ""
+	}
+	return stringutil.Ellipses(input, length)
 }
 
 func firstLetterFilter(input string) string {

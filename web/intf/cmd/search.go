@@ -11,14 +11,16 @@ import (
 	"losh/internal/lib/util/mathutil"
 	"losh/internal/lib/util/stringutil"
 	"losh/web/core/search"
+
+	searchmodels "losh/web/core/search/models"
 )
 
 var searchOptions = struct {
 	Path           string
 	OrderBy        string
 	Descending     bool
-	ResultsPerPage int64
-	Page           int64
+	ResultsPerPage int
+	Page           int
 	Format         string
 }{}
 
@@ -29,10 +31,10 @@ var SearchCommand = &gcli.Command{
 	Config: func(c *gcli.Command) {
 		c.StrOpt(&searchOptions.Path, "config", "c", "", "configuration file path")
 		c.StrOpt(&searchOptions.OrderBy, "order", "o", "", "order by")
-		c.StrOpt(&searchOptions.Format, "format", "f", "", "export format (accepted values: json, csv)")
+		c.StrOpt(&searchOptions.Format, "format", "f", "", "export format (accepted values: csv, tsv)")
 		c.BoolOpt(&searchOptions.Descending, "descending", "d", false, "descending order")
-		c.Int64Opt(&searchOptions.ResultsPerPage, "rpp", "n", 100, "results per page")
-		c.Int64Opt(&searchOptions.Page, "page", "p", 1, "page")
+		c.IntOpt(&searchOptions.ResultsPerPage, "rpp", "n", 100, "results per page")
+		c.IntOpt(&searchOptions.Page, "page", "p", 1, "page")
 		c.AddArg("queryString", "Search query", true, true)
 	},
 	Func: func(cmd *gcli.Command, args []string) error {
@@ -42,18 +44,20 @@ var SearchCommand = &gcli.Command{
 		}
 
 		sQry := strings.Join(cmd.Arg("queryString").Strings(), " ")
-		if sQry == "" {
-			return errors.Errorf("query string is empty")
-		}
 
 		// search service
-		searchSvc := search.NewService(db)
+		searchSvc := search.NewService(db, true)
 		ctx := context.Background()
 
 		// search
 		offset := mathutil.Max(0, (searchOptions.Page-1)*searchOptions.ResultsPerPage)
 		first := mathutil.Max(1, searchOptions.ResultsPerPage)
-		res, err := searchSvc.Search(ctx, sQry, searchOptions.OrderBy, searchOptions.Descending, first, offset)
+		res, err := searchSvc.Search3(
+			ctx,
+			sQry,
+			searchmodels.OrderByFromStr(searchOptions.OrderBy, searchOptions.Descending),
+			searchmodels.Pagination{First: first, Offset: offset},
+		)
 		if err != nil {
 			return errors.Wrap(err, "search failed")
 		}
@@ -61,14 +65,19 @@ var SearchCommand = &gcli.Command{
 		// format output
 		format := strings.TrimSpace(strings.ToLower(searchOptions.Format))
 		switch format {
-		case "json":
-			b, err := searchSvc.ExportResults(sQry, res, search.ExportTypeJSON)
-			if err != nil {
-				return errors.Wrap(err, "export failed")
+		case "csv", "tsv":
+			t := searchmodels.ExportTypeCSV
+			if format == "tsv" {
+				t = searchmodels.ExportTypeTSV
 			}
-			fmt.Printf("%s\n", b)
-		case "csv":
-			b, err := searchSvc.ExportResults(sQry, res, search.ExportTypeCSV)
+			b, err := searchSvc.ExportResults(
+				t,
+				ctx,
+				sQry,
+				searchmodels.OrderByFromStr(searchOptions.OrderBy, searchOptions.Descending),
+				searchOptions.ResultsPerPage,
+				offset,
+			)
 			if err != nil {
 				return errors.Wrap(err, "export failed")
 			}

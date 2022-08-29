@@ -1,3 +1,40 @@
+<div class="page-header d-print-none mb-3">
+	<div class="d-flex justify-content-between align-items-center">
+		<div>
+			<h2 class="page-title">
+				ZZZZZZZ
+			</h2>
+		</div>
+		<div class="btn-group" role="button">
+			<button id="exportResults" type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" {% if page.results.count == 0 %} disabled{% endif %}>
+				{% include ui/icon.html icon="file-download" use-svg=true %}
+				Download As
+			</button>
+			<div class="dropdown-menu dropdown-menu-end">
+                <div class="dropdown-header">RDF:</div>
+				<a class="dropdown-item" href="{{ req.url  }}">
+					Turtle
+				</a>
+				<a class="dropdown-item" href="{{ req.url  }}">
+					N-Triples
+				</a>
+				<a class="dropdown-item" href="{{ req.url  }}">
+					XML
+				</a>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-header">Other:</div>
+				<a class="dropdown-item" href="{{ req.url  }}">
+					CSV
+				</a>
+				<a class="dropdown-item" href="{{ req.url  }}">
+					TSV
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+
 <div class="card">
 	<div class="table-responsive">
 		<table class="table">

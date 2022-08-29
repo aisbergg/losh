@@ -1,7 +1,29 @@
 @import "tabler/config";
 
+// redeclare variables for dark mode
+@media not print {
+  .theme-dark {
+    --app-body-color: #{$dark-mode-text};
+    --app-body-color-rgb: #{to-rgb($dark-mode-text)};
+
+    --app-body-bg: #{$dark-mode-darken};
+    --app-body-bg-rgb: #{to-rgb($dark-mode-darken)};
+
+    --app-card-bg: #{$dark};
+    --app-card-bg-rgb: #{to-rgb($dark)};
+
+    --app-border-color: #{$dark-mode-border-color};
+    --app-border-color-light: #{$dark-mode-border-color-light};
+
+    --app-btn-color: #{$dark};
+  }
+}
+
 @import "fonts/roboto";
 
-@import "ui/search";
-@import "ui/details";
 @import "ui/forms/form-pagination";
+@import "ui/buttons";
+@import "ui/details";
+@import "ui/hero";
+@import "ui/icons";
+@import "ui/search";

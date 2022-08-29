@@ -1,3 +1,12 @@
+// const setQueryParameter = function(param, value) {
+window.setQueryParameter = function(param, value) {
+    const params = new URLSearchParams(window.location.search);
+    params.set(param, value);
+
+    // change target location
+    location = location.href.replace(location.search, '?' + params.toString());
+}
+
 // Setting items
 const items = {
 	'theme': { localStorage: 'tablerTheme', default: 'light' },
@@ -48,10 +57,6 @@ const toggleFormControls = (form) => {
 const updateBodyClasses = () => {
 	document.body.classList.remove('theme-dark', 'theme-light');
 	document.body.classList.add(`theme-${config.theme}`);
-
-	// for (const [key, params] of Object.entries(items)) {
-	// 	document.body.setAttribute(`data-${key}`, config[key]);
-	// }
 }
 
 // Submit form

@@ -6,60 +6,315 @@
 {%- assign sortBy = "name" -%}
 {%- assign displayMode = req.queryParams.displayMode -%}
 <div class="card">
-	<form name="search" onSubmit="return handleSearch();">
-		<div class="card-body">
-			<div class="input-group input-group mb-2">
-				<input type="text" name="q" class="form-control" autofocus placeholder="Search Product…" value="{{ req.queryParams.query | escape }}">
-				{% include ui/button.html element="button" type="submit" color="primary" icon-only=true icon="search" %}
+	<div class="card-body">
+		<form id="searchForm" name="search">
+			<div class="input-group input-group-flat">
+				<input type="text" id="searchQuery" name="q" class="form-control" autofocus placeholder="Search Product…" value="{{ req.queryParams.query | escape }}">
+				<span class="input-group-text">
+					<button id="clearSearch" type="button" class="btn-unstyled ms-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Clear">
+						{% include ui/icon.html icon="x" class="icon-hover-bold" %}
+					</button>
+					<span class="border-end h-100 ms-2"></span>
+					<button type="submit" class="btn-unstyled ms-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Search">
+						{% include ui/icon.html icon="search" class="icon-hover-bold" %}
+					</button>
+				</span>
 			</div>
-		</div>
+		</form>
 
-		<div class="card-body">
-			<div class="d-flex justify-content-between align-items-center">
-				<div class="text-muted">{% if numPagedResults > 0 %}Showing {{ page.curPage | minus: 1 | times: resultsPerPage | plus: 1 | int64 }} to {{ page.curPage | minus: 1 | times: resultsPerPage | plus: numPagedResults | int64 }} of {% endif %}{{ numResults }} results</div>
-				<div class="btn-group">
-					{% include ui/button.html element="a" href="{{ req.fullPath | url_with_params: 'dm', 'card' }}" size="md" icon-only=true icon="layout-grid" name="ds" value="cards" %}
-					{% include ui/button.html element="a" href="{{ req.fullPath | url_with_params: 'dm', 'list' }}" size="md" icon-only=true icon="layout-list" name="ds" value="list" %}
-					{% include ui/button.html element="a" href="{{ req.fullPath | url_with_params: 'dm', 'table' }}" size="md" icon-only=true icon="table" name="ds" value="table" %}
+		<div class="accordion mt-2" id="accordion-example">
+			<div class="accordion-item border-0">
+				<h4 class="accordion-header" id="heading-1">
+				<button class="accordion-button collapsed p-0 pt-2 pe-1 w-auto" type="button" data-bs-toggle="collapse" data-bs-target="#syntax" aria-expanded="false">
+					<span class="me-1">Query Syntax</span>
+				</button>
+				</h4>
+				<div id="syntax" class="accordion-collapse collapse show">
+				<!-- <div id="syntax" class="accordion-collapse collapse"> -->
+					<div class="accordion-body pt-0">
+						<div class="row gy-3 mt-2">
+							<div class="col-12 col-md-6 col-lg-4">
+								<h5>General Expressions</h5>
+								<table class="syntax-cheat-sheet">
+									<tbody>
+										<tr>
+											<td>
+												<code class="syntax-example">word1 word2</span></code></br>
+												<code class="syntax-example"><span class="text-primary">`</span>word1 word2<span class="text-primary">`</span></code>
+											</td>
+											<td>Full Text</td>
+										</tr>
+										<tr>
+											<td>
+												<code class="syntax-example"><span class="text-primary">"</span>some text<span class="text-primary">"</span></code></br>
+												<code class="syntax-example"><span class="text-primary">'</span>some text<span class="text-primary">'</span></code>
+											</td>
+											<td>Exact Text</td>
+										</tr>
+										<tr>
+											<td>
+												<code class="syntax-example">some <span class="text-primary">*</span> text</code>
+											</td>
+											<td>Wildcard (Any Text or Phrase)</td>
+										</tr>
+										<tr>
+											<td>
+												<code class="syntax-example">expr1 <span class="text-primary">OR</span> expr2</code></br>
+												<code class="syntax-example">expr1 <span class="text-primary">|</span> expr2</code>
+											</td>
+											<td>Boolean OR</td>
+										</tr>
+										<tr>
+											<td>
+												<code class="syntax-example">expr1 <span class="text-primary">AND</span> expr2</code></br>
+												<code class="syntax-example">expr1 <span class="text-primary">&</span> expr2</code>
+											</td>
+											<td>Boolean AND</td>
+										</tr>
+										<tr>
+											<td>
+												<code class="syntax-example"><span class="text-primary">NOT</span> expr</code></br>
+												<code class="syntax-example"><span class="text-primary">-</span>expr</code>
+											</td>
+											<td>Boolean NOT</td>
+										</tr>
+										<tr>
+											<td>
+												<code class="syntax-example"><span class="text-primary">(</span>expr1 expr2<span class="text-primary">)</span></code>
+											</td>
+											<td>Grouping of Expressions</td>
+										</tr>
+										<tr>
+											<td>
+												<code class="syntax-example"><span class="text-primary"></span>operator:<span class="text-primary">value</span></code>
+											</td>
+											<td>Operator</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+
+							<div class="col-12 col-md-6 col-lg-4">
+								<h5>General Operators</h5>
+								<p>Operators allow to search for specific product properties. The allowed operations on each Operator depends on its type. Generally the following operations are defined:</p>
+								<p>TODO: value: can be either a number (e.g. 42.1), date+time (RFC 3339, e.g. 2022-01-01T10:20:30), or time duration (e.g. 1y2M3w4d5h6m7s)</p>
+								<table class="syntax-cheat-sheet">
+									<tbody>
+										<tr>
+											<td>
+												<code class="syntax-example"><span class="text-primary">operator:</span>value</code></br>
+												<code class="syntax-example">operator:<span class="text-primary">`</span>word1 word2<span class="text-primary">`</span></code>
+											</td>
+											<td>Equal Text</td>
+										</tr>
+										<tr>
+											<td><code class="syntax-example"><span class="text-primary">operator:==</span>value</code></td>
+											<td>Equal</td>
+										</tr>
+										<tr>
+											<td><code class="syntax-example"><span class="text-primary">operator:!=</span>value</code></td>
+											<td>Unequal</td>
+										</tr>
+										<tr>
+											<td><code class="syntax-example"><span class="text-primary">operator:&lt;</span>value</code></td>
+											<td>Less</td>
+										</tr>
+										<tr>
+											<td><code class="syntax-example"><span class="text-primary">operator:&lt;=</span>value</code></td>
+											<td>Less or Equal</td>
+										</tr>
+										<tr>
+											<td><code class="syntax-example"><span class="text-primary">operator:&gt;=</span>value</code></td>
+											<td>Greater</td>
+										</tr>
+										<tr>
+											<td><code class="syntax-example"><span class="text-primary">operator:&gt;=</span>value</code></td>
+											<td>Greater or Equal</td>
+										</tr>
+										<tr>
+											<td><code class="syntax-example"><span class="text-primary">operator:</span>number<span class="text-primary">..</span>number</code></td>
+											<td>Inclusive Range (e.g. <code>2..*</code>, <code>2022-01-01..2022-04-01</code> )</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+
+							<div class="col-12 col-md-6 col-lg-4">
+								<h5>Product</h5>
+								<table class="syntax-cheat-sheet">
+									<tbody>
+										<tr>
+											<td><code class="syntax-example"><span class="text-primary">is:active</span></code></td>
+											<td>Is actively developed</td>
+										</tr>
+										<tr>
+											<td><code class="syntax-example"><span class="text-primary">is:inactive</span></code></td>
+											<td>No updates for over 2 years</td>
+										</tr>
+										<tr>
+											<td><code class="syntax-example"><span class="text-primary">is:archived</span></code></td>
+											<td>Repository is marked as archived and thus is no longer developed</td>
+										</tr>
+										<tr>
+											<td><code class="syntax-example"><span class="text-primary">is:deprecated</span></code></td>
+											<td>Is marked as deprecated</td>
+										</tr>
+										<tr>
+											<td><code class="syntax-example"><span class="text-primary">is:missing</span></code></td>
+											<td>Source is missing</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+
+							<div class="col-12 col-md-6 col-lg-4">
+								<h5>License</h5>
+								<table class="syntax-cheat-sheet">
+									<tbody>
+										<tr>
+											<td><code class="syntax-example"><span class="text-primary">has:license</span></code></td>
+											<td>Indicates whether Product is licensed</td>
+										</tr>
+										<tr>
+											<td>
+												<code class="syntax-example"><span class="text-primary">license:</span>CC-BY-SA-4.0</code></br>
+												<code class="syntax-example"><span class="text-primary">licenseId:</span>CC-BY-SA-4.0</code>
+											</td>
+											<td>License SPDX Identifier</td>
+										</tr>
+										<tr>
+											<td><code class="syntax-example"><span class="text-primary">licenseName:</span>value</code></td>
+											<td>License Full Name</td>
+										</tr>
+										<tr>
+											<td><code class="syntax-example"><span class="text-primary">is:licenseSpdx</span></code></td>
+											<td>License is well-known and listed on SPDX.org</td>
+										</tr>
+										<tr>
+											<td><code class="syntax-example"><span class="text-primary">is:licenseDeprecated</span></code></td>
+											<td>License is marked as deprecated</td>
+										</tr>
+										<tr>
+											<td><code class="syntax-example"><span class="text-primary">is:licenseOsiApproved</span></code></td>
+											<td>License is approved by OSI</td>
+										</tr>
+										<tr>
+											<td><code class="syntax-example"><span class="text-primary">is:licenseFsfLibre</span></code></td>
+											<td>License is FSF approved</td>
+										</tr>
+										<tr>
+											<td><code class="syntax-example"><span class="text-primary">is:licenseBlocked</span></code></td>
+											<td>License is not approved by LOSH</td>
+										</tr>
+										<tr>
+											<td><code class="syntax-example"><span class="text-primary">is:licenseStrong</span></code></td>
+											<td>License is considered strong</td>
+										</tr>
+										<tr>
+											<td><code class="syntax-example"><span class="text-primary">is:licenseWeak</span></code></td>
+											<td>License is considered weak</td>
+										</tr>
+										<tr>
+											<td><code class="syntax-example"><span class="text-primary">is:licensePermissive</span></code></td>
+											<td>License is considered permissive</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
-	</form>
-
-
-	{%- if page.results.count == 0 %}
-	<div class="card-body mx-auto">
-		<div class="text-center text-muted my-4 fs-1 no-results">
-			<div class="mb-2">{% include ui/icon.html class="no-results-icon mx-auto" icon="mood-sad" use-svg=true %}</div>
-			<div class="">No Results</div>
-		</div>
 	</div>
 
+	<div class="card-body">
+		<div class="d-flex justify-content-between align-items-center">
+			<div class="text-muted">{% if numPagedResults > 0 %}Showing {{ page.curPage | minus: 1 | times: resultsPerPage | plus: 1 | int64 }} to {{ page.curPage | minus: 1 | times: resultsPerPage | plus: numPagedResults | int64 }} of {% endif %}{{ numResults }} results</div>
+			<form class="ms-auto">
+				<select id="orderBy" name="orderBy" class="form-select ms-auto w-auto" data-bs-toggle="tooltip" data-bs-placement="top" title="Order Results By">
+					<option value="nameAsc"{% if req.queryParams.order == 'nameAsc' %} selected{% endif %}>Name ↥</option>
+					<option value="nameDsc"{% if req.queryParams.order == 'nameDsc' %} selected{% endif %}>Name ↧</option>
+					<option value="licenseAsc"{% if req.queryParams.order == 'licenseAsc' %} selected{% endif %}>License ↥</option>
+					<option value="licenseDsc"{% if req.queryParams.order == 'licenseDsc' %} selected{% endif %}>License ↧</option>
+				</select>
+			</form>
+			<div class="btn-group ms-2">
+				<a href="{{ req.fullPath | url_with_params: 'dm', 'card' }}" class="btn btn-md btn-icon" aria-label="Button" name="ds" value="cards" data-bs-toggle="tooltip" data-bs-placement="top" title="Card Style View">
+					{% include ui/icon.html icon="layout-grid" %}
+				</a>
+				<a href="{{ req.fullPath | url_with_params: 'dm', 'table' }}" class="btn btn-md btn-icon" aria-label="Button" name="ds" value="table" data-bs-toggle="tooltip" data-bs-placement="top" title="Table Style View">
+					{% include ui/icon.html icon="table" %}
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
 
-	{%- elsif displayMode == "table" %}
+
+{%- if page.error %}
+<div class="empty my-4">
+	<div class="empty-icon">
+		{% include ui/icon.html icon="mood-sad" %}
+	</div>
+	<p class="empty-title">{{ page.error | capitalize }}</p>
+	<p class="empty-subtitle text-muted">
+		Try adjusting your search query and making it simpler.
+	</p>
+</div>
+
+
+{%- elsif page.results.count == 0 %}
+<div class="empty my-4">
+	<div class="empty-icon">
+		{% include ui/icon.html icon="mood-sad" %}
+	</div>
+	<p class="empty-title">No results found</p>
+	<p class="empty-subtitle text-muted">
+		Try adjusting your search query to find what you're looking for.
+	</p>
+</div>
+
+
+{%- elsif displayMode == "table" %}
+<div class="card mt-3">
 	<div class="table-responsive">
 		<table class="table table-vcenter{% if include.mobile %} table-mobile-md{% endif %}{% if include.card %} card-table{% endif %}{% if include.stripped %} table-striped{% endif %}{% if include.nowrap %} table-nowrap{% endif %}">
 			<thead>
 				<tr>
-					<th class="w-1"></th>
-					<th>Name</th>
-					<th>Language</th>
+					<th colspan="2">
+						<!-- TODO: sorting via table -->
+						<a href="{{ req.fullPath | url_with_params: 'o', 'zzz' }}" class="text-reset d-block">
+							Name
+							{%- if req.queryParams.order == 'nameAsc' %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
+							{%- if req.queryParams.order == 'nameDsc' %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
+						</a>
+					</th>
 					<th>Description</th>
 					<th>Licensor</th>
 					<th>License</th>
+					<th data-bs-toggle="tooltip" data-bs-placement="top" title="Product State (Activeness)">{% include ui/icon.html icon="bolt" %}</th>
+					<th data-bs-toggle="tooltip" data-bs-placement="top" title="Language">{% include ui/icon.html icon="language" %}</th>
+					<th data-bs-toggle="tooltip" data-bs-placement="top" title="Star Count">{% include ui/icon.html icon="star" %}</th>
+					<th data-bs-toggle="tooltip" data-bs-placement="top" title="Fork Count">{% include ui/icon.html icon="git-fork" %}</th>
+					<th></th>
 				</tr>
 			</thead>
 			<tbody>
 				{%- for product in page.results.items %}
 				<tr>
-					<td style="width: 6rem; height: auto;">
-						<a href="/details/{{ product.ID | idhex }}">
-							<div class="card-img-top img-responsive img-responsive-1x1" style="background-image: url({{ product.Release.Image.URL }})"></div>
-						</a>
-					</td>
-
 					<td>
-						{{ product.Release.DocumentationLanguage }}
+						<a href="/details/{{ product.ID | idhex }}" class="search-result-info-link">
+							{%- if (product.Release.Image | is_nil)  %}
+							<div class="card-img ratio ratio-4x3 text-bg-primary" style="width: 6rem; height: auto;">
+								<div class="d-flex align-items-center justify-content-center">
+									{% include ui/icon.html icon="package" class="" %}
+								</div>
+							</div>
+							{%- else %}
+							<div class="card-img img-responsive img-responsive-4x3" style="background-image: url({{ product.Release.Image.URL }}); width: 6rem; height: auto;"></div>
+							{%- endif %}
+						</a>
 					</td>
 
 					<td>
@@ -67,7 +322,10 @@
 					</td>
 
 					<td>
-						<a href="/details/{{ product.Release.ID | idhex }}" class="search-result-info-link">{{ product.Release.Description | escape }}</a>
+						{%- assign description=(product.Release.Description | ellipses: 800 | escape ) %}
+						<span class="position-relative">
+							<span class="text-ellipses-line-2" data-text="{{ description }}">{{ description }}</span>
+						</span>
 					</td>
 
 					<td>
@@ -77,151 +335,175 @@
 					<td>
 						<a href="/details/{{ product.Release.License.ID | idhex }}" class="search-result-info-link">{{ product.Release.License.Xid }}</a>
 					</td>
+
+					<td>
+						{%- if product.State == 'ACTIVE' %}
+						<span class="badge bg-green m-0" data-bs-toggle="tooltip" data-bs-placement="top" title="ACTIVE: is actively developed"></span>
+						{%- elsif product.State == 'INACTIVE' %}
+						<span class="badge bg-red m-0" data-bs-toggle="tooltip" data-bs-placement="top" title="INACTIVE: no updates for over 2 years"></span>
+						{%- elsif product.State == 'ARCHIVED' %}
+						<span class="badge bg-red m-0" data-bs-toggle="tooltip" data-bs-placement="top" title="ARCHIVED: repository is marked as archived and thus is no longer developed"></span>
+						{%- elsif product.State == 'DEPRECATED' %}
+						<span class="badge bg-purple m-0" data-bs-toggle="tooltip" data-bs-placement="top" title="DEPRECATED: is marked as deprecated</br>MISSING: source was deleted"></span>
+						{%- elsif product.State == 'MISSING' %}
+						<span class="badge bg-red m-0" data-bs-toggle="tooltip" data-bs-placement="top" title="MISSING: source was deleted"></span>
+						{%- endif %}
+					</td>
+
+					<td>
+						{{ product.Release.DocumentationLanguage }}
+					</td>
+
+					<td>
+						{{ product.StarCount }}
+					</td>
+
+					<td>
+						{{ product.ForkCount }}
+					</td>
+
+					<td>
+						<a href="{{ product.Website }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-circle btn-primary mx-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Go to Website">{% include ui/icon.html icon="external-link" class="m-0 icon-bold" %}</a>
+					</td>
 				</tr>
 				{% endfor %}
 			</tbody>
 		</table>
 	</div>
+</div>
 
 
-	{%- elsif displayMode == "list" %}
-	<div class="list-group list-group-flush">
-		{% for product in page.results.items %}
-		<div class="list-group-item align-items-start">
-			<div class="row align-items-start">
-				<div class="col-12 col-sm-3">
-					<a href="/details/{{ product.ID | idhex }}">
-						<div class="card-img-top img-responsive img-responsive-4x3" style="background-image: url({{ product.Release.Image.URL }})"></div>
-					</a>
-				</div>
-				<div class="col-12 col-sm-9">
-					<a href="/details/{{ product.ID | idhex }}" class="nav-link">
-						<div class="fs-3 fw-bold mb-2">{{ product.Name | escape }}</div>
-					</a>
-					<div class="search-result-info mb-1">
-						<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Language">{% include ui/icon.html icon="language" %}</span>
-						<span>{{ product.Release.DocumentationLanguage | escape }}</span>
-					</div>
-					<div class="search-result-info mb-1">
-						<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Description">{% include ui/icon.html icon="file-description" %}</span>
-						<span>{{ product.Release.Description | escape }}</span>
-					</div>
-					<a href="/details/{{ product.Release.Licensor.ID | idhex }}" class="search-result-info-link mb-1">
-						<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Owner">{% include ui/icon.html icon="user" %}</span>
-						<span>{% if product.Release.Licensor.FullName %}{{ product.Release.Licensor.FullName | escape }}{% else %}{{ product.Release.Licensor.Name | escape }}{% endif %}</span>
-					</a>
-					<a href="/details/{{ product.Release.License.ID | idhex }}" class="search-result-info-link mb-1" in="">
-						<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="License">{% include ui/icon.html icon="license" %}</span>
-						<span>{{ product.Release.License.Xid }}</span>
-					</a>
-					{%- if (product.Tags | size) > 1 %}
-					<a href="#" class="search-result-info-link mb-1" in="">
-						<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Tags">{% include ui/icon.html icon="tag" %}</span>
-						<span>{% for tag in product.Tags %}{{ tag.Name }}{% unless forloop.last %}, {% endunless %}{% endfor %}</span>
-					</a>
-					{%- endif %}
-					<div class="search-result-info mb-1">
-						<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Version">{% include ui/icon.html icon="versions" %}</span>
-						<span>{{ product.Release.Version | escape }}</span>
-					</div>
-
-					<div class="search-result-info mb-1">
-						<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Description">{% include ui/icon.html icon="file-description" %}</span>
-						<div><span class="text-ellipses-line-2">Blanditiis voluptates quae aut at sed cupiditate. Ipsum vitae velit laudantium blanditiis modi. Et quasi ex perferendis aut consectetur et voluptates.
-							At fugiat voluptas est dicta voluptatum. Qui blanditiis voluptas minus aliquid. Dolorem libero officiis qui sequi aliquam aut aperiam eum. Quaerat animi cum commodi et architecto. Dolores quos et eveniet et perspiciatis nostrum.</span><span class="more d-inline-block"><i class="fa fa-plus"></i> more</span></div>
-					</div>
-<!--
-					<div id="faq-1" class="accordion" role="tablist" aria-multiselectable="false">
-						<div class="accordion-item">
-							<div class="accordion-header" role="tab">
-								<button class="accordion-button{% unless questions-loop.index == 1 %} collapsed{% endunless %}" data-bs-toggle="collapse" data-bs-target="#faq-{{ categories-loop.index }}-{{ questions-loop.index }}">{{ question.question }}</button>
-							</div>
-							<div id="faq-{{ categories-loop.index }}-{{ questions-loop.index }}" class="accordion-collapse collapse{% if questions-loop.index == 1 %} show{% endif %}" role="tabpanel" data-bs-parent="#faq-{{ categories-loop.index }}">
-								<div class="accordion-body pt-0">
-									<div>
-										<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium alias dignissimos dolorum ea est eveniet, excepturi illum in iste iure maiores nemo recusandae rerum saepe sed, sunt totam! Explicabo, ipsa?</p>
-										<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium alias dignissimos dolorum ea est eveniet, excepturi illum in iste iure maiores nemo recusandae rerum saepe sed, sunt totam! Explicabo, ipsa?</p>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div> -->
-
-				</div>
-			</div>
-		</div>
-		{% endfor %}
-	</div>
-
-
-	{%- else %}
-	<div class="row row-cards mx-md-1 mb-3">
-		{%- for product in page.results.items %}
-		<div class="col-md-4 col-lg-3">
-			<div class="card">
+{%- else %}
+<div class="row row-cards mt-0">
+	{%- for product in page.results.items %}
+	<div class="col-md-4 col-lg-3">
+		<div class="card">
+			<div class="position-relative">
 				<a href="/details/{{ product.ID | idhex }}">
-					<div class="card-img-top img-responsive img-responsive-4x3" style="background-image: url({{ product.Release.Image.URL }})"></div>
-				</a>
-				<div class="card-body">
-					<div class="d-flex">
-						<a href="/details/{{ product.ID | idhex }}" class="search-result-info-link flex-grow-1"><h3 class="card-title">{{ product.Name | escape }}</h3></a>
-						<div class="search-result-info mb-1">
-							<div class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Language">
-								{% include ui/icon.html icon="language" %} {{ product.Release.DocumentationLanguage | escape }}
-							</div>
+					{%- if (product.Release.Image | is_nil)  %}
+					<div class="card-img-top ratio ratio-4x3 text-bg-primary">
+						<div class="d-flex align-items-center justify-content-center">
+							{% include ui/icon.html icon="package" size="lg" class="" %}
 						</div>
 					</div>
-
-					<div class="search-result-info mb-1">
-						<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Description">{% include ui/icon.html icon="file-description" %}</span>
-						<span class="text-ellipses-line-3">{{ product.Release.Description | escape }}</span>
-					</div>
-				</div>
-				</div>
-		  </div>
-		{%- endfor %}
-	</div>
-	{%- endif %}
-
-	<div class="card-footer d-flex align-items-center">
-		<div>
-			<!-- {% include ui/button.html element="button" type="submit" disabled={{ numPagedResults == 0 }} size="md" icon="file-download" name="ds" value="cards" text="Export Results" %} -->
-			<div class="btn-group" role="button">
-				<button id="exportResults" type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" {% if page.results.count == 0 %} disabled{% endif %}>
-					{% include ui/icon.html icon="file-download" use-svg=true %}
-					Export Results
-				</button>
-				<div class="dropdown-menu dropdown-menu-end">
-					<a class="dropdown-item" href="{{ req.url | url_with_params: 'export', 'csv' }}">
-						CSV
-					</a>
-					<a class="dropdown-item" href="{{ req.url | url_with_params: 'export', 'tsv' }}">
-						TSV
-					</a>
+					{%- else %}
+					<div class="card-img-top img-responsive img-responsive-4x3" style="background-image: url({{ product.Release.Image.URL }})"></div>
+					{%- endif %}
+				</a>
+				<div class="d-flex position-absolute bottom-0 w-100 p-1">
+					{%- if product.State == 'ACTIVE' %}{%- assign stateColor = 'green' %}{% else %}{%- assign stateColor = 'red' %}{% endif %}
+					<span class="badge badge-outline bg-white text-{{stateColor}} me-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" title="Product State (Activeness)</br>ACTIVE: is actively developed</br>INACTIVE: no updates for over 2 years</br>ARCHIVED: repository is marked as archived and thus is no longer developed</br>DEPRECATED: is marked as deprecated</br>MISSING: source was deleted">{% include ui/icon.html icon="bolt" %} {{ product.State }}</span>
+					<span class="badge badge-outline bg-white text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="top" title="Language">{% include ui/icon.html icon="language" %} {{ product.Release.DocumentationLanguage | escape }}</span>
+					<span class="badge badge-outline bg-white text-muted me-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Star Count">{% include ui/icon.html icon="star" %} {{ product.StarCount }}</span>
+					<span class="badge badge-outline bg-white text-muted" data-bs-toggle="tooltip" data-bs-placement="top" title="Fork Count">{% include ui/icon.html icon="git-fork" %} {{ product.ForkCount }}</span>
 				</div>
 			</div>
+			<div class="card-body">
+				<div class="d-flex align-items-start">
+					<a href="/details/{{ product.ID | idhex }}" class="search-result-info-link flex-grow-1"><h3 class="card-title">{{ product.Name | escape }}</h3></a>
+					<a href="{{ product.Website }}" target="_blank" rel="noopener noreferrer" class="btn btn-circle btn-primary" style="margin-top: -0.4rem; margin-right: -0.4rem;" data-bs-toggle="tooltip" data-bs-placement="top" title="Go to Website">{% include ui/icon.html icon="external-link" class="m-0 icon-bold" %}</a>
+				</div>
+				<div class="search-result-info mb-1">
+					{%- assign description=(product.Release.Description | ellipses: 800 | escape ) %}
+					<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Description">{% include ui/icon.html icon="file-description" %}</span>
+					<span class="position-relative">
+						<span class="text-ellipses-line-3" data-text="{{ description }}">{{ description }}</span>
+					</span>
+				</div>
+				<a href="/details/{{ product.Release.Licensor.ID | idhex }}" class="search-result-info-link mb-1">
+					<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Owner">{% include ui/icon.html icon="user" %}</span>
+					<span>{% if product.Release.Licensor.FullName %}{{ product.Release.Licensor.FullName | escape }}{% else %}{{ product.Release.Licensor.Name | escape }}{% endif %}</span>
+				</a>
+				{%- unless (product.Release.License | is_nil) %}
+				<a href="/details/{{ product.Release.License.ID | idhex }}" class="search-result-info-link mb-1" in="">
+					<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="License">{% include ui/icon.html icon="license" %}</span>
+					<span>{{ product.Release.License.Xid }}</span>
+				</a>
+				{%- endunless %}
+				{%- if (product.Tags | size) > 1 %}
+				<a href="#" class="search-result-info-link mb-1" in="">
+					<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Tags">{% include ui/icon.html icon="tag" %}</span>
+					<span>{% for tag in product.Tags %}{{ tag.Name }}{% unless forloop.last %}, {% endunless %}{% endfor %}</span>
+				</a>
+				{%- endif %}
+				<!-- extras -->
+				<!-- <div class="search-result-info mb-1">
+					<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Version">{% include ui/icon.html icon="versions" %}</span>
+					<span>{{ product.Release.Version | escape }}</span>
+				</div> -->
+			</div>
 		</div>
-		<div class="m-0 ms-auto d-flex">
-			{% include ui/pagination.html icons=true numPages={{ page.numPages }} curPage={{ page.curPage }} resultsPerPage={{ req.queryParams.resultsPerPage }} %}
+	</div>
+	{%- endfor %}
+</div>
+
+{%- endif %}
+
+<div class="d-flex align-items-center mt-3">
+	<div>
+		<div class="btn-group" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Export up to 300 results in a machine-readable format.">
+			<button id="exportResults" type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" {% if page.results.count == 0 %} disabled{% endif %}>
+				{% include ui/icon.html icon="file-download" use-svg=true %}
+				Export Results
+			</button>
+			<div class="dropdown-menu dropdown-menu-end">
+				<a class="dropdown-item" href="{{ req.url | url_with_params: 'export', 'csv' }}">
+					CSV
+				</a>
+				<a class="dropdown-item" href="{{ req.url | url_with_params: 'export', 'tsv' }}">
+					TSV
+				</a>
+			</div>
 		</div>
+	</div>
+	<div class="m-0 ms-auto d-flex">
+		{% include ui/pagination.html icons=true numPages={{ page.numPages }} curPage={{ page.curPage }} resultsPerPage={{ req.queryParams.resultsPerPage }} %}
 	</div>
 </div>
 
+{%- capture_global scripts %}
 <script>
-	function handleSearch(event) {
+	// @formatter:off
+	document.getElementById('searchForm').addEventListener('submit', function (e) {
+		e.preventDefault();
 		const form = document.forms.search;
 		const formData = new FormData(form);
 		const params = new URLSearchParams(window.location.search);
 		// unset page for new query
-		params.delete("page")
-		params.set("q", formData.get("q"));
-
-		console.log ("here");
+		params.delete('page')
+		params.set('q', formData.get('q'));
 
 		// change target location
-		location = "{{ req.path }}?" + params.toString();
+		location = '{{ req.path }}?' + params.toString();
+	})
 
-		// cancel submit event
+	document.getElementById('clearSearch').addEventListener('click', function (e) {
+		document.forms.search['q'].value = '';
 		return false;
-	}
+	})
+
+	document.getElementById('orderBy').addEventListener('change', function (e) {
+		setQueryParameter('o', new FormData(this.form).get('orderBy'));
+		return true;
+	})
+
+	const querySyntaxExamples = document.getElementsByClassName('syntax-example');
+	const searchQueryInput = document.getElementById('searchQuery');
+	Array.from(querySyntaxExamples).forEach((elm) => {
+		elm.addEventListener('click', function (e) {
+			var selStart = searchQueryInput.selectionStart;
+			var selEnd = searchQueryInput.selectionEnd;
+			var curVal = searchQueryInput.value;
+			if (selStart != selEnd) {
+				searchQueryInput.value = curVal.substring(0, selStart) + elm.innerText + curVal.substring(selEnd);
+			} else {
+				if (curVal.length > 0) {
+					curVal += ' ';
+				}
+				searchQueryInput.value = curVal + this.innerText;
+			}
+		})
+	})
+	// @formatter:on
 </script>
+{%- endcapture_global %}
