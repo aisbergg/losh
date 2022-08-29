@@ -19,6 +19,10 @@ import (
 	"github.com/aisbergg/go-copier/pkg/copier"
 	"github.com/aisbergg/go-errors/pkg/errors"
 	"github.com/aisbergg/go-retry/pkg/retry"
+	"github.com/dgraph-io/dgo/v200"
+	"github.com/dgraph-io/dgo/v200/protos/api"
+	"github.com/fenos/dqlx"
+	"google.golang.org/grpc"
 
 	gql "github.com/Yamashou/gqlgenc/clientv2"
 	"go.uber.org/zap"
@@ -35,8 +39,13 @@ type DgraphRepository struct {
 	requester  *request.GraphQLRequester
 	client     *dgclient.Client
 	copier     *copier.Copier
+	dqlCopier  *copier.Copier
 	// copierFull *copier.Copier
 	log *zap.SugaredLogger
+
+	// dqlxClient
+	dqlxClient   dqlx.DB
+	dgraphClient *dgo.Dgraph
 }
 
 // NewDgraphRepository creates a new DgraphRepository.
@@ -107,22 +116,63 @@ func NewDgraphRepository(dbConfig Config) (*DgraphRepository, error) {
 	// 	IgnoreEmpty:    false,
 	// 	Converters:     copierConverters(),
 	// })
+	dqlCopier := copier.New(copier.Options{
+		AutoConvert:    true,
+		CopyUnexported: true,
+		IgnoreEmpty:    false,
+		Converters:     dqlCopierConverters(),
+		ConsiderTags:   []string{"dql"},
+	})
 	copier := copier.New(copier.Options{
 		AutoConvert:    true,
 		CopyUnexported: true,
 		IgnoreEmpty:    false,
 		Converters:     copierConverters(),
+		ConsiderTags:   []string{"json"},
 	})
 
+	// -------------------------------------------------------------------------
+	// dqlxClient
+	// dgraphClient := api.DgraphClient, len(addresses))
+	// TODO: TLS stuff
+	dial, err := grpc.Dial(strings.TrimSpace(dbConfig.Host)+":9080", grpc.WithInsecure())
+	if err != nil {
+		return nil, err
+	}
+	dgraphClient := dgo.NewDgraphClient(api.NewDgraphClient(dial))
+	dqlxClient := dqlx.FromClient(dgraphClient)
+
+	// TODO: access to cluster
+	// func Connect(addresses ...string) (DB, error) {
+	// 	clients := make([]api.DgraphClient, len(addresses))
+
+	// 	for index, address := range addresses {
+	// 		dial, err := grpc.Dial(address, grpc.WithInsecure())
+	// 		if err != nil {
+	// 			return nil, err
+	// 		}
+	// 		clients[index] = api.NewDgraphClient(dial)
+	// 	}
+
+	// 	dgraph := dgo.NewDgraphClient(clients...)
+
+	// 	return FromClient(dgraph), nil
+	// }
+
+	// -------------------------------------------------------------------------
 	dgraphRepo := &DgraphRepository{
 		timeout:    dbConfig.Timeout,
 		httpClient: httpClient,
 		requester:  graphQLRequester,
 		client:     client,
 		copier:     copier,
+		dqlCopier:  dqlCopier,
 		// copierFull: copierFull,
 		address: address,
 		log:     log,
+
+		dqlxClient:   dqlxClient,
+		dgraphClient: dgraphClient,
 	}
 	return dgraphRepo, nil
 }
@@ -153,7 +203,7 @@ func (dr *DgraphRepository) WaitUntilReachable() error {
 		b = request.WithDelayLimit(dr.timeout, b)
 	}
 	b = request.WithHook(func(delay time.Duration, err error) (time.Duration, error) {
-		dr.log.Errorf("failed to reach database at %s, waiting %ss and try again: %s", dr.address, delay, err.Error())
+		dr.log.Errorf("failed to reach database at %s, waiting %s and try again: %s", dr.address, delay, err.Error())
 		return delay, nil
 	}, b)
 

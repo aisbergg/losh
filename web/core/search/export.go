@@ -2,54 +2,60 @@ package search
 
 import (
 	"bytes"
+	"context"
 	"encoding/csv"
-	"encoding/json"
 	"fmt"
+	"strconv"
 	"strings"
 
 	"losh/internal/core/product/models"
-
-	orderedmap "github.com/wk8/go-ordered-map"
+	"losh/internal/infra/dgraph"
+	searchmodels "losh/web/core/search/models"
 )
 
-type ExportType int
+// func (s *Service) ExportResults(query string, results searchmodels.Results, t searchmodels.ExportType) ([]byte, error) {
+// 	switch t {
+// 	case searchmodels.ExportTypeCSV, searchmodels.ExportTypeTSV:
+// 		return dumpCSVorTSV(results, t)
+// 	default:
+// 		// should never happen unless we missed something
+// 		panic("invalid export type")
+// 	}
+// }
 
-const (
-	ExportTypeInvalid ExportType = iota
-	ExportTypeJSON
-	ExportTypeCSV
-	ExportTypeTSV
-)
+const batchSize = 100
 
-func (s *Service) ExportResults(query string, results Results, t ExportType) ([]byte, error) {
-	switch t {
-	case ExportTypeJSON:
-		return dumpJSON(query, results)
-	case ExportTypeCSV, ExportTypeTSV:
-		return dumpCSVorTSV(results, t)
-	default:
-		return nil, &Error{"invalid export type"}
-	}
-}
-
-func dumpJSON(query string, results Results) ([]byte, error) {
-	items := make([]*models.Product, 0, len(results.Items))
-	for _, prd := range results.Items {
-		items = append(items, models.AsTree(prd).(*models.Product))
-	}
-	m := orderedmap.NewWithPairs(
-		"query", query,
-		"count", results.Count,
-		"items", items,
+func (s *Service) ExportResults(t searchmodels.ExportType, ctx context.Context, queryStr string, orderBy searchmodels.OrderBy, limit, offset int) ([]byte, error) {
+	pgdRes := dgraph.NewPaginatedList(
+		func(first int, offset int) ([]*models.Product, error) {
+			res, err := s.Search3(ctx, queryStr, orderBy, searchmodels.Pagination{First: first, Offset: offset})
+			if err != nil {
+				return nil, err
+			}
+			return res.Items, nil
+		},
+		batchSize,
+		offset,
 	)
-	return json.MarshalIndent(m, "", "  ")
+
+	switch t {
+	case searchmodels.ExportTypeCSV, searchmodels.ExportTypeTSV:
+		return dumpCSVorTSV(pgdRes, t, limit)
+	default:
+		// should never happen unless we missed something
+		panic("invalid export type")
+	}
 }
 
-func dumpCSVorTSV(results Results, t ExportType) ([]byte, error) {
+func (s *Service) ExportUpTo300Results(t searchmodels.ExportType, ctx context.Context, queryStr string, orderBy searchmodels.OrderBy) ([]byte, error) {
+	return s.ExportResults(t, ctx, queryStr, orderBy, 300, 0)
+}
+
+func dumpCSVorTSV(results *dgraph.PaginatedList[*models.Product], t searchmodels.ExportType, limit int) ([]byte, error) {
 	buf := &bytes.Buffer{}
 	w := csv.NewWriter(buf)
 	w.Comma = ';'
-	if t == ExportTypeTSV {
+	if t == searchmodels.ExportTypeTSV {
 		w.Comma = '\t'
 	}
 
@@ -58,7 +64,10 @@ func dumpCSVorTSV(results Results, t ExportType) ([]byte, error) {
 		"name",
 		"description",
 		"website",
+		"state",
 		"forkOf",
+		"forkCount",
+		"starCount",
 		"tags",
 		"category",
 		"version",
@@ -93,7 +102,18 @@ func dumpCSVorTSV(results Results, t ExportType) ([]byte, error) {
 		return nil, err
 	}
 
-	for _, prd := range results.Items {
+	count := 0
+	for {
+		if count >= limit {
+			break
+		}
+		prd, err := results.Next()
+		if err != nil {
+			return nil, err
+		}
+		if prd == nil {
+			break
+		}
 		tags := make([]string, 0, len(prd.Tags))
 		for _, tag := range prd.Tags {
 			tags = append(tags, *tag.Name)
@@ -117,6 +137,10 @@ func dumpCSVorTSV(results Results, t ExportType) ([]byte, error) {
 				lcs = append(lcs, *lc.Xid)
 			}
 			additionalLicenses = strings.Join(lcs, ",")
+		}
+		var license string
+		if prd.Release.License != nil {
+			license = *prd.Release.License.Xid
 		}
 		var licensor string
 		var licensorURL string
@@ -191,13 +215,16 @@ func dumpCSVorTSV(results Results, t ExportType) ([]byte, error) {
 			pd(prd.Name),
 			pd(prd.Release.Description),
 			pd(prd.Website),
+			string(pd(prd.State)),
 			forkOf,
+			strconv.FormatInt(pd(prd.ForkCount), 10),
+			strconv.FormatInt(pd(prd.StarCount), 10),
 			strings.Join(tags, ","),
 			category,
 			pd(prd.Release.Version),
 			pd(prd.Release.CreatedAt).String(),
 			pd(prd.Release.Repository.URL),
-			pd(prd.Release.License.Xid),
+			license,
 			additionalLicenses,
 			licensor,
 			licensorURL,
@@ -225,6 +252,7 @@ func dumpCSVorTSV(results Results, t ExportType) ([]byte, error) {
 		if err != nil {
 			return nil, err
 		}
+		count++
 	}
 
 	w.Flush()

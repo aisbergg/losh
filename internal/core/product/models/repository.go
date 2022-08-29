@@ -5,15 +5,15 @@ import "encoding/json"
 var _ Node = (*Repository)(nil)
 
 type Repository struct {
-	ID        *string     `id:"true" mandatory:"true" json:"id,omitempty" graphql:"id"`
-	Xid       *string     `altID:"true" mandatory:"true" json:"xid,omitempty" graphql:"xid"`
-	URL       *string     `mandatory:"true" json:"url,omitempty" graphql:"url"`
-	PermaURL  *string     `mandatory:"true" json:"permaUrl,omitempty" graphql:"permaUrl"`
-	Host      *Host       `mandatory:"true" json:"host,omitempty" graphql:"host"`
-	Owner     UserOrGroup `json:"owner,omitempty" graphql:"owner"`
-	Name      *string     `json:"name,omitempty" graphql:"name"`
-	Reference *string     `json:"reference,omitempty" graphql:"reference"`
-	Path      *string     `json:"path,omitempty" graphql:"path"`
+	ID        *string     `id:"true" mandatory:"true" json:"id,omitempty" graphql:"id" dql:"uid"`
+	Xid       *string     `altID:"true" mandatory:"true" json:"xid,omitempty" graphql:"xid" dql:"Repository.xid"`
+	URL       *string     `mandatory:"true" json:"url,omitempty" graphql:"url" dql:"Repository.url"`
+	PermaURL  *string     `mandatory:"true" json:"permaUrl,omitempty" graphql:"permaUrl" dql:"Repository.permaUrl"`
+	Host      *Host       `mandatory:"true" json:"host,omitempty" graphql:"host" dql:"Repository.host"`
+	Owner     UserOrGroup `json:"owner,omitempty" graphql:"owner" dql:"Repository.owner"`
+	Name      *string     `json:"name,omitempty" graphql:"name" dql:"Repository.name"`
+	Reference *string     `json:"reference,omitempty" graphql:"reference" dql:"Repository.reference"`
+	Path      *string     `json:"path,omitempty" graphql:"path" dql:"Repository.path"`
 }
 
 // GetID returns the ID of the node.

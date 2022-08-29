@@ -42,10 +42,10 @@ func unmarshalOuterDimensions(msg *json.RawMessage) (res OuterDimensions, err er
 var _ Node = (*BoundingBoxDimensions)(nil)
 
 type BoundingBoxDimensions struct {
-	ID     *string  `id:"true" mandatory:"true" json:"id,omitempty" graphql:"id"`
-	Height *float64 `mandatory:"true" json:"height,omitempty" graphql:"height"`
-	Width  *float64 `mandatory:"true" json:"width,omitempty" graphql:"width"`
-	Depth  *float64 `mandatory:"true" json:"depth,omitempty" graphql:"depth"`
+	ID     *string  `id:"true" mandatory:"true" json:"id,omitempty" graphql:"id" dql:"uid"`
+	Height *float64 `mandatory:"true" json:"height,omitempty" graphql:"height" dql:"BoundingBoxDimensions.height"`
+	Width  *float64 `mandatory:"true" json:"width,omitempty" graphql:"width" dql:"BoundingBoxDimensions.width"`
+	Depth  *float64 `mandatory:"true" json:"depth,omitempty" graphql:"depth" dql:"BoundingBoxDimensions.depth"`
 }
 
 // GetID returns the ID of the node.
@@ -78,9 +78,9 @@ func (*BoundingBoxDimensions) IsNode()            {}
 var _ Node = (*OpenSCADDimensions)(nil)
 
 type OpenSCADDimensions struct {
-	ID       *string `id:"true" mandatory:"true" json:"id,omitempty" graphql:"id"`
-	Openscad *string `mandatory:"true" json:"openscad,omitempty" graphql:"openscad"`
-	Unit     *string `mandatory:"true" json:"unit,omitempty" graphql:"unit"`
+	ID       *string `id:"true" mandatory:"true" json:"id,omitempty" graphql:"id" dql:"uid"`
+	Openscad *string `mandatory:"true" json:"openscad,omitempty" graphql:"openscad" dql:"OpenSCADDimensions.openscad"`
+	Unit     *string `mandatory:"true" json:"unit,omitempty" graphql:"unit" dql:"OpenSCADDimensions.unit"`
 }
 
 // GetID returns the ID of the node.

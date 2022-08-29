@@ -224,7 +224,7 @@ func (dr *DgraphRepository) DeleteLicense(ctx context.Context, id, xid *string) 
 		delFilter.ID = []string{*id}
 	}
 	if xid != nil {
-		delFilter.Xid = &dgclient.StringHashFilter{Eq: xid}
+		delFilter.Xid = &dgclient.StringHashFilterStringRegExpFilterStringTermFilter{Eq: xid}
 	}
 
 	dr.log.Debugw("delete License")

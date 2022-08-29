@@ -62,6 +62,34 @@ func copierConverters() []copier.TypeConverter {
 	}
 }
 
+func stringListContains(list []interface{}, s string) bool {
+	for _, v := range list {
+		if v == s {
+			return true
+		}
+	}
+	return false
+}
+
+func dqlCopierConverters() []copier.TypeConverter {
+	return []copier.TypeConverter{
+		copier.TypeConverter{
+			SrcType: map[string]interface{}{},
+			DstType: reflect.TypeOf((*models.UserOrGroup)(nil)).Elem(),
+			Fn: func(src interface{}, _ *copier.Copier) (interface{}, bool, error) {
+				o := src.(map[string]interface{})
+				types := o["dgraph.type"].([]interface{})
+				if stringListContains(types, "User") {
+					return &models.User{}, false, nil
+				} else if stringListContains(types, "Group") {
+					return &models.Group{}, false, nil
+				}
+				panic("unexpected type")
+			},
+		},
+	}
+}
+
 // initMandatoryFields initializes mandatory fields of type slice. Slices are
 // nullable and therefore must be initialized.
 func (dr *DgraphRepository) initMandatorySlices(node models.Node) {

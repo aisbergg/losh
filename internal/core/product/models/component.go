@@ -10,49 +10,49 @@ import (
 var _ Node = (*Component)(nil)
 
 type Component struct {
-	ID                          *string                                  `id:"true" mandatory:"true" json:"id,omitempty" graphql:"id"`
-	DiscoveredAt                *time.Time                               `mandatory:"true" json:"discoveredAt,omitempty" graphql:"discoveredAt"`
-	LastIndexedAt               *time.Time                               `mandatory:"true" json:"lastIndexedAt,omitempty" graphql:"lastIndexedAt"`
-	DataSource                  *Repository                              `mandatory:"true" json:"dataSource,omitempty" graphql:"dataSource"`
-	Xid                         *string                                  `altID:"true" mandatory:"true" json:"xid,omitempty" graphql:"xid"`
-	Name                        *string                                  `mandatory:"true" json:"name,omitempty" graphql:"name"`
-	Description                 *string                                  `mandatory:"true" json:"description,omitempty" graphql:"description"`
-	Version                     *string                                  `mandatory:"true" json:"version,omitempty" graphql:"version"`
-	CreatedAt                   *time.Time                               `mandatory:"true" json:"createdAt,omitempty" graphql:"createdAt"`
-	Releases                    []*Component                             `json:"releases,omitempty" graphql:"releases"`
-	IsLatest                    *bool                                    `mandatory:"true" json:"isLatest,omitempty" graphql:"isLatest"`
-	Repository                  *Repository                              `mandatory:"true" json:"repository,omitempty" graphql:"repository"`
+	ID                          *string                                  `id:"true" mandatory:"true" json:"id,omitempty" graphql:"id" dql:"uid"`
+	DiscoveredAt                *time.Time                               `mandatory:"true" json:"discoveredAt,omitempty" graphql:"discoveredAt" dql:"CrawlerMeta.discoveredAt"`
+	LastIndexedAt               *time.Time                               `mandatory:"true" json:"lastIndexedAt,omitempty" graphql:"lastIndexedAt" dql:"CrawlerMeta.lastIndexedAt"`
+	DataSource                  *Repository                              `mandatory:"true" json:"dataSource,omitempty" graphql:"dataSource" dql:"Component.dataSource"`
+	Xid                         *string                                  `altID:"true" mandatory:"true" json:"xid,omitempty" graphql:"xid" dql:"Component.xid"`
+	Name                        *string                                  `mandatory:"true" json:"name,omitempty" graphql:"name" dql:"Component.name"`
+	Description                 *string                                  `mandatory:"true" json:"description,omitempty" graphql:"description" dql:"Component.description"`
+	Version                     *string                                  `mandatory:"true" json:"version,omitempty" graphql:"version" dql:"Component.version"`
+	CreatedAt                   *time.Time                               `mandatory:"true" json:"createdAt,omitempty" graphql:"createdAt" dql:"Component.createdAt"`
+	Releases                    []*Component                             `json:"releases,omitempty" graphql:"releases" dql:"Component.releases"`
+	IsLatest                    *bool                                    `mandatory:"true" json:"isLatest,omitempty" graphql:"isLatest" dql:"Component.isLatest"`
+	Repository                  *Repository                              `mandatory:"true" json:"repository,omitempty" graphql:"repository" dql:"Component.repository"`
 	License                     *License                                 `json:"license,omitempty" graphql:"license" dql:"Component.license"`
 	AdditionalLicenses          []*License                               `json:"additionalLicenses,omitempty" graphql:"additionalLicenses" dql:"Component.additionalLicenses"`
-	Licensor                    UserOrGroup                              `mandatory:"true" json:"licensor,omitempty" graphql:"licensor"`
-	DocumentationLanguage       *string                                  `mandatory:"true" json:"documentationLanguage,omitempty" graphql:"documentationLanguage"`
-	TechnologyReadinessLevel    *dgclient.TechnologyReadinessLevel       `mandatory:"true" json:"technologyReadinessLevel,omitempty" graphql:"technologyReadinessLevel"`
-	DocumentationReadinessLevel *dgclient.DocumentationReadinessLevel    `mandatory:"true" json:"documentationReadinessLevel,omitempty" graphql:"documentationReadinessLevel"`
-	Attestation                 *string                                  `json:"attestation,omitempty" graphql:"attestation"`
-	Publication                 *string                                  `json:"publication,omitempty" graphql:"publication"`
-	Issues                      *string                                  `json:"issues,omitempty" graphql:"issues"`
-	CompliesWith                *TechnicalStandard                       `json:"compliesWith,omitempty" graphql:"compliesWith"`
-	CpcPatentClass              *string                                  `json:"cpcPatentClass,omitempty" graphql:"cpcPatentClass"`
-	Tsdc                        *TechnologySpecificDocumentationCriteria `json:"tsdc,omitempty" graphql:"tsdc"`
-	Components                  []*Component                             `json:"components,omitempty" graphql:"components"`
-	Software                    []*Software                              `json:"software,omitempty" graphql:"software"`
-	Image                       *File                                    `json:"image,omitempty" graphql:"image"`
-	Readme                      *File                                    `json:"readme,omitempty" graphql:"readme"`
-	ContributionGuide           *File                                    `json:"contributionGuide,omitempty" graphql:"contributionGuide"`
-	Bom                         *File                                    `json:"bom,omitempty" graphql:"bom"`
-	ManufacturingInstructions   *File                                    `json:"manufacturingInstructions,omitempty" graphql:"manufacturingInstructions"`
-	UserManual                  *File                                    `json:"userManual,omitempty" graphql:"userManual"`
-	Product                     *Product                                 `json:"product,omitempty" graphql:"product"`
-	UsedIn                      []*Component                             `json:"usedIn,omitempty" graphql:"usedIn"`
-	Source                      *File                                    `json:"source,omitempty" graphql:"source"`
-	Export                      []*File                                  `json:"export,omitempty" graphql:"export"`
-	Auxiliary                   []*File                                  `json:"auxiliary,omitempty" graphql:"auxiliary"`
-	Organization                *Group                                   `json:"organization,omitempty" graphql:"organization"`
-	Mass                        *float64                                 `json:"mass,omitempty" graphql:"mass"`
-	OuterDimensions             OuterDimensions                          `json:"outerDimensions,omitempty" graphql:"outerDimensions"`
-	Material                    *Material                                `json:"material,omitempty" graphql:"material"`
-	ManufacturingProcess        *ManufacturingProcess                    `json:"manufacturingProcess,omitempty" graphql:"manufacturingProcess"`
-	ProductionMetadata          []*KeyValue                              `json:"productionMetadata,omitempty" graphql:"productionMetadata"`
+	Licensor                    UserOrGroup                              `mandatory:"true" json:"licensor,omitempty" graphql:"licensor" dql:"Component.licensor"`
+	DocumentationLanguage       *string                                  `mandatory:"true" json:"documentationLanguage,omitempty" graphql:"documentationLanguage" dql:"Component.documentationLanguage"`
+	TechnologyReadinessLevel    *dgclient.TechnologyReadinessLevel       `mandatory:"true" json:"technologyReadinessLevel,omitempty" graphql:"technologyReadinessLevel" dql:"Component.technologyReadinessLevel"`
+	DocumentationReadinessLevel *dgclient.DocumentationReadinessLevel    `mandatory:"true" json:"documentationReadinessLevel,omitempty" graphql:"documentationReadinessLevel" dql:"Component.documentationReadinessLevel"`
+	Attestation                 *string                                  `json:"attestation,omitempty" graphql:"attestation" dql:"Component.attestation"`
+	Publication                 *string                                  `json:"publication,omitempty" graphql:"publication" dql:"Component.publication"`
+	Issues                      *string                                  `json:"issues,omitempty" graphql:"issues" dql:"Component.issues"`
+	CompliesWith                *TechnicalStandard                       `json:"compliesWith,omitempty" graphql:"compliesWith" dql:"Component.compliesWith"`
+	CpcPatentClass              *string                                  `json:"cpcPatentClass,omitempty" graphql:"cpcPatentClass" dql:"Component.cpcPatentClass"`
+	Tsdc                        *TechnologySpecificDocumentationCriteria `json:"tsdc,omitempty" graphql:"tsdc" dql:"Component.tsdc"`
+	Components                  []*Component                             `json:"components,omitempty" graphql:"components" dql:"Component.components"`
+	Software                    []*Software                              `json:"software,omitempty" graphql:"software" dql:"Component.software"`
+	Image                       *File                                    `json:"image,omitempty" graphql:"image" dql:"Component.image"`
+	Readme                      *File                                    `json:"readme,omitempty" graphql:"readme" dql:"Component.readme"`
+	ContributionGuide           *File                                    `json:"contributionGuide,omitempty" graphql:"contributionGuide" dql:"Component.contributionGuide"`
+	Bom                         *File                                    `json:"bom,omitempty" graphql:"bom" dql:"Component.bom"`
+	ManufacturingInstructions   *File                                    `json:"manufacturingInstructions,omitempty" graphql:"manufacturingInstructions" dql:"Component.manufacturingInstructions"`
+	UserManual                  *File                                    `json:"userManual,omitempty" graphql:"userManual" dql:"Component.userManual"`
+	Product                     *Product                                 `json:"product,omitempty" graphql:"product" dql:"Component.product"`
+	UsedIn                      []*Component                             `json:"usedIn,omitempty" graphql:"usedIn" dql:"Component.usedIn"`
+	Source                      *File                                    `json:"source,omitempty" graphql:"source" dql:"Component.source"`
+	Export                      []*File                                  `json:"export,omitempty" graphql:"export" dql:"Component.export"`
+	Auxiliary                   []*File                                  `json:"auxiliary,omitempty" graphql:"auxiliary" dql:"Component.auxiliary"`
+	Organization                *Group                                   `json:"organization,omitempty" graphql:"organization" dql:"Component.organization"`
+	Mass                        *float64                                 `json:"mass,omitempty" graphql:"mass" dql:"Component.mass"`
+	OuterDimensions             OuterDimensions                          `json:"outerDimensions,omitempty" graphql:"outerDimensions" dql:"Component.outerDimensions"`
+	Material                    *Material                                `json:"material,omitempty" graphql:"material" dql:"Component.material"`
+	ManufacturingProcess        *ManufacturingProcess                    `json:"manufacturingProcess,omitempty" graphql:"manufacturingProcess" dql:"Component.manufacturingProcess"`
+	ProductionMetadata          []*KeyValue                              `json:"productionMetadata,omitempty" graphql:"productionMetadata" dql:"Component.productionMetadata"`
 }
 
 type componentAlias Component

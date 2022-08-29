@@ -8,22 +8,23 @@ type PaginatableType interface {
 	*models.Product
 }
 
-type ItemProvider[T PaginatableType] func(first int64, offset int64) ([]T, error)
+type ItemProvider[T PaginatableType] func(first int, offset int) ([]T, error)
 
 type PaginatedList[T PaginatableType] struct {
 	itemPrvFn ItemProvider[T]
 
-	first  int64
-	offset int64
+	first  int
+	offset int
 	i      int
 	items  []T
 }
 
 // NewPaginatedList returns a new PaginatedList.
-func NewPaginatedList[T PaginatableType](itemPrvFn func(first int64, offset int64) ([]T, error), batchSize int64) *PaginatedList[T] {
+func NewPaginatedList[T PaginatableType](itemPrvFn ItemProvider[T], first, offset int) *PaginatedList[T] {
 	return &PaginatedList[T]{
 		itemPrvFn: itemPrvFn,
-		first:     batchSize,
+		first:     first,
+		offset:    offset,
 	}
 }
 
@@ -60,6 +61,6 @@ func (pl *PaginatedList[T]) nextPage() error {
 	}
 	pl.items = items
 	pl.i = 0
-	pl.offset += int64(len(items))
+	pl.offset += int(len(items))
 	return nil
 }

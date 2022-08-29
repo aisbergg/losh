@@ -43,9 +43,9 @@ func unmarshalStringOrFloat(msg *json.RawMessage) (res StringOrFloat, err error)
 var _ Node = (*KeyValue)(nil)
 
 type KeyValue struct {
-	ID    *string       `id:"true" mandatory:"true" json:"id,omitempty" graphql:"id"`
-	Key   *string       `mandatory:"true" json:"key,omitempty" graphql:"key"`
-	Value StringOrFloat `mandatory:"true" json:"value,omitempty" graphql:"value"`
+	ID    *string       `id:"true" mandatory:"true" json:"id,omitempty" graphql:"id" dql:"uid"`
+	Key   *string       `mandatory:"true" json:"key,omitempty" graphql:"key" dql:"KeyValue.key"`
+	Value StringOrFloat `mandatory:"true" json:"value,omitempty" graphql:"value" dql:"KeyValue.value"`
 }
 
 // GetID returns the ID of the node.
@@ -65,8 +65,8 @@ func (*KeyValue) IsNode() {}
 var _ Node = (*FloatV)(nil)
 
 type FloatV struct {
-	ID    *string  `id:"true" mandatory:"true" json:"id,omitempty" graphql:"id"`
-	Value *float64 `mandatory:"true" json:"value,omitempty" graphql:"value"`
+	ID    *string  `id:"true" mandatory:"true" json:"id,omitempty" graphql:"id" dql:"uid"`
+	Value *float64 `mandatory:"true" json:"value,omitempty" graphql:"value" dql:"FloatV.value"`
 }
 
 // GetID returns the ID of the node.
@@ -99,8 +99,8 @@ func (*FloatV) IsNode()          {}
 var _ Node = (*StringV)(nil)
 
 type StringV struct {
-	ID    *string `id:"true" mandatory:"true" json:"id,omitempty" graphql:"id"`
-	Value *string `mandatory:"true" json:"value,omitempty" graphql:"value"`
+	ID    *string `id:"true" mandatory:"true" json:"id,omitempty" graphql:"id" dql:"uid"`
+	Value *string `mandatory:"true" json:"value,omitempty" graphql:"value" dql:"StringV.value"`
 }
 
 // GetID returns the ID of the node.

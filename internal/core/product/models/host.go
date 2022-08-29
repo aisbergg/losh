@@ -3,9 +3,9 @@ package models
 var _ Node = (*Host)(nil)
 
 type Host struct {
-	ID     *string `id:"true" mandatory:"true" json:"id,omitempty" graphql:"id"`
-	Domain *string `altID:"true" mandatory:"true" json:"domain,omitempty" graphql:"domain"`
-	Name   *string `mandatory:"true" json:"name,omitempty" graphql:"name"`
+	ID     *string `id:"true" mandatory:"true" json:"id,omitempty" graphql:"id" dql:"uid"`
+	Domain *string `altID:"true" mandatory:"true" json:"domain,omitempty" graphql:"domain" dql:"Host.domain"`
+	Name   *string `mandatory:"true" json:"name,omitempty" graphql:"name" dql:"Host.name"`
 }
 
 // GetID returns the ID of the node.

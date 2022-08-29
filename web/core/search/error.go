@@ -1,9 +1,18 @@
 package search
 
+type ErrorType int
+
+const (
+	ErrorTypeInvalid ErrorType = iota
+	ErrorLimitExceeded
+	ErrorInvalidQuery
+)
+
 type Error struct {
-	msg string
+	Msg  string
+	Type ErrorType
 }
 
 func (e *Error) Error() string {
-	return e.msg
+	return e.Msg
 }
