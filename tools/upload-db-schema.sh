@@ -10,7 +10,7 @@ repo_root_dir="$(dirname "$0")/.."
 cd "$repo_root_dir"
 
 # upload the schema to the GraphQL server
-curl -X POST localhost:8080/admin/schema --data-binary "@internal/models/.schema.graphql"
+curl -X POST localhost:8080/admin/schema --data-binary "@internal/core/product/models/.schema.graphql"
 echo
 
 # regenerate the GraphQL clients

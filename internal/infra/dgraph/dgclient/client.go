@@ -4,8 +4,9 @@ package dgclient
 
 import (
 	"context"
-	"losh/internal/lib/net/request"
 	"time"
+
+	"losh/internal/lib/net/request"
 )
 
 type DgraphGraphQLClient interface {
@@ -165,15 +166,6 @@ func NewClient(requester *request.GraphQLRequester) DgraphGraphQLClient {
 }
 
 type Query struct {
-	GetTestObject                                    *TestObject                                             "json:\"getTestObject,omitempty\" graphql:\"getTestObject\""
-	QueryTestObject                                  []*TestObject                                           "json:\"queryTestObject,omitempty\" graphql:\"queryTestObject\""
-	AggregateTestObject                              *TestObjectAggregateResult                              "json:\"aggregateTestObject,omitempty\" graphql:\"aggregateTestObject\""
-	GetTestObject2                                   *TestObject2                                            "json:\"getTestObject2,omitempty\" graphql:\"getTestObject2\""
-	QueryTestObject2                                 []*TestObject2                                          "json:\"queryTestObject2,omitempty\" graphql:\"queryTestObject2\""
-	AggregateTestObject2                             *TestObject2AggregateResult                             "json:\"aggregateTestObject2,omitempty\" graphql:\"aggregateTestObject2\""
-	GetTestObject3                                   *TestObject3                                            "json:\"getTestObject3,omitempty\" graphql:\"getTestObject3\""
-	QueryTestObject3                                 []*TestObject3                                          "json:\"queryTestObject3,omitempty\" graphql:\"queryTestObject3\""
-	AggregateTestObject3                             *TestObject3AggregateResult                             "json:\"aggregateTestObject3,omitempty\" graphql:\"aggregateTestObject3\""
 	GetDatabase                                      *Database                                               "json:\"getDatabase,omitempty\" graphql:\"getDatabase\""
 	QueryDatabase                                    []*Database                                             "json:\"queryDatabase,omitempty\" graphql:\"queryDatabase\""
 	AggregateDatabase                                *DatabaseAggregateResult                                "json:\"aggregateDatabase,omitempty\" graphql:\"aggregateDatabase\""
@@ -247,15 +239,6 @@ type Query struct {
 	AggregateTag                                     *TagAggregateResult                                     "json:\"aggregateTag,omitempty\" graphql:\"aggregateTag\""
 }
 type Mutation struct {
-	AddTestObject                                 *AddTestObjectPayload                                 "json:\"addTestObject,omitempty\" graphql:\"addTestObject\""
-	UpdateTestObject                              *UpdateTestObjectPayload                              "json:\"updateTestObject,omitempty\" graphql:\"updateTestObject\""
-	DeleteTestObject                              *DeleteTestObjectPayload                              "json:\"deleteTestObject,omitempty\" graphql:\"deleteTestObject\""
-	AddTestObject2                                *AddTestObject2Payload                                "json:\"addTestObject2,omitempty\" graphql:\"addTestObject2\""
-	UpdateTestObject2                             *UpdateTestObject2Payload                             "json:\"updateTestObject2,omitempty\" graphql:\"updateTestObject2\""
-	DeleteTestObject2                             *DeleteTestObject2Payload                             "json:\"deleteTestObject2,omitempty\" graphql:\"deleteTestObject2\""
-	AddTestObject3                                *AddTestObject3Payload                                "json:\"addTestObject3,omitempty\" graphql:\"addTestObject3\""
-	UpdateTestObject3                             *UpdateTestObject3Payload                             "json:\"updateTestObject3,omitempty\" graphql:\"updateTestObject3\""
-	DeleteTestObject3                             *DeleteTestObject3Payload                             "json:\"deleteTestObject3,omitempty\" graphql:\"deleteTestObject3\""
 	AddDatabase                                   *AddDatabasePayload                                   "json:\"addDatabase,omitempty\" graphql:\"addDatabase\""
 	UpdateDatabase                                *UpdateDatabasePayload                                "json:\"updateDatabase,omitempty\" graphql:\"updateDatabase\""
 	DeleteDatabase                                *DeleteDatabasePayload                                "json:\"deleteDatabase,omitempty\" graphql:\"deleteDatabase\""
@@ -345,7 +328,7 @@ type ComponentFragment struct {
 	Releases                    []*ComponentFragment_Releases                "json:\"releases\" graphql:\"releases\""
 	IsLatest                    bool                                         "json:\"isLatest\" graphql:\"isLatest\""
 	Repository                  ComponentFragment_Repository                 "json:\"repository\" graphql:\"repository\""
-	License                     ComponentFragment_License                    "json:\"license\" graphql:\"license\""
+	License                     *ComponentFragment_License                   "json:\"license\" graphql:\"license\""
 	AdditionalLicenses          []*ComponentFragment_AdditionalLicenses      "json:\"additionalLicenses\" graphql:\"additionalLicenses\""
 	Licensor                    *UserOrGroupBasicFragment                    "json:\"licensor\" graphql:\"licensor\""
 	DocumentationLanguage       string                                       "json:\"documentationLanguage\" graphql:\"documentationLanguage\""
@@ -476,15 +459,18 @@ type ProductFragment struct {
 	Description           string                       "json:\"description\" graphql:\"description\""
 	DocumentationLanguage string                       "json:\"documentationLanguage\" graphql:\"documentationLanguage\""
 	Version               string                       "json:\"version\" graphql:\"version\""
-	License               ProductFragment_License      "json:\"license\" graphql:\"license\""
+	License               *ProductFragment_License     "json:\"license\" graphql:\"license\""
 	Licensor              *UserOrGroupBasicFragment    "json:\"licensor\" graphql:\"licensor\""
 	Website               *string                      "json:\"website\" graphql:\"website\""
+	State                 ProductState                 "json:\"state\" graphql:\"state\""
 	Release               ProductFragment_Release      "json:\"release\" graphql:\"release\""
 	Releases              []*ProductFragment_Releases  "json:\"releases\" graphql:\"releases\""
 	RenamedTo             *ProductFragment_RenamedTo   "json:\"renamedTo\" graphql:\"renamedTo\""
 	RenamedFrom           *ProductFragment_RenamedFrom "json:\"renamedFrom\" graphql:\"renamedFrom\""
 	ForkOf                *ProductFragment_ForkOf      "json:\"forkOf\" graphql:\"forkOf\""
 	Forks                 []*ProductFragment_Forks     "json:\"forks\" graphql:\"forks\""
+	ForkCount             *int64                       "json:\"forkCount\" graphql:\"forkCount\""
+	StarCount             *int64                       "json:\"starCount\" graphql:\"starCount\""
 	Tags                  []*ProductFragment_Tags      "json:\"tags\" graphql:\"tags\""
 	Category              *ProductFragment_Category    "json:\"category\" graphql:\"category\""
 }
@@ -495,10 +481,13 @@ type ProductSearchFragment struct {
 	Xid           string                             "json:\"xid\" graphql:\"xid\""
 	Name          string                             "json:\"name\" graphql:\"name\""
 	Website       *string                            "json:\"website\" graphql:\"website\""
+	State         ProductState                       "json:\"state\" graphql:\"state\""
 	RenamedTo     *ProductSearchFragment_RenamedTo   "json:\"renamedTo\" graphql:\"renamedTo\""
 	RenamedFrom   *ProductSearchFragment_RenamedFrom "json:\"renamedFrom\" graphql:\"renamedFrom\""
 	ForkOf        *ProductSearchFragment_ForkOf      "json:\"forkOf\" graphql:\"forkOf\""
 	Forks         []*ProductSearchFragment_Forks     "json:\"forks\" graphql:\"forks\""
+	ForkCount     *int64                             "json:\"forkCount\" graphql:\"forkCount\""
+	StarCount     *int64                             "json:\"starCount\" graphql:\"starCount\""
 	Tags          []*TagFragment                     "json:\"tags\" graphql:\"tags\""
 	Category      *CategoryFragment                  "json:\"category\" graphql:\"category\""
 	Releases      []*ProductSearchFragment_Releases  "json:\"releases\" graphql:\"releases\""
@@ -812,8 +801,8 @@ type ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_User_UserFra
 	Name string "json:\"name\" graphql:\"name\""
 }
 type ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Avatar struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Path string "json:\"path\" graphql:\"path\""
+	ID  string "json:\"id\" graphql:\"id\""
+	URL string "json:\"url\" graphql:\"url\""
 }
 type ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -828,8 +817,8 @@ type ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_Group_GroupF
 	Name string "json:\"name\" graphql:\"name\""
 }
 type ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Avatar struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Path string "json:\"path\" graphql:\"path\""
+	ID  string "json:\"id\" graphql:\"id\""
+	URL string "json:\"url\" graphql:\"url\""
 }
 type ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -947,8 +936,8 @@ type UserOrGroupFragment_Host struct {
 	Name string "json:\"name\" graphql:\"name\""
 }
 type UserOrGroupFragment_Avatar struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Path string "json:\"path\" graphql:\"path\""
+	ID  string "json:\"id\" graphql:\"id\""
+	URL string "json:\"url\" graphql:\"url\""
 }
 type UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -963,8 +952,8 @@ type UserFragment_UserOrGroupFragment_Host struct {
 	Name string "json:\"name\" graphql:\"name\""
 }
 type UserFragment_UserOrGroupFragment_Avatar struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Path string "json:\"path\" graphql:\"path\""
+	ID  string "json:\"id\" graphql:\"id\""
+	URL string "json:\"url\" graphql:\"url\""
 }
 type UserFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -979,8 +968,8 @@ type GroupFragment_UserOrGroupFragment_Host struct {
 	Name string "json:\"name\" graphql:\"name\""
 }
 type GroupFragment_UserOrGroupFragment_Avatar struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Path string "json:\"path\" graphql:\"path\""
+	ID  string "json:\"id\" graphql:\"id\""
+	URL string "json:\"url\" graphql:\"url\""
 }
 type GroupFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -999,8 +988,8 @@ type UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Host struct {
 	Name string "json:\"name\" graphql:\"name\""
 }
 type UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Avatar struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Path string "json:\"path\" graphql:\"path\""
+	ID  string "json:\"id\" graphql:\"id\""
+	URL string "json:\"url\" graphql:\"url\""
 }
 type UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -1015,8 +1004,8 @@ type UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Host struct
 	Name string "json:\"name\" graphql:\"name\""
 }
 type UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Avatar struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Path string "json:\"path\" graphql:\"path\""
+	ID  string "json:\"id\" graphql:\"id\""
+	URL string "json:\"url\" graphql:\"url\""
 }
 type UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -1852,8 +1841,8 @@ type SearchProducts_QueryProduct_ProductSearchFragment_Release_Licensor_UserOrGr
 	Name string "json:\"name\" graphql:\"name\""
 }
 type SearchProducts_QueryProduct_ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Avatar struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Path string "json:\"path\" graphql:\"path\""
+	ID  string "json:\"id\" graphql:\"id\""
+	URL string "json:\"url\" graphql:\"url\""
 }
 type SearchProducts_QueryProduct_ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -1868,8 +1857,8 @@ type SearchProducts_QueryProduct_ProductSearchFragment_Release_Licensor_UserOrGr
 	Name string "json:\"name\" graphql:\"name\""
 }
 type SearchProducts_QueryProduct_ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Avatar struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Path string "json:\"path\" graphql:\"path\""
+	ID  string "json:\"id\" graphql:\"id\""
+	URL string "json:\"url\" graphql:\"url\""
 }
 type SearchProducts_QueryProduct_ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -2179,8 +2168,8 @@ type GetUserOrGroupByID_GetUserOrGroup_User_UserFragment_UserOrGroupFragment_Hos
 	Name string "json:\"name\" graphql:\"name\""
 }
 type GetUserOrGroupByID_GetUserOrGroup_User_UserFragment_UserOrGroupFragment_Avatar struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Path string "json:\"path\" graphql:\"path\""
+	ID  string "json:\"id\" graphql:\"id\""
+	URL string "json:\"url\" graphql:\"url\""
 }
 type GetUserOrGroupByID_GetUserOrGroup_User_UserFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -2195,8 +2184,8 @@ type GetUserOrGroupByID_GetUserOrGroup_Group_GroupFragment_UserOrGroupFragment_H
 	Name string "json:\"name\" graphql:\"name\""
 }
 type GetUserOrGroupByID_GetUserOrGroup_Group_GroupFragment_UserOrGroupFragment_Avatar struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Path string "json:\"path\" graphql:\"path\""
+	ID  string "json:\"id\" graphql:\"id\""
+	URL string "json:\"url\" graphql:\"url\""
 }
 type GetUserOrGroupByID_GetUserOrGroup_Group_GroupFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -2219,8 +2208,8 @@ type GetUserOrGroupByXid_GetUserOrGroup_User_UserFragment_UserOrGroupFragment_Ho
 	Name string "json:\"name\" graphql:\"name\""
 }
 type GetUserOrGroupByXid_GetUserOrGroup_User_UserFragment_UserOrGroupFragment_Avatar struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Path string "json:\"path\" graphql:\"path\""
+	ID  string "json:\"id\" graphql:\"id\""
+	URL string "json:\"url\" graphql:\"url\""
 }
 type GetUserOrGroupByXid_GetUserOrGroup_User_UserFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -2235,8 +2224,8 @@ type GetUserOrGroupByXid_GetUserOrGroup_Group_GroupFragment_UserOrGroupFragment_
 	Name string "json:\"name\" graphql:\"name\""
 }
 type GetUserOrGroupByXid_GetUserOrGroup_Group_GroupFragment_UserOrGroupFragment_Avatar struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Path string "json:\"path\" graphql:\"path\""
+	ID  string "json:\"id\" graphql:\"id\""
+	URL string "json:\"url\" graphql:\"url\""
 }
 type GetUserOrGroupByXid_GetUserOrGroup_Group_GroupFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -2262,8 +2251,8 @@ type GetUserOrGroups_QueryUserOrGroup_User_UserFragment_UserOrGroupFragment_Host
 	Name string "json:\"name\" graphql:\"name\""
 }
 type GetUserOrGroups_QueryUserOrGroup_User_UserFragment_UserOrGroupFragment_Avatar struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Path string "json:\"path\" graphql:\"path\""
+	ID  string "json:\"id\" graphql:\"id\""
+	URL string "json:\"url\" graphql:\"url\""
 }
 type GetUserOrGroups_QueryUserOrGroup_User_UserFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -2278,8 +2267,8 @@ type GetUserOrGroups_QueryUserOrGroup_Group_GroupFragment_UserOrGroupFragment_Ho
 	Name string "json:\"name\" graphql:\"name\""
 }
 type GetUserOrGroups_QueryUserOrGroup_Group_GroupFragment_UserOrGroupFragment_Avatar struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Path string "json:\"path\" graphql:\"path\""
+	ID  string "json:\"id\" graphql:\"id\""
+	URL string "json:\"url\" graphql:\"url\""
 }
 type GetUserOrGroups_QueryUserOrGroup_Group_GroupFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -2317,8 +2306,8 @@ type GetUserByID_GetUser_UserFragment_UserOrGroupFragment_Host struct {
 	Name string "json:\"name\" graphql:\"name\""
 }
 type GetUserByID_GetUser_UserFragment_UserOrGroupFragment_Avatar struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Path string "json:\"path\" graphql:\"path\""
+	ID  string "json:\"id\" graphql:\"id\""
+	URL string "json:\"url\" graphql:\"url\""
 }
 type GetUserByID_GetUser_UserFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -2333,8 +2322,8 @@ type GetUserByXid_GetUser_UserFragment_UserOrGroupFragment_Host struct {
 	Name string "json:\"name\" graphql:\"name\""
 }
 type GetUserByXid_GetUser_UserFragment_UserOrGroupFragment_Avatar struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Path string "json:\"path\" graphql:\"path\""
+	ID  string "json:\"id\" graphql:\"id\""
+	URL string "json:\"url\" graphql:\"url\""
 }
 type GetUserByXid_GetUser_UserFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -2352,8 +2341,8 @@ type GetUsers_QueryUser_UserFragment_UserOrGroupFragment_Host struct {
 	Name string "json:\"name\" graphql:\"name\""
 }
 type GetUsers_QueryUser_UserFragment_UserOrGroupFragment_Avatar struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Path string "json:\"path\" graphql:\"path\""
+	ID  string "json:\"id\" graphql:\"id\""
+	URL string "json:\"url\" graphql:\"url\""
 }
 type GetUsers_QueryUser_UserFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -2389,8 +2378,8 @@ type GetGroupByID_GetGroup_GroupFragment_UserOrGroupFragment_Host struct {
 	Name string "json:\"name\" graphql:\"name\""
 }
 type GetGroupByID_GetGroup_GroupFragment_UserOrGroupFragment_Avatar struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Path string "json:\"path\" graphql:\"path\""
+	ID  string "json:\"id\" graphql:\"id\""
+	URL string "json:\"url\" graphql:\"url\""
 }
 type GetGroupByID_GetGroup_GroupFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -2409,8 +2398,8 @@ type GetGroupByXid_GetGroup_GroupFragment_UserOrGroupFragment_Host struct {
 	Name string "json:\"name\" graphql:\"name\""
 }
 type GetGroupByXid_GetGroup_GroupFragment_UserOrGroupFragment_Avatar struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Path string "json:\"path\" graphql:\"path\""
+	ID  string "json:\"id\" graphql:\"id\""
+	URL string "json:\"url\" graphql:\"url\""
 }
 type GetGroupByXid_GetGroup_GroupFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -2432,8 +2421,8 @@ type GetGroups_QueryGroup_GroupFragment_UserOrGroupFragment_Host struct {
 	Name string "json:\"name\" graphql:\"name\""
 }
 type GetGroups_QueryGroup_GroupFragment_UserOrGroupFragment_Avatar struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Path string "json:\"path\" graphql:\"path\""
+	ID  string "json:\"id\" graphql:\"id\""
+	URL string "json:\"url\" graphql:\"url\""
 }
 type GetGroups_QueryGroup_GroupFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -3293,21 +3282,6 @@ const GetComponentByIDDocument = `query GetComponentByID ($id: ID!) {
 		... ComponentFragment
 	}
 }
-fragment OuterDimensionsFragment on OuterDimensions {
-	__typename
-	... on BoundingBoxDimensions {
-		... BoundingBoxDimensionsFragment
-	}
-	... on OpenSCADDimensions {
-		... OpenSCADDimensionsFragment
-	}
-}
-fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
-	id
-	height
-	width
-	depth
-}
 fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
 	id
 	openscad
@@ -3444,6 +3418,21 @@ fragment UserOrGroupBasicFragment on UserOrGroup {
 	name
 	fullName
 	id
+}
+fragment OuterDimensionsFragment on OuterDimensions {
+	__typename
+	... on BoundingBoxDimensions {
+		... BoundingBoxDimensionsFragment
+	}
+	... on OpenSCADDimensions {
+		... OpenSCADDimensionsFragment
+	}
+}
+fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
+	id
+	height
+	width
+	depth
 }
 `
 
@@ -3487,25 +3476,6 @@ const GetComponentByXidDocument = `query GetComponentByXid ($xid: String!) {
 		... ComponentFragment
 	}
 }
-fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
-	id
-	openscad
-	unit
-}
-fragment KeyValueFragment on KeyValue {
-	id
-	key
-	value {
-		... on StringV {
-			id
-			stringValue: value
-		}
-		... on FloatV {
-			id
-			floatValue: value
-		}
-	}
-}
 fragment ComponentFragment on Component {
 	id
 	xid
@@ -3638,6 +3608,25 @@ fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
 	height
 	width
 	depth
+}
+fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
+	id
+	openscad
+	unit
+}
+fragment KeyValueFragment on KeyValue {
+	id
+	key
+	value {
+		... on StringV {
+			id
+			stringValue: value
+		}
+		... on FloatV {
+			id
+			floatValue: value
+		}
+	}
 }
 `
 
@@ -7277,6 +7266,7 @@ fragment ProductFragment on Product {
 		... UserOrGroupBasicFragment
 	}
 	website
+	state
 	release {
 		id
 		name
@@ -7301,6 +7291,8 @@ fragment ProductFragment on Product {
 		id
 		name
 	}
+	forkCount
+	starCount
 	tags {
 		id
 		name
@@ -7362,6 +7354,16 @@ const GetProductByXidDocument = `query GetProductByXid ($xid: String!) {
 		... ProductFragment
 	}
 }
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
+}
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
+}
 fragment ProductFragment on Product {
 	... CrawlerMetaFragment
 	id
@@ -7378,6 +7380,7 @@ fragment ProductFragment on Product {
 		... UserOrGroupBasicFragment
 	}
 	website
+	state
 	release {
 		id
 		name
@@ -7402,6 +7405,8 @@ fragment ProductFragment on Product {
 		id
 		name
 	}
+	forkCount
+	starCount
 	tags {
 		id
 		name
@@ -7410,16 +7415,6 @@ fragment ProductFragment on Product {
 		id
 		fullName
 	}
-}
-fragment CrawlerMetaFragment on CrawlerMeta {
-	discoveredAt
-	lastIndexedAt
-}
-fragment UserOrGroupBasicFragment on UserOrGroup {
-	__typename
-	name
-	fullName
-	id
 }
 `
 
@@ -7524,6 +7519,7 @@ fragment ProductFragment on Product {
 		... UserOrGroupBasicFragment
 	}
 	website
+	state
 	release {
 		id
 		name
@@ -7548,6 +7544,8 @@ fragment ProductFragment on Product {
 		id
 		name
 	}
+	forkCount
+	starCount
 	tags {
 		id
 		name
@@ -7618,12 +7616,85 @@ const SearchProductsDocument = `query SearchProducts ($getFilter: ProductFilter,
 		count
 	}
 }
+fragment LicenseFragmentBasic on License {
+	id
+	xid
+	name
+	isSpdx
+	isDeprecated
+	isOsiApproved
+	isFsfLibre
+	isBlocked
+}
+fragment UserFragment on User {
+	... UserOrGroupFragment
+	locale
+}
+fragment FileFragment on File {
+	... CrawlerMetaFragment
+	id
+	name
+	path
+	mimeType
+	url
+	createdAt
+}
+fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
+	id
+	height
+	width
+	depth
+}
+fragment TagFragment on Tag {
+	id
+	xid
+	name
+	aliases {
+		id
+		name
+	}
+	related {
+		id
+		name
+	}
+}
+fragment CategoryFragment on Category {
+	id
+	xid
+	fullName
+	name
+	description
+	parent {
+		id
+		fullName
+	}
+	children {
+		id
+		fullName
+	}
+	products {
+		id
+		name
+	}
+}
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
+}
+fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
+	id
+	openscad
+	unit
+}
 fragment ProductSearchFragment on Product {
 	... CrawlerMetaFragment
 	id
 	xid
 	name
 	website
+	state
 	renamedTo {
 		id
 	}
@@ -7641,6 +7712,8 @@ fragment ProductSearchFragment on Product {
 	forks {
 		id
 	}
+	forkCount
+	starCount
 	tags {
 		... TagFragment
 	}
@@ -7742,38 +7815,6 @@ fragment ProductSearchFragment on Product {
 		}
 	}
 }
-fragment TagFragment on Tag {
-	id
-	xid
-	name
-	aliases {
-		id
-		name
-	}
-	related {
-		id
-		name
-	}
-}
-fragment CategoryFragment on Category {
-	id
-	xid
-	fullName
-	name
-	description
-	parent {
-		id
-		fullName
-	}
-	children {
-		id
-		fullName
-	}
-	products {
-		id
-		name
-	}
-}
 fragment RepositoryFragment on Repository {
 	id
 	xid
@@ -7790,12 +7831,6 @@ fragment RepositoryFragment on Repository {
 	reference
 	path
 }
-fragment UserOrGroupBasicFragment on UserOrGroup {
-	__typename
-	name
-	fullName
-	id
-}
 fragment GroupFragment on Group {
 	... UserOrGroupFragment
 	members {
@@ -7803,19 +7838,18 @@ fragment GroupFragment on Group {
 		id
 	}
 }
-fragment LicenseFragmentBasic on License {
-	id
-	xid
-	name
-	isSpdx
-	isDeprecated
-	isOsiApproved
-	isFsfLibre
-	isBlocked
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
 }
-fragment UserFragment on User {
-	... UserOrGroupFragment
-	locale
+fragment UserOrGroupFullFragment on UserOrGroup {
+	__typename
+	... on User {
+		... UserFragment
+	}
+	... on Group {
+		... GroupFragment
+	}
 }
 fragment UserOrGroupFragment on UserOrGroup {
 	__typename
@@ -7830,7 +7864,7 @@ fragment UserOrGroupFragment on UserOrGroup {
 	email
 	avatar {
 		id
-		path
+		url
 	}
 	url
 	memberOf {
@@ -7842,19 +7876,6 @@ fragment UserOrGroupFragment on UserOrGroup {
 		name
 	}
 }
-fragment FileFragment on File {
-	... CrawlerMetaFragment
-	id
-	name
-	path
-	mimeType
-	url
-	createdAt
-}
-fragment CrawlerMetaFragment on CrawlerMeta {
-	discoveredAt
-	lastIndexedAt
-}
 fragment OuterDimensionsFragment on OuterDimensions {
 	__typename
 	... on BoundingBoxDimensions {
@@ -7862,26 +7883,6 @@ fragment OuterDimensionsFragment on OuterDimensions {
 	}
 	... on OpenSCADDimensions {
 		... OpenSCADDimensionsFragment
-	}
-}
-fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
-	id
-	height
-	width
-	depth
-}
-fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
-	id
-	openscad
-	unit
-}
-fragment UserOrGroupFullFragment on UserOrGroup {
-	__typename
-	... on User {
-		... UserFragment
-	}
-	... on Group {
-		... GroupFragment
 	}
 }
 `
@@ -8128,12 +8129,6 @@ const GetRepositoryByXidDocument = `query GetRepositoryByXid ($xid: String!) {
 		... RepositoryFragment
 	}
 }
-fragment UserOrGroupBasicFragment on UserOrGroup {
-	__typename
-	name
-	fullName
-	id
-}
 fragment RepositoryFragment on Repository {
 	id
 	xid
@@ -8149,6 +8144,12 @@ fragment RepositoryFragment on Repository {
 	name
 	reference
 	path
+}
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
 }
 `
 
@@ -9793,7 +9794,7 @@ fragment UserOrGroupFragment on UserOrGroup {
 	email
 	avatar {
 		id
-		path
+		url
 	}
 	url
 	memberOf {
@@ -9876,7 +9877,7 @@ fragment UserOrGroupFragment on UserOrGroup {
 	email
 	avatar {
 		id
-		path
+		url
 	}
 	url
 	memberOf {
@@ -10004,7 +10005,7 @@ fragment UserOrGroupFragment on UserOrGroup {
 	email
 	avatar {
 		id
-		path
+		url
 	}
 	url
 	memberOf {
@@ -10176,7 +10177,7 @@ fragment UserOrGroupFragment on UserOrGroup {
 	email
 	avatar {
 		id
-		path
+		url
 	}
 	url
 	memberOf {
@@ -10247,7 +10248,7 @@ fragment UserOrGroupFragment on UserOrGroup {
 	email
 	avatar {
 		id
-		path
+		url
 	}
 	url
 	memberOf {
@@ -10346,6 +10347,10 @@ const GetUsersDocument = `query GetUsers ($getFilter: UserFilter, $order: UserOr
 		count
 	}
 }
+fragment UserFragment on User {
+	... UserOrGroupFragment
+	locale
+}
 fragment UserOrGroupFragment on UserOrGroup {
 	__typename
 	id
@@ -10359,7 +10364,7 @@ fragment UserOrGroupFragment on UserOrGroup {
 	email
 	avatar {
 		id
-		path
+		url
 	}
 	url
 	memberOf {
@@ -10370,10 +10375,6 @@ fragment UserOrGroupFragment on UserOrGroup {
 		id
 		name
 	}
-}
-fragment UserFragment on User {
-	... UserOrGroupFragment
-	locale
 }
 `
 
@@ -10575,7 +10576,7 @@ fragment UserOrGroupFragment on UserOrGroup {
 	email
 	avatar {
 		id
-		path
+		url
 	}
 	url
 	memberOf {
@@ -10649,7 +10650,7 @@ fragment UserOrGroupFragment on UserOrGroup {
 	email
 	avatar {
 		id
-		path
+		url
 	}
 	url
 	memberOf {
@@ -10768,7 +10769,7 @@ fragment UserOrGroupFragment on UserOrGroup {
 	email
 	avatar {
 		id
-		path
+		url
 	}
 	url
 	memberOf {

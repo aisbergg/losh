@@ -32,12 +32,12 @@ A set of meta data collected and used by the crawler.
 """
 interface CrawlerMeta {
   """
-  The date and time the object was discovered.
+  The date and time the object was discovered by the crawler.
   """
   discoveredAt: DateTime! @search
 
   """
-  The date and time the object was last updated.
+  The date and time the object was last visited and indexed by the crawler.
   """
   lastIndexedAt: DateTime! @search
 
@@ -72,7 +72,7 @@ type Product implements Node & CrawlerMeta {
   """
   The language in which the documentation is written.
   """
-  documentationLanguage: String! @search(by: [hash])
+  documentationLanguage: String! @search(by: [regexp])
 
   """
   The latest version of the product.
@@ -97,7 +97,7 @@ type Product implements Node & CrawlerMeta {
 	"""
 	Indicates if the product is still actively developed or not.
 	"""
-	isActive: Boolean! @search
+	state: ProductState! @search
 
   """
   The latest release of the product.
@@ -129,6 +129,16 @@ type Product implements Node & CrawlerMeta {
   """
   forks: [Product!] @hasInverse(field: forkOf)
 
+	"""
+	The number of forks of the product. It might be higher than the number of indexed forks, because not all forks might satisfy the conditions for being indexed.
+	"""
+	forkCount: Int @search
+
+	"""
+	The number of people starring the product.
+	"""
+	starCount: Int @search
+
   """
   A list of all tags associated with the product.
   """
@@ -138,6 +148,41 @@ type Product implements Node & CrawlerMeta {
   The category of the product.
   """
   category: Category
+}
+
+"""
+ProductState determines the state (activeness) of the product.
+"""
+enum ProductState {
+	"""
+	State metric has not been determined yet.
+	"""
+	UNDETERMINED
+
+	"""
+	Product is actively developed.
+	"""
+	ACTIVE
+
+	"""
+	Product has not received any updates for over 2 years.
+	"""
+	INACTIVE
+
+	"""
+	Product repository was marked as archived and thus no longer actively developed.
+	"""
+	ARCHIVED
+
+	"""
+	Product was marked as deprecated. There might be a newer version of the product or a different product that acts as a replacement.
+	"""
+	DEPRECATED
+
+	"""
+	Product source doesn't exists anymore, but its entry is still in the database.
+	"""
+	MISSING
 }
 
 """
@@ -366,10 +411,10 @@ type Repository implements Node {
 	"""
   xid: String! @id @search(by: [hash])
 
-	"""
-	The type of the repository.
-	"""
-	type: RepositoryType! @search(by: [hash])
+	# """
+	# The type of the repository.
+	# """
+	# type: RepositoryType! @search(by: [hash])
 
   """
   Nice URL of the repository where the result is The repository URL where the component was discoverd from or is developed in.
@@ -443,12 +488,12 @@ type License implements Node {
   """
   The human readable ID of the license. If the license is a SPDX license, the ID is the SPDX ID.
   """
-  xid: String! @id @search(by: [hash])
+  xid: String! @id @search(by: [term, regexp])
 
   """
   The full name of the license.
   """
-  name: String! @search(by: [fulltext, regexp])
+  name: String! @search(by: [term, regexp])
 
   """
   The full text of the license.
@@ -598,26 +643,64 @@ interface UserOrGroup {
   id: ID!
 
 	"""
-  The unique human readable identifier of the owner in the format: `domain.tld/owner`. Each part is path escaped. A single dash '-' denotes an empty part. Examples:
+  Unique human readable identifier of the user or group in the format: `domain.tld/owner`. Each part is path escaped. A single dash '-' denotes an empty part. Examples:
 	- `github.com/aisbergg`
 	- `wikifactory.com/@aisbergg`
 	"""
   xid: String! @id(interface: true) @search(by: [hash]) # shall be unique across all implementing
-  host: Host!
-  name: String! @search(by: [hash])
-  fullName: String
-  email: String
+
+	"""
+	Host platform where the user or group is registered.
+	"""
+	host: Host!
+
+	"""
+	Name of the user or group as used on the host platform.
+	"""
+  name: String! @search(by: [term, regexp])
+
+	"""
+	Full name of the person.
+	"""
+  fullName: String @search(by: [term, regexp])
+
+	"""
+	Email address of the user or group.
+	"""
+  email: String @search(by: [term, regexp])
+
+	"""
+	Avatar image of the user or group.
+	"""
   avatar: File
+
+	"""
+	URL to the user or groups profile on the host platform.
+	"""
   url: String
-  memberOf: [Group!] @hasInverse(field: members)
+
+	"""
+	List of groups the user or group is a member of.
+	"""
+	memberOf: [Group!] @hasInverse(field: members)
+
+	"""
+	List of products the user or group owns.
+	"""
   products: [Product!] @hasInverse(field: licensor)
 }
 
 type User implements Node & UserOrGroup {
+	"""
+	Localization of the user.
+	"""
   locale: String
 }
 
 type Group implements Node & UserOrGroup {
+	"""
+	Members of the group.
+	"""
   members: [UserOrGroup!]
 }
 

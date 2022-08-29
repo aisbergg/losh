@@ -116,6 +116,7 @@ generate:
       name: License
       namePlural: Licenses
       extraIds: ["xid"]
+      filter: StringHashFilterStringRegExpFilterStringTermFilter
 
   - dest: host_gen.go
     vars:

@@ -82,7 +82,7 @@ type AddComponentInput struct {
 	// Indicates if this release is the latest release of the component.
 	IsLatest           bool           `json:"isLatest"`
 	Repository         RepositoryRef  `json:"repository"`
-	License            LicenseRef     `json:"license"`
+	License            *LicenseRef    `json:"license,omitempty"`
 	AdditionalLicenses []*LicenseRef  `json:"additionalLicenses,omitempty"`
 	Licensor           UserOrGroupRef `json:"licensor"`
 	// The language in which the documentation is written.
@@ -116,7 +116,7 @@ type AddComponentInput struct {
 	Export                    []*FileRef                                  `json:"export,omitempty"`
 	Auxiliary                 []*FileRef                                  `json:"auxiliary,omitempty"`
 	Organization              *GroupRef                                   `json:"organization,omitempty"`
-	// The mass of the component.
+	// The mass of the component in grams.
 	Mass                 *float64                 `json:"mass,omitempty"`
 	OuterDimensions      *OuterDimensionsRef      `json:"outerDimensions,omitempty"`
 	Material             *MaterialRef             `json:"material,omitempty"`
@@ -297,18 +297,24 @@ type AddProductInput struct {
 	DocumentationLanguage string `json:"documentationLanguage"`
 	// The latest version of the product.
 	Version  string         `json:"version"`
-	License  LicenseRef     `json:"license"`
+	License  *LicenseRef    `json:"license,omitempty"`
 	Licensor UserOrGroupRef `json:"licensor"`
 	// The product website URL, if any.
-	Website     *string         `json:"website,omitempty"`
+	Website *string `json:"website,omitempty"`
+	// Indicates if the product is still actively developed or not.
+	State       ProductState    `json:"state"`
 	Release     ComponentRef    `json:"release"`
 	Releases    []*ComponentRef `json:"releases"`
 	RenamedTo   *ProductRef     `json:"renamedTo,omitempty"`
 	RenamedFrom *ProductRef     `json:"renamedFrom,omitempty"`
 	ForkOf      *ProductRef     `json:"forkOf,omitempty"`
 	Forks       []*ProductRef   `json:"forks,omitempty"`
-	Tags        []*TagRef       `json:"tags,omitempty"`
-	Category    *CategoryRef    `json:"category,omitempty"`
+	// The number of forks of the product. It might be higher than the number of indexed forks, because not all forks might satisfy the conditions for being indexed.
+	ForkCount *int64 `json:"forkCount,omitempty"`
+	// The number of people starring the product.
+	StarCount *int64       `json:"starCount,omitempty"`
+	Tags      []*TagRef    `json:"tags,omitempty"`
+	Category  *CategoryRef `json:"category,omitempty"`
 }
 
 type AddProductPayload struct {
@@ -322,18 +328,19 @@ type AddRepositoryInput struct {
 	// - `wikifactory.com/@aisbergg/foobar/a1b2c3d/-`
 	// - `oshwa.org/-/-/1.0.0/us000000.html`
 	Xid string `json:"xid"`
-	// The repository URL where the component was discoverd from or is developed in.
+	// Nice URL of the repository where the result is The repository URL where the component was discoverd from or is developed in.
 	URL string `json:"url"`
-	// The URL to specific release version of the component.
+	// The permanent URL to the specific release version.
 	PermaURL string          `json:"permaUrl"`
 	Host     HostRef         `json:"host"`
 	Owner    *UserOrGroupRef `json:"owner,omitempty"`
-	// The name of the repository.
+	// The repository name, if any.
 	Name *string `json:"name,omitempty"`
-	// The reference of the repository, if any. (might be a Git tag or branch name)
+	// The reference, if any. This could be a Git tag or branch for example.
 	Reference *string `json:"reference,omitempty"`
-	// The path of the manifest file or other resource inside the repository, if any.
-	Path *string `json:"path,omitempty"`
+	// The path of the file or other resource inside the repository, if any.
+	Path *string  `json:"path,omitempty"`
+	File *FileRef `json:"file,omitempty"`
 }
 
 type AddRepositoryPayload struct {
@@ -412,38 +419,6 @@ type AddTechnologySpecificDocumentationCriteriaPayload struct {
 	NumUids                                 *int64                                     `json:"numUids"`
 }
 
-type AddTestObject2Input struct {
-	A *TestObject3Ref `json:"a,omitempty"`
-}
-
-type AddTestObject2Payload struct {
-	TestObject2 []*TestObject2 `json:"testObject2"`
-	NumUids     *int64         `json:"numUids"`
-}
-
-type AddTestObject3Input struct {
-	Name string `json:"name"`
-	S    *int64 `json:"s,omitempty"`
-}
-
-type AddTestObject3Payload struct {
-	TestObject3 []*TestObject3 `json:"testObject3"`
-	NumUids     *int64         `json:"numUids"`
-}
-
-type AddTestObjectInput struct {
-	Name  string          `json:"name"`
-	Other *TestObjectRef  `json:"other,omitempty"`
-	X     []string        `json:"x"`
-	A     *TestObject3Ref `json:"a,omitempty"`
-	B     *TestObject2Ref `json:"b,omitempty"`
-}
-
-type AddTestObjectPayload struct {
-	TestObject []*TestObject `json:"testObject"`
-	NumUids    *int64        `json:"numUids"`
-}
-
 type AddUserInput struct {
 	Xid      string        `json:"xid"`
 	Host     HostRef       `json:"host"`
@@ -454,7 +429,8 @@ type AddUserInput struct {
 	URL      *string       `json:"url,omitempty"`
 	MemberOf []*GroupRef   `json:"memberOf,omitempty"`
 	Products []*ProductRef `json:"products,omitempty"`
-	Locale   *string       `json:"locale,omitempty"`
+	// Localization of the user.
+	Locale *string `json:"locale,omitempty"`
 }
 
 type AddUserPayload struct {
@@ -477,8 +453,8 @@ type BoundingBoxDimensions struct {
 	Depth  float64 `json:"depth"`
 }
 
-func (BoundingBoxDimensions) IsOuterDimensions() {}
 func (BoundingBoxDimensions) IsNode()            {}
+func (BoundingBoxDimensions) IsOuterDimensions() {}
 
 type BoundingBoxDimensionsAggregateResult struct {
 	Count     *int64   `json:"count"`
@@ -630,7 +606,7 @@ type Component struct {
 	// The repository that this component is developed in.
 	Repository Repository `json:"repository"`
 	// The license used for the component.
-	License License `json:"license"`
+	License *License `json:"license"`
 	// The additional licenses used for the documentation and other assets, if any.
 	AdditionalLicenses []*License `json:"additionalLicenses"`
 	// The license holder of the component.
@@ -683,7 +659,7 @@ type Component struct {
 	// A list of auxiliary files.
 	Auxiliary    []*File `json:"auxiliary"`
 	Organization *Group  `json:"organization"`
-	// The mass of the component.
+	// The mass of the component in grams.
 	Mass *float64 `json:"mass"`
 	// The outer dimensions of the component.
 	OuterDimensions OuterDimensions `json:"outerDimensions"`
@@ -821,7 +797,7 @@ type ComponentPatch struct {
 	Export                    []*FileRef                                  `json:"export,omitempty"`
 	Auxiliary                 []*FileRef                                  `json:"auxiliary,omitempty"`
 	Organization              *GroupRef                                   `json:"organization,omitempty"`
-	// The mass of the component.
+	// The mass of the component in grams.
 	Mass                 *float64                 `json:"mass,omitempty"`
 	OuterDimensions      *OuterDimensionsRef      `json:"outerDimensions,omitempty"`
 	Material             *MaterialRef             `json:"material,omitempty"`
@@ -885,7 +861,7 @@ type ComponentRef struct {
 	Export                    []*FileRef                                  `json:"export,omitempty"`
 	Auxiliary                 []*FileRef                                  `json:"auxiliary,omitempty"`
 	Organization              *GroupRef                                   `json:"organization,omitempty"`
-	// The mass of the component.
+	// The mass of the component in grams.
 	Mass                 *float64                 `json:"mass,omitempty"`
 	OuterDimensions      *OuterDimensionsRef      `json:"outerDimensions,omitempty"`
 	Material             *MaterialRef             `json:"material,omitempty"`
@@ -1128,24 +1104,6 @@ type DeleteTechnologySpecificDocumentationCriteriaPayload struct {
 	NumUids                                 *int64                                     `json:"numUids"`
 }
 
-type DeleteTestObject2Payload struct {
-	TestObject2 []*TestObject2 `json:"testObject2"`
-	Msg         *string        `json:"msg"`
-	NumUids     *int64         `json:"numUids"`
-}
-
-type DeleteTestObject3Payload struct {
-	TestObject3 []*TestObject3 `json:"testObject3"`
-	Msg         *string        `json:"msg"`
-	NumUids     *int64         `json:"numUids"`
-}
-
-type DeleteTestObjectPayload struct {
-	TestObject []*TestObject `json:"testObject"`
-	Msg        *string       `json:"msg"`
-	NumUids    *int64        `json:"numUids"`
-}
-
 type DeleteUserOrGroupPayload struct {
 	UserOrGroup []UserOrGroup `json:"userOrGroup"`
 	Msg         *string       `json:"msg"`
@@ -1339,16 +1297,17 @@ type GenerateQueryParams struct {
 }
 
 type Group struct {
-	Xid               string                      `json:"xid"`
-	Host              Host                        `json:"host"`
-	Name              string                      `json:"name"`
-	FullName          *string                     `json:"fullName"`
-	Email             *string                     `json:"email"`
-	Avatar            *File                       `json:"avatar"`
-	URL               *string                     `json:"url"`
-	MemberOf          []*Group                    `json:"memberOf"`
-	Products          []*Product                  `json:"products"`
-	ID                string                      `json:"id"`
+	Xid      string     `json:"xid"`
+	Host     Host       `json:"host"`
+	Name     string     `json:"name"`
+	FullName *string    `json:"fullName"`
+	Email    *string    `json:"email"`
+	Avatar   *File      `json:"avatar"`
+	URL      *string    `json:"url"`
+	MemberOf []*Group   `json:"memberOf"`
+	Products []*Product `json:"products"`
+	ID       string     `json:"id"`
+	// Members of the group.
 	Members           []UserOrGroup               `json:"members"`
 	MemberOfAggregate *GroupAggregateResult       `json:"memberOfAggregate"`
 	ProductsAggregate *ProductAggregateResult     `json:"productsAggregate"`
@@ -1373,13 +1332,15 @@ type GroupAggregateResult struct {
 }
 
 type GroupFilter struct {
-	Xid  *StringHashFilter `json:"xid,omitempty"`
-	Name *StringHashFilter `json:"name,omitempty"`
-	ID   []string          `json:"id,omitempty"`
-	Has  []*GroupHasFilter `json:"has,omitempty"`
-	And  []*GroupFilter    `json:"and,omitempty"`
-	Or   []*GroupFilter    `json:"or,omitempty"`
-	Not  *GroupFilter      `json:"not,omitempty"`
+	Xid      *StringHashFilter                   `json:"xid,omitempty"`
+	Name     *StringRegExpFilterStringTermFilter `json:"name,omitempty"`
+	FullName *StringRegExpFilterStringTermFilter `json:"fullName,omitempty"`
+	Email    *StringRegExpFilterStringTermFilter `json:"email,omitempty"`
+	ID       []string                            `json:"id,omitempty"`
+	Has      []*GroupHasFilter                   `json:"has,omitempty"`
+	And      []*GroupFilter                      `json:"and,omitempty"`
+	Or       []*GroupFilter                      `json:"or,omitempty"`
+	Not      *GroupFilter                        `json:"not,omitempty"`
 }
 
 type GroupOrder struct {
@@ -1587,18 +1548,18 @@ type LicenseAggregateResult struct {
 }
 
 type LicenseFilter struct {
-	ID            []string                                `json:"id,omitempty"`
-	Xid           *StringHashFilter                       `json:"xid,omitempty"`
-	Name          *StringFullTextFilterStringRegExpFilter `json:"name,omitempty"`
-	IsSpdx        *bool                                   `json:"isSpdx,omitempty"`
-	IsDeprecated  *bool                                   `json:"isDeprecated,omitempty"`
-	IsOsiApproved *bool                                   `json:"isOsiApproved,omitempty"`
-	IsFsfLibre    *bool                                   `json:"isFsfLibre,omitempty"`
-	IsBlocked     *bool                                   `json:"isBlocked,omitempty"`
-	Has           []*LicenseHasFilter                     `json:"has,omitempty"`
-	And           []*LicenseFilter                        `json:"and,omitempty"`
-	Or            []*LicenseFilter                        `json:"or,omitempty"`
-	Not           *LicenseFilter                          `json:"not,omitempty"`
+	ID            []string                                            `json:"id,omitempty"`
+	Xid           *StringHashFilterStringRegExpFilterStringTermFilter `json:"xid,omitempty"`
+	Name          *StringRegExpFilterStringTermFilter                 `json:"name,omitempty"`
+	IsSpdx        *bool                                               `json:"isSpdx,omitempty"`
+	IsDeprecated  *bool                                               `json:"isDeprecated,omitempty"`
+	IsOsiApproved *bool                                               `json:"isOsiApproved,omitempty"`
+	IsFsfLibre    *bool                                               `json:"isFsfLibre,omitempty"`
+	IsBlocked     *bool                                               `json:"isBlocked,omitempty"`
+	Has           []*LicenseHasFilter                                 `json:"has,omitempty"`
+	And           []*LicenseFilter                                    `json:"and,omitempty"`
+	Or            []*LicenseFilter                                    `json:"or,omitempty"`
+	Not           *LicenseFilter                                      `json:"not,omitempty"`
 }
 
 type LicenseOrder struct {
@@ -1897,11 +1858,13 @@ type Product struct {
 	// The latest version of the product.
 	Version string `json:"version"`
 	// The license used for the component.
-	License License `json:"license"`
+	License *License `json:"license"`
 	// The license holder of the product.
 	Licensor UserOrGroup `json:"licensor"`
 	// The product website URL, if any.
 	Website *string `json:"website"`
+	// Indicates if the product is still actively developed or not.
+	State ProductState `json:"state"`
 	// The latest release of the product.
 	Release Component `json:"release"`
 	// A list of all releases of the product.
@@ -1914,6 +1877,10 @@ type Product struct {
 	ForkOf *Product `json:"forkOf"`
 	// A list of products that are based on this product.
 	Forks []*Product `json:"forks"`
+	// The number of forks of the product. It might be higher than the number of indexed forks, because not all forks might satisfy the conditions for being indexed.
+	ForkCount *int64 `json:"forkCount"`
+	// The number of people starring the product.
+	StarCount *int64 `json:"starCount"`
 	// A list of all tags associated with the product.
 	Tags []*Tag `json:"tags"`
 	// The category of the product.
@@ -1944,6 +1911,14 @@ type ProductAggregateResult struct {
 	VersionMax               *string    `json:"versionMax"`
 	WebsiteMin               *string    `json:"websiteMin"`
 	WebsiteMax               *string    `json:"websiteMax"`
+	ForkCountMin             *int64     `json:"forkCountMin"`
+	ForkCountMax             *int64     `json:"forkCountMax"`
+	ForkCountSum             *int64     `json:"forkCountSum"`
+	ForkCountAvg             *float64   `json:"forkCountAvg"`
+	StarCountMin             *int64     `json:"starCountMin"`
+	StarCountMax             *int64     `json:"starCountMax"`
+	StarCountSum             *int64     `json:"starCountSum"`
+	StarCountAvg             *float64   `json:"starCountAvg"`
 }
 
 type ProductFilter struct {
@@ -1953,9 +1928,12 @@ type ProductFilter struct {
 	Xid                   *StringHashFilter                                       `json:"xid,omitempty"`
 	Name                  *StringFullTextFilterStringHashFilterStringRegExpFilter `json:"name,omitempty"`
 	Description           *StringFullTextFilterStringRegExpFilter                 `json:"description,omitempty"`
-	DocumentationLanguage *StringHashFilter                                       `json:"documentationLanguage,omitempty"`
+	DocumentationLanguage *StringRegExpFilter                                     `json:"documentationLanguage,omitempty"`
 	Version               *StringTermFilter                                       `json:"version,omitempty"`
 	Website               *StringFullTextFilterStringHashFilterStringRegExpFilter `json:"website,omitempty"`
+	State                 *ProductStateHash                                       `json:"state,omitempty"`
+	ForkCount             *IntFilter                                              `json:"forkCount,omitempty"`
+	StarCount             *IntFilter                                              `json:"starCount,omitempty"`
 	Has                   []*ProductHasFilter                                     `json:"has,omitempty"`
 	And                   []*ProductFilter                                        `json:"and,omitempty"`
 	Or                    []*ProductFilter                                        `json:"or,omitempty"`
@@ -1988,15 +1966,21 @@ type ProductPatch struct {
 	License  *LicenseRef     `json:"license,omitempty"`
 	Licensor *UserOrGroupRef `json:"licensor,omitempty"`
 	// The product website URL, if any.
-	Website     *string         `json:"website,omitempty"`
+	Website *string `json:"website,omitempty"`
+	// Indicates if the product is still actively developed or not.
+	State       *ProductState   `json:"state,omitempty"`
 	Release     *ComponentRef   `json:"release,omitempty"`
 	Releases    []*ComponentRef `json:"releases,omitempty"`
 	RenamedTo   *ProductRef     `json:"renamedTo,omitempty"`
 	RenamedFrom *ProductRef     `json:"renamedFrom,omitempty"`
 	ForkOf      *ProductRef     `json:"forkOf,omitempty"`
 	Forks       []*ProductRef   `json:"forks,omitempty"`
-	Tags        []*TagRef       `json:"tags,omitempty"`
-	Category    *CategoryRef    `json:"category,omitempty"`
+	// The number of forks of the product. It might be higher than the number of indexed forks, because not all forks might satisfy the conditions for being indexed.
+	ForkCount *int64 `json:"forkCount,omitempty"`
+	// The number of people starring the product.
+	StarCount *int64       `json:"starCount,omitempty"`
+	Tags      []*TagRef    `json:"tags,omitempty"`
+	Category  *CategoryRef `json:"category,omitempty"`
 }
 
 type ProductRef struct {
@@ -2020,15 +2004,26 @@ type ProductRef struct {
 	License  *LicenseRef     `json:"license,omitempty"`
 	Licensor *UserOrGroupRef `json:"licensor,omitempty"`
 	// The product website URL, if any.
-	Website     *string         `json:"website,omitempty"`
+	Website *string `json:"website,omitempty"`
+	// Indicates if the product is still actively developed or not.
+	State       *ProductState   `json:"state,omitempty"`
 	Release     *ComponentRef   `json:"release,omitempty"`
 	Releases    []*ComponentRef `json:"releases,omitempty"`
 	RenamedTo   *ProductRef     `json:"renamedTo,omitempty"`
 	RenamedFrom *ProductRef     `json:"renamedFrom,omitempty"`
 	ForkOf      *ProductRef     `json:"forkOf,omitempty"`
 	Forks       []*ProductRef   `json:"forks,omitempty"`
-	Tags        []*TagRef       `json:"tags,omitempty"`
-	Category    *CategoryRef    `json:"category,omitempty"`
+	// The number of forks of the product. It might be higher than the number of indexed forks, because not all forks might satisfy the conditions for being indexed.
+	ForkCount *int64 `json:"forkCount,omitempty"`
+	// The number of people starring the product.
+	StarCount *int64       `json:"starCount,omitempty"`
+	Tags      []*TagRef    `json:"tags,omitempty"`
+	Category  *CategoryRef `json:"category,omitempty"`
+}
+
+type ProductStateHash struct {
+	Eq *ProductState   `json:"eq,omitempty"`
+	In []*ProductState `json:"in,omitempty"`
 }
 
 // Repository represents a data source. It might be a Git repository (+ manifest file), a website or other kind of data source.
@@ -2039,20 +2034,22 @@ type Repository struct {
 	// - `wikifactory.com/@aisbergg/foobar/a1b2c3d/-`
 	// - `oshwa.org/-/-/1.0.0/us000000.html`
 	Xid string `json:"xid"`
-	// The repository URL where the component was discoverd from or is developed in.
+	// Nice URL of the repository where the result is The repository URL where the component was discoverd from or is developed in.
 	URL string `json:"url"`
-	// The URL to specific release version of the component.
+	// The permanent URL to the specific release version.
 	PermaURL string `json:"permaUrl"`
 	// The host platform of the repository.
 	Host Host `json:"host"`
-	// The owner (user or group) of the repository.
+	// The owner (user or group) of the repository, if any.
 	Owner UserOrGroup `json:"owner"`
-	// The name of the repository.
+	// The repository name, if any.
 	Name *string `json:"name"`
-	// The reference of the repository, if any. (might be a Git tag or branch name)
+	// The reference, if any. This could be a Git tag or branch for example.
 	Reference *string `json:"reference"`
-	// The path of the manifest file or other resource inside the repository, if any.
+	// The path of the file or other resource inside the repository, if any.
 	Path *string `json:"path"`
+	// The actual file that the repository represents. If the repository is a Git repository, this is the manifest file.
+	File *File `json:"file"`
 }
 
 func (Repository) IsNode() {}
@@ -2095,18 +2092,19 @@ type RepositoryPatch struct {
 	// - `wikifactory.com/@aisbergg/foobar/a1b2c3d/-`
 	// - `oshwa.org/-/-/1.0.0/us000000.html`
 	Xid *string `json:"xid,omitempty"`
-	// The repository URL where the component was discoverd from or is developed in.
+	// Nice URL of the repository where the result is The repository URL where the component was discoverd from or is developed in.
 	URL *string `json:"url,omitempty"`
-	// The URL to specific release version of the component.
+	// The permanent URL to the specific release version.
 	PermaURL *string         `json:"permaUrl,omitempty"`
 	Host     *HostRef        `json:"host,omitempty"`
 	Owner    *UserOrGroupRef `json:"owner,omitempty"`
-	// The name of the repository.
+	// The repository name, if any.
 	Name *string `json:"name,omitempty"`
-	// The reference of the repository, if any. (might be a Git tag or branch name)
+	// The reference, if any. This could be a Git tag or branch for example.
 	Reference *string `json:"reference,omitempty"`
-	// The path of the manifest file or other resource inside the repository, if any.
-	Path *string `json:"path,omitempty"`
+	// The path of the file or other resource inside the repository, if any.
+	Path *string  `json:"path,omitempty"`
+	File *FileRef `json:"file,omitempty"`
 }
 
 type RepositoryRef struct {
@@ -2116,18 +2114,19 @@ type RepositoryRef struct {
 	// - `wikifactory.com/@aisbergg/foobar/a1b2c3d/-`
 	// - `oshwa.org/-/-/1.0.0/us000000.html`
 	Xid *string `json:"xid,omitempty"`
-	// The repository URL where the component was discoverd from or is developed in.
+	// Nice URL of the repository where the result is The repository URL where the component was discoverd from or is developed in.
 	URL *string `json:"url,omitempty"`
-	// The URL to specific release version of the component.
+	// The permanent URL to the specific release version.
 	PermaURL *string         `json:"permaUrl,omitempty"`
 	Host     *HostRef        `json:"host,omitempty"`
 	Owner    *UserOrGroupRef `json:"owner,omitempty"`
-	// The name of the repository.
+	// The repository name, if any.
 	Name *string `json:"name,omitempty"`
-	// The reference of the repository, if any. (might be a Git tag or branch name)
+	// The reference, if any. This could be a Git tag or branch for example.
 	Reference *string `json:"reference,omitempty"`
-	// The path of the manifest file or other resource inside the repository, if any.
-	Path *string `json:"path,omitempty"`
+	// The path of the file or other resource inside the repository, if any.
+	Path *string  `json:"path,omitempty"`
+	File *FileRef `json:"file,omitempty"`
 }
 
 type Software struct {
@@ -2509,126 +2508,6 @@ type TechnologySpecificDocumentationCriteriaRef struct {
 	Components      []*ComponentRef `json:"components,omitempty"`
 }
 
-type TestObject struct {
-	ID    string       `json:"id"`
-	Name  string       `json:"name"`
-	Other *TestObject  `json:"other"`
-	X     []string     `json:"x"`
-	A     *TestObject3 `json:"a"`
-	B     *TestObject2 `json:"b"`
-}
-
-func (TestObject) IsNode() {}
-
-type TestObject2 struct {
-	ID string       `json:"id"`
-	A  *TestObject3 `json:"a"`
-}
-
-func (TestObject2) IsNode() {}
-
-type TestObject2AggregateResult struct {
-	Count *int64 `json:"count"`
-}
-
-type TestObject2Filter struct {
-	ID  []string                `json:"id,omitempty"`
-	Has []*TestObject2HasFilter `json:"has,omitempty"`
-	And []*TestObject2Filter    `json:"and,omitempty"`
-	Or  []*TestObject2Filter    `json:"or,omitempty"`
-	Not *TestObject2Filter      `json:"not,omitempty"`
-}
-
-type TestObject2Patch struct {
-	A *TestObject3Ref `json:"a,omitempty"`
-}
-
-type TestObject2Ref struct {
-	ID *string         `json:"id,omitempty"`
-	A  *TestObject3Ref `json:"a,omitempty"`
-}
-
-type TestObject3 struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
-	S    *int64 `json:"s"`
-}
-
-func (TestObject3) IsNode() {}
-
-type TestObject3AggregateResult struct {
-	Count   *int64   `json:"count"`
-	NameMin *string  `json:"nameMin"`
-	NameMax *string  `json:"nameMax"`
-	SMin    *int64   `json:"sMin"`
-	SMax    *int64   `json:"sMax"`
-	SSum    *int64   `json:"sSum"`
-	SAvg    *float64 `json:"sAvg"`
-}
-
-type TestObject3Filter struct {
-	ID   []string                `json:"id,omitempty"`
-	Name *StringHashFilter       `json:"name,omitempty"`
-	Has  []*TestObject3HasFilter `json:"has,omitempty"`
-	And  []*TestObject3Filter    `json:"and,omitempty"`
-	Or   []*TestObject3Filter    `json:"or,omitempty"`
-	Not  *TestObject3Filter      `json:"not,omitempty"`
-}
-
-type TestObject3Order struct {
-	Asc  *TestObject3Orderable `json:"asc,omitempty"`
-	Desc *TestObject3Orderable `json:"desc,omitempty"`
-	Then *TestObject3Order     `json:"then,omitempty"`
-}
-
-type TestObject3Patch struct {
-	Name *string `json:"name,omitempty"`
-	S    *int64  `json:"s,omitempty"`
-}
-
-type TestObject3Ref struct {
-	ID   *string `json:"id,omitempty"`
-	Name *string `json:"name,omitempty"`
-	S    *int64  `json:"s,omitempty"`
-}
-
-type TestObjectAggregateResult struct {
-	Count   *int64  `json:"count"`
-	NameMin *string `json:"nameMin"`
-	NameMax *string `json:"nameMax"`
-}
-
-type TestObjectFilter struct {
-	ID  []string               `json:"id,omitempty"`
-	Has []*TestObjectHasFilter `json:"has,omitempty"`
-	And []*TestObjectFilter    `json:"and,omitempty"`
-	Or  []*TestObjectFilter    `json:"or,omitempty"`
-	Not *TestObjectFilter      `json:"not,omitempty"`
-}
-
-type TestObjectOrder struct {
-	Asc  *TestObjectOrderable `json:"asc,omitempty"`
-	Desc *TestObjectOrderable `json:"desc,omitempty"`
-	Then *TestObjectOrder     `json:"then,omitempty"`
-}
-
-type TestObjectPatch struct {
-	Name  *string         `json:"name,omitempty"`
-	Other *TestObjectRef  `json:"other,omitempty"`
-	X     []string        `json:"x,omitempty"`
-	A     *TestObject3Ref `json:"a,omitempty"`
-	B     *TestObject2Ref `json:"b,omitempty"`
-}
-
-type TestObjectRef struct {
-	ID    *string         `json:"id,omitempty"`
-	Name  *string         `json:"name,omitempty"`
-	Other *TestObjectRef  `json:"other,omitempty"`
-	X     []string        `json:"x,omitempty"`
-	A     *TestObject3Ref `json:"a,omitempty"`
-	B     *TestObject2Ref `json:"b,omitempty"`
-}
-
 type UpdateBoundingBoxDimensionsInput struct {
 	Filter BoundingBoxDimensionsFilter `json:"filter"`
 	Set    *BoundingBoxDimensionsPatch `json:"set,omitempty"`
@@ -2860,39 +2739,6 @@ type UpdateTechnologySpecificDocumentationCriteriaPayload struct {
 	NumUids                                 *int64                                     `json:"numUids"`
 }
 
-type UpdateTestObject2Input struct {
-	Filter TestObject2Filter `json:"filter"`
-	Set    *TestObject2Patch `json:"set,omitempty"`
-	Remove *TestObject2Patch `json:"remove,omitempty"`
-}
-
-type UpdateTestObject2Payload struct {
-	TestObject2 []*TestObject2 `json:"testObject2"`
-	NumUids     *int64         `json:"numUids"`
-}
-
-type UpdateTestObject3Input struct {
-	Filter TestObject3Filter `json:"filter"`
-	Set    *TestObject3Patch `json:"set,omitempty"`
-	Remove *TestObject3Patch `json:"remove,omitempty"`
-}
-
-type UpdateTestObject3Payload struct {
-	TestObject3 []*TestObject3 `json:"testObject3"`
-	NumUids     *int64         `json:"numUids"`
-}
-
-type UpdateTestObjectInput struct {
-	Filter TestObjectFilter `json:"filter"`
-	Set    *TestObjectPatch `json:"set,omitempty"`
-	Remove *TestObjectPatch `json:"remove,omitempty"`
-}
-
-type UpdateTestObjectPayload struct {
-	TestObject []*TestObject `json:"testObject"`
-	NumUids    *int64        `json:"numUids"`
-}
-
 type UpdateUserInput struct {
 	Filter UserFilter `json:"filter"`
 	Set    *UserPatch `json:"set,omitempty"`
@@ -2916,16 +2762,17 @@ type UpdateUserPayload struct {
 }
 
 type User struct {
-	Xid               string                  `json:"xid"`
-	Host              Host                    `json:"host"`
-	Name              string                  `json:"name"`
-	FullName          *string                 `json:"fullName"`
-	Email             *string                 `json:"email"`
-	Avatar            *File                   `json:"avatar"`
-	URL               *string                 `json:"url"`
-	MemberOf          []*Group                `json:"memberOf"`
-	Products          []*Product              `json:"products"`
-	ID                string                  `json:"id"`
+	Xid      string     `json:"xid"`
+	Host     Host       `json:"host"`
+	Name     string     `json:"name"`
+	FullName *string    `json:"fullName"`
+	Email    *string    `json:"email"`
+	Avatar   *File      `json:"avatar"`
+	URL      *string    `json:"url"`
+	MemberOf []*Group   `json:"memberOf"`
+	Products []*Product `json:"products"`
+	ID       string     `json:"id"`
+	// Localization of the user.
 	Locale            *string                 `json:"locale"`
 	MemberOfAggregate *GroupAggregateResult   `json:"memberOfAggregate"`
 	ProductsAggregate *ProductAggregateResult `json:"productsAggregate"`
@@ -2951,13 +2798,15 @@ type UserAggregateResult struct {
 }
 
 type UserFilter struct {
-	Xid  *StringHashFilter `json:"xid,omitempty"`
-	Name *StringHashFilter `json:"name,omitempty"`
-	ID   []string          `json:"id,omitempty"`
-	Has  []*UserHasFilter  `json:"has,omitempty"`
-	And  []*UserFilter     `json:"and,omitempty"`
-	Or   []*UserFilter     `json:"or,omitempty"`
-	Not  *UserFilter       `json:"not,omitempty"`
+	Xid      *StringHashFilter                   `json:"xid,omitempty"`
+	Name     *StringRegExpFilterStringTermFilter `json:"name,omitempty"`
+	FullName *StringRegExpFilterStringTermFilter `json:"fullName,omitempty"`
+	Email    *StringRegExpFilterStringTermFilter `json:"email,omitempty"`
+	ID       []string                            `json:"id,omitempty"`
+	Has      []*UserHasFilter                    `json:"has,omitempty"`
+	And      []*UserFilter                       `json:"and,omitempty"`
+	Or       []*UserFilter                       `json:"or,omitempty"`
+	Not      *UserFilter                         `json:"not,omitempty"`
 }
 
 type UserOrGroupAggregateResult struct {
@@ -2975,13 +2824,15 @@ type UserOrGroupAggregateResult struct {
 }
 
 type UserOrGroupFilter struct {
-	ID   []string                `json:"id,omitempty"`
-	Xid  *StringHashFilter       `json:"xid,omitempty"`
-	Name *StringHashFilter       `json:"name,omitempty"`
-	Has  []*UserOrGroupHasFilter `json:"has,omitempty"`
-	And  []*UserOrGroupFilter    `json:"and,omitempty"`
-	Or   []*UserOrGroupFilter    `json:"or,omitempty"`
-	Not  *UserOrGroupFilter      `json:"not,omitempty"`
+	ID       []string                            `json:"id,omitempty"`
+	Xid      *StringHashFilter                   `json:"xid,omitempty"`
+	Name     *StringRegExpFilterStringTermFilter `json:"name,omitempty"`
+	FullName *StringRegExpFilterStringTermFilter `json:"fullName,omitempty"`
+	Email    *StringRegExpFilterStringTermFilter `json:"email,omitempty"`
+	Has      []*UserOrGroupHasFilter             `json:"has,omitempty"`
+	And      []*UserOrGroupFilter                `json:"and,omitempty"`
+	Or       []*UserOrGroupFilter                `json:"or,omitempty"`
+	Not      *UserOrGroupFilter                  `json:"not,omitempty"`
 }
 
 type UserOrGroupOrder struct {
@@ -2991,15 +2842,19 @@ type UserOrGroupOrder struct {
 }
 
 type UserOrGroupPatch struct {
-	//  The unique human readable identifier of the owner in the format: `domain.tld/owner`. Each part is path escaped. A single dash '-' denotes an empty part. Examples:
+	//  Unique human readable identifier of the user or group in the format: `domain.tld/owner`. Each part is path escaped. A single dash '-' denotes an empty part. Examples:
 	// - `github.com/aisbergg`
 	// - `wikifactory.com/@aisbergg`
-	Xid      *string       `json:"xid,omitempty"`
-	Host     *HostRef      `json:"host,omitempty"`
-	Name     *string       `json:"name,omitempty"`
-	FullName *string       `json:"fullName,omitempty"`
-	Email    *string       `json:"email,omitempty"`
-	Avatar   *FileRef      `json:"avatar,omitempty"`
+	Xid  *string  `json:"xid,omitempty"`
+	Host *HostRef `json:"host,omitempty"`
+	// Name of the user or group as used on the host platform.
+	Name *string `json:"name,omitempty"`
+	// Full name of the person.
+	FullName *string `json:"fullName,omitempty"`
+	// Email address of the user or group.
+	Email  *string  `json:"email,omitempty"`
+	Avatar *FileRef `json:"avatar,omitempty"`
+	// URL to the user or groups profile on the host platform.
 	URL      *string       `json:"url,omitempty"`
 	MemberOf []*GroupRef   `json:"memberOf,omitempty"`
 	Products []*ProductRef `json:"products,omitempty"`
@@ -3008,7 +2863,7 @@ type UserOrGroupPatch struct {
 type UserOrGroupRef struct {
 	// ID of the object.
 	ID *string `json:"id,omitempty"`
-	//  The unique human readable identifier of the owner in the format: `domain.tld/owner`. Each part is path escaped. A single dash '-' denotes an empty part. Examples:
+	//  Unique human readable identifier of the user or group in the format: `domain.tld/owner`. Each part is path escaped. A single dash '-' denotes an empty part. Examples:
 	// - `github.com/aisbergg`
 	// - `wikifactory.com/@aisbergg`
 	Xid *string `json:"xid,omitempty"`
@@ -3030,7 +2885,8 @@ type UserPatch struct {
 	URL      *string       `json:"url,omitempty"`
 	MemberOf []*GroupRef   `json:"memberOf,omitempty"`
 	Products []*ProductRef `json:"products,omitempty"`
-	Locale   *string       `json:"locale,omitempty"`
+	// Localization of the user.
+	Locale *string `json:"locale,omitempty"`
 }
 
 type UserRef struct {
@@ -3044,7 +2900,8 @@ type UserRef struct {
 	URL      *string       `json:"url,omitempty"`
 	MemberOf []*GroupRef   `json:"memberOf,omitempty"`
 	Products []*ProductRef `json:"products,omitempty"`
-	Locale   *string       `json:"locale,omitempty"`
+	// Localization of the user.
+	Locale *string `json:"locale,omitempty"`
 }
 
 type WithinFilter struct {
@@ -4693,12 +4550,15 @@ const (
 	ProductHasFilterLicense               ProductHasFilter = "license"
 	ProductHasFilterLicensor              ProductHasFilter = "licensor"
 	ProductHasFilterWebsite               ProductHasFilter = "website"
+	ProductHasFilterState                 ProductHasFilter = "state"
 	ProductHasFilterRelease               ProductHasFilter = "release"
 	ProductHasFilterReleases              ProductHasFilter = "releases"
 	ProductHasFilterRenamedTo             ProductHasFilter = "renamedTo"
 	ProductHasFilterRenamedFrom           ProductHasFilter = "renamedFrom"
 	ProductHasFilterForkOf                ProductHasFilter = "forkOf"
 	ProductHasFilterForks                 ProductHasFilter = "forks"
+	ProductHasFilterForkCount             ProductHasFilter = "forkCount"
+	ProductHasFilterStarCount             ProductHasFilter = "starCount"
 	ProductHasFilterTags                  ProductHasFilter = "tags"
 	ProductHasFilterCategory              ProductHasFilter = "category"
 )
@@ -4715,19 +4575,22 @@ var AllProductHasFilter = []ProductHasFilter{
 	ProductHasFilterLicense,
 	ProductHasFilterLicensor,
 	ProductHasFilterWebsite,
+	ProductHasFilterState,
 	ProductHasFilterRelease,
 	ProductHasFilterReleases,
 	ProductHasFilterRenamedTo,
 	ProductHasFilterRenamedFrom,
 	ProductHasFilterForkOf,
 	ProductHasFilterForks,
+	ProductHasFilterForkCount,
+	ProductHasFilterStarCount,
 	ProductHasFilterTags,
 	ProductHasFilterCategory,
 }
 
 func (e ProductHasFilter) IsValid() bool {
 	switch e {
-	case ProductHasFilterDiscoveredAt, ProductHasFilterLastIndexedAt, ProductHasFilterDataSource, ProductHasFilterXid, ProductHasFilterName, ProductHasFilterDescription, ProductHasFilterDocumentationLanguage, ProductHasFilterVersion, ProductHasFilterLicense, ProductHasFilterLicensor, ProductHasFilterWebsite, ProductHasFilterRelease, ProductHasFilterReleases, ProductHasFilterRenamedTo, ProductHasFilterRenamedFrom, ProductHasFilterForkOf, ProductHasFilterForks, ProductHasFilterTags, ProductHasFilterCategory:
+	case ProductHasFilterDiscoveredAt, ProductHasFilterLastIndexedAt, ProductHasFilterDataSource, ProductHasFilterXid, ProductHasFilterName, ProductHasFilterDescription, ProductHasFilterDocumentationLanguage, ProductHasFilterVersion, ProductHasFilterLicense, ProductHasFilterLicensor, ProductHasFilterWebsite, ProductHasFilterState, ProductHasFilterRelease, ProductHasFilterReleases, ProductHasFilterRenamedTo, ProductHasFilterRenamedFrom, ProductHasFilterForkOf, ProductHasFilterForks, ProductHasFilterForkCount, ProductHasFilterStarCount, ProductHasFilterTags, ProductHasFilterCategory:
 		return true
 	}
 	return false
@@ -4765,6 +4628,8 @@ const (
 	ProductOrderableDocumentationLanguage ProductOrderable = "documentationLanguage"
 	ProductOrderableVersion               ProductOrderable = "version"
 	ProductOrderableWebsite               ProductOrderable = "website"
+	ProductOrderableForkCount             ProductOrderable = "forkCount"
+	ProductOrderableStarCount             ProductOrderable = "starCount"
 )
 
 var AllProductOrderable = []ProductOrderable{
@@ -4776,11 +4641,13 @@ var AllProductOrderable = []ProductOrderable{
 	ProductOrderableDocumentationLanguage,
 	ProductOrderableVersion,
 	ProductOrderableWebsite,
+	ProductOrderableForkCount,
+	ProductOrderableStarCount,
 }
 
 func (e ProductOrderable) IsValid() bool {
 	switch e {
-	case ProductOrderableDiscoveredAt, ProductOrderableLastIndexedAt, ProductOrderableXid, ProductOrderableName, ProductOrderableDescription, ProductOrderableDocumentationLanguage, ProductOrderableVersion, ProductOrderableWebsite:
+	case ProductOrderableDiscoveredAt, ProductOrderableLastIndexedAt, ProductOrderableXid, ProductOrderableName, ProductOrderableDescription, ProductOrderableDocumentationLanguage, ProductOrderableVersion, ProductOrderableWebsite, ProductOrderableForkCount, ProductOrderableStarCount:
 		return true
 	}
 	return false
@@ -4807,6 +4674,62 @@ func (e ProductOrderable) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
+// ProductState determines the state (activeness) of the product.
+type ProductState string
+
+const (
+	// State metric has not been determined yet.
+	ProductStateUndetermined ProductState = "UNDETERMINED"
+	// Product is actively developed.
+	ProductStateActive ProductState = "ACTIVE"
+	// Product has not received any updates for over 2 years.
+	ProductStateInactive ProductState = "INACTIVE"
+	// Product repository was marked as archived and thus no longer actively developed.
+	ProductStateArchived ProductState = "ARCHIVED"
+	// Product was marked as deprecated. There might be a newer version of the product or a different product that acts as a replacement.
+	ProductStateDeprecated ProductState = "DEPRECATED"
+	// Product source doesn't exists anymore, but its entry is still in the database.
+	ProductStateMissing ProductState = "MISSING"
+)
+
+var AllProductState = []ProductState{
+	ProductStateUndetermined,
+	ProductStateActive,
+	ProductStateInactive,
+	ProductStateArchived,
+	ProductStateDeprecated,
+	ProductStateMissing,
+}
+
+func (e ProductState) IsValid() bool {
+	switch e {
+	case ProductStateUndetermined, ProductStateActive, ProductStateInactive, ProductStateArchived, ProductStateDeprecated, ProductStateMissing:
+		return true
+	}
+	return false
+}
+
+func (e ProductState) String() string {
+	return string(e)
+}
+
+func (e *ProductState) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = ProductState(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid ProductState", str)
+	}
+	return nil
+}
+
+func (e ProductState) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
 type RepositoryHasFilter string
 
 const (
@@ -4818,6 +4741,7 @@ const (
 	RepositoryHasFilterName      RepositoryHasFilter = "name"
 	RepositoryHasFilterReference RepositoryHasFilter = "reference"
 	RepositoryHasFilterPath      RepositoryHasFilter = "path"
+	RepositoryHasFilterFile      RepositoryHasFilter = "file"
 )
 
 var AllRepositoryHasFilter = []RepositoryHasFilter{
@@ -4829,11 +4753,12 @@ var AllRepositoryHasFilter = []RepositoryHasFilter{
 	RepositoryHasFilterName,
 	RepositoryHasFilterReference,
 	RepositoryHasFilterPath,
+	RepositoryHasFilterFile,
 }
 
 func (e RepositoryHasFilter) IsValid() bool {
 	switch e {
-	case RepositoryHasFilterXid, RepositoryHasFilterURL, RepositoryHasFilterPermaURL, RepositoryHasFilterHost, RepositoryHasFilterOwner, RepositoryHasFilterName, RepositoryHasFilterReference, RepositoryHasFilterPath:
+	case RepositoryHasFilterXid, RepositoryHasFilterURL, RepositoryHasFilterPermaURL, RepositoryHasFilterHost, RepositoryHasFilterOwner, RepositoryHasFilterName, RepositoryHasFilterReference, RepositoryHasFilterPath, RepositoryHasFilterFile:
 		return true
 	}
 	return false
@@ -4906,6 +4831,50 @@ func (e *RepositoryOrderable) UnmarshalGQL(v interface{}) error {
 }
 
 func (e RepositoryOrderable) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// The recognized types of repositories.
+type RepositoryType string
+
+const (
+	RepositoryTypeWebsite RepositoryType = "WEBSITE"
+	RepositoryTypeFile    RepositoryType = "FILE"
+	RepositoryTypeGit     RepositoryType = "GIT"
+)
+
+var AllRepositoryType = []RepositoryType{
+	RepositoryTypeWebsite,
+	RepositoryTypeFile,
+	RepositoryTypeGit,
+}
+
+func (e RepositoryType) IsValid() bool {
+	switch e {
+	case RepositoryTypeWebsite, RepositoryTypeFile, RepositoryTypeGit:
+		return true
+	}
+	return false
+}
+
+func (e RepositoryType) String() string {
+	return string(e)
+}
+
+func (e *RepositoryType) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = RepositoryType(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid RepositoryType", str)
+	}
+	return nil
+}
+
+func (e RepositoryType) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
@@ -5441,213 +5410,6 @@ func (e *TechnologySpecificDocumentationCriteriaOrderable) UnmarshalGQL(v interf
 }
 
 func (e TechnologySpecificDocumentationCriteriaOrderable) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(e.String()))
-}
-
-type TestObject2HasFilter string
-
-const (
-	TestObject2HasFilterA TestObject2HasFilter = "a"
-)
-
-var AllTestObject2HasFilter = []TestObject2HasFilter{
-	TestObject2HasFilterA,
-}
-
-func (e TestObject2HasFilter) IsValid() bool {
-	switch e {
-	case TestObject2HasFilterA:
-		return true
-	}
-	return false
-}
-
-func (e TestObject2HasFilter) String() string {
-	return string(e)
-}
-
-func (e *TestObject2HasFilter) UnmarshalGQL(v interface{}) error {
-	str, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("enums must be strings")
-	}
-
-	*e = TestObject2HasFilter(str)
-	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid TestObject2HasFilter", str)
-	}
-	return nil
-}
-
-func (e TestObject2HasFilter) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(e.String()))
-}
-
-type TestObject3HasFilter string
-
-const (
-	TestObject3HasFilterName TestObject3HasFilter = "name"
-	TestObject3HasFilterS    TestObject3HasFilter = "s"
-)
-
-var AllTestObject3HasFilter = []TestObject3HasFilter{
-	TestObject3HasFilterName,
-	TestObject3HasFilterS,
-}
-
-func (e TestObject3HasFilter) IsValid() bool {
-	switch e {
-	case TestObject3HasFilterName, TestObject3HasFilterS:
-		return true
-	}
-	return false
-}
-
-func (e TestObject3HasFilter) String() string {
-	return string(e)
-}
-
-func (e *TestObject3HasFilter) UnmarshalGQL(v interface{}) error {
-	str, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("enums must be strings")
-	}
-
-	*e = TestObject3HasFilter(str)
-	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid TestObject3HasFilter", str)
-	}
-	return nil
-}
-
-func (e TestObject3HasFilter) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(e.String()))
-}
-
-type TestObject3Orderable string
-
-const (
-	TestObject3OrderableName TestObject3Orderable = "name"
-	TestObject3OrderableS    TestObject3Orderable = "s"
-)
-
-var AllTestObject3Orderable = []TestObject3Orderable{
-	TestObject3OrderableName,
-	TestObject3OrderableS,
-}
-
-func (e TestObject3Orderable) IsValid() bool {
-	switch e {
-	case TestObject3OrderableName, TestObject3OrderableS:
-		return true
-	}
-	return false
-}
-
-func (e TestObject3Orderable) String() string {
-	return string(e)
-}
-
-func (e *TestObject3Orderable) UnmarshalGQL(v interface{}) error {
-	str, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("enums must be strings")
-	}
-
-	*e = TestObject3Orderable(str)
-	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid TestObject3Orderable", str)
-	}
-	return nil
-}
-
-func (e TestObject3Orderable) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(e.String()))
-}
-
-type TestObjectHasFilter string
-
-const (
-	TestObjectHasFilterName  TestObjectHasFilter = "name"
-	TestObjectHasFilterOther TestObjectHasFilter = "other"
-	TestObjectHasFilterX     TestObjectHasFilter = "x"
-	TestObjectHasFilterA     TestObjectHasFilter = "a"
-	TestObjectHasFilterB     TestObjectHasFilter = "b"
-)
-
-var AllTestObjectHasFilter = []TestObjectHasFilter{
-	TestObjectHasFilterName,
-	TestObjectHasFilterOther,
-	TestObjectHasFilterX,
-	TestObjectHasFilterA,
-	TestObjectHasFilterB,
-}
-
-func (e TestObjectHasFilter) IsValid() bool {
-	switch e {
-	case TestObjectHasFilterName, TestObjectHasFilterOther, TestObjectHasFilterX, TestObjectHasFilterA, TestObjectHasFilterB:
-		return true
-	}
-	return false
-}
-
-func (e TestObjectHasFilter) String() string {
-	return string(e)
-}
-
-func (e *TestObjectHasFilter) UnmarshalGQL(v interface{}) error {
-	str, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("enums must be strings")
-	}
-
-	*e = TestObjectHasFilter(str)
-	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid TestObjectHasFilter", str)
-	}
-	return nil
-}
-
-func (e TestObjectHasFilter) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(e.String()))
-}
-
-type TestObjectOrderable string
-
-const (
-	TestObjectOrderableName TestObjectOrderable = "name"
-)
-
-var AllTestObjectOrderable = []TestObjectOrderable{
-	TestObjectOrderableName,
-}
-
-func (e TestObjectOrderable) IsValid() bool {
-	switch e {
-	case TestObjectOrderableName:
-		return true
-	}
-	return false
-}
-
-func (e TestObjectOrderable) String() string {
-	return string(e)
-}
-
-func (e *TestObjectOrderable) UnmarshalGQL(v interface{}) error {
-	str, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("enums must be strings")
-	}
-
-	*e = TestObjectOrderable(str)
-	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid TestObjectOrderable", str)
-	}
-	return nil
-}
-
-func (e TestObjectOrderable) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 

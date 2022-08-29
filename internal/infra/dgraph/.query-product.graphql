@@ -12,6 +12,7 @@ fragment ProductFragment on Product {
 	}
 	licensor {...UserOrGroupBasicFragment}
 	website
+	state
 	release {
 		id
 		name
@@ -36,6 +37,8 @@ fragment ProductFragment on Product {
 		id
 		name
 	}
+	forkCount
+	starCount
 	tags {
 		id
 		name
@@ -52,6 +55,7 @@ fragment ProductSearchFragment on Product {
 	xid
 	name
 	website
+	state
 	renamedTo {id}
 	renamedFrom {id}
 	forkOf {
@@ -63,6 +67,8 @@ fragment ProductSearchFragment on Product {
 		}
 	}
 	forks {id}
+	forkCount
+	starCount
 	tags {...TagFragment}
 	category {...CategoryFragment}
 
