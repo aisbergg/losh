@@ -1,6 +1,9 @@
 # see: https://github.com/dgraph-io/dgraph/blob/master/contrib/config/docker/docker-compose-multi.yml
 x-dgraph: &dgraph
   image: dgraph/dgraph:v21.12.0
+  # image: losh-dgraph:v21.12.0
+  # build:
+  #   context: ../dgraph
   volumes:
     - dgraph:/dgraph
   restart: on-failure
@@ -28,7 +31,9 @@ services:
   # the size of the data served by each Alpha instance.
   dgraph-zero:
     <<: *dgraph
-    command: dgraph zero --my=dgraph-zero:5080
+    command: dgraph zero
+      --my=dgraph-zero:5080
+      --telemetry="sentry=false;"
     ports:
       - 5080:5080  # internal, private gRPC interface used for cluster communication
       - 6080:6080  # external, private admin interface
@@ -42,6 +47,8 @@ services:
       --my=dgraph-alpha:7080
       --zero=dgraph-zero:5080
       --security whitelist=172.16.0.0/12
+      --telemetry="sentry=false;"
+      # --custom_tokenizers=/plugins/exacti.so
     ports:
       - 7070:7070  # internal, private gRPC interface
       - 8080:8080  # external, public HTTP interface used for GraphQL queries
