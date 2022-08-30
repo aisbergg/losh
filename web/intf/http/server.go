@@ -115,8 +115,9 @@ func createFiberConfig(config *config.Config, log *zap.SugaredLogger, tplBndPrv 
 	// }
 	// viewsEngine := liquid.New(tmplPath, ".html")
 	viewsEngine := liquid.NewFileSystem(assets.AssetsHTTP, "templates", ".html")
-	viewsEngine.Layout("content")            // use 'content' as var name in layout
-	viewsEngine.Reload(config.Debug.Enabled) // in debug mode reload templates on every request
+	viewsEngine.Layout("content")                  // use 'content' as var name in layout
+	viewsEngine.EnableReload(config.Debug.Enabled) // in debug mode reload templates on every request
+	viewsEngine.EnableFrontmatter(true)            // enable frontmatter
 	if err := viewsEngine.Load(); err != nil {
 		return nil, errors.Wrap(err, "failed to load templates")
 	}

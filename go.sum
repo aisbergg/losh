@@ -74,16 +74,14 @@ github.com/aisbergg/go-copier v0.0.0-20220822180427-d38739757c35 h1:hDzHiuyHIoHZ
 github.com/aisbergg/go-copier v0.0.0-20220822180427-d38739757c35/go.mod h1:kUIZwzM5ED6XcglsHSq1elIsq8UoWLCjkpvZl4GuAxg=
 github.com/aisbergg/go-dqlx v0.0.0-20220822230403-6ac098906135 h1:DRFNyap8wA/eK6IWDBpBD9dILM3u0pqZIbmvG7QlNtM=
 github.com/aisbergg/go-dqlx v0.0.0-20220822230403-6ac098906135/go.mod h1:1sT62B2oMOvQj7gOdxlouPPpKyzKiXVCQ/Py3A1ZJ6c=
-github.com/aisbergg/go-errors v0.0.0-20220812170109-00125c3c1b00 h1:RfG5HaHZfixU4NUc+oOJkGu9MF8fMHIvdZ/wgflU12U=
-github.com/aisbergg/go-errors v0.0.0-20220812170109-00125c3c1b00/go.mod h1:R4VOP6v6tKqT4L2umVlCtUk1zFYdkQ6F96oy7c4EffI=
 github.com/aisbergg/go-errors v0.0.0-20220825110559-14f02ed2dc16 h1:7u+hQjfIiv0Iklo5vB5Fs3b+YnkJHlKuC4KGATlo+RM=
 github.com/aisbergg/go-errors v0.0.0-20220825110559-14f02ed2dc16/go.mod h1:R4VOP6v6tKqT4L2umVlCtUk1zFYdkQ6F96oy7c4EffI=
+github.com/aisbergg/go-frontmatter v0.0.0-20220830134939-08322d69e80e h1:PlZKPkkFZf6EAcdPrLc06zLD+mpnnVBPqKL0kUo8dIc=
+github.com/aisbergg/go-frontmatter v0.0.0-20220830134939-08322d69e80e/go.mod h1:sK2bwLREFXlZXx5kfx1prUQra66NAi8Sk4lE9yY6AVo=
 github.com/aisbergg/go-liquid v1.3.1-0.20220719205958-08f515a337ef h1:ljhb40eMSMSSFBqGVrKDvYVqkAAwiPYSsjxqmtRRqDA=
 github.com/aisbergg/go-liquid v1.3.1-0.20220719205958-08f515a337ef/go.mod h1:VmzQQHa5v4E0GvGzqccfAfLgMwRk2V+s1QbxYx9dGak=
 github.com/aisbergg/go-orderedmap v1.0.1-0.20220812065708-63d414488359 h1:dlbtUbHsOOzJc9cexV4+tb6Uu9AauexrISeR8/DxDio=
 github.com/aisbergg/go-orderedmap v1.0.1-0.20220812065708-63d414488359/go.mod h1:9ZIbRunKbuvfPKyBP1SIKLcXNlv74YCOZ3t3VTS6gRk=
-github.com/aisbergg/go-pathlib v0.12.1-0.20220720080820-6840c871ef28 h1:4SYvCRb71duaD8II03OBBpUfNFetfFgG+96+F/m1W4Y=
-github.com/aisbergg/go-pathlib v0.12.1-0.20220720080820-6840c871ef28/go.mod h1:aHd1stGy8mCvDEsGIa6JyvfGA8sFNRzbmZ187+CRFnc=
 github.com/aisbergg/go-pathlib v0.12.1-0.20220826142213-89265f98d94e h1:HyLPuZ+CoTS92lnklDPlktq6F8o9TKMLDzsHKqs8+1Y=
 github.com/aisbergg/go-pathlib v0.12.1-0.20220826142213-89265f98d94e/go.mod h1:aHd1stGy8mCvDEsGIa6JyvfGA8sFNRzbmZ187+CRFnc=
 github.com/aisbergg/go-retry v1.0.0 h1:N+rQINcZQGqf4fpGu3+UqgRwTq65CzxvDlmS/aL0hJE=
@@ -96,7 +94,6 @@ github.com/alecthomas/chroma v0.10.0/go.mod h1:jtJATyUxlIORhUOFNA9NZDWGAQ8wpxQQq
 github.com/alecthomas/participle/v2 v2.0.0-beta.5 h1:y6dsSYVb1G5eK6mgmy+BgI3Mw35a3WghArZ/Hbebrjo=
 github.com/alecthomas/participle/v2 v2.0.0-beta.5/go.mod h1:RC764t6n4L8D8ITAJv0qdokritYSNR3wV5cVwmIEaMM=
 github.com/alecthomas/repr v0.1.0 h1:ENn2e1+J3k09gyj2shc0dHr/yjaWSHRlrJ4DPMevDqE=
-github.com/alecthomas/repr v0.1.0/go.mod h1:2kn6fqh/zIyPLmm3ugklbEi5hg5wS435eygvNfaDQL8=
 github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
 github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
 github.com/alecthomas/units v0.0.0-20151022065526-2efee857e7cf/go.mod h1:ybxpYRFXyAe+OPACYpWeL0wqObRcbAqCMya13uyzqw0=

@@ -48,7 +48,7 @@ import (
 type LinkTagHandler func(string) (string, bool)
 
 // AddJekyllTags adds the Jekyll tags to the Liquid engine.
-func addJekyllTags(e *liquid.Engine, templates map[string]*liquid.Template) {
+func addJekyllTags(e *liquid.Engine, templates map[string]*template) {
 	tc := tagContext{templates}
 	e.RegisterBlock("highlight", highlightTag)
 	e.RegisterTag("include", tc.includeTag)
@@ -57,7 +57,7 @@ func addJekyllTags(e *liquid.Engine, templates map[string]*liquid.Template) {
 
 // tagContext provides the context to a tag renderer.
 type tagContext struct {
-	templates map[string]*liquid.Template
+	templates map[string]*template
 }
 
 // -----------------------------------------------------------------------------
@@ -133,7 +133,7 @@ func (tc tagContext) includeRelativeTag(rc render.Context) (string, error) {
 	return includeFromDir(path.Dir(rc.SourceFile()), tc.templates, rc)
 }
 
-func includeFromDir(dir string, templates map[string]*liquid.Template, rc render.Context) (string, error) {
+func includeFromDir(dir string, templates map[string]*template, rc render.Context) (string, error) {
 	// parse args and options
 	argsline, err := rc.ExpandTagArg()
 	if err != nil {

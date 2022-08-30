@@ -2,20 +2,26 @@ package liquid
 
 import (
 	"io"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
+	"reflect"
 	"strings"
 	"sync"
 
 	losherrors "losh/internal/lib/errors"
+	"losh/internal/lib/util/reflectutil"
 
+	"github.com/aisbergg/go-copier/pkg/copier"
+	"github.com/aisbergg/go-frontmatter/pkg/frontmatter"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/utils"
 	"github.com/osteele/liquid"
+	"gopkg.in/yaml.v3"
 )
 
-func newLiquidEngine(templates map[string]*liquid.Template) *liquid.Engine {
+func newLiquidEngine(templates map[string]*template) *liquid.Engine {
 	engine := liquid.NewEngine()
 	addTags(engine, templates)
 	addFilters(engine)
@@ -34,16 +40,21 @@ type Engine struct {
 	layoutVar string
 	// determines if the engine parsed all templates
 	loaded bool
-	// reload on each render
-	reload bool
+	// reloadEnabled on each render
+	reloadEnabled bool
 	// lock for loading up the engine
 	mutex sync.RWMutex
 	// templates
-	Templates map[string]*liquid.Template
+	Templates map[string]*template
+	// determines whether the frontmatterEnabled parsing shall be used
+	frontmatterEnabled bool
+
+	copier *copier.Copier
 }
 
 // New creates a Liquid template render engine for Fiber.
 func New(directory, extension string) *Engine {
+	// copier := copier.New(copier.Options{IgnoreErrors: true, })
 	engine := &Engine{
 		directory: directory,
 		extension: extension,
@@ -69,11 +80,17 @@ func (e *Engine) Layout(key string) *Engine {
 	return e
 }
 
-// Reload if set to true the templates are reloading on each render,
+// EnableReload if set to true the templates are reloading on each render,
 // use it when you're in development and you don't want to restart
 // the application when you edit a template file.
-func (e *Engine) Reload(enabled bool) *Engine {
-	e.reload = enabled
+func (e *Engine) EnableReload(enabled bool) *Engine {
+	e.reloadEnabled = enabled
+	return e
+}
+
+// EnableFrontmatter enables the frontmatter parsing.
+func (e *Engine) EnableFrontmatter(enabled bool) *Engine {
+	e.frontmatterEnabled = enabled
 	return e
 }
 
@@ -83,7 +100,12 @@ func (e *Engine) Load() error {
 	e.mutex.Lock()
 	defer e.mutex.Unlock()
 
-	e.Templates = make(map[string]*liquid.Template)
+	// frontmatter
+	frtmFmts := []*frontmatter.Format{
+		frontmatter.NewFormat("---", "---", yaml.Unmarshal),
+	}
+
+	e.Templates = make(map[string]*template)
 	liquidEngine := newLiquidEngine(e.Templates)
 
 	// Loop trough each directory and register template files
@@ -104,17 +126,30 @@ func (e *Engine) Load() error {
 		}
 		// reverse slashes '\' -> '/'
 		name := filepath.ToSlash(rel)
+
 		// read the file
-		buf, err := utils.ReadFile(path, e.fileSystem)
+		file, err := e.fileSystem.Open(path)
 		if err != nil {
 			return NewLoadError(path, err, nil)
 		}
+		defer file.Close()
+		var body []byte
+		var frtm map[string]interface{}
+		if e.frontmatterEnabled {
+			body, err = frontmatter.Parse(file, &frtm, frtmFmts...)
+		} else {
+			body, err = ioutil.ReadAll(file)
+		}
+		if err != nil {
+			return NewLoadError(path, err, nil)
+		}
+
 		// create new template associated with the current one
-		tmpl, err := liquidEngine.ParseTemplate(buf)
+		tmpl, err := liquidEngine.ParseTemplate(body)
 		if err != nil {
 			return NewLoadError(path, err, nil)
 		}
-		e.Templates[name] = tmpl
+		e.Templates[name] = newTemplate(tmpl, frtm)
 		return nil
 	}
 	// notify engine that we parsed all templates
@@ -149,7 +184,7 @@ func getLiquidBinding(binding interface{}) (liquid.Bindings, error) {
 }
 
 // getTemplate returns the template by name or name+extension.
-func (e *Engine) getTemplate(name string) (*liquid.Template, error) {
+func (e *Engine) getTemplate(name string) (*template, error) {
 	tmpl, ok := e.Templates[name]
 	if ok {
 		return tmpl, nil
@@ -162,29 +197,29 @@ func (e *Engine) getTemplate(name string) (*liquid.Template, error) {
 }
 
 // Render will render the template by name
-func (e *Engine) Render(out io.Writer, template string, binding interface{}, layout ...string) error {
-	if !e.loaded || e.reload {
-		if e.reload {
+func (e *Engine) Render(out io.Writer, name string, binding interface{}, layout ...string) error {
+	if !e.loaded || e.reloadEnabled {
+		if e.reloadEnabled {
 			e.loaded = false
 		}
 		if err := e.Load(); err != nil {
-			return NewRenderError(template, err, binding)
+			return NewRenderError(name, err, binding)
 		}
 	}
 
 	var err error
-	var tmpl *liquid.Template
-	if tmpl, err = e.getTemplate(template); err != nil {
-		return NewRenderError(template, err, binding)
+	var tmpl *template
+	if tmpl, err = e.getTemplate(name); err != nil {
+		return NewRenderError(name, err, binding)
 	}
 
 	liquidBinding, err := getLiquidBinding(binding)
 	if err != nil {
-		return NewRenderError(template, err, binding)
+		return NewRenderError(name, err, binding)
 	}
 	rendered, err := tmpl.Render(liquidBinding)
 	if err != nil {
-		return NewRenderError(template, err, binding)
+		return NewRenderError(name, err, binding)
 	}
 	if len(layout) > 0 && layout[0] != "" {
 		if liquidBinding == nil {
@@ -192,15 +227,56 @@ func (e *Engine) Render(out io.Writer, template string, binding interface{}, lay
 		}
 		liquidBinding[e.layoutVar] = rendered
 		if tmpl, err = e.getTemplate(layout[0]); err != nil {
-			return NewRenderError(template, err, binding)
+			return NewRenderError(name, err, binding)
 		}
 		rendered, err = tmpl.Render(liquidBinding)
 		if err != nil {
-			return NewRenderError(template, err, binding)
+			return NewRenderError(name, err, binding)
 		}
 	}
 	if _, err = out.Write(rendered); err != nil {
-		return NewRenderError(template, err, binding)
+		return NewRenderError(name, err, binding)
 	}
 	return nil
+}
+
+// template is a Liquid template with frontmatter.
+type template struct {
+	*liquid.Template
+	// frtm is the frontmatter data
+	frtm map[string]interface{}
+}
+
+// newTemplate creates a new template from the given reader.
+func newTemplate(lqdTpl *liquid.Template, frtm map[string]interface{}) *template {
+	return &template{
+		Template: lqdTpl,
+		frtm:     frtm,
+	}
+}
+
+func (t *template) Render(vars liquid.Bindings) ([]byte, liquid.SourceError) {
+	if t.frtm != nil {
+		mergeMap(t.frtm, &vars)
+	}
+	return t.Template.Render(vars)
+}
+
+func mergeMap(src, dst interface{}) {
+	srcVal := reflectutil.Indirect(reflect.ValueOf(src))
+	dstVal := reflectutil.Indirect(reflect.ValueOf(dst))
+	if srcVal.Kind() != reflect.Map || dstVal.Kind() != reflect.Map {
+		return
+	}
+	if !srcVal.IsValid() || !dstVal.IsValid() {
+		return
+	}
+
+	for _, key := range srcVal.MapKeys() {
+		if dstVal.MapIndex(key).IsValid() {
+			mergeMap(srcVal.MapIndex(key).Interface(), dstVal.MapIndex(key).Interface())
+		} else {
+			dstVal.SetMapIndex(key, srcVal.MapIndex(key))
+		}
+	}
 }

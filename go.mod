@@ -8,12 +8,12 @@ require (
 	github.com/abadojack/whatlanggo v1.0.1
 	github.com/aisbergg/go-copier v0.0.0-20220822180427-d38739757c35
 	github.com/aisbergg/go-errors v0.0.0-20220825110559-14f02ed2dc16
+	github.com/aisbergg/go-frontmatter v0.0.0-20220830134939-08322d69e80e
 	github.com/aisbergg/go-pathlib v0.12.1-0.20220826142213-89265f98d94e
 	github.com/aisbergg/go-retry v1.0.0
 	github.com/aisbergg/go-unidecode v1.1.1
 	github.com/alecthomas/chroma v0.10.0
 	github.com/alecthomas/participle/v2 v2.0.0-beta.5
-	github.com/alecthomas/repr v0.1.0
 	github.com/dgraph-io/dgo/v200 v200.0.0-20210401091508-95bfd74de60e
 	github.com/fenos/dqlx v0.2.1-0.20210902154011-e8c319a835d3
 	github.com/go-resty/resty/v2 v2.7.0

@@ -9,7 +9,7 @@ import (
 	"github.com/osteele/liquid/render"
 )
 
-func addTags(e *liquid.Engine, templates map[string]*liquid.Template) {
+func addTags(e *liquid.Engine, templates map[string]*template) {
 	addJekyllTags(e, templates)
 
 	// tabler.io tags
