@@ -208,8 +208,8 @@ func (e *Engine) Render(out io.Writer, name string, binding interface{}, layout 
 	}
 
 	var err error
-	var tmpl *template
-	if tmpl, err = e.getTemplate(name); err != nil {
+	var tpl *template
+	if tpl, err = e.getTemplate(name); err != nil {
 		return NewRenderError(name, err, binding)
 	}
 
@@ -217,26 +217,59 @@ func (e *Engine) Render(out io.Writer, name string, binding interface{}, layout 
 	if err != nil {
 		return NewRenderError(name, err, binding)
 	}
-	rendered, err := tmpl.Render(liquidBinding)
-	if err != nil {
-		return NewRenderError(name, err, binding)
+
+	// get stack of templates (layouts + template)
+	tpls := make([]*template, 0, 5)
+	var cbdFrtm map[string]interface{}
+	i := 0
+	for {
+		i++
+		tpls = append(tpls, tpl)
+		frtm := tpl.frtm
+		if frtm != nil {
+			lyti, ok := frtm["layout"]
+			if cbdFrtm == nil {
+				cbdFrtm = frtm
+			} else {
+				mergeMap(cbdFrtm, frtm)
+			}
+			if ok {
+				if lyt, ok := lyti.(string); ok {
+					if tpl, err = e.getTemplate(lyt); err != nil {
+						return NewRenderError(lyt, err, binding)
+					}
+					continue
+				}
+			}
+		} else if i == 1 && len(layout) > 0 && layout[0] != "" {
+			if tpl, err = e.getTemplate(layout[0]); err != nil {
+				return NewRenderError(layout[0], err, binding)
+			}
+			continue
+		}
+		break
 	}
-	if len(layout) > 0 && layout[0] != "" {
-		if liquidBinding == nil {
-			liquidBinding = make(map[string]interface{}, 1)
-		}
-		liquidBinding[e.layoutVar] = rendered
-		if tmpl, err = e.getTemplate(layout[0]); err != nil {
-			return NewRenderError(name, err, binding)
-		}
-		rendered, err = tmpl.Render(liquidBinding)
+
+	// render stack of templates
+	if liquidBinding == nil {
+		liquidBinding = make(map[string]interface{})
+	}
+	mergeMap(cbdFrtm, liquidBinding)
+	liquidBinding[e.layoutVar] = ""
+	var rendered []byte
+	for _, tpl := range tpls {
+		rendered, err = tpl.Render(liquidBinding)
 		if err != nil {
 			return NewRenderError(name, err, binding)
 		}
+		liquidBinding[e.layoutVar] = rendered
 	}
+
+	// write out the rendered template
 	if _, err = out.Write(rendered); err != nil {
 		return NewRenderError(name, err, binding)
 	}
+
 	return nil
 }
 
@@ -255,12 +288,12 @@ func newTemplate(lqdTpl *liquid.Template, frtm map[string]interface{}) *template
 	}
 }
 
-func (t *template) Render(vars liquid.Bindings) ([]byte, liquid.SourceError) {
-	if t.frtm != nil {
-		mergeMap(t.frtm, &vars)
-	}
-	return t.Template.Render(vars)
-}
+// func (t *template) Render(vars liquid.Bindings, inclFrtm bool) ([]byte, liquid.SourceError) {
+// 	if inclFrtm && t.frtm != nil {
+// 		mergeMap(t.frtm, &vars)
+// 	}
+// 	return t.Template.Render(vars)
+// }
 
 func mergeMap(src, dst interface{}) {
 	srcVal := reflectutil.Indirect(reflect.ValueOf(src))

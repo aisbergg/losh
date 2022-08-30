@@ -134,7 +134,7 @@ func createFiberConfig(config *config.Config, log *zap.SugaredLogger, tplBndPrv 
 		BodyLimit:               20 * 1024 * 1024,
 		Concurrency:             256 * 1024,
 		Views:                   viewsEngine,
-		ViewsLayout:             "layouts/default2",
+		ViewsLayout:             "layouts/default",
 		PassLocalsToViews:       false,
 		ReadTimeout:             0,
 		WriteTimeout:            0,
@@ -199,11 +199,13 @@ func (s *Server) registerMiddlewares() error {
 	s.Use(middleware.RemoveTrailingSlash())
 
 	// Cache
-	// TODO: cache key need to consider query params
 	if s.config.Server.Cache.Enabled {
 		s.Use(cache.New(cache.Config{
 			Expiration:   s.config.Server.Cache.Expiration,
 			CacheControl: s.config.Server.Cache.CacheControl, // use client side caching
+			KeyGenerator: func(ctx *fiber.Ctx) string {
+				return ctx.OriginalURL()
+			},
 		}))
 	}
 

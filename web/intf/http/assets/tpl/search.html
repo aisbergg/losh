@@ -1,3 +1,6 @@
+---
+layout: layouts/default
+---
 {%- assign resultsPerPage = req.queryParams.resultsPerPage -%}
 {%- assign results = page.results.items -%}
 {%- assign numResults = page.results.count -%}
@@ -30,7 +33,7 @@
 				</button>
 				</h4>
 				<div id="syntax" class="accordion-collapse collapse">
-				<!-- <div id="syntax" class="accordion-collapse collapse"> -->
+				<!-- <div id="syntax" class="accordion-collapse collapse show"> -->
 					<div class="accordion-body pt-0">
 						<div class="row gy-3 mt-2">
 							<div class="col-12 col-md-6 col-lg-4">

@@ -1,7 +1,6 @@
 ---
-layout: base
+layout: layouts/base
 ---
-
 {% assign no-container = page.no-container | default: layout.no-container %}
 
 <div class="page">
@@ -9,9 +8,20 @@ layout: base
 		{% include layout/sidebar.html dark=page.layout-sidebar-dark right=page.layout-sidebar-right transparent=page.layout-navbar-transparent breakpoint="lg" %}
 	{% endif %}
 
-	{% unless page.layout-hide-topbar %}
-		{% include layout/navbar.html condensed=page.layout-navbar-condensed overlap=page.layout-navbar-overlap dark=page.layout-navbar-dark hide-brand=page.layout-navbar-hide-brand hide-menu=page.layout-navbar-hide-menu sticky=page.layout-navbar-sticky transparent=page.layout-topbar-transparent class=page.layout-navbar-class %}
-	{% endunless %}
+	{% assign breakpoint = include.breakpoint | default: 'md' %}
+	<header class="navbar navbar-expand-{{ breakpoint }}{% if include.transparent %} navbar-transparent{% else %}{% if include.dark %} navbar-dark{% else %} navbar-light{% endif %}{% if include.background %} bg-{{ include.background }}{% endif %}{% endif %}{% if include.sticky %} sticky-top{% endif %}{% if include.overlap %} navbar-overlap{% endif %}{% if include.class %} {{ include.class }}{% endif %} d-print-none"{% if include.background-color %} style="background: {{ include.background-color }}"{% endif %}>
+		<div class="container-xl">
+			{% include layout/navbar-toggler.html target="navbar-menu" %}
+
+			{% include layout/navbar-logo.html dark=include.dark small-logo=include.small-logo hide-logo=include.hide-logo class="d-none-navbar-horizontal pe-0 pe-md-3" breakpoint=breakpoint show-title=include.show-title header=true %}
+
+			<div class="collapse navbar-collapse" id="navbar-menu">
+				<div class="d-flex flex-column flex-md-row flex-fill align-items-stretch align-items-md-center">
+					{% include layout/navbar-menu.html hide-icons=include.hide-icons %}
+				</div>
+			</div>
+		</div>
+	</header>
 
 	<div class="page-wrapper{% if page.layout-wrapper-full %} page-wrapper-full{% endif %}">
 		<div class="container-xl">
@@ -23,7 +33,7 @@ layout: base
 			{{ content }}
 			{% else %}
 			{% unless no-container %}
-			<div class="container-xl{% if page.container-centered %} d-flex flex-column justify-content-center{% endif %}">
+			<div class="container-xl d-flex flex-column justify-content-center">
 			{% endunless %}
 				{{ content }}
 			{% unless no-container %}
@@ -36,5 +46,3 @@ layout: base
 		{% include layout/footer.html %}
 	</div>
 </div>
-
-{% comment %}{% include settings.html %}{% endcomment %}
