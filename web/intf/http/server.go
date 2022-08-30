@@ -206,6 +206,7 @@ func (s *Server) registerMiddlewares() error {
 			KeyGenerator: func(ctx *fiber.Ctx) string {
 				return ctx.OriginalURL()
 			},
+			MaxBytes: 100 * 1024 * 1024, // 100MB
 		}))
 	}
 
