@@ -1,4 +1,5 @@
 @import "tabler/config";
+// @import "tabler/layout/navbar";
 
 // redeclare variables for dark mode
 @media not print {
@@ -23,6 +24,8 @@
 
 @import "ui/buttons";
 @import "ui/details";
+@import "ui/fixes";
+@import "ui/forms";
 @import "ui/hero";
 @import "ui/icons";
 @import "ui/search";

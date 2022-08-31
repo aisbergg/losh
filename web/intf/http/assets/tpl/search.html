@@ -10,20 +10,7 @@ layout: layouts/default
 {%- assign displayMode = req.queryParams.displayMode -%}
 <div class="card">
 	<div class="card-body">
-		<form id="searchForm" name="search">
-			<div class="input-group input-group-flat">
-				<input type="text" id="searchQuery" name="q" class="form-control" autofocus placeholder="Search Product…" value="{{ req.queryParams.query | escape }}">
-				<span class="input-group-text">
-					<button id="clearSearch" type="button" class="btn-unstyled ms-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Clear">
-						{% include ui/icon.html icon="x" class="icon-hover-bold" %}
-					</button>
-					<span class="border-end h-100 ms-2"></span>
-					<button type="submit" class="btn-unstyled ms-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Search">
-						{% include ui/icon.html icon="search" class="icon-hover-bold" %}
-					</button>
-				</span>
-			</div>
-		</form>
+		{% include ui/form/searchbar.html placeholder='Search Product…' %}
 
 		<div class="accordion mt-2" id="accordion-example">
 			<div class="accordion-item border-0">
@@ -467,31 +454,13 @@ layout: layouts/default
 {%- capture_global scripts %}
 <script>
 	// @formatter:off
-	document.getElementById('searchForm').addEventListener('submit', function (e) {
-		e.preventDefault();
-		const form = document.forms.search;
-		const formData = new FormData(form);
-		const params = new URLSearchParams(window.location.search);
-		// unset page for new query
-		params.delete('page')
-		params.set('q', formData.get('q'));
-
-		// change target location
-		location = '{{ req.path }}?' + params.toString();
-	})
-
-	document.getElementById('clearSearch').addEventListener('click', function (e) {
-		document.forms.search['q'].value = '';
-		return false;
-	})
-
 	document.getElementById('orderBy').addEventListener('change', function (e) {
 		setQueryParameter('o', new FormData(this.form).get('orderBy'));
 		return true;
 	})
 
 	const querySyntaxExamples = document.getElementsByClassName('syntax-example');
-	const searchQueryInput = document.getElementById('searchQuery');
+	const searchQueryInput = document.getElementById('searchInput');
 	Array.from(querySyntaxExamples).forEach((elm) => {
 		elm.addEventListener('click', function (e) {
 			var selStart = searchQueryInput.selectionStart;

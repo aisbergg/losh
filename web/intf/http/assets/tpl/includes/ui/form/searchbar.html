@@ -1,0 +1,44 @@
+{% assign formId = include.formId | default: 'searchForm' %}
+{% assign inputId = include.inputId | default: 'searchInput' %}
+{% assign clearButtonId = include.formId | default: 'clearSearch' %}
+{% assign placeholder = include.placeholder | default: '' %}
+{% assign path = include.path | default: req.path %}
+{% assign size = include.size | default: 'md' %}
+<form id="{{ formId }}" name="search">
+	<div class="input-group{% if size %} input-group-{{ size }}{% endif %} input-group-flat">
+		<input type="text" id="{{ inputId }}" name="q" class="form-control" autofocus placeholder="{{ placeholder }}" value="{{ req.queryParams.query | escape }}">
+		<span class="input-group-text bg-form">
+			<button id="{{ clearButtonId }}" type="button" class="btn-unstyled btn-{{ size }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Clear">
+				{% include ui/icon.html icon='x' class='icon-hover-bold' %}
+			</button>
+			<span class="border-end{% if size == 'lg' %} border-2{% endif %} h-100 ms-2"></span>
+			<button type="submit" class="btn-unstyled btn-{{ size }} ms-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Search">
+				{% include ui/icon.html icon='search' class='icon-hover-bold' %}
+			</button>
+		</span>
+	</div>
+</form>
+
+{%- capture_global scripts %}
+<script>
+	// @formatter:off
+	document.getElementById('searchForm').addEventListener('submit', function (e) {
+		e.preventDefault();
+		const form = document.forms.search;
+		const formData = new FormData(form);
+		const params = new URLSearchParams(window.location.search);
+		// unset page for new query
+		params.delete('page')
+		params.set('q', formData.get('q'));
+
+		// change target location
+		location = '{{ path }}?' + params.toString();
+	})
+
+	document.getElementById('clearSearch').addEventListener('click', function (e) {
+		document.forms.search['q'].value = '';
+		return false;
+	})
+	// @formatter:on
+</script>
+{%- endcapture_global %}

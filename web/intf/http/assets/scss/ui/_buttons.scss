@@ -5,6 +5,13 @@
   padding: 0;
   font: inherit;
   outline: inherit;
+
+  .icon {
+    width: var(--#{$prefix}btn-icon-size);
+    height: var(--#{$prefix}btn-icon-size);
+    min-width: var(--#{$prefix}btn-icon-size);
+    color: inherit;
+  }
 }
 
 .btn-circle {
