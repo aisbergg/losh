@@ -7,11 +7,40 @@ import (
 	"strings"
 	"unsafe"
 
+	"losh/web/intf/http/controllers/binding"
+
 	gourl "net/url"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/utils"
 )
+
+type Controller struct {
+	tplBndPrv binding.TemplateBindingProvider
+}
+
+func (c Controller) preprocessRequest(ctx *fiber.Ctx, queryParser paramParser, paramParser paramParser) (*RequestInfo, map[string]interface{}) {
+	// collect request information (mostly for template use)
+	reqInfo := parseRequestInfo(ctx, queryParser, paramParser)
+
+	// tell client that hints about color scheme are accepted
+	ctx.Set("Accept-CH", "Sec-CH-Prefers-Color-Scheme")
+	ctx.Set("Vary", "Sec-CH-Prefers-Color-Scheme")
+	ctx.Set("Critical-CH", "Sec-CH-Prefers-Color-Scheme")
+
+	preferredColorScheme := ctx.Get("Sec-CH-Prefers-Color-Scheme")
+
+	tplBnd := c.tplBndPrv.Get()
+	tplBnd["req"] = reqInfo
+	page := tplBnd["page"].(map[string]interface{})
+	if preferredColorScheme == "dark" {
+		page["body-class"] = "theme-dark"
+	} else {
+		page["body-class"] = "theme-light"
+	}
+
+	return reqInfo, tplBnd
+}
 
 type RequestInfo struct {
 	BaseURL  string            `json:"baseUrl" liquid:"baseUrl"`

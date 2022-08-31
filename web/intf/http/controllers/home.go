@@ -8,12 +8,12 @@ import (
 
 // HomeController is the controller for the homepage at '/'.
 type HomeController struct {
-	tplBndPrv binding.TemplateBindingProvider
+	Controller
 }
 
 // NewHomeController creates a new HomeController.
 func NewHomeController(tplBndPrv binding.TemplateBindingProvider) HomeController {
-	return HomeController{tplBndPrv}
+	return HomeController{Controller: Controller{tplBndPrv: tplBndPrv}}
 }
 
 func (c HomeController) Register(router fiber.Router) {
@@ -21,16 +21,6 @@ func (c HomeController) Register(router fiber.Router) {
 }
 
 func (c HomeController) Handle(ctx *fiber.Ctx) error {
-	// Bind data to template
-	bindings := c.tplBndPrv.Get()
-	// Render template
-
-	// out, err := yaml.Marshal(bindings)
-	// if err != nil {
-	// 	return ctx.SendString(err.Error())
-	// }
-	// return ctx.SendString(string(out))
-
-	// return ctx.SendString(fmt.Sprintf("%s", bindings))
-	return ctx.Render("index", bindings)
+	_, tplBnd := c.preprocessRequest(ctx, nil, nil)
+	return ctx.Render("home", tplBnd)
 }

@@ -8,32 +8,34 @@ import (
 
 // AboutController is the controller for the resource details page at '/details/:id'.
 type AboutController struct {
-	tplBndPrv binding.TemplateBindingProvider
+	Controller
 }
 
 // NewAboutController creates a new AboutController.
 func NewAboutController(tplBndPrv binding.TemplateBindingProvider) AboutController {
-	return AboutController{tplBndPrv}
+	return AboutController{Controller: Controller{tplBndPrv: tplBndPrv}}
 }
 
 // Register registers the controller with the given router.
 func (c AboutController) Register(router fiber.Router) {
-	router.Get("/details/:id", c.AboutProjectHandler)
-	router.Get("/details/:id", c.FAQHandler)
+	router.Get("/about/project", c.AboutProjectHandler)
+	router.Get("/about/faq", c.FAQHandler)
 }
 
 func (c AboutController) AboutProjectHandler(ctx *fiber.Ctx) error {
-	bindings := c.tplBndPrv.Get()
-	page := bindings["page"].(map[string]interface{})
+	_, tplBnd := c.preprocessRequest(ctx, nil, nil)
+	page := tplBnd["page"].(map[string]interface{})
 	page["title"] = "About the Project"
+	page["page-header"] = "About the Project"
 	page["menu"] = "about.project"
-	return ctx.Render("blank", bindings)
+	return ctx.Render("blank", tplBnd)
 }
 
 func (c AboutController) FAQHandler(ctx *fiber.Ctx) error {
-	bindings := c.tplBndPrv.Get()
-	page := bindings["page"].(map[string]interface{})
+	_, tplBnd := c.preprocessRequest(ctx, nil, nil)
+	page := tplBnd["page"].(map[string]interface{})
 	page["title"] = "FAQ"
+	page["page-header"] = "FAQ"
 	page["menu"] = "about.faq"
-	return ctx.Render("blank", bindings)
+	return ctx.Render("blank", tplBnd)
 }
