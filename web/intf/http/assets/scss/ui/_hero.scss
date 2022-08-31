@@ -1,6 +1,66 @@
 .hero {
   background: $primary url(/static/img/hero/pattern.svg) repeat 0 0;
-  min-height: 60vh;
-  -webkit-animation: 4s linear 0s normal none infinite animate;
-  animation: 4s linear 0s normal none infinite animate
+  height: 100vh;
+  -webkit-animation: 6s linear 0s normal none infinite animate-pattern;
+  animation: 6s linear 0s normal none infinite animate-pattern;
+
+  .navbar {
+    box-shadow: unset;
+    background-color: transparent;
+  }
+
+  .navbar-brand {
+    color: white;
+  }
+  .navbar-brand:hover, .navbar-brand:focus {
+    color: white;
+    opacity: 0.8;
+  }
+  .navbar-nav .nav-link {
+    color: white;
+  }
+  .navbar-nav .nav-link:hover, .navbar-nav .nav-link:focus {
+    color: white;
+  }
+  .navbar-nav .nav-link.disabled {
+    color: $navbar-dark-disabled-color;
+  }
+  .navbar-nav .show > .nav-link,
+  .navbar-nav .active > .nav-link,
+  .navbar-nav .nav-link.show,
+  .navbar-nav .nav-link.active {
+    color: white;
+  }
+  .navbar-toggler {
+    color: white;
+    border-color: transparent;
+  }
+  .navbar-text {
+    color: white;
+  }
+  .navbar-text a,
+  .navbar-text a:hover,
+  .navbar-text a:focus {
+    color: white;
+  }
+}
+
+@-webkit-keyframes animate-pattern {
+  from {
+      background-position: 0 0
+  }
+
+  to {
+      background-position: 0 -350px
+  }
+}
+
+@keyframes animate-pattern {
+  from {
+      background-position: 0 0
+  }
+
+  to {
+      background-position: 0 -350px
+  }
 }

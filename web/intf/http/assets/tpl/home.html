@@ -1,0 +1,62 @@
+---
+layout: layouts/base
+---
+<div class="page">
+	<div class="hero">
+		{% assign breakpoint = include.breakpoint | default: 'md' %}
+		<header class="navbar navbar-expand-{{ breakpoint }}{% if include.transparent %} navbar-transparent{% else %}{% if include.dark %} navbar-dark{% else %} navbar-light{% endif %}{% if include.background %} bg-{{ include.background }}{% endif %}{% endif %}{% if include.sticky %} sticky-top{% endif %}{% if include.overlap %} navbar-overlap{% endif %}{% if include.class %} {{ include.class }}{% endif %} d-print-none"{% if include.background-color %} style="background: {{ include.background-color }}"{% endif %}>
+			<div class="container-xl">
+				{% include layout/navbar-toggler.html target="navbar-menu" %}
+
+				{% include layout/navbar-logo.html dark=include.dark small-logo=include.small-logo hide-logo=include.hide-logo class="d-none-navbar-horizontal pe-0 pe-md-3" breakpoint=breakpoint show-title=include.show-title header=true %}
+
+				<div class="collapse navbar-collapse" id="navbar-menu">
+					<div class="d-flex flex-column flex-md-row flex-fill align-items-stretch align-items-md-center">
+						{% include layout/navbar-menu.html hide-icons=include.hide-icons %}
+					</div>
+				</div>
+			</div>
+		</header>
+
+		<div>
+			<div class="px-4 py-5 my-5 text-center">
+				<img src="{{ site.base }}/static/img/logo{% if include.dark %}-white{% endif %}.png" alt="{{ site.title }}" class="col-12 w-auto" style="max-height: 14rem;">
+				<div class="col-lg-6 mx-auto mt-4 text-white">
+					<p class="lead mb-4">The Library of Open Source Hardware is ...</p>
+					{% include ui/form/searchbar.html size="lg" placeholder='Search Product…' path='/search' %}
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div>
+
+	<!-- Short About and FAQ -->
+	<!-- What Platforms can be searched -->
+
+	</div>
+
+	<div class="page-wrapper{% if page.layout-wrapper-full %} page-wrapper-full{% endif %}">
+		<div class="container-xl">
+			{% include layout/page-header.html %}
+		</div>
+
+		<div class="page-body">
+			{% if page.layout-wrapper-full %}
+			{{ content }}
+			{% else %}
+			{% unless no-container %}
+			<div class="container-xl d-flex flex-column justify-content-center">
+			{% endunless %}
+				{{ content }}
+			{% unless no-container %}
+			</div>
+			{% endunless %}
+
+			{% endif %}
+		</div>
+
+		{% include layout/footer.html %}
+	</div>
+
+</div>
