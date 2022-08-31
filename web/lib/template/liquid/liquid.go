@@ -13,7 +13,6 @@ import (
 	losherrors "losh/internal/lib/errors"
 	"losh/internal/lib/util/reflectutil"
 
-	"github.com/aisbergg/go-copier/pkg/copier"
 	"github.com/aisbergg/go-frontmatter/pkg/frontmatter"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/utils"
@@ -48,13 +47,10 @@ type Engine struct {
 	Templates map[string]*template
 	// determines whether the frontmatterEnabled parsing shall be used
 	frontmatterEnabled bool
-
-	copier *copier.Copier
 }
 
 // New creates a Liquid template render engine for Fiber.
 func New(directory, extension string) *Engine {
-	// copier := copier.New(copier.Options{IgnoreErrors: true, })
 	engine := &Engine{
 		directory: directory,
 		extension: extension,

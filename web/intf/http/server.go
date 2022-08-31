@@ -162,7 +162,7 @@ func (s *Server) registerRoutes() error {
 	web := s.Group("")
 	controllers.NewHomeController(tplBndPrv).Register(web)
 	controllers.NewSearchController(s.db, tplBndPrv, s.config.Debug.Enabled).Register(web)
-	controllers.NewDetailsController(s.prdSvc, tplBndPrv).Register(web)
+	controllers.NewDetailsController(s.db, s.prdSvc, tplBndPrv, s.config.Debug.Enabled).Register(web)
 	controllers.NewAboutController(tplBndPrv).Register(web)
 	controllers.NewRDFController(s.prdSvc, tplBndPrv).Register(web)
 
