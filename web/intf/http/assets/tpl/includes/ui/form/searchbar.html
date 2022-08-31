@@ -7,7 +7,7 @@
 <form id="{{ formId }}" name="search">
 	<div class="input-group{% if size %} input-group-{{ size }}{% endif %} input-group-flat">
 		<input type="text" id="{{ inputId }}" name="q" class="form-control" autofocus placeholder="{{ placeholder }}" value="{{ req.queryParams.query | escape }}">
-		<span class="input-group-text bg-form">
+		<span class="input-group-text bg-standard">
 			<button id="{{ clearButtonId }}" type="button" class="btn-unstyled btn-{{ size }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Clear">
 				{% include ui/icon.html icon='x' class='icon-hover-bold' %}
 			</button>

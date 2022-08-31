@@ -18,12 +18,22 @@
   border-width: 5px !important;
 }
 
-.bg-form {
+.text-standard {
+  color: $dark-mode-darken !important;
+}
+
+.theme-dark {
+  .text-standard {
+    color: white !important;
+  }
+}
+
+.bg-standard {
   background-color: white !important;
 }
 
 .theme-dark {
-  .bg-form {
+  .bg-standard {
     background-color: $dark-mode-darken !important;
   }
 }

@@ -26,6 +26,8 @@ body:not(.theme-dark) .hide-theme-light {
 
     --#{$prefix}btn-color: #{$dark};
 
+    --#{$prefix}code-color: #{$code-color-dark};
+
     color: $dark-mode-text;
     background-color: $dark-mode-darken;
   }
