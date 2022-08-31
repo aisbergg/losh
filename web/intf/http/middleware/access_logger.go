@@ -3,6 +3,7 @@ package middleware
 import (
 	"strconv"
 	"strings"
+	"sync"
 
 	"losh/internal/lib/log"
 	"losh/web/core/config"
@@ -37,6 +38,40 @@ func AccessLogger(accessLogConfig config.AccessLogConfig) (fiber.Handler, error)
 		return accessLoggerManager.Close()
 	}))
 
+	// console logger
+	if accessLogConfig.Format == "console" {
+		pool := sync.Pool{
+			New: func() interface{} { return &strings.Builder{} },
+		}
+		return func(ctx *fiber.Ctx) error {
+			// Handle the request to calculate the number of bytes sent
+			err := ctx.Next()
+
+			// Chained error
+			if err != nil {
+				if chainErr := ctx.App().Config().ErrorHandler(ctx, err); chainErr != nil {
+					_ = ctx.SendStatus(fiber.StatusInternalServerError)
+				}
+			}
+
+			// Send structured information message to the logger
+			msgBuilder := pool.Get().(*strings.Builder)
+			msgBuilder.Reset()
+			msgBuilder.WriteString(ctx.IP())
+			msgBuilder.WriteString(" - ")
+			msgBuilder.WriteString(ctx.Method())
+			msgBuilder.WriteString(" ")
+			msgBuilder.WriteString(ctx.OriginalURL())
+			msgBuilder.WriteString(" - ")
+			msgBuilder.WriteString(strconv.Itoa(ctx.Response().StatusCode()))
+			logger.Info(msgBuilder.String())
+			pool.Put(msgBuilder)
+
+			return err
+		}, nil
+	}
+
+	// json logger
 	return func(ctx *fiber.Ctx) error {
 		// Handle the request to calculate the number of bytes sent
 		err := ctx.Next()
@@ -49,32 +84,15 @@ func AccessLogger(accessLogConfig config.AccessLogConfig) (fiber.Handler, error)
 		}
 
 		// Send structured information message to the logger
-		msgBuilder := strings.Builder{}
-		msgBuilder.Grow(256) // TODO: optimize value?
-		msgBuilder.WriteString(ctx.IP())
-		msgBuilder.WriteString(" - ")
-		msgBuilder.WriteString(ctx.Method())
-		msgBuilder.WriteString(" ")
-		msgBuilder.WriteString(ctx.OriginalURL())
-		msgBuilder.WriteString(" - ")
-		msgBuilder.WriteString(strconv.Itoa(ctx.Response().StatusCode()))
-		msgBuilder.WriteString(" - ")
-		msgBuilder.WriteString(strconv.Itoa(len(ctx.Response().Body())))
-		logger.Info(msgBuilder.String(),
-
-			zap.String("ip", ctx.IP()),
-			zap.String("hostname", ctx.Hostname()),
-			zap.String("method", ctx.Method()),
-			zap.String("path", ctx.OriginalURL()),
-			zap.String("protocol", ctx.Protocol()),
-			zap.Int("status", ctx.Response().StatusCode()),
-
-			zap.String("x-forwarded-for", ctx.Get(fiber.HeaderXForwardedFor)),
-			zap.String("user-agent", ctx.Get(fiber.HeaderUserAgent)),
-			zap.String("referer", ctx.Get(fiber.HeaderReferer)),
-
-			zap.Int("bytes_received", len(ctx.Request().Body())),
-			zap.Int("bytes_sent", len(ctx.Response().Body())),
+		logger.Infow("",
+			zap.String("remote_addr", ctx.IP()),
+			zap.String("request_uri", ctx.OriginalURL()),
+			zap.String("request_protocol", ctx.Protocol()),
+			zap.Int("http_status", ctx.Response().StatusCode()),
+			zap.String("http_host", ctx.Hostname()),
+			zap.String("http_method", ctx.Method()),
+			zap.String("http_user_agent", ctx.Get(fiber.HeaderUserAgent)),
+			zap.String("http_referer", ctx.Get(fiber.HeaderReferer)),
 		)
 
 		return err
