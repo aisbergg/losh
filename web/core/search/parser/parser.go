@@ -1,7 +1,6 @@
 package parser
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/aisbergg/go-errors/pkg/errors"
@@ -88,13 +87,6 @@ type Operator struct {
 	Value      *Text       `| @@ )?`
 }
 
-// TODO: remove later
-// type Value struct {
-// 	Number *float64 `  @Number`
-// 	Bool   *Boolean `| @("true" | "false")`
-// 	Text   *Text    `| @@`
-// }
-
 var queryLexer = lexer.MustSimple([]lexer.SimpleRule{
 	{"Number", `[-+]?\d+(_\d+)*(\.\d+(_\d+)*)?`},
 	{"Keyword", `AND|&|OR|\||NOT|-`},
@@ -110,7 +102,7 @@ var queryLexer = lexer.MustSimple([]lexer.SimpleRule{
 
 var parser = participle.MustBuild[Query](
 	participle.Lexer(queryLexer),
-	participle.UseLookahead(2),
+	participle.UseLookahead(50),
 	participle.Unquote("QuotedString", "BacktickQuotedString"),
 )
 
@@ -119,7 +111,6 @@ func Parse(query string) (*Query, error) {
 	parsed, err := parser.ParseString("", query, participle.AllowTrailing(true))
 	parsed = cleanQuery(parsed)
 	if err != nil {
-		fmt.Println("error parsing query:", err)
 		return parsed, errors.CEWrap(err, "failed to parse query").Add("query", query)
 	}
 	return parsed, nil
