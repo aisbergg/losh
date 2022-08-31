@@ -25,6 +25,7 @@ type Product struct {
 	Licensor              UserOrGroup            `mandatory:"true" json:"licensor,omitempty" graphql:"licensor" dql:"Product.licensor"`
 	Website               *string                `json:"website,omitempty" graphql:"website" dql:"Product.website"`
 	State                 *dgclient.ProductState `mandatory:"true" json:"state,omitempty" graphql:"state" dql:"Product.state"`
+	LastUpdatedAt         *time.Time             `json:"lastUpdatedAt,omitempty" graphql:"lastUpdatedAt" dql:"CrawlerMeta.lastUpdatedAt"`
 	Release               *Component             `mandatory:"true" json:"release,omitempty" graphql:"release" dql:"Product.release"`
 	Releases              []*Component           `mandatory:"true" json:"releases,omitempty" graphql:"releases" dql:"Product.releases"`
 	RenamedTo             *Product               `json:"renamedTo,omitempty" graphql:"renamedTo" dql:"Product.renamedTo"`

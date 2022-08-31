@@ -176,6 +176,7 @@ q(func: uid(%s), first: $first, offset: $offset, %s) {
 	Product.name
 	Product.website
 	Product.state
+	Product.lastUpdatedAt
 	Product.renamedTo {uid}
 	Product.renamedFrom {uid}
 	Product.forkOf {
@@ -939,6 +940,12 @@ var operators = map[string]operator{
 		Predicate:      "Product.forkCount",
 		SelectionStart: "uid",
 	},
+	"lastupdatedat": {
+		Type:           dateTimeOperator,
+		IsRootFilter:   true,
+		Predicate:      "Product.lastUpdatedAt",
+		SelectionStart: "uid",
+	},
 
 	// state
 	"isactive": {
@@ -1053,13 +1060,13 @@ var operators = map[string]operator{
 		SelectionEnd:   `{uid}`,
 	},
 	"license": {
-		Type:           textExactOperator,
+		Type:           textTermExactOperator,
 		Predicate:      "License.xid",
 		SelectionStart: `Product.release {Component.license`,
 		SelectionEnd:   `{uid}}`,
 	},
 	"licenseid": {
-		Type:           textExactOperator,
+		Type:           textTermExactOperator,
 		Predicate:      "License.xid",
 		SelectionStart: `Product.release {Component.license`,
 		SelectionEnd:   `{uid}}`,

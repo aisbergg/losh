@@ -302,13 +302,15 @@ type AddProductInput struct {
 	// The product website URL, if any.
 	Website *string `json:"website,omitempty"`
 	// Indicates if the product is still actively developed or not.
-	State       ProductState    `json:"state"`
-	Release     ComponentRef    `json:"release"`
-	Releases    []*ComponentRef `json:"releases"`
-	RenamedTo   *ProductRef     `json:"renamedTo,omitempty"`
-	RenamedFrom *ProductRef     `json:"renamedFrom,omitempty"`
-	ForkOf      *ProductRef     `json:"forkOf,omitempty"`
-	Forks       []*ProductRef   `json:"forks,omitempty"`
+	State ProductState `json:"state"`
+	// The date and time the product was last upated. This doesn't necessarily mean that a new release was created.
+	LastUpdatedAt *time.Time      `json:"lastUpdatedAt,omitempty"`
+	Release       ComponentRef    `json:"release"`
+	Releases      []*ComponentRef `json:"releases"`
+	RenamedTo     *ProductRef     `json:"renamedTo,omitempty"`
+	RenamedFrom   *ProductRef     `json:"renamedFrom,omitempty"`
+	ForkOf        *ProductRef     `json:"forkOf,omitempty"`
+	Forks         []*ProductRef   `json:"forks,omitempty"`
 	// The number of forks of the product. It might be higher than the number of indexed forks, because not all forks might satisfy the conditions for being indexed.
 	ForkCount *int64 `json:"forkCount,omitempty"`
 	// The number of people starring the product.
@@ -453,8 +455,8 @@ type BoundingBoxDimensions struct {
 	Depth  float64 `json:"depth"`
 }
 
-func (BoundingBoxDimensions) IsNode()            {}
 func (BoundingBoxDimensions) IsOuterDimensions() {}
+func (BoundingBoxDimensions) IsNode()            {}
 
 type BoundingBoxDimensionsAggregateResult struct {
 	Count     *int64   `json:"count"`
@@ -898,9 +900,9 @@ type CrawlerMetaOrder struct {
 }
 
 type CrawlerMetaPatch struct {
-	// The date and time the object was discovered.
+	// The date and time the object was discovered by the crawler.
 	DiscoveredAt *time.Time `json:"discoveredAt,omitempty"`
-	// The date and time the object was last updated.
+	// The date and time the object was last visited and indexed by the crawler.
 	LastIndexedAt *time.Time     `json:"lastIndexedAt,omitempty"`
 	DataSource    *RepositoryRef `json:"dataSource,omitempty"`
 }
@@ -1753,8 +1755,8 @@ type OpenSCADDimensions struct {
 	Unit     string `json:"unit"`
 }
 
-func (OpenSCADDimensions) IsNode()            {}
 func (OpenSCADDimensions) IsOuterDimensions() {}
+func (OpenSCADDimensions) IsNode()            {}
 
 type OpenSCADDimensionsAggregateResult struct {
 	Count       *int64  `json:"count"`
@@ -1865,6 +1867,8 @@ type Product struct {
 	Website *string `json:"website"`
 	// Indicates if the product is still actively developed or not.
 	State ProductState `json:"state"`
+	// The date and time the product was last upated. This doesn't necessarily mean that a new release was created.
+	LastUpdatedAt *time.Time `json:"lastUpdatedAt"`
 	// The latest release of the product.
 	Release Component `json:"release"`
 	// A list of all releases of the product.
@@ -1911,6 +1915,8 @@ type ProductAggregateResult struct {
 	VersionMax               *string    `json:"versionMax"`
 	WebsiteMin               *string    `json:"websiteMin"`
 	WebsiteMax               *string    `json:"websiteMax"`
+	LastUpdatedAtMin         *time.Time `json:"lastUpdatedAtMin"`
+	LastUpdatedAtMax         *time.Time `json:"lastUpdatedAtMax"`
 	ForkCountMin             *int64     `json:"forkCountMin"`
 	ForkCountMax             *int64     `json:"forkCountMax"`
 	ForkCountSum             *int64     `json:"forkCountSum"`
@@ -1932,6 +1938,7 @@ type ProductFilter struct {
 	Version               *StringTermFilter                                       `json:"version,omitempty"`
 	Website               *StringFullTextFilterStringHashFilterStringRegExpFilter `json:"website,omitempty"`
 	State                 *ProductStateHash                                       `json:"state,omitempty"`
+	LastUpdatedAt         *DateTimeFilter                                         `json:"lastUpdatedAt,omitempty"`
 	ForkCount             *IntFilter                                              `json:"forkCount,omitempty"`
 	StarCount             *IntFilter                                              `json:"starCount,omitempty"`
 	Has                   []*ProductHasFilter                                     `json:"has,omitempty"`
@@ -1968,13 +1975,15 @@ type ProductPatch struct {
 	// The product website URL, if any.
 	Website *string `json:"website,omitempty"`
 	// Indicates if the product is still actively developed or not.
-	State       *ProductState   `json:"state,omitempty"`
-	Release     *ComponentRef   `json:"release,omitempty"`
-	Releases    []*ComponentRef `json:"releases,omitempty"`
-	RenamedTo   *ProductRef     `json:"renamedTo,omitempty"`
-	RenamedFrom *ProductRef     `json:"renamedFrom,omitempty"`
-	ForkOf      *ProductRef     `json:"forkOf,omitempty"`
-	Forks       []*ProductRef   `json:"forks,omitempty"`
+	State *ProductState `json:"state,omitempty"`
+	// The date and time the product was last upated. This doesn't necessarily mean that a new release was created.
+	LastUpdatedAt *time.Time      `json:"lastUpdatedAt,omitempty"`
+	Release       *ComponentRef   `json:"release,omitempty"`
+	Releases      []*ComponentRef `json:"releases,omitempty"`
+	RenamedTo     *ProductRef     `json:"renamedTo,omitempty"`
+	RenamedFrom   *ProductRef     `json:"renamedFrom,omitempty"`
+	ForkOf        *ProductRef     `json:"forkOf,omitempty"`
+	Forks         []*ProductRef   `json:"forks,omitempty"`
 	// The number of forks of the product. It might be higher than the number of indexed forks, because not all forks might satisfy the conditions for being indexed.
 	ForkCount *int64 `json:"forkCount,omitempty"`
 	// The number of people starring the product.
@@ -2006,13 +2015,15 @@ type ProductRef struct {
 	// The product website URL, if any.
 	Website *string `json:"website,omitempty"`
 	// Indicates if the product is still actively developed or not.
-	State       *ProductState   `json:"state,omitempty"`
-	Release     *ComponentRef   `json:"release,omitempty"`
-	Releases    []*ComponentRef `json:"releases,omitempty"`
-	RenamedTo   *ProductRef     `json:"renamedTo,omitempty"`
-	RenamedFrom *ProductRef     `json:"renamedFrom,omitempty"`
-	ForkOf      *ProductRef     `json:"forkOf,omitempty"`
-	Forks       []*ProductRef   `json:"forks,omitempty"`
+	State *ProductState `json:"state,omitempty"`
+	// The date and time the product was last upated. This doesn't necessarily mean that a new release was created.
+	LastUpdatedAt *time.Time      `json:"lastUpdatedAt,omitempty"`
+	Release       *ComponentRef   `json:"release,omitempty"`
+	Releases      []*ComponentRef `json:"releases,omitempty"`
+	RenamedTo     *ProductRef     `json:"renamedTo,omitempty"`
+	RenamedFrom   *ProductRef     `json:"renamedFrom,omitempty"`
+	ForkOf        *ProductRef     `json:"forkOf,omitempty"`
+	Forks         []*ProductRef   `json:"forks,omitempty"`
 	// The number of forks of the product. It might be higher than the number of indexed forks, because not all forks might satisfy the conditions for being indexed.
 	ForkCount *int64 `json:"forkCount,omitempty"`
 	// The number of people starring the product.
@@ -4551,6 +4562,7 @@ const (
 	ProductHasFilterLicensor              ProductHasFilter = "licensor"
 	ProductHasFilterWebsite               ProductHasFilter = "website"
 	ProductHasFilterState                 ProductHasFilter = "state"
+	ProductHasFilterLastUpdatedAt         ProductHasFilter = "lastUpdatedAt"
 	ProductHasFilterRelease               ProductHasFilter = "release"
 	ProductHasFilterReleases              ProductHasFilter = "releases"
 	ProductHasFilterRenamedTo             ProductHasFilter = "renamedTo"
@@ -4576,6 +4588,7 @@ var AllProductHasFilter = []ProductHasFilter{
 	ProductHasFilterLicensor,
 	ProductHasFilterWebsite,
 	ProductHasFilterState,
+	ProductHasFilterLastUpdatedAt,
 	ProductHasFilterRelease,
 	ProductHasFilterReleases,
 	ProductHasFilterRenamedTo,
@@ -4590,7 +4603,7 @@ var AllProductHasFilter = []ProductHasFilter{
 
 func (e ProductHasFilter) IsValid() bool {
 	switch e {
-	case ProductHasFilterDiscoveredAt, ProductHasFilterLastIndexedAt, ProductHasFilterDataSource, ProductHasFilterXid, ProductHasFilterName, ProductHasFilterDescription, ProductHasFilterDocumentationLanguage, ProductHasFilterVersion, ProductHasFilterLicense, ProductHasFilterLicensor, ProductHasFilterWebsite, ProductHasFilterState, ProductHasFilterRelease, ProductHasFilterReleases, ProductHasFilterRenamedTo, ProductHasFilterRenamedFrom, ProductHasFilterForkOf, ProductHasFilterForks, ProductHasFilterForkCount, ProductHasFilterStarCount, ProductHasFilterTags, ProductHasFilterCategory:
+	case ProductHasFilterDiscoveredAt, ProductHasFilterLastIndexedAt, ProductHasFilterDataSource, ProductHasFilterXid, ProductHasFilterName, ProductHasFilterDescription, ProductHasFilterDocumentationLanguage, ProductHasFilterVersion, ProductHasFilterLicense, ProductHasFilterLicensor, ProductHasFilterWebsite, ProductHasFilterState, ProductHasFilterLastUpdatedAt, ProductHasFilterRelease, ProductHasFilterReleases, ProductHasFilterRenamedTo, ProductHasFilterRenamedFrom, ProductHasFilterForkOf, ProductHasFilterForks, ProductHasFilterForkCount, ProductHasFilterStarCount, ProductHasFilterTags, ProductHasFilterCategory:
 		return true
 	}
 	return false
@@ -4628,6 +4641,7 @@ const (
 	ProductOrderableDocumentationLanguage ProductOrderable = "documentationLanguage"
 	ProductOrderableVersion               ProductOrderable = "version"
 	ProductOrderableWebsite               ProductOrderable = "website"
+	ProductOrderableLastUpdatedAt         ProductOrderable = "lastUpdatedAt"
 	ProductOrderableForkCount             ProductOrderable = "forkCount"
 	ProductOrderableStarCount             ProductOrderable = "starCount"
 )
@@ -4641,13 +4655,14 @@ var AllProductOrderable = []ProductOrderable{
 	ProductOrderableDocumentationLanguage,
 	ProductOrderableVersion,
 	ProductOrderableWebsite,
+	ProductOrderableLastUpdatedAt,
 	ProductOrderableForkCount,
 	ProductOrderableStarCount,
 }
 
 func (e ProductOrderable) IsValid() bool {
 	switch e {
-	case ProductOrderableDiscoveredAt, ProductOrderableLastIndexedAt, ProductOrderableXid, ProductOrderableName, ProductOrderableDescription, ProductOrderableDocumentationLanguage, ProductOrderableVersion, ProductOrderableWebsite, ProductOrderableForkCount, ProductOrderableStarCount:
+	case ProductOrderableDiscoveredAt, ProductOrderableLastIndexedAt, ProductOrderableXid, ProductOrderableName, ProductOrderableDescription, ProductOrderableDocumentationLanguage, ProductOrderableVersion, ProductOrderableWebsite, ProductOrderableLastUpdatedAt, ProductOrderableForkCount, ProductOrderableStarCount:
 		return true
 	}
 	return false

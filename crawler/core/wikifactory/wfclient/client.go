@@ -175,6 +175,7 @@ type Mutation struct {
 	CreateManufacturer                  Manufacturer                           "json:\"createManufacturer\" graphql:\"createManufacturer\""
 	CreateManufacturerProfile           Manufacturer                           "json:\"createManufacturerProfile\" graphql:\"createManufacturerProfile\""
 	UpdateManufacturer                  Manufacturer                           "json:\"updateManufacturer\" graphql:\"updateManufacturer\""
+	UpdateService                       Service                                "json:\"updateService\" graphql:\"updateService\""
 	CreateServiceInstances              []*ServiceInstance                     "json:\"createServiceInstances\" graphql:\"createServiceInstances\""
 	UpdateServiceInstance               ServiceInstance                        "json:\"updateServiceInstance\" graphql:\"updateServiceInstance\""
 	CreateOptionInstances               []*OptionInstance                      "json:\"createOptionInstances\" graphql:\"createOptionInstances\""
@@ -192,6 +193,7 @@ type Mutation struct {
 	UpdateOption                        Option                                 "json:\"updateOption\" graphql:\"updateOption\""
 	DeleteOption                        Option                                 "json:\"deleteOption\" graphql:\"deleteOption\""
 	CreateFileRequirement               FileRequirement                        "json:\"createFileRequirement\" graphql:\"createFileRequirement\""
+	DeleteFileRequirement               FileRequirement                        "json:\"deleteFileRequirement\" graphql:\"deleteFileRequirement\""
 	CreateTooltipTag                    TooltipTag                             "json:\"createTooltipTag\" graphql:\"createTooltipTag\""
 	UpdateTooltipTag                    TooltipTag                             "json:\"updateTooltipTag\" graphql:\"updateTooltipTag\""
 	CreateMessage                       Message                                "json:\"createMessage\" graphql:\"createMessage\""
@@ -235,7 +237,6 @@ type ProjectFullFragment struct {
 	ID             string                             "json:\"id\" graphql:\"id\""
 	Name           *string                            "json:\"name\" graphql:\"name\""
 	Description    *string                            "json:\"description\" graphql:\"description\""
-	DateCreated    *time.Time                         "json:\"dateCreated\" graphql:\"dateCreated\""
 	LastUpdated    *time.Time                         "json:\"lastUpdated\" graphql:\"lastUpdated\""
 	FollowersCount *int64                             "json:\"followersCount\" graphql:\"followersCount\""
 	StarCount      *int64                             "json:\"starCount\" graphql:\"starCount\""
@@ -627,22 +628,10 @@ const GetProjectFullByIDDocument = `query GetProjectFullByID ($id: ID!) {
 		}
 	}
 }
-fragment ContributionFragment on Contribution {
-	title
-	dateCreated
-	version
-	files {
-		dirname
-		file {
-			... FileFragment
-		}
-	}
-}
 fragment ProjectFullFragment on Project {
 	id
 	name
 	description
-	dateCreated
 	lastUpdated
 	followersCount
 	starCount
@@ -704,6 +693,17 @@ fragment FileFragment on File {
 	lastUpdated
 	license
 }
+fragment ContributionFragment on Contribution {
+	title
+	dateCreated
+	version
+	files {
+		dirname
+		file {
+			... FileFragment
+		}
+	}
+}
 `
 
 func (c *Client) GetProjectFullByID(ctx context.Context, id string) (*GetProjectFullByID, error) {
@@ -752,7 +752,6 @@ fragment ProjectFullFragment on Project {
 	id
 	name
 	description
-	dateCreated
 	lastUpdated
 	followersCount
 	starCount

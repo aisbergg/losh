@@ -3282,11 +3282,6 @@ const GetComponentByIDDocument = `query GetComponentByID ($id: ID!) {
 		... ComponentFragment
 	}
 }
-fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
-	id
-	openscad
-	unit
-}
 fragment KeyValueFragment on KeyValue {
 	id
 	key
@@ -3433,6 +3428,11 @@ fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
 	height
 	width
 	depth
+}
+fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
+	id
+	openscad
+	unit
 }
 `
 
@@ -3476,6 +3476,20 @@ const GetComponentByXidDocument = `query GetComponentByXid ($xid: String!) {
 		... ComponentFragment
 	}
 }
+fragment KeyValueFragment on KeyValue {
+	id
+	key
+	value {
+		... on StringV {
+			id
+			stringValue: value
+		}
+		... on FloatV {
+			id
+			floatValue: value
+		}
+	}
+}
 fragment ComponentFragment on Component {
 	id
 	xid
@@ -3613,20 +3627,6 @@ fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
 	id
 	openscad
 	unit
-}
-fragment KeyValueFragment on KeyValue {
-	id
-	key
-	value {
-		... on StringV {
-			id
-			stringValue: value
-		}
-		... on FloatV {
-			id
-			floatValue: value
-		}
-	}
 }
 `
 
@@ -7250,6 +7250,12 @@ const GetProductByIDDocument = `query GetProductByID ($id: ID!) {
 		... ProductFragment
 	}
 }
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
+}
 fragment ProductFragment on Product {
 	... CrawlerMetaFragment
 	id
@@ -7305,12 +7311,6 @@ fragment ProductFragment on Product {
 fragment CrawlerMetaFragment on CrawlerMeta {
 	discoveredAt
 	lastIndexedAt
-}
-fragment UserOrGroupBasicFragment on UserOrGroup {
-	__typename
-	name
-	fullName
-	id
 }
 `
 
@@ -7354,16 +7354,6 @@ const GetProductByXidDocument = `query GetProductByXid ($xid: String!) {
 		... ProductFragment
 	}
 }
-fragment CrawlerMetaFragment on CrawlerMeta {
-	discoveredAt
-	lastIndexedAt
-}
-fragment UserOrGroupBasicFragment on UserOrGroup {
-	__typename
-	name
-	fullName
-	id
-}
 fragment ProductFragment on Product {
 	... CrawlerMetaFragment
 	id
@@ -7415,6 +7405,16 @@ fragment ProductFragment on Product {
 		id
 		fullName
 	}
+}
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
+}
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
 }
 `
 
@@ -7503,6 +7503,16 @@ const GetProductsDocument = `query GetProducts ($getFilter: ProductFilter, $orde
 		count
 	}
 }
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
+}
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
+}
 fragment ProductFragment on Product {
 	... CrawlerMetaFragment
 	id
@@ -7555,16 +7565,6 @@ fragment ProductFragment on Product {
 		fullName
 	}
 }
-fragment CrawlerMetaFragment on CrawlerMeta {
-	discoveredAt
-	lastIndexedAt
-}
-fragment UserOrGroupBasicFragment on UserOrGroup {
-	__typename
-	name
-	fullName
-	id
-}
 `
 
 func (c *Client) GetProducts(ctx context.Context, getFilter *ProductFilter, order *ProductOrder, first *int64, offset *int64) (*GetProducts, error) {
@@ -7615,78 +7615,6 @@ const SearchProductsDocument = `query SearchProducts ($getFilter: ProductFilter,
 	aggregateProduct(filter: $getFilter) {
 		count
 	}
-}
-fragment LicenseFragmentBasic on License {
-	id
-	xid
-	name
-	isSpdx
-	isDeprecated
-	isOsiApproved
-	isFsfLibre
-	isBlocked
-}
-fragment UserFragment on User {
-	... UserOrGroupFragment
-	locale
-}
-fragment FileFragment on File {
-	... CrawlerMetaFragment
-	id
-	name
-	path
-	mimeType
-	url
-	createdAt
-}
-fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
-	id
-	height
-	width
-	depth
-}
-fragment TagFragment on Tag {
-	id
-	xid
-	name
-	aliases {
-		id
-		name
-	}
-	related {
-		id
-		name
-	}
-}
-fragment CategoryFragment on Category {
-	id
-	xid
-	fullName
-	name
-	description
-	parent {
-		id
-		fullName
-	}
-	children {
-		id
-		fullName
-	}
-	products {
-		id
-		name
-	}
-}
-fragment UserOrGroupBasicFragment on UserOrGroup {
-	__typename
-	name
-	fullName
-	id
-}
-fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
-	id
-	openscad
-	unit
 }
 fragment ProductSearchFragment on Product {
 	... CrawlerMetaFragment
@@ -7815,42 +7743,6 @@ fragment ProductSearchFragment on Product {
 		}
 	}
 }
-fragment RepositoryFragment on Repository {
-	id
-	xid
-	url
-	permaUrl
-	host {
-		id
-		name
-	}
-	owner {
-		... UserOrGroupBasicFragment
-	}
-	name
-	reference
-	path
-}
-fragment GroupFragment on Group {
-	... UserOrGroupFragment
-	members {
-		__typename
-		id
-	}
-}
-fragment CrawlerMetaFragment on CrawlerMeta {
-	discoveredAt
-	lastIndexedAt
-}
-fragment UserOrGroupFullFragment on UserOrGroup {
-	__typename
-	... on User {
-		... UserFragment
-	}
-	... on Group {
-		... GroupFragment
-	}
-}
 fragment UserOrGroupFragment on UserOrGroup {
 	__typename
 	id
@@ -7875,6 +7767,114 @@ fragment UserOrGroupFragment on UserOrGroup {
 		id
 		name
 	}
+}
+fragment FileFragment on File {
+	... CrawlerMetaFragment
+	id
+	name
+	path
+	mimeType
+	url
+	createdAt
+}
+fragment GroupFragment on Group {
+	... UserOrGroupFragment
+	members {
+		__typename
+		id
+	}
+}
+fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
+	id
+	height
+	width
+	depth
+}
+fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
+	id
+	openscad
+	unit
+}
+fragment TagFragment on Tag {
+	id
+	xid
+	name
+	aliases {
+		id
+		name
+	}
+	related {
+		id
+		name
+	}
+}
+fragment RepositoryFragment on Repository {
+	id
+	xid
+	url
+	permaUrl
+	host {
+		id
+		name
+	}
+	owner {
+		... UserOrGroupBasicFragment
+	}
+	name
+	reference
+	path
+}
+fragment LicenseFragmentBasic on License {
+	id
+	xid
+	name
+	isSpdx
+	isDeprecated
+	isOsiApproved
+	isFsfLibre
+	isBlocked
+}
+fragment UserOrGroupFullFragment on UserOrGroup {
+	__typename
+	... on User {
+		... UserFragment
+	}
+	... on Group {
+		... GroupFragment
+	}
+}
+fragment UserFragment on User {
+	... UserOrGroupFragment
+	locale
+}
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
+}
+fragment CategoryFragment on Category {
+	id
+	xid
+	fullName
+	name
+	description
+	parent {
+		id
+		fullName
+	}
+	children {
+		id
+		fullName
+	}
+	products {
+		id
+		name
+	}
+}
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
 }
 fragment OuterDimensionsFragment on OuterDimensions {
 	__typename

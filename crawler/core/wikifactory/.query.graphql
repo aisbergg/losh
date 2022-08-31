@@ -52,7 +52,6 @@ fragment ProjectFullFragment on Project {
 	id
 	name
 	description
-	dateCreated
 	lastUpdated
 	followersCount
 	starCount

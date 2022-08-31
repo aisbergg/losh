@@ -100,6 +100,11 @@ type Product implements Node & CrawlerMeta {
 	state: ProductState! @search
 
   """
+  The date and time the product was last upated. This doesn't necessarily mean that a new release was created.
+  """
+  lastUpdatedAt: DateTime @search
+
+  """
   The latest release of the product.
   """
   release: Component!

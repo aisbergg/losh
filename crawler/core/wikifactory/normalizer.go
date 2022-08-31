@@ -95,6 +95,7 @@ func (c *WikifactoryCrawler) NormalizeProduct(ctx context.Context, timestamp tim
 	product.Licensor = licensor
 	product.Website = product.DataSource.URL
 	product.State = c.normState(wfPrjInfo)
+	product.LastUpdatedAt = wfPrjInfo.LastUpdated
 	product.Release = latestRelease
 	product.Releases = releases
 	for _, release := range releases {
@@ -148,12 +149,11 @@ func (c *WikifactoryCrawler) normReleases(prjInfo *wfclient.ProjectFullFragment,
 		release.DataSource = crawlerMeta.DataSource
 
 		// Xid format: domain.tld/owner/repo/ref/file-path/component-name
-		// release.Xid = *release.DataSource.Xid + "/" + asXid(*prjInfo.Name)
 		release.Xid = asXid(*release.DataSource.Host.Domain, *release.DataSource.Owner.GetName(), *release.DataSource.Name, *release.DataSource.Reference, "", *prjInfo.Name)
 		release.Name = sp(prjInfo.Name)
 		release.Description = c.normDescription(prjInfo)
 		release.Version = wfContrib.Version
-		release.CreatedAt = prjInfo.DateCreated
+		release.CreatedAt = wfContrib.DateCreated
 		release.Releases = make([]*models.Component, 0, len(wfContribs))
 		if i == 0 {
 			release.IsLatest = p(true)

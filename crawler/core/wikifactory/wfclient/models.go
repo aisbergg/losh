@@ -998,9 +998,9 @@ type Contribution struct {
 	ContribFile           *ContribFile       `json:"contribFile"`
 }
 
-func (Contribution) IsNotificationTarget() {}
 func (Contribution) IsNode()               {}
 func (Contribution) IsContentInterface()   {}
+func (Contribution) IsNotificationTarget() {}
 
 type ContributionConnection struct {
 	PageInfo   PageInfo            `json:"pageInfo"`
@@ -1142,16 +1142,6 @@ type CreateManufacturerInput struct {
 	InitiativeID *string            `json:"initiativeId,omitempty"`
 	SpaceID      *string            `json:"spaceId,omitempty"`
 	Address      CreateAddressInput `json:"address"`
-	ShipsTo      []string           `json:"shipsTo,omitempty"`
-	Telephone    string             `json:"telephone"`
-	FoundingYear int64              `json:"foundingYear"`
-	Industries   []string           `json:"industries,omitempty"`
-	NumEmployees *int64             `json:"numEmployees,omitempty"`
-	NumMachines  *int64             `json:"numMachines,omitempty"`
-	LeadTime     *string            `json:"leadTime,omitempty"`
-	FileFormats  []string           `json:"fileFormats,omitempty"`
-	CaseStudies  []string           `json:"caseStudies,omitempty"`
-	CompanyType  []string           `json:"companyType,omitempty"`
 }
 
 type CreateManufacturerProfileInput struct {
@@ -1317,6 +1307,10 @@ type DeleteAddressInput struct {
 
 type DeleteAnnotationInput struct {
 	AnnotationID string `json:"annotationId"`
+}
+
+type DeleteFileRequirementInput struct {
+	ID string `json:"id"`
 }
 
 type DeleteInvite struct {
@@ -1519,8 +1513,8 @@ type FederatedInitiative struct {
 	OrganizationTypeID             *int64                 `json:"organizationTypeId"`
 	Manufacturer                   *Manufacturer          `json:"manufacturer"`
 	PreferedPlanID                 *int64                 `json:"preferedPlanId"`
-	HasAvatar                      *string                `json:"hasAvatar"`
 	IsConfirmed                    *string                `json:"isConfirmed"`
+	HasAvatar                      *string                `json:"hasAvatar"`
 	FeaturedIn                     *string                `json:"featuredIn"`
 	Avatar                         *File                  `json:"avatar"`
 	OrganizationType               *OrganizationType      `json:"organizationType"`
@@ -1652,7 +1646,8 @@ type FileConversion struct {
 	DateCreated     time.Time `json:"dateCreated"`
 	ConvertedFile   *File     `json:"convertedFile"`
 	Status          *string   `json:"status"`
-	Buffers         []string  `json:"buffers"`
+	Reason          string    `json:"reason"`
+	ErrorCode       string    `json:"errorCode"`
 	OriginalFile    *File     `json:"originalFile"`
 }
 
@@ -1849,8 +1844,8 @@ type GroupInvite struct {
 	GroupAvatar             *File      `json:"groupAvatar"`
 }
 
-func (GroupInvite) IsNotificationTarget() {}
 func (GroupInvite) IsNode()               {}
+func (GroupInvite) IsNotificationTarget() {}
 
 type GroupMember struct {
 	GroupID      string      `json:"groupId"`
@@ -1923,8 +1918,8 @@ type Initiative struct {
 	OrganizationTypeID             *int64                 `json:"organizationTypeId"`
 	Manufacturer                   *Manufacturer          `json:"manufacturer"`
 	PreferedPlanID                 *int64                 `json:"preferedPlanId"`
-	HasAvatar                      *string                `json:"hasAvatar"`
 	IsConfirmed                    *string                `json:"isConfirmed"`
+	HasAvatar                      *string                `json:"hasAvatar"`
 	FeaturedIn                     *string                `json:"featuredIn"`
 	Avatar                         *File                  `json:"avatar"`
 	OrganizationType               *OrganizationType      `json:"organizationType"`
@@ -1973,9 +1968,9 @@ type Initiative struct {
 	ThreadsCount                   *int64                 `json:"threadsCount"`
 }
 
-func (Initiative) IsNotificationTarget() {}
 func (Initiative) IsNode()               {}
 func (Initiative) IsContentInterface()   {}
+func (Initiative) IsNotificationTarget() {}
 
 type InitiativeConnection struct {
 	PageInfo   PageInfo          `json:"pageInfo"`
@@ -2117,9 +2112,9 @@ type Issue struct {
 	CanAddDeleteLabels    *bool              `json:"canAddDeleteLabels"`
 }
 
-func (Issue) IsNotificationTarget() {}
 func (Issue) IsNode()               {}
 func (Issue) IsContentInterface()   {}
+func (Issue) IsNotificationTarget() {}
 
 type IssueAssigneeInput struct {
 	ProfileID string `json:"profileId"`
@@ -2261,16 +2256,6 @@ type Manufacturer struct {
 	Initiative   *FederatedInitiative `json:"initiative"`
 	Address      *Address             `json:"address"`
 	CompanyName  *string              `json:"companyName"`
-	ShipsTo      []string             `json:"shipsTo"`
-	Telephone    *string              `json:"telephone"`
-	FoundingYear *int64               `json:"foundingYear"`
-	Industries   []string             `json:"industries"`
-	NumEmployees *int64               `json:"numEmployees"`
-	NumMachines  *int64               `json:"numMachines"`
-	FileFormats  []string             `json:"fileFormats"`
-	CaseStudies  []string             `json:"caseStudies"`
-	CompanyType  []string             `json:"companyType"`
-	Certificates []*Certificate       `json:"certificates"`
 	Services     []*Service           `json:"services"`
 }
 
@@ -2489,6 +2474,7 @@ type OptionFilter struct {
 	MaterialID             *string                     `json:"materialId,omitempty"`
 	ProcessID              *string                     `json:"processId,omitempty"`
 	SelectedOptionInstance []*SelectedOptionValueInput `json:"selectedOptionInstance,omitempty"`
+	Name                   *string                     `json:"name,omitempty"`
 }
 
 type OptionInstance struct {
@@ -2759,9 +2745,9 @@ type Profile struct {
 	IntentID                       *int64                  `json:"intentId"`
 	UserID                         int64                   `json:"userId"`
 	PreferedPlanID                 *int64                  `json:"preferedPlanId"`
-	HasAvatar                      *string                 `json:"hasAvatar"`
 	IsConfirmed                    *string                 `json:"isConfirmed"`
 	HasBio                         *string                 `json:"hasBio"`
+	HasAvatar                      *string                 `json:"hasAvatar"`
 	FeaturedIn                     *string                 `json:"featuredIn"`
 	Avatar                         *File                   `json:"avatar"`
 	UserType                       *ProfileUserType        `json:"userType"`
@@ -2905,12 +2891,12 @@ type Project struct {
 	ImportJobID               *string                 `json:"importJobId"`
 	SlackThreadTs             *string                 `json:"slackThreadTs"`
 	SlackContributionThreadTs string                  `json:"slackContributionThreadTs"`
-	IsExactForkCopy           *string                 `json:"isExactForkCopy"`
-	HasImage                  *string                 `json:"hasImage"`
 	HasContributions          *string                 `json:"hasContributions"`
+	HasImage                  *string                 `json:"hasImage"`
+	StarCount                 *int64                  `json:"starCount"`
 	CanAppearOnHome           *string                 `json:"canAppearOnHome"`
 	HeadContribution          *string                 `json:"headContribution"`
-	StarCount                 *int64                  `json:"starCount"`
+	IsExactForkCopy           *string                 `json:"isExactForkCopy"`
 	FeaturedIn                *string                 `json:"featuredIn"`
 	Image                     *File                   `json:"image"`
 	Phase                     *ProjectPhase           `json:"phase"`
@@ -3200,18 +3186,19 @@ func (SelectionOption) IsOption()     {}
 func (SelectionOption) IsRequirable() {}
 
 type Service struct {
-	ID       string   `json:"id"`
-	IsActive bool     `json:"isActive"`
-	Process  Process  `json:"process"`
-	Material Material `json:"material"`
+	ID            string             `json:"id"`
+	IsActive      bool               `json:"isActive"`
+	IsRecommended bool               `json:"isRecommended"`
+	Process       Process            `json:"process"`
+	Material      Material           `json:"material"`
+	Instances     []*ServiceInstance `json:"instances"`
 }
 
 func (Service) IsNode() {}
 
 type ServiceFilter struct {
-	ManufacturerID []string `json:"manufacturerId,omitempty"`
-	MaterialID     []string `json:"materialId,omitempty"`
-	ProcessID      []string `json:"processId,omitempty"`
+	MaterialIds []string `json:"materialIds,omitempty"`
+	ProcessIds  []string `json:"processIds,omitempty"`
 }
 
 type ServiceInstance struct {
@@ -3746,17 +3733,9 @@ type UpdateJobSpecInput struct {
 }
 
 type UpdateManufacturerInput struct {
-	ManufacturingID string   `json:"manufacturingId"`
-	EnquiryEmail    *string  `json:"enquiryEmail,omitempty"`
-	ShipsTo         []string `json:"shipsTo,omitempty"`
-	Telephone       *string  `json:"telephone,omitempty"`
-	FoundingYear    *int64   `json:"foundingYear,omitempty"`
-	Industries      []string `json:"industries,omitempty"`
-	NumEmployees    *int64   `json:"numEmployees,omitempty"`
-	NumMachines     *int64   `json:"numMachines,omitempty"`
-	FileFormats     []string `json:"fileFormats,omitempty"`
-	CaseStudies     []string `json:"caseStudies,omitempty"`
-	CompanyType     []string `json:"companyType,omitempty"`
+	ID           string  `json:"id"`
+	EnquiryEmail *string `json:"enquiryEmail,omitempty"`
+	CompanyName  *string `json:"companyName,omitempty"`
 }
 
 type UpdateMaterialInput struct {
@@ -3806,9 +3785,14 @@ type UpdateRequestForQuoteInput struct {
 	JobSpec            *UpdateJobSpecInput `json:"jobSpec,omitempty"`
 }
 
+type UpdateServiceInput struct {
+	ID            string `json:"id"`
+	IsRecommended *bool  `json:"isRecommended,omitempty"`
+}
+
 type UpdateServiceInstanceInput struct {
-	ServiceInstanceID string `json:"serviceInstanceId"`
-	IsArchived        bool   `json:"isArchived"`
+	ID         string `json:"id"`
+	IsArchived bool   `json:"isArchived"`
 }
 
 type UpdateSharedFileInput struct {

@@ -13,6 +13,7 @@ fragment ProductFragment on Product {
 	licensor {...UserOrGroupBasicFragment}
 	website
 	state
+	lastUpdatedAt
 	release {
 		id
 		name
@@ -56,6 +57,7 @@ fragment ProductSearchFragment on Product {
 	name
 	website
 	state
+	lastUpdatedAt
 	renamedTo {id}
 	renamedFrom {id}
 	forkOf {
