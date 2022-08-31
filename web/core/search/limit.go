@@ -119,7 +119,20 @@ func (l *limiter) checkText(text *parser.Text) {
 
 // checkOperator
 func (l *limiter) checkOperator(opr *parser.Operator) {
-	l.operators[strings.ToLower(opr.Name)] = struct{}{}
+	oprName := strings.ToLower(opr.Name)
+	if oprName == "is" || oprName == "has" {
+		if opr.Value != nil {
+			if opr.Value.Exact != nil {
+				oprName += strings.ToLower(*opr.Value.Exact)
+			} else if opr.Value.Words != nil {
+				oprName += strings.ToLower(*opr.Value.Words)
+			}
+			l.operators[oprName] = struct{}{}
+		}
+	} else {
+		l.operators[oprName] = struct{}{}
+	}
+
 	if opr == nil {
 		return
 	}

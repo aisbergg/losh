@@ -167,7 +167,7 @@ func includeFromDir(dir string, templates map[string]*template, rc render.Contex
 	bindings["include"] = include
 
 	// render template
-	rendered, err := template.Render(bindings)
+	rendered, err := template.Render(bindings, true)
 	if err != nil {
 		return "", NewRenderError(filename, err, bindings)
 	}

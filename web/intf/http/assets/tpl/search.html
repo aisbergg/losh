@@ -1,5 +1,18 @@
 ---
 layout: layouts/default
+# used for adding more columns to the table and cards
+extraProperties:
+  - operator: createdat
+    title: Created At
+    description: The date the latest release of the product was created
+    icon: calendar
+    path: /Release/CreatedAt
+
+  - operator: version
+    title: Version
+    description: The version of the latest release of the product
+    icon: versions
+    path: /Release/Version
 ---
 {%- assign resultsPerPage = req.queryParams.resultsPerPage -%}
 {%- assign results = page.results.items -%}
@@ -8,6 +21,9 @@ layout: layouts/default
 
 {%- assign sortBy = "name" -%}
 {%- assign displayMode = req.queryParams.displayMode -%}
+{% for e in abc %}
+	{{ e }}
+{% endfor %}
 <div class="card">
 	<div class="card-body">
 		{% include ui/form/searchbar.html placeholder='Search Product…' %}
@@ -287,6 +303,11 @@ layout: layouts/default
 					<th data-bs-toggle="tooltip" data-bs-placement="top" title="Language">{% include ui/icon.html icon="language" %}</th>
 					<th data-bs-toggle="tooltip" data-bs-placement="top" title="Star Count">{% include ui/icon.html icon="star" %}</th>
 					<th data-bs-toggle="tooltip" data-bs-placement="top" title="Fork Count">{% include ui/icon.html icon="git-fork" %}</th>
+					{%- for ep in extraProperties %}
+						{%- if ep.operator | in: page.results.operators %}
+					<th data-bs-toggle="tooltip" data-bs-placement="top" title="{{ ep.description }}">{{ ep.title }}</th>
+						{%- endif %}
+					{%- endfor %}
 					<th></th>
 				</tr>
 			</thead>
@@ -352,9 +373,21 @@ layout: layouts/default
 						{{ product.ForkCount }}
 					</td>
 
+					{%- for ep in extraProperties %}
+						{%- if ep.operator | in: page.results.operators %}
+					<td class="text-break">
+						{%- assign val = product | get: ep.path %}
+						{%- unless (val | is_nil) %}
+						{{ val | escape }}
+						{%- endunless %}
+					</td>
+						{%- endif %}
+					{%- endfor %}
+
 					<td>
 						<a href="{{ product.Website }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-circle btn-primary mx-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Go to Website">{% include ui/icon.html icon="external-link" class="m-0 icon-bold" %}</a>
 					</td>
+
 				</tr>
 				{% endfor %}
 			</tbody>
@@ -416,11 +449,19 @@ layout: layouts/default
 					<span>{% for tag in product.Tags %}{{ tag.Name }}{% unless forloop.last %}, {% endunless %}{% endfor %}</span>
 				</a>
 				{%- endif %}
-				<!-- extras -->
-				<!-- <div class="search-result-info mb-1">
-					<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Version">{% include ui/icon.html icon="versions" %}</span>
-					<span>{{ product.Release.Version | escape }}</span>
-				</div> -->
+				{%- for ep in extraProperties %}
+					{%- if ep.operator | in: page.results.operators %}
+						{%- assign val = product | get: ep.path %}
+						{%- unless (val | is_nil) %}
+				<div class="search-result-info mb-1">
+					<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ ep.title }}">{% include ui/icon.html icon="{{ ep.icon }}" %}</span>
+					<span class="text-ellipses-line-1" data-text="{{ description }}">
+						{{ val | escape }}
+					</span>
+				</div>
+						{%- endunless %}
+					{%- endif %}
+				{%- endfor %}
 			</div>
 		</div>
 	</div>

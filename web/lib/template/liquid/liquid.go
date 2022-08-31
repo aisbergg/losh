@@ -254,7 +254,7 @@ func (e *Engine) Render(out io.Writer, name string, binding interface{}, layout 
 	liquidBinding[e.layoutVar] = ""
 	var rendered []byte
 	for _, tpl := range tpls {
-		rendered, err = tpl.Render(liquidBinding)
+		rendered, err = tpl.Render(liquidBinding, false)
 		if err != nil {
 			return NewRenderError(name, err, binding)
 		}
@@ -284,12 +284,12 @@ func newTemplate(lqdTpl *liquid.Template, frtm map[string]interface{}) *template
 	}
 }
 
-// func (t *template) Render(vars liquid.Bindings, inclFrtm bool) ([]byte, liquid.SourceError) {
-// 	if inclFrtm && t.frtm != nil {
-// 		mergeMap(t.frtm, &vars)
-// 	}
-// 	return t.Template.Render(vars)
-// }
+func (t *template) Render(vars liquid.Bindings, inclFrtm bool) ([]byte, liquid.SourceError) {
+	if inclFrtm && t.frtm != nil {
+		mergeMap(t.frtm, &vars)
+	}
+	return t.Template.Render(vars)
+}
 
 func mergeMap(src, dst interface{}) {
 	srcVal := reflectutil.Indirect(reflect.ValueOf(src))

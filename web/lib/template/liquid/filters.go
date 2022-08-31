@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 	gourl "net/url"
+	"reflect"
 	"regexp"
 	"strings"
 	"unicode/utf8"
@@ -11,6 +12,7 @@ import (
 	"losh/internal/lib/util/reflectutil"
 	"losh/internal/lib/util/stringutil"
 
+	"github.com/aisbergg/go-jsonpointer/pkg/jsonpointer"
 	"github.com/golang-module/carbon/v2"
 	"github.com/osteele/liquid"
 	"golang.org/x/text/language"
@@ -21,8 +23,10 @@ import (
 func addFilters(e *liquid.Engine) {
 	addJekyllFilters(e)
 
-	// map filters
+	// map/slice filters
 	e.RegisterFilter("dict2items", dict2itemsFilter)
+	e.RegisterFilter("in", inFilter)
+	e.RegisterFilter("get", getFilter)
 
 	// format filters
 	e.RegisterFilter("format_datetime", formatDatetimeFilter)
@@ -53,6 +57,7 @@ func addFilters(e *liquid.Engine) {
 	// other
 	e.RegisterFilter("ternary", ternaryFilter)
 	e.RegisterFilter("is_nil", isNilFilter)
+	e.RegisterFilter("is", isFilter)
 
 }
 
@@ -66,6 +71,37 @@ func dict2itemsFilter(value map[string]interface{}) []interface{} {
 		items = append(items, item)
 	}
 	return items
+}
+
+func inFilter(variable string, in interface{}) bool {
+	inVal := reflect.ValueOf(in)
+	switch inVal.Kind() {
+	case reflect.Slice:
+		for i := 0; i < inVal.Len(); i++ {
+			if inVal.Index(i).String() == variable {
+				return true
+			}
+		}
+	case reflect.Map:
+		for _, key := range inVal.MapKeys() {
+			if key.String() == variable {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+func getFilter(obj interface{}, path interface{}) interface{} {
+	ptr, err := jsonpointer.New(path)
+	if err != nil {
+		return nil
+	}
+	res, err := ptr.Get(obj)
+	if err != nil {
+		return nil
+	}
+	return res
 }
 
 func ellipsesFilter(input string, length int) string {
@@ -119,6 +155,15 @@ func formatNumberFilter(input interface{}) string {
 
 func idhexFilter(input string) string {
 	return strings.TrimPrefix(strings.TrimSpace(input), "0x")
+}
+
+func isFilter(value interface{}, t ...string) bool {
+	for _, t := range t {
+		if reflect.TypeOf(value).String() == t {
+			return true
+		}
+	}
+	return false
 }
 
 func isNilFilter(value interface{}) bool {
