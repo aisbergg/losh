@@ -188,7 +188,7 @@ func (p *SpdxOrgProvider) getBaseLicenses(ctx context.Context) ([]*models.Licens
 	if err != nil {
 		panic(err)
 	}
-	licensesMap := make(map[string]*models.License, len(licenseExtraFile.Licenses))
+	licensesMap := make(map[string]*models.License, len(licenses))
 	for i := 0; i < len(licenses); i++ {
 		// copy ptr of license into map
 		licensesMap[*licenses[i].Xid] = licenses[i]
@@ -198,7 +198,8 @@ func (p *SpdxOrgProvider) getBaseLicenses(ctx context.Context) ([]*models.Licens
 		if !ok {
 			continue
 		}
-		l.IsBlocked = &lraw.IsBlocked
+		isBlocked := lraw.IsBlocked
+		l.IsBlocked = &isBlocked
 		lt := models.AsLicenseType(lraw.Type)
 		l.Type = &lt
 	}
