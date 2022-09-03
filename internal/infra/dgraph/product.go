@@ -192,7 +192,6 @@ q(func: uid(%s), first: $first, offset: $offset, %s) {
 	Product.releases {uid}
 	Product.tags {
 		uid
-		Tag.xid
 		Tag.name
 		Tag.aliases {
 			uid

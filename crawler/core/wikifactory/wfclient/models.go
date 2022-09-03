@@ -782,9 +782,9 @@ type Comment struct {
 	CreatorProfile        *Profile           `json:"creatorProfile"`
 }
 
-func (Comment) IsNotificationTarget() {}
 func (Comment) IsNode()               {}
 func (Comment) IsContentInterface()   {}
+func (Comment) IsNotificationTarget() {}
 
 type CommentConnection struct {
 	PageInfo   PageInfo       `json:"pageInfo"`
@@ -1513,8 +1513,8 @@ type FederatedInitiative struct {
 	OrganizationTypeID             *int64                 `json:"organizationTypeId"`
 	Manufacturer                   *Manufacturer          `json:"manufacturer"`
 	PreferedPlanID                 *int64                 `json:"preferedPlanId"`
-	IsConfirmed                    *string                `json:"isConfirmed"`
 	HasAvatar                      *string                `json:"hasAvatar"`
+	IsConfirmed                    *string                `json:"isConfirmed"`
 	FeaturedIn                     *string                `json:"featuredIn"`
 	Avatar                         *File                  `json:"avatar"`
 	OrganizationType               *OrganizationType      `json:"organizationType"`
@@ -1918,8 +1918,8 @@ type Initiative struct {
 	OrganizationTypeID             *int64                 `json:"organizationTypeId"`
 	Manufacturer                   *Manufacturer          `json:"manufacturer"`
 	PreferedPlanID                 *int64                 `json:"preferedPlanId"`
-	IsConfirmed                    *string                `json:"isConfirmed"`
 	HasAvatar                      *string                `json:"hasAvatar"`
+	IsConfirmed                    *string                `json:"isConfirmed"`
 	FeaturedIn                     *string                `json:"featuredIn"`
 	Avatar                         *File                  `json:"avatar"`
 	OrganizationType               *OrganizationType      `json:"organizationType"`
@@ -2112,9 +2112,9 @@ type Issue struct {
 	CanAddDeleteLabels    *bool              `json:"canAddDeleteLabels"`
 }
 
+func (Issue) IsNotificationTarget() {}
 func (Issue) IsNode()               {}
 func (Issue) IsContentInterface()   {}
-func (Issue) IsNotificationTarget() {}
 
 type IssueAssigneeInput struct {
 	ProfileID string `json:"profileId"`
@@ -2712,8 +2712,8 @@ type ProductItem struct {
 	Build     Build          `json:"build"`
 }
 
-func (ProductItem) IsNode()        {}
 func (ProductItem) IsProductNode() {}
+func (ProductItem) IsNode()        {}
 
 type Profile struct {
 	ID                             string                  `json:"id"`
@@ -2745,9 +2745,9 @@ type Profile struct {
 	IntentID                       *int64                  `json:"intentId"`
 	UserID                         int64                   `json:"userId"`
 	PreferedPlanID                 *int64                  `json:"preferedPlanId"`
+	HasAvatar                      *string                 `json:"hasAvatar"`
 	IsConfirmed                    *string                 `json:"isConfirmed"`
 	HasBio                         *string                 `json:"hasBio"`
-	HasAvatar                      *string                 `json:"hasAvatar"`
 	FeaturedIn                     *string                 `json:"featuredIn"`
 	Avatar                         *File                   `json:"avatar"`
 	UserType                       *ProfileUserType        `json:"userType"`
@@ -2813,9 +2813,9 @@ type Profile struct {
 	CollectionsCount               *int64                  `json:"collectionsCount"`
 }
 
-func (Profile) IsNotificationTarget() {}
 func (Profile) IsNode()               {}
 func (Profile) IsContentInterface()   {}
+func (Profile) IsNotificationTarget() {}
 
 type ProfileConnection struct {
 	PageInfo   PageInfo       `json:"pageInfo"`
@@ -2891,12 +2891,12 @@ type Project struct {
 	ImportJobID               *string                 `json:"importJobId"`
 	SlackThreadTs             *string                 `json:"slackThreadTs"`
 	SlackContributionThreadTs string                  `json:"slackContributionThreadTs"`
-	HasContributions          *string                 `json:"hasContributions"`
-	HasImage                  *string                 `json:"hasImage"`
-	StarCount                 *int64                  `json:"starCount"`
-	CanAppearOnHome           *string                 `json:"canAppearOnHome"`
 	HeadContribution          *string                 `json:"headContribution"`
 	IsExactForkCopy           *string                 `json:"isExactForkCopy"`
+	HasImage                  *string                 `json:"hasImage"`
+	HasContributions          *string                 `json:"hasContributions"`
+	CanAppearOnHome           *string                 `json:"canAppearOnHome"`
+	StarCount                 *int64                  `json:"starCount"`
 	FeaturedIn                *string                 `json:"featuredIn"`
 	Image                     *File                   `json:"image"`
 	Phase                     *ProjectPhase           `json:"phase"`
@@ -3206,6 +3206,7 @@ type ServiceInstance struct {
 	IsArchived   bool         `json:"isArchived"`
 	Service      Service      `json:"service"`
 	Manufacturer Manufacturer `json:"manufacturer"`
+	ReferenceID  *string      `json:"referenceId"`
 }
 
 func (ServiceInstance) IsNode() {}
@@ -3463,9 +3464,9 @@ type Story struct {
 	CreatorProfile        *Profile           `json:"creatorProfile"`
 }
 
-func (Story) IsNotificationTarget() {}
 func (Story) IsNode()               {}
 func (Story) IsContentInterface()   {}
+func (Story) IsNotificationTarget() {}
 
 type StoryConnection struct {
 	PageInfo   PageInfo     `json:"pageInfo"`
@@ -3791,8 +3792,9 @@ type UpdateServiceInput struct {
 }
 
 type UpdateServiceInstanceInput struct {
-	ID         string `json:"id"`
-	IsArchived bool   `json:"isArchived"`
+	ID          string  `json:"id"`
+	IsArchived  *bool   `json:"isArchived,omitempty"`
+	ReferenceID *string `json:"referenceId,omitempty"`
 }
 
 type UpdateSharedFileInput struct {

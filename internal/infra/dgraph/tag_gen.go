@@ -15,13 +15,13 @@ var _ TagRepository = (*DgraphRepository)(nil)
 
 // TagRepository is an interface for getting and saving `Tag` objects to a repository.
 type TagRepository interface {
-	GetTag(ctx context.Context, id, xid *string) (*models.Tag, error)
+	GetTag(ctx context.Context, id, name *string) (*models.Tag, error)
 	GetTags(ctx context.Context, filter *dgclient.TagFilter, order *dgclient.TagOrder, first *int64, offset *int64) ([]*models.Tag, int64, error)
 	GetAllTags(ctx context.Context) ([]*models.Tag, int64, error)
 	CreateTag(ctx context.Context, input *models.Tag) error
 	CreateTags(ctx context.Context, input []*models.Tag) error
 	UpdateTag(ctx context.Context, input *models.Tag) error
-	DeleteTag(ctx context.Context, id, xid *string) error
+	DeleteTag(ctx context.Context, id, name *string) error
 	DeleteAllTags(ctx context.Context) error
 }
 
@@ -32,7 +32,7 @@ var (
 )
 
 // GetTag returns a `Tag` object by its ID.
-func (dr *DgraphRepository) GetTag(ctx context.Context, id, xid *string) (*models.Tag, error) {
+func (dr *DgraphRepository) GetTag(ctx context.Context, id, name *string) (*models.Tag, error) {
 	var rspData interface{}
 	if id != nil {
 		dr.log.Debugw("get Tag", "id", *id)
@@ -41,15 +41,15 @@ func (dr *DgraphRepository) GetTag(ctx context.Context, id, xid *string) (*model
 			return nil, WrapRepoError(err, errGetTagStr).Add("tagId", id)
 		}
 		rspData = rsp.GetTag
-	} else if xid != nil {
-		dr.log.Debugw("get Tag", "xid", *xid)
-		rsp, err := dr.client.GetTagByXid(ctx, *xid)
+	} else if name != nil {
+		dr.log.Debugw("get Tag", "name", *name)
+		rsp, err := dr.client.GetTagByName(ctx, *name)
 		if err != nil {
-			return nil, WrapRepoError(err, errGetTagStr).Add("tagXid", xid)
+			return nil, WrapRepoError(err, errGetTagStr).Add("tagName", name)
 		}
 		rspData = rsp.GetTag
 	} else {
-		panic("must specify id or xid")
+		panic("must specify id or name")
 	}
 
 	if rspData == nil {
@@ -63,12 +63,12 @@ func (dr *DgraphRepository) GetTag(ctx context.Context, id, xid *string) (*model
 }
 
 // GetTagID returns the ID of an existing `Tag` object.
-func (dr *DgraphRepository) GetTagID(ctx context.Context, xid *string) (*string, error) {
-	if xid != nil {
-		dr.log.Debugw("get Tag", "xid", *xid)
-		rsp, err := dr.client.GetTagID(ctx, *xid)
+func (dr *DgraphRepository) GetTagID(ctx context.Context, name *string) (*string, error) {
+	if name != nil {
+		dr.log.Debugw("get Tag", "name", *name)
+		rsp, err := dr.client.GetTagID(ctx, *name)
 		if err != nil {
-			return nil, WrapRepoError(err, errGetTagStr).Add("tagXid", xid)
+			return nil, WrapRepoError(err, errGetTagStr).Add("tagName", name)
 		}
 		if rsp.GetTag == nil {
 			return nil, nil
@@ -76,7 +76,7 @@ func (dr *DgraphRepository) GetTagID(ctx context.Context, xid *string) (*string,
 		return &rsp.GetTag.ID, nil
 	}
 
-	panic("must specify xid")
+	panic("must specify name")
 }
 
 // GetTags returns a list of `Tag` objects matching the filter criteria.
@@ -100,14 +100,14 @@ func (dr *DgraphRepository) GetAllTags(ctx context.Context) ([]*models.Tag, int6
 
 // GetTagWithCustomQuery returns a `Tag` object by its ID.
 // The given query controls the amount of information to be returned.
-func (dr *DgraphRepository) GetTagWithCustomQuery(ctx context.Context, operationName, query string, id, xid *string) (*models.Tag, error) {
+func (dr *DgraphRepository) GetTagWithCustomQuery(ctx context.Context, operationName, query string, id, name *string) (*models.Tag, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
 		OperationName: operationName,
 		Query:         query,
 		Variables: map[string]interface{}{
-			"id":  id,
-			"xid": xid,
+			"id":   id,
+			"name": name,
 		},
 	}
 	rsp := struct {
@@ -153,13 +153,13 @@ func (dr *DgraphRepository) GetAllTagsWithCustomQuery(ctx context.Context, opera
 // After successful creation the ID field of the input will be populated with
 // the ID assigned by the DB.
 func (dr *DgraphRepository) CreateTag(ctx context.Context, input *models.Tag) error {
-	dr.log.Debugw("create Tag", []interface{}{"xid", *input.Xid}...)
+	dr.log.Debugw("create Tag", []interface{}{"name", *input.Name}...)
 	inputData := dgclient.AddTagInput{}
 	dr.copyORMStruct(input, &inputData)
 	rsp, err := dr.client.CreateTags(ctx, []*dgclient.AddTagInput{&inputData})
 	if err != nil {
 		return WrapRepoError(err, "failed to create tag").
-			Add("tagId", input.ID).Add("tagXid", input.Xid)
+			Add("tagId", input.ID).Add("tagName", input.Name)
 	}
 	// save ID from response
 	input.ID = &rsp.AddTag.Tag[0].ID
@@ -193,13 +193,13 @@ func (dr *DgraphRepository) CreateTags(ctx context.Context, input []*models.Tag)
 
 // UpdateTag updates an existing `Tag` object.
 func (dr *DgraphRepository) UpdateTag(ctx context.Context, input *models.Tag) error {
-	dr.log.Debugw("update Tag", []interface{}{"id", *input.ID, "xid", *input.Xid}...)
+	dr.log.Debugw("update Tag", []interface{}{"id", *input.ID, "name", *input.Name}...)
 	if *input.ID == "" {
-		return WrapRepoError(nil, "missing ID").Add("tagXid", input.Xid)
+		return WrapRepoError(nil, "missing ID").Add("tagName", input.Name)
 	}
 	patch := &dgclient.TagPatch{}
 	dr.copyORMStruct(input, patch)
-	patch.Xid = nil
+	patch.Name = nil
 	inputData := dgclient.UpdateTagInput{
 		Filter: dgclient.TagFilter{
 			ID: []string{*input.ID},
@@ -209,28 +209,28 @@ func (dr *DgraphRepository) UpdateTag(ctx context.Context, input *models.Tag) er
 	_, err := dr.client.UpdateTags(ctx, inputData)
 	if err != nil {
 		return WrapRepoError(err, "failed to update tag").
-			Add("tagId", *input.ID).Add("tagXid", input.Xid)
+			Add("tagId", *input.ID).Add("tagName", input.Name)
 	}
 	return nil
 }
 
 // DeleteTag deletes a `Tag` object.
-func (dr *DgraphRepository) DeleteTag(ctx context.Context, id, xid *string) error {
+func (dr *DgraphRepository) DeleteTag(ctx context.Context, id, name *string) error {
 	delFilter := dgclient.TagFilter{}
-	if id != nil && xid != nil {
-		return NewRepoError("must specify either id or xid")
+	if id != nil && name != nil {
+		return NewRepoError("must specify either id or name")
 	}
 	if id != nil {
 		delFilter.ID = []string{*id}
 	}
-	if xid != nil {
-		delFilter.Xid = &dgclient.StringHashFilter{Eq: xid}
+	if name != nil {
+		delFilter.Name = &dgclient.StringFullTextFilterStringHashFilterStringRegExpFilter{Eq: name}
 	}
 
 	dr.log.Debugw("delete Tag")
 	if _, err := dr.client.DeleteTags(ctx, delFilter); err != nil {
 		return WrapRepoError(err, errDeleteTagStr).
-			Add("tagId", id).Add("tagXid", xid)
+			Add("tagId", id).Add("tagName", name)
 	}
 	return nil
 }

@@ -4,9 +4,8 @@ package dgclient
 
 import (
 	"context"
-	"time"
-
 	"losh/internal/lib/net/request"
+	"time"
 )
 
 type DgraphGraphQLClient interface {
@@ -112,8 +111,8 @@ type DgraphGraphQLClient interface {
 	UpdateSoftwares(ctx context.Context, updateInput UpdateSoftwareInput) (*UpdateSoftwares, error)
 	DeleteSoftwares(ctx context.Context, delFilter SoftwareFilter) (*DeleteSoftwares, error)
 	GetTagByID(ctx context.Context, id string) (*GetTagByID, error)
-	GetTagByXid(ctx context.Context, xid string) (*GetTagByXid, error)
-	GetTagID(ctx context.Context, xid string) (*GetTagID, error)
+	GetTagByName(ctx context.Context, name string) (*GetTagByName, error)
+	GetTagID(ctx context.Context, name string) (*GetTagID, error)
 	GetTags(ctx context.Context, getFilter *TagFilter, order *TagOrder, first *int64, offset *int64) (*GetTags, error)
 	CreateTags(ctx context.Context, createInput []*AddTagInput) (*CreateTags, error)
 	UpdateTags(ctx context.Context, updateInput UpdateTagInput) (*UpdateTags, error)
@@ -463,6 +462,7 @@ type ProductFragment struct {
 	Licensor              *UserOrGroupBasicFragment    "json:\"licensor\" graphql:\"licensor\""
 	Website               *string                      "json:\"website\" graphql:\"website\""
 	State                 ProductState                 "json:\"state\" graphql:\"state\""
+	LastUpdatedAt         *time.Time                   "json:\"lastUpdatedAt\" graphql:\"lastUpdatedAt\""
 	Release               ProductFragment_Release      "json:\"release\" graphql:\"release\""
 	Releases              []*ProductFragment_Releases  "json:\"releases\" graphql:\"releases\""
 	RenamedTo             *ProductFragment_RenamedTo   "json:\"renamedTo\" graphql:\"renamedTo\""
@@ -482,6 +482,7 @@ type ProductSearchFragment struct {
 	Name          string                             "json:\"name\" graphql:\"name\""
 	Website       *string                            "json:\"website\" graphql:\"website\""
 	State         ProductState                       "json:\"state\" graphql:\"state\""
+	LastUpdatedAt *time.Time                         "json:\"lastUpdatedAt\" graphql:\"lastUpdatedAt\""
 	RenamedTo     *ProductSearchFragment_RenamedTo   "json:\"renamedTo\" graphql:\"renamedTo\""
 	RenamedFrom   *ProductSearchFragment_RenamedFrom "json:\"renamedFrom\" graphql:\"renamedFrom\""
 	ForkOf        *ProductSearchFragment_ForkOf      "json:\"forkOf\" graphql:\"forkOf\""
@@ -516,7 +517,6 @@ type SoftwareFragment struct {
 }
 type TagFragment struct {
 	ID      string                 "json:\"id\" graphql:\"id\""
-	Xid     string                 "json:\"xid\" graphql:\"xid\""
 	Name    string                 "json:\"name\" graphql:\"name\""
 	Aliases []*TagFragment_Aliases "json:\"aliases\" graphql:\"aliases\""
 	Related []*TagFragment_Related "json:\"related\" graphql:\"related\""
@@ -2045,11 +2045,11 @@ type GetTagByID_GetTag_TagFragment_Related struct {
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type GetTagByXid_GetTag_TagFragment_Aliases struct {
+type GetTagByName_GetTag_TagFragment_Aliases struct {
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type GetTagByXid_GetTag_TagFragment_Related struct {
+type GetTagByName_GetTag_TagFragment_Related struct {
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
@@ -2781,7 +2781,7 @@ type DeleteSoftwares struct {
 type GetTagByID struct {
 	GetTag *TagFragment "json:\"getTag\" graphql:\"getTag\""
 }
-type GetTagByXid struct {
+type GetTagByName struct {
 	GetTag *TagFragment "json:\"getTag\" graphql:\"getTag\""
 }
 type GetTagID struct {
@@ -3476,6 +3476,32 @@ const GetComponentByXidDocument = `query GetComponentByXid ($xid: String!) {
 		... ComponentFragment
 	}
 }
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
+}
+fragment OuterDimensionsFragment on OuterDimensions {
+	__typename
+	... on BoundingBoxDimensions {
+		... BoundingBoxDimensionsFragment
+	}
+	... on OpenSCADDimensions {
+		... OpenSCADDimensionsFragment
+	}
+}
+fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
+	id
+	height
+	width
+	depth
+}
+fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
+	id
+	openscad
+	unit
+}
 fragment KeyValueFragment on KeyValue {
 	id
 	key
@@ -3601,32 +3627,6 @@ fragment ComponentFragment on Component {
 	productionMetadata {
 		... KeyValueFragment
 	}
-}
-fragment UserOrGroupBasicFragment on UserOrGroup {
-	__typename
-	name
-	fullName
-	id
-}
-fragment OuterDimensionsFragment on OuterDimensions {
-	__typename
-	... on BoundingBoxDimensions {
-		... BoundingBoxDimensionsFragment
-	}
-	... on OpenSCADDimensions {
-		... OpenSCADDimensionsFragment
-	}
-}
-fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
-	id
-	height
-	width
-	depth
-}
-fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
-	id
-	openscad
-	unit
 }
 `
 
@@ -7250,12 +7250,6 @@ const GetProductByIDDocument = `query GetProductByID ($id: ID!) {
 		... ProductFragment
 	}
 }
-fragment UserOrGroupBasicFragment on UserOrGroup {
-	__typename
-	name
-	fullName
-	id
-}
 fragment ProductFragment on Product {
 	... CrawlerMetaFragment
 	id
@@ -7273,6 +7267,7 @@ fragment ProductFragment on Product {
 	}
 	website
 	state
+	lastUpdatedAt
 	release {
 		id
 		name
@@ -7311,6 +7306,12 @@ fragment ProductFragment on Product {
 fragment CrawlerMetaFragment on CrawlerMeta {
 	discoveredAt
 	lastIndexedAt
+}
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
 }
 `
 
@@ -7354,6 +7355,12 @@ const GetProductByXidDocument = `query GetProductByXid ($xid: String!) {
 		... ProductFragment
 	}
 }
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
+}
 fragment ProductFragment on Product {
 	... CrawlerMetaFragment
 	id
@@ -7371,6 +7378,7 @@ fragment ProductFragment on Product {
 	}
 	website
 	state
+	lastUpdatedAt
 	release {
 		id
 		name
@@ -7409,12 +7417,6 @@ fragment ProductFragment on Product {
 fragment CrawlerMetaFragment on CrawlerMeta {
 	discoveredAt
 	lastIndexedAt
-}
-fragment UserOrGroupBasicFragment on UserOrGroup {
-	__typename
-	name
-	fullName
-	id
 }
 `
 
@@ -7503,16 +7505,6 @@ const GetProductsDocument = `query GetProducts ($getFilter: ProductFilter, $orde
 		count
 	}
 }
-fragment CrawlerMetaFragment on CrawlerMeta {
-	discoveredAt
-	lastIndexedAt
-}
-fragment UserOrGroupBasicFragment on UserOrGroup {
-	__typename
-	name
-	fullName
-	id
-}
 fragment ProductFragment on Product {
 	... CrawlerMetaFragment
 	id
@@ -7530,6 +7522,7 @@ fragment ProductFragment on Product {
 	}
 	website
 	state
+	lastUpdatedAt
 	release {
 		id
 		name
@@ -7564,6 +7557,16 @@ fragment ProductFragment on Product {
 		id
 		fullName
 	}
+}
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
+}
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
 }
 `
 
@@ -7616,6 +7619,81 @@ const SearchProductsDocument = `query SearchProducts ($getFilter: ProductFilter,
 		count
 	}
 }
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
+}
+fragment CategoryFragment on Category {
+	id
+	xid
+	fullName
+	name
+	description
+	parent {
+		id
+		fullName
+	}
+	children {
+		id
+		fullName
+	}
+	products {
+		id
+		name
+	}
+}
+fragment UserOrGroupFragment on UserOrGroup {
+	__typename
+	id
+	xid
+	host {
+		id
+		name
+	}
+	name
+	fullName
+	email
+	avatar {
+		id
+		url
+	}
+	url
+	memberOf {
+		id
+		fullName
+	}
+	products {
+		id
+		name
+	}
+}
+fragment FileFragment on File {
+	... CrawlerMetaFragment
+	id
+	name
+	path
+	mimeType
+	url
+	createdAt
+}
+fragment TagFragment on Tag {
+	id
+	name
+	aliases {
+		id
+		name
+	}
+	related {
+		id
+		name
+	}
+}
+fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
+	id
+	height
+	width
+	depth
+}
 fragment ProductSearchFragment on Product {
 	... CrawlerMetaFragment
 	id
@@ -7623,6 +7701,7 @@ fragment ProductSearchFragment on Product {
 	name
 	website
 	state
+	lastUpdatedAt
 	renamedTo {
 		id
 	}
@@ -7743,71 +7822,6 @@ fragment ProductSearchFragment on Product {
 		}
 	}
 }
-fragment UserOrGroupFragment on UserOrGroup {
-	__typename
-	id
-	xid
-	host {
-		id
-		name
-	}
-	name
-	fullName
-	email
-	avatar {
-		id
-		url
-	}
-	url
-	memberOf {
-		id
-		fullName
-	}
-	products {
-		id
-		name
-	}
-}
-fragment FileFragment on File {
-	... CrawlerMetaFragment
-	id
-	name
-	path
-	mimeType
-	url
-	createdAt
-}
-fragment GroupFragment on Group {
-	... UserOrGroupFragment
-	members {
-		__typename
-		id
-	}
-}
-fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
-	id
-	height
-	width
-	depth
-}
-fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
-	id
-	openscad
-	unit
-}
-fragment TagFragment on Tag {
-	id
-	xid
-	name
-	aliases {
-		id
-		name
-	}
-	related {
-		id
-		name
-	}
-}
 fragment RepositoryFragment on Repository {
 	id
 	xid
@@ -7823,6 +7837,24 @@ fragment RepositoryFragment on Repository {
 	name
 	reference
 	path
+}
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
+}
+fragment GroupFragment on Group {
+	... UserOrGroupFragment
+	members {
+		__typename
+		id
+	}
+}
+fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
+	id
+	openscad
+	unit
 }
 fragment LicenseFragmentBasic on License {
 	id
@@ -7846,35 +7878,6 @@ fragment UserOrGroupFullFragment on UserOrGroup {
 fragment UserFragment on User {
 	... UserOrGroupFragment
 	locale
-}
-fragment CrawlerMetaFragment on CrawlerMeta {
-	discoveredAt
-	lastIndexedAt
-}
-fragment CategoryFragment on Category {
-	id
-	xid
-	fullName
-	name
-	description
-	parent {
-		id
-		fullName
-	}
-	children {
-		id
-		fullName
-	}
-	products {
-		id
-		name
-	}
-}
-fragment UserOrGroupBasicFragment on UserOrGroup {
-	__typename
-	name
-	fullName
-	id
 }
 fragment OuterDimensionsFragment on OuterDimensions {
 	__typename
@@ -8705,7 +8708,6 @@ const GetTagByIDDocument = `query GetTagByID ($id: ID!) {
 }
 fragment TagFragment on Tag {
 	id
-	xid
 	name
 	aliases {
 		id
@@ -8753,14 +8755,13 @@ func (c *Client) GetTagByIDWithResponse(ctx context.Context, id string, resp int
 	return nil
 }
 
-const GetTagByXidDocument = `query GetTagByXid ($xid: String!) {
-	getTag(xid: $xid) {
+const GetTagByNameDocument = `query GetTagByName ($name: String!) {
+	getTag(name: $name) {
 		... TagFragment
 	}
 }
 fragment TagFragment on Tag {
 	id
-	xid
 	name
 	aliases {
 		id
@@ -8773,17 +8774,17 @@ fragment TagFragment on Tag {
 }
 `
 
-func (c *Client) GetTagByXid(ctx context.Context, xid string) (*GetTagByXid, error) {
+func (c *Client) GetTagByName(ctx context.Context, name string) (*GetTagByName, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
-		OperationName: "GetTagByXid",
-		Query:         GetTagByXidDocument,
+		OperationName: "GetTagByName",
+		Query:         GetTagByNameDocument,
 		Variables: map[string]interface{}{
-			"xid": xid,
+			"name": name,
 		},
 	}
 
-	var resp GetTagByXid
+	var resp GetTagByName
 	err := c.Requester.Do(req, &resp)
 	if err != nil {
 		return nil, err
@@ -8791,13 +8792,13 @@ func (c *Client) GetTagByXid(ctx context.Context, xid string) (*GetTagByXid, err
 	return &resp, nil
 }
 
-func (c *Client) GetTagByXidWithResponse(ctx context.Context, xid string, resp interface{}) error {
+func (c *Client) GetTagByNameWithResponse(ctx context.Context, name string, resp interface{}) error {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
-		OperationName: "GetTagByXid",
-		Query:         GetTagByXidDocument,
+		OperationName: "GetTagByName",
+		Query:         GetTagByNameDocument,
 		Variables: map[string]interface{}{
-			"xid": xid,
+			"name": name,
 		},
 	}
 
@@ -8808,20 +8809,20 @@ func (c *Client) GetTagByXidWithResponse(ctx context.Context, xid string, resp i
 	return nil
 }
 
-const GetTagIDDocument = `query GetTagID ($xid: String!) {
-	getTag(xid: $xid) {
+const GetTagIDDocument = `query GetTagID ($name: String!) {
+	getTag(name: $name) {
 		id
 	}
 }
 `
 
-func (c *Client) GetTagID(ctx context.Context, xid string) (*GetTagID, error) {
+func (c *Client) GetTagID(ctx context.Context, name string) (*GetTagID, error) {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
 		OperationName: "GetTagID",
 		Query:         GetTagIDDocument,
 		Variables: map[string]interface{}{
-			"xid": xid,
+			"name": name,
 		},
 	}
 
@@ -8833,13 +8834,13 @@ func (c *Client) GetTagID(ctx context.Context, xid string) (*GetTagID, error) {
 	return &resp, nil
 }
 
-func (c *Client) GetTagIDWithResponse(ctx context.Context, xid string, resp interface{}) error {
+func (c *Client) GetTagIDWithResponse(ctx context.Context, name string, resp interface{}) error {
 	req := request.GraphQLRequest{
 		Ctx:           ctx,
 		OperationName: "GetTagID",
 		Query:         GetTagIDDocument,
 		Variables: map[string]interface{}{
-			"xid": xid,
+			"name": name,
 		},
 	}
 
@@ -8860,7 +8861,6 @@ const GetTagsDocument = `query GetTags ($getFilter: TagFilter, $order: TagOrder,
 }
 fragment TagFragment on Tag {
 	id
-	xid
 	name
 	aliases {
 		id

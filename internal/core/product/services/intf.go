@@ -246,7 +246,7 @@ type CategoryRepository interface {
 // TagRepository is an interface for getting and saving `Tag` objects to a repository.
 type TagRepository interface {
 	GetTag(ctx context.Context, id, xid *string) (*models.Tag, error)
-	GetTagID(ctx context.Context, xid *string) (*string, error)
+	GetTagID(ctx context.Context, name *string) (*string, error)
 	GetTags(ctx context.Context, filter *dgclient.TagFilter, order *dgclient.TagOrder, first *int64, offset *int64) ([]*models.Tag, int64, error)
 	GetAllTags(ctx context.Context) ([]*models.Tag, int64, error)
 	CreateTag(ctx context.Context, input *models.Tag) error

@@ -6,6 +6,7 @@ import (
 	"html"
 	"net/url"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"time"
 
@@ -108,7 +109,7 @@ func (c *WikifactoryCrawler) NormalizeProduct(ctx context.Context, timestamp tim
 	product.Forks = []*models.Product{} // TODO
 	product.ForkCount = wfPrjInfo.ForkCount
 	product.StarCount = wfPrjInfo.StarCount
-	// product.Tags = "XXX"     // TODO
+	product.Tags = normTags(wfPrjInfo.Tags)
 	// product.Category = "XXX" // TODO
 
 	return product, nil
@@ -565,6 +566,32 @@ func (c *WikifactoryCrawler) getSubComponents(files []*models.File, prjInfo *wfc
 		return nil
 	}
 	return cmps
+}
+
+// TODO: make this better
+var validTagPattern = regexp.MustCompile(`^[a-z0-9_.+-]+$`)
+
+// parseTags parses the given string into a slice of tags.
+func normTags(wfTags []*wfclient.ProjectFullFragment_Tags) []*models.Tag {
+	if wfTags == nil || len(wfTags) == 0 {
+		return nil
+	}
+	tags := make([]*models.Tag, 0, len(wfTags))
+	for _, tag := range wfTags {
+		name := strings.ToLower(strings.TrimSpace(*tag.Name))
+		if len(name) == 0 ||
+			len(name) > 128 ||
+			!validTagPattern.MatchString(name) {
+			continue
+		}
+		tags = append(tags, &models.Tag{
+			Name: &name,
+		})
+	}
+	if len(tags) == 0 {
+		return nil
+	}
+	return tags
 }
 
 // stringOrNil returns the string pointer if it is non nil and contains a string

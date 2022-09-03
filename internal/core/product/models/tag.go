@@ -4,8 +4,7 @@ var _ Node = (*Tag)(nil)
 
 type Tag struct {
 	ID      *string `id:"true" mandatory:"true" json:"id,omitempty" graphql:"id" dql:"uid"`
-	Xid     *string `altID:"true" mandatory:"true" json:"xid,omitempty" graphql:"xid" dql:"Tag.xid"`
-	Name    *string `mandatory:"true" json:"name,omitempty" graphql:"name" dql:"Tag.name"`
+	Name    *string `altID:"true" mandatory:"true" json:"name,omitempty" graphql:"name" dql:"Tag.name"`
 	Aliases []*Tag  `json:"aliases,omitempty" graphql:"aliases" dql:"Tag.aliases"`
 	Related []*Tag  `json:"related,omitempty" graphql:"related" dql:"Tag.related"`
 }
@@ -17,7 +16,7 @@ func (t *Tag) GetID() *string {
 
 // GetAltID returns the alternative IDs of the node.
 func (t *Tag) GetAltID() *string {
-	return t.Xid
+	return t.Name
 }
 
 func (*Tag) IsNode() {}

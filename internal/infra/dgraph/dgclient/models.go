@@ -376,8 +376,6 @@ type AddStringVPayload struct {
 }
 
 type AddTagInput struct {
-	// The human readable identifier of the tag.
-	Xid string `json:"xid"`
 	// The name of the tag.
 	Name    string    `json:"name"`
 	Aliases []*TagRef `json:"aliases,omitempty"`
@@ -730,7 +728,7 @@ type ComponentFilter struct {
 	Attestation           *StringHashFilter                                       `json:"attestation,omitempty"`
 	Publication           *StringHashFilter                                       `json:"publication,omitempty"`
 	Issues                *StringHashFilter                                       `json:"issues,omitempty"`
-	CpcPatentClass        *StringHashFilter                                       `json:"cpcPatentClass,omitempty"`
+	CpcPatentClass        *StringRegExpFilterStringTermFilter                     `json:"cpcPatentClass,omitempty"`
 	Mass                  *FloatFilter                                            `json:"mass,omitempty"`
 	Has                   []*ComponentHasFilter                                   `json:"has,omitempty"`
 	And                   []*ComponentFilter                                      `json:"and,omitempty"`
@@ -1398,13 +1396,13 @@ type HostAggregateResult struct {
 }
 
 type HostFilter struct {
-	ID     []string                                            `json:"id,omitempty"`
-	Domain *StringHashFilterStringRegExpFilter                 `json:"domain,omitempty"`
-	Name   *StringHashFilterStringRegExpFilterStringTermFilter `json:"name,omitempty"`
-	Has    []*HostHasFilter                                    `json:"has,omitempty"`
-	And    []*HostFilter                                       `json:"and,omitempty"`
-	Or     []*HostFilter                                       `json:"or,omitempty"`
-	Not    *HostFilter                                         `json:"not,omitempty"`
+	ID     []string                            `json:"id,omitempty"`
+	Domain *StringHashFilterStringRegExpFilter `json:"domain,omitempty"`
+	Name   *StringRegExpFilterStringTermFilter `json:"name,omitempty"`
+	Has    []*HostHasFilter                    `json:"has,omitempty"`
+	And    []*HostFilter                       `json:"and,omitempty"`
+	Or     []*HostFilter                       `json:"or,omitempty"`
+	Not    *HostFilter                         `json:"not,omitempty"`
 }
 
 type HostOrder struct {
@@ -1935,8 +1933,8 @@ type ProductFilter struct {
 	Name                  *StringFullTextFilterStringHashFilterStringRegExpFilter `json:"name,omitempty"`
 	Description           *StringFullTextFilterStringRegExpFilter                 `json:"description,omitempty"`
 	DocumentationLanguage *StringRegExpFilter                                     `json:"documentationLanguage,omitempty"`
-	Version               *StringTermFilter                                       `json:"version,omitempty"`
-	Website               *StringFullTextFilterStringHashFilterStringRegExpFilter `json:"website,omitempty"`
+	Version               *StringRegExpFilter                                     `json:"version,omitempty"`
+	Website               *StringFullTextFilterStringRegExpFilter                 `json:"website,omitempty"`
 	State                 *ProductStateHash                                       `json:"state,omitempty"`
 	LastUpdatedAt         *DateTimeFilter                                         `json:"lastUpdatedAt,omitempty"`
 	ForkCount             *IntFilter                                              `json:"forkCount,omitempty"`
@@ -2082,13 +2080,13 @@ type RepositoryAggregateResult struct {
 }
 
 type RepositoryFilter struct {
-	ID   []string                                                `json:"id,omitempty"`
-	Xid  *StringHashFilter                                       `json:"xid,omitempty"`
-	Name *StringFullTextFilterStringHashFilterStringRegExpFilter `json:"name,omitempty"`
-	Has  []*RepositoryHasFilter                                  `json:"has,omitempty"`
-	And  []*RepositoryFilter                                     `json:"and,omitempty"`
-	Or   []*RepositoryFilter                                     `json:"or,omitempty"`
-	Not  *RepositoryFilter                                       `json:"not,omitempty"`
+	ID   []string                                `json:"id,omitempty"`
+	Xid  *StringHashFilter                       `json:"xid,omitempty"`
+	Name *StringFullTextFilterStringRegExpFilter `json:"name,omitempty"`
+	Has  []*RepositoryHasFilter                  `json:"has,omitempty"`
+	And  []*RepositoryFilter                     `json:"and,omitempty"`
+	Or   []*RepositoryFilter                     `json:"or,omitempty"`
+	Not  *RepositoryFilter                       `json:"not,omitempty"`
 }
 
 type RepositoryOrder struct {
@@ -2327,8 +2325,6 @@ type StringVRef struct {
 // A tag is a keyword or fulltext used to describe a product.
 type Tag struct {
 	ID string `json:"id"`
-	// The human readable identifier of the tag.
-	Xid string `json:"xid"`
 	// The name of the tag.
 	Name string `json:"name"`
 	// List of alliases of the tag.
@@ -2343,20 +2339,17 @@ func (Tag) IsNode() {}
 
 type TagAggregateResult struct {
 	Count   *int64  `json:"count"`
-	XidMin  *string `json:"xidMin"`
-	XidMax  *string `json:"xidMax"`
 	NameMin *string `json:"nameMin"`
 	NameMax *string `json:"nameMax"`
 }
 
 type TagFilter struct {
-	ID   []string                                `json:"id,omitempty"`
-	Xid  *StringHashFilter                       `json:"xid,omitempty"`
-	Name *StringFullTextFilterStringRegExpFilter `json:"name,omitempty"`
-	Has  []*TagHasFilter                         `json:"has,omitempty"`
-	And  []*TagFilter                            `json:"and,omitempty"`
-	Or   []*TagFilter                            `json:"or,omitempty"`
-	Not  *TagFilter                              `json:"not,omitempty"`
+	ID   []string                                                `json:"id,omitempty"`
+	Name *StringFullTextFilterStringHashFilterStringRegExpFilter `json:"name,omitempty"`
+	Has  []*TagHasFilter                                         `json:"has,omitempty"`
+	And  []*TagFilter                                            `json:"and,omitempty"`
+	Or   []*TagFilter                                            `json:"or,omitempty"`
+	Not  *TagFilter                                              `json:"not,omitempty"`
 }
 
 type TagOrder struct {
@@ -2366,8 +2359,6 @@ type TagOrder struct {
 }
 
 type TagPatch struct {
-	// The human readable identifier of the tag.
-	Xid *string `json:"xid,omitempty"`
 	// The name of the tag.
 	Name    *string   `json:"name,omitempty"`
 	Aliases []*TagRef `json:"aliases,omitempty"`
@@ -2376,8 +2367,6 @@ type TagPatch struct {
 
 type TagRef struct {
 	ID *string `json:"id,omitempty"`
-	// The human readable identifier of the tag.
-	Xid *string `json:"xid,omitempty"`
 	// The name of the tag.
 	Name    *string   `json:"name,omitempty"`
 	Aliases []*TagRef `json:"aliases,omitempty"`
@@ -5115,14 +5104,12 @@ func (e StringVOrderable) MarshalGQL(w io.Writer) {
 type TagHasFilter string
 
 const (
-	TagHasFilterXid     TagHasFilter = "xid"
 	TagHasFilterName    TagHasFilter = "name"
 	TagHasFilterAliases TagHasFilter = "aliases"
 	TagHasFilterRelated TagHasFilter = "related"
 )
 
 var AllTagHasFilter = []TagHasFilter{
-	TagHasFilterXid,
 	TagHasFilterName,
 	TagHasFilterAliases,
 	TagHasFilterRelated,
@@ -5130,7 +5117,7 @@ var AllTagHasFilter = []TagHasFilter{
 
 func (e TagHasFilter) IsValid() bool {
 	switch e {
-	case TagHasFilterXid, TagHasFilterName, TagHasFilterAliases, TagHasFilterRelated:
+	case TagHasFilterName, TagHasFilterAliases, TagHasFilterRelated:
 		return true
 	}
 	return false
@@ -5160,18 +5147,16 @@ func (e TagHasFilter) MarshalGQL(w io.Writer) {
 type TagOrderable string
 
 const (
-	TagOrderableXid  TagOrderable = "xid"
 	TagOrderableName TagOrderable = "name"
 )
 
 var AllTagOrderable = []TagOrderable{
-	TagOrderableXid,
 	TagOrderableName,
 }
 
 func (e TagOrderable) IsValid() bool {
 	switch e {
-	case TagOrderableXid, TagOrderableName:
+	case TagOrderableName:
 		return true
 	}
 	return false

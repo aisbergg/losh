@@ -1,6 +1,5 @@
 fragment TagFragment on Tag {
 	id
-	xid
 	name
 	aliases {
 		id
@@ -18,12 +17,12 @@ query GetTagByID($id: ID!) {
 	getTag(id: $id) {...TagFragment}
 }
 
-query GetTagByXid($xid: String!) {
-	getTag(xid: $xid) {...TagFragment}
+query GetTagByName($name: String!) {
+	getTag(name: $name) {...TagFragment}
 }
 
-query GetTagID($xid: String!) {
-	getTag(xid: $xid) {id}
+query GetTagID($name: String!) {
+	getTag(name: $name) {id}
 }
 
 query GetTags($getFilter: TagFilter, $order: TagOrder, $first: Int, $offset: Int) {

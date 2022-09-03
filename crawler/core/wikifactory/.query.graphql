@@ -52,6 +52,9 @@ fragment ProjectFullFragment on Project {
 	id
 	name
 	description
+	tags {
+    name
+  }
 	lastUpdated
 	followersCount
 	starCount

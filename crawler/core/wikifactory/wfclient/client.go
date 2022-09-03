@@ -4,9 +4,8 @@ package wfclient
 
 import (
 	"context"
-	"time"
-
 	"losh/internal/lib/net/request"
+	"time"
 )
 
 type WikifactoryGraphQLClient interface {
@@ -86,6 +85,7 @@ type Query struct {
 	Manufacturers         ManufacturerPage                          "json:\"manufacturers\" graphql:\"manufacturers\""
 	Materials             []*Material                               "json:\"materials\" graphql:\"materials\""
 	Processes             []*Process                                "json:\"processes\" graphql:\"processes\""
+	Service               Service                                   "json:\"service\" graphql:\"service\""
 	Services              ServicePage                               "json:\"services\" graphql:\"services\""
 	Option                Option                                    "json:\"option\" graphql:\"option\""
 	Options               []Option                                  "json:\"options\" graphql:\"options\""
@@ -237,6 +237,7 @@ type ProjectFullFragment struct {
 	ID             string                             "json:\"id\" graphql:\"id\""
 	Name           *string                            "json:\"name\" graphql:\"name\""
 	Description    *string                            "json:\"description\" graphql:\"description\""
+	Tags           []*ProjectFullFragment_Tags        "json:\"tags\" graphql:\"tags\""
 	LastUpdated    *time.Time                         "json:\"lastUpdated\" graphql:\"lastUpdated\""
 	FollowersCount *int64                             "json:\"followersCount\" graphql:\"followersCount\""
 	StarCount      *int64                             "json:\"starCount\" graphql:\"starCount\""
@@ -280,6 +281,9 @@ type ProjectMandatoryFragment_Contribution_Files struct {
 type ProjectMandatoryFragment_Contribution struct {
 	Version *string                                        "json:\"version\" graphql:\"version\""
 	Files   []*ProjectMandatoryFragment_Contribution_Files "json:\"files\" graphql:\"files\""
+}
+type ProjectFullFragment_Tags struct {
+	Name *string "json:\"name\" graphql:\"name\""
 }
 type ProjectFullFragment_Creator_Profile struct {
 	FullName *string       "json:\"fullName\" graphql:\"fullName\""
@@ -357,6 +361,9 @@ type QueryProjects_Projects_Result struct {
 type QueryProjects_Projects struct {
 	Result *QueryProjects_Projects_Result "json:\"result\" graphql:\"result\""
 }
+type GetProjectFullByID_Project_Result_ProjectFullFragment_Tags struct {
+	Name *string "json:\"name\" graphql:\"name\""
+}
 type GetProjectFullByID_Project_Result_ProjectFullFragment_Creator_Profile struct {
 	FullName *string       "json:\"fullName\" graphql:\"fullName\""
 	Username *string       "json:\"username\" graphql:\"username\""
@@ -405,6 +412,9 @@ type GetProjectFullByID_Project_Result_ProjectFullFragment_ParentContent struct 
 }
 type GetProjectFullByID_Project struct {
 	Result *ProjectFullFragment "json:\"result\" graphql:\"result\""
+}
+type GetProjectFullBySlug_Project_Result_ProjectFullFragment_Tags struct {
+	Name *string "json:\"name\" graphql:\"name\""
 }
 type GetProjectFullBySlug_Project_Result_ProjectFullFragment_Creator_Profile struct {
 	FullName *string       "json:\"fullName\" graphql:\"fullName\""
@@ -632,6 +642,9 @@ fragment ProjectFullFragment on Project {
 	id
 	name
 	description
+	tags {
+		name
+	}
 	lastUpdated
 	followersCount
 	starCount
@@ -748,10 +761,24 @@ const GetProjectFullBySlugDocument = `query GetProjectFullBySlug ($space: String
 		}
 	}
 }
+fragment ContributionFragment on Contribution {
+	title
+	dateCreated
+	version
+	files {
+		dirname
+		file {
+			... FileFragment
+		}
+	}
+}
 fragment ProjectFullFragment on Project {
 	id
 	name
 	description
+	tags {
+		name
+	}
 	lastUpdated
 	followersCount
 	starCount
@@ -812,17 +839,6 @@ fragment FileFragment on File {
 	dateCreated
 	lastUpdated
 	license
-}
-fragment ContributionFragment on Contribution {
-	title
-	dateCreated
-	version
-	files {
-		dirname
-		file {
-			... FileFragment
-		}
-	}
 }
 `
 

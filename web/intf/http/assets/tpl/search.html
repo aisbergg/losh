@@ -444,10 +444,10 @@ extraProperties:
 				</a>
 				{%- endunless %}
 				{%- if (product.Tags | size) > 1 %}
-				<a href="#" class="search-result-info-link mb-1" in="">
+				<div class="search-result-info mb-1">
 					<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Tags">{% include ui/icon.html icon="tag" %}</span>
-					<span>{% for tag in product.Tags %}{{ tag.Name }}{% unless forloop.last %}, {% endunless %}{% endfor %}</span>
-				</a>
+					<span>{% for tag in product.Tags %}<span class="add-to-search" data-operator='tag:=="{{ tag.Name }}"'>{{ tag.Name }}</span>{% unless forloop.last %}, {% endunless %}{% endfor %}</span>
+				</div>
 				{%- endif %}
 				{%- for ep in extraProperties %}
 					{%- if ep.operator | in: page.results.operators %}

@@ -862,15 +862,10 @@ type Category implements Node {
 A tag is a keyword or fulltext used to describe a product.
 """
 type Tag implements Node {
-	"""
-  The human readable identifier of the tag.
-  """
-  xid: String! @id @search(by: [hash])
-
   """
   The name of the tag.
   """
-  name: String! @search(by: [fulltext, regexp])
+  name: String! @id @search(by: [fulltext, regexp])
 
   """
   List of alliases of the tag.

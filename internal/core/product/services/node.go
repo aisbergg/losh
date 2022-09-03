@@ -46,7 +46,7 @@ func (s *Service) determineID(ctx context.Context, node models.Node) (err error)
 		n.ID, err = s.repo.GetRepositoryID(ctx, n.Xid)
 
 	case *models.Tag:
-		n.ID, err = s.repo.GetTagID(ctx, n.Xid)
+		n.ID, err = s.repo.GetTagID(ctx, n.Name)
 
 	case *models.TechnicalStandard:
 		n.ID, err = s.repo.GetTechnicalStandardID(ctx, n.Xid)
