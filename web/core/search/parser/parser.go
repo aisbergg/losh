@@ -69,7 +69,7 @@ func (co *CompOperator) Capture(s []string) error {
 }
 
 type Comparison struct {
-	Operator CompOperator `@("=" "=" | "!" "=" | "<" | ">" | "<" "=" | ">" "=")`
+	Operator CompOperator `@("=" "=" | "!" "=" | "<" "=" | "<" | ">" "=" | ">")`
 	Value    *Text        `@@`
 }
 
