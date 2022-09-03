@@ -76,6 +76,8 @@ github.com/aisbergg/go-dqlx v0.0.0-20220822230403-6ac098906135 h1:DRFNyap8wA/eK6
 github.com/aisbergg/go-dqlx v0.0.0-20220822230403-6ac098906135/go.mod h1:1sT62B2oMOvQj7gOdxlouPPpKyzKiXVCQ/Py3A1ZJ6c=
 github.com/aisbergg/go-errors v0.0.0-20220825110559-14f02ed2dc16 h1:7u+hQjfIiv0Iklo5vB5Fs3b+YnkJHlKuC4KGATlo+RM=
 github.com/aisbergg/go-errors v0.0.0-20220825110559-14f02ed2dc16/go.mod h1:R4VOP6v6tKqT4L2umVlCtUk1zFYdkQ6F96oy7c4EffI=
+github.com/aisbergg/go-errors v0.0.0-20220903200228-45af4ab2732d h1:BXUrCg1g98tq20qhVPdwbvN7yhmrKoYCfQiWhRWwChE=
+github.com/aisbergg/go-errors v0.0.0-20220903200228-45af4ab2732d/go.mod h1:R4VOP6v6tKqT4L2umVlCtUk1zFYdkQ6F96oy7c4EffI=
 github.com/aisbergg/go-frontmatter v0.0.0-20220830134939-08322d69e80e h1:PlZKPkkFZf6EAcdPrLc06zLD+mpnnVBPqKL0kUo8dIc=
 github.com/aisbergg/go-frontmatter v0.0.0-20220830134939-08322d69e80e/go.mod h1:sK2bwLREFXlZXx5kfx1prUQra66NAi8Sk4lE9yY6AVo=
 github.com/aisbergg/go-jsonpointer v0.0.0-20220709111216-687f47fafb50 h1:ciWnkPWWai/WbssyLpQZCSCFwgBdcaTZLepy6qRGCWs=

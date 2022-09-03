@@ -7,7 +7,7 @@ require (
 	github.com/Yamashou/gqlgenc v0.0.6
 	github.com/abadojack/whatlanggo v1.0.1
 	github.com/aisbergg/go-copier v0.0.0-20220822180427-d38739757c35
-	github.com/aisbergg/go-errors v0.0.0-20220825110559-14f02ed2dc16
+	github.com/aisbergg/go-errors v0.0.0-20220903200228-45af4ab2732d
 	github.com/aisbergg/go-frontmatter v0.0.0-20220830134939-08322d69e80e
 	github.com/aisbergg/go-jsonpointer v0.0.0-20220709111216-687f47fafb50
 	github.com/aisbergg/go-pathlib v0.12.1-0.20220826142213-89265f98d94e

@@ -139,6 +139,18 @@ func (c *WikifactoryCrawler) DiscoverProducts(ctx context.Context) error {
 			c.log.Infof("indexing product (%s)", productID.String())
 			prd, err := c.getProduct(ctx, productID, discoveredAt)
 			if err != nil {
+				var gqlErr *gql.ErrorResponse
+				if errors.As(err, &gqlErr) {
+					// if there is something wrong on the Wikifactory side
+					// (empty message), we skip the product
+					if gqlErr.GqlErrors != nil &&
+						len(*gqlErr.GqlErrors) > 0 &&
+						(*gqlErr.GqlErrors)[0].Message == "" {
+						c.log.Debugf("skipping (%s): invalid response from Wikifactory", productID.String())
+						continue
+					}
+				}
+
 				if vldErr, ok := err.(*validator.ValidationError); ok {
 					c.log.Debugf("skipping (%s): %s", productID.String(), vldErr.Error())
 					continue
