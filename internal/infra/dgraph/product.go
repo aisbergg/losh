@@ -11,161 +11,12 @@ import (
 	"time"
 
 	productmodels "losh/internal/core/product/models"
-	"losh/internal/infra/dgraph/dgclient"
 	searchmodels "losh/web/core/search/models"
 	"losh/web/core/search/parser"
 
 	"github.com/aisbergg/go-errors/pkg/errors"
 	"github.com/golang-module/carbon/v2"
 )
-
-// SearchProducts returns a list of `Product` objects matching the filter criteria.
-func (dr *DgraphRepository) SearchProducts(ctx context.Context, filter *dgclient.ProductFilter, order *dgclient.ProductOrder, first *int64, offset *int64) ([]*productmodels.Product, int64, error) {
-	dr.log.Debugw("search Products")
-	rsp, err := dr.client.SearchProducts(ctx, filter, order, first, offset)
-	if err != nil {
-		return nil, 0, WrapRepoError(err, errGetProductStr)
-	}
-	ret := make([]*productmodels.Product, 0, len(rsp.QueryProduct))
-	if err = dr.copier.CopyTo(rsp.QueryProduct, &ret); err != nil {
-		panic(err)
-	}
-	return ret, *rsp.AggregateProduct.Count, nil
-}
-
-// func (dr *DgraphRepository) SearchProductsDQL(ctx context.Context, filter *dgclient.ProductFilter, order *dgclient.ProductOrder, first *int64, offset *int64) ([]*models.Product, uint64, error) {
-// 	dr.log.Debugw("search Products")
-
-// 	// bind results to map - will be copied into data model at the end
-// 	var rspData []map[string]interface{}
-
-// 	// search products
-// 	searchQuery := dqlx.Variable(dqlx.TypeFn("Product")).As("searchResults")
-// 	// Filter(dqlx.And()).
-
-// 	// order by
-// 	orderBy := OrderBy{"license", true}
-// 	switch orderBy.Field {
-// 	case "license":
-// 		// searchQuery = searchQuery.
-// 		// 	Select(dqlx.As("order", dqlx.Min("O1"))).
-// 		// 	Edge("Product.release", dqlx.As("O1", dqlx.Min("O2"))). // variable needs to be propagated through levels
-// 		// 	Edge("Product.release->Component.license", dqlx.Select("O2 as License.xid"))
-// 		// searchQuery = searchQuery.
-// 		searchQuery = searchQuery.Select(dqlx.As("order", dqlx.Min("O1")))
-// 		searchQuery = searchQuery.Edge("Product.release", dqlx.As("O1", dqlx.Min("O2"))) // variable needs to be propagated through levels
-// 		searchQuery = searchQuery.Edge("Product.release->Component.license", dqlx.Select("O2 as License.xid"))
-// 	default:
-// 		// order by name
-// 	}
-
-// 	// collect results and select fields
-// 	paginatedQuery := dr.dqlxClient.Query(dqlx.UIDFn(dqlx.P("searchResults"))).
-// 		Variable(searchQuery).
-// 		Raw(`
-// 			uid
-// 			Product.xid
-// 			Product.name
-// 			Product.website
-// 			Product.renamedTo {uid}
-// 			Product.renamedFrom {uid}
-// 			Product.forkOf {
-// 				uid
-// 				Product.release {
-// 					Component.repository {
-// 						Repository.url
-// 					}
-// 				}
-// 			}
-// 			Product.forks {uid}
-// 			Product.releases {uid}
-// 		`).
-// 		EdgeFromQuery(TagDQLFragment.Name("Product.tags")).
-// 		EdgeFromQuery(CategoryDQLFragment.Name("Product.category")).
-// 		EdgeFn("Product.release", func(builder dqlx.QueryBuilder) dqlx.QueryBuilder {
-// 			return builder.Raw(`
-// 					Component.id
-// 					Component.xid
-// 					Component.name
-// 					Component.description
-// 					Component.version
-// 					Component.createdAt
-// 					Component.releases {uid}
-// 					Component.isLatest
-// 					Component.documentationLanguage
-// 					Component.technologyReadinessLevel
-// 					Component.documentationReadinessLevel
-// 					Component.attestation
-// 					Component.publication
-// 					Component.compliesWith {name}
-// 					Component.cpcPatentClass
-// 					Component.tsdc {uid}
-// 					Component.components {uid}
-// 					Component.software {uid}
-// 					Component.product {uid}
-// 					Component.usedIn {uid}
-// 					Component.organization {uid}
-// 					Component.mass
-// 					Component.material {uid}
-// 					Component.manufacturingProcess {uid}
-// 					Component.productionMetadata {uid}
-// 				`).
-// 				EdgeFromQuery(RepositoryDQLFragment.Name("Component.repository")).
-// 				EdgeFromQuery(LicenseBasicDQLFragment.Name("Component.license")).
-// 				EdgeFromQuery(LicenseBasicDQLFragment.Name("Component.additionalLicenses")).
-// 				EdgeFromQuery(UserOrGroupFullDQLFragment.Name("Component.licensor")).
-// 				EdgeFromQuery(FileDQLFragment.Name("Component.image")).
-// 				EdgeFromQuery(FileDQLFragment.Name("Component.readme")).
-// 				EdgeFromQuery(FileDQLFragment.Name("Component.contributionGuide")).
-// 				EdgeFromQuery(FileDQLFragment.Name("Component.bom")).
-// 				EdgeFromQuery(FileDQLFragment.Name("Component.manufacturingInstructions")).
-// 				EdgeFromQuery(FileDQLFragment.Name("Component.userManual")).
-// 				EdgeFromQuery(FileDQLFragment.Name("Component.source")).
-// 				EdgeFromQuery(FileDQLFragment.Name("Component.export")).
-// 				EdgeFromQuery(FileDQLFragment.Name("Component.auxiliary")).
-// 				EdgeFromQuery(OuterDimensionsDQLFragment.Name("Component.outerDimensions"))
-// 		}).
-// 		UnmarshalInto(&rspData)
-
-// 	// order results
-// 	paginatedQuery = paginatedQuery.OrderAsc(dqlx.Val("order"))
-
-// 	// paginate results
-// 	if first != nil {
-// 		paginatedQuery = paginatedQuery.Paginate(dqlx.Cursor{
-// 			// TODO: revert
-// 			// First: int(*first),
-// 			First:  1,
-// 			Offset: int(*offset),
-// 			After:  "",
-// 		})
-// 	}
-
-// 	s, m, e := paginatedQuery.ToDQL()
-// 	fmt.Println("query:", s)
-// 	fmt.Println("m:", m)
-// 	fmt.Println("e:", e)
-
-// 	rsp, err := paginatedQuery.Execute(ctx, dqlx.WithReadOnly(true))
-// 	if err != nil {
-// 		return nil, 0, err
-// 	}
-
-// 	// fmt.Println("here")
-// 	// fmt.Println(string(rsp.Raw.Json))
-// 	// fmt.Println(rsp.Raw.Metrics.NumUids["uid"])
-
-// 	ret := make([]*models.Product, 0, len(rspData))
-// 	if err = dr.dqlCopier.CopyTo(rspData, &ret); err != nil {
-// 		panic(err)
-// 	}
-
-// 	// fmt.Println("ret:", rspData[0])
-// 	// fmt.Println("ret:", ret[0].Name)
-// 	// fmt.Println("metrics:", rsp.Raw.Metrics)
-
-// 	return ret, rsp.Raw.Metrics.NumUids["Product.xid"], nil
-// }
 
 const selectQueryFragment = `
 q(func: uid(%s), first: $first, offset: $offset, %s) {
@@ -419,7 +270,7 @@ q(func: uid(%s), first: $first, offset: $offset, %s) {
 	}
 }`
 
-func (dr *DgraphRepository) SearchProductsDQL(ctx context.Context, query *parser.Query, order searchmodels.OrderBy, pagination searchmodels.Pagination) ([]*productmodels.Product, uint64, error) {
+func (dr *DgraphRepository) SearchProducts(ctx context.Context, query *parser.Query, order searchmodels.OrderBy, pagination searchmodels.Pagination) ([]*productmodels.Product, uint64, error) {
 	dr.log.Debugw("search Products")
 
 	q, v := createDQLQuery(query, order, pagination)
@@ -579,37 +430,6 @@ func (e *encoder) encodeQuery(query *parser.Query, parVar string) (curVar string
 	return e.appendUnionVariable(vars...)
 }
 
-// func (e *encoder) encodeAndConditions(andCnds []*parser.AndCondition) (curVar string) {
-// 	for _, andCnd := range andCnds {
-// 		pf, lf := encodeAndCondition(andCnd)
-// 		if pf != nil {
-// 			if prdAndFlts == nil {
-// 				prdAndFlts = []*dgclient.ProductFilter{}
-// 			}
-// 			prdAndFlts = append(prdAndFlts, pf)
-// 		}
-// 		_ = lf
-// 	}
-
-// 	if andCnd.Not != nil {
-// 		pf, lf := encodeAndCondition(andCnd.Not)
-// 		if pf != nil {
-// 			pf = &dgclient.ProductFilter{
-// 				Not: pf,
-// 			}
-// 		}
-// 		if lf != nil {
-// 			lf = &dgclient.LicenseFilter{
-// 				Not: lf,
-// 			}
-// 		}
-// 		return pf, lf
-
-// 	} else {
-// 		return encodeExpression(andCnd.Operand)
-// 	}
-// }
-
 func (e *encoder) encodeAndCondition(andCnd *parser.AndCondition, parVar string) (curVar string) {
 	if andCnd.Not != nil {
 		notVar := e.encodeAndCondition(andCnd.Not, parVar)
@@ -619,125 +439,42 @@ func (e *encoder) encodeAndCondition(andCnd *parser.AndCondition, parVar string)
 	return e.encodeExpression(andCnd.Operand, parVar)
 }
 
-// encodeExpression encodes an expression into DQL variable and returns the
-// variable name.
-// func (e *encoder) encodeExpression(expr *parser.Expression, parVar string) (curVar string) {
-// 	if expr.Text != nil {
-// 		if expr.Text.Words != nil {
-// 			arg := e.addArg(*expr.Text.Words, "string")
-// 			filter := fmt.Sprintf(`@filter(
-// 				alloftext(Product.name, %s)
-// 				OR alloftext(Product.description, %s)
-// 			)`, arg, arg)
-// 			curVar = e.addVariableWithFilter(filter, "", parVar)
-// 		}
-// 	}
-
-// 	return
-// }
-
 var multGlobPattern = regexp.MustCompile(`\*+`)
 
 // encodeExpression encodes an expression into DQL variable and returns the
 // variable name.
 func (e *encoder) encodeExpression(expr *parser.Expression, parVar string) (curVar string) {
 	if expr.Text != nil {
+		// extract the value as text
+		text := ""
 		if expr.Text.Words != nil {
-			if strings.Contains(*expr.Text.Words, "*") {
-				// regex search
-				words := strings.Split(*expr.Text.Words, " ")
-				asFullText := []string{}
-
-				var fb strings.Builder
-				wildcardsCount := 0
-				for i, word := range words {
-					if strings.Contains(word, "*") && wildcardsCount <= 3 { // allow up to 3 wildcards
-						word = multGlobPattern.ReplaceAllString(word, "*")
-						// regex for words with globs (*)
-						parts := strings.Split(word, "*")
-						for i, part := range parts {
-							parts[i] = regexp.QuoteMeta(part)
-						}
-						var b strings.Builder
-						b.WriteString(`/.*?`)
-						for j, part := range parts {
-							if wildcardsCount > 3 {
-								// discard remaining parts
-								break
-							}
-							if part == "" {
-								if j == len(parts)-1 {
-									// if glob is last -> match until next word
-									b.WriteString(`(\s*\S*)?`)
-								}
-								continue
-							}
-							if j != 0 {
-								// max distance between matches of 5
-								b.WriteString(`(\s*\S*){0,5}`)
-							}
-
-							b.WriteString(part)
-							wildcardsCount++
-						}
-						b.WriteString(`/i`)
-						arg := e.CrateArg(b.String(), "string")
-
-						if i != 0 {
-							fb.WriteString(` AND `)
-						}
-						fb.WriteString(`(regexp(Product.name, `)
-						fb.WriteString(arg)
-						fb.WriteString(`) OR regexp(Product.description, `)
-						fb.WriteString(arg)
-						fb.WriteString(`))`)
-
-					} else {
-						asFullText = append(asFullText, word)
-					}
-				}
-				// use full text search for the rest
-				if len(asFullText) > 0 {
-					s := strings.Join(asFullText, " ")
-					arg := e.CrateArg(s, "string")
-					fb.WriteString(` AND (alloftext(Product.name, `)
-					fb.WriteString(arg)
-					fb.WriteString(`) OR alloftext(Product.description, `)
-					fb.WriteString(arg)
-					fb.WriteString(`))`)
-				}
-				filter := fmt.Sprintf(`@filter(%s)`, fb.String())
-				curVar = e.addVariableWithFilter(filter, "", parVar)
-
-			} else {
-				// full text search
-				arg := e.CrateArg(*expr.Text.Words, "string")
-				filter := fmt.Sprintf(`@filter(
-	alloftext(Product.name, %s)
-	OR alloftext(Product.description, %s)
-)`, arg, arg)
-				curVar = e.addVariableWithFilter(filter, "", parVar)
-			}
-
-		} else if expr.Text.Exact != nil {
-			// TODO: might also contain wildcards
-
-			// exact text search
-			// TODO: implement a custom strings.contains filter in database that allows case insensitive matching and use that instead of regex
-			exact := regexp.QuoteMeta(*expr.Text.Exact)
-			var b strings.Builder
-			b.Grow(len(exact) + 10)
-			b.WriteString(`/.*?`)
-			b.WriteString(exact)
-			b.WriteString(`.*/i`)
-
-			arg := e.CrateArg(b.String(), "string")
-			filter := fmt.Sprintf(`@filter(
-	regexp(Product.name, %s)
-	OR regexp(Product.description, %s)
-)`, arg, arg)
-			curVar = e.addVariableWithFilter(filter, "", parVar)
+			text = *expr.Text.Words
+		} else {
+			text = *expr.Text.Exact
 		}
+		if text == "" {
+			return
+		}
+		nameOpr := operators["name"]
+		descOpr := operators["description"]
+		tagOpr := operators["tag"]
+		filter := e.generateOrFilter(
+			e.generateTextFilter(nameOpr.Predicate, nameOpr.Type, text, false, false),
+			e.generateTextFilter(descOpr.Predicate, descOpr.Type, text, false, false),
+		)
+		if filter == nil {
+			return
+		}
+		filter = e.generateFilterExpression(filter)
+		var1 := e.addVariableWithFilter(string(filter), "", parVar)
+
+		tagfilter := e.generateTextFilter(tagOpr.Predicate, tagOpr.Type, text, false, false)
+		tagfilter = e.generateFilterExpression(tagfilter)
+		sel := fmt.Sprintf(`%s %s %s`, tagOpr.SelectionStart, string(tagfilter), tagOpr.SelectionEnd)
+		var2 := e.addVariableWithFilter("", sel, parVar)
+
+		curVar = e.appendUnionVariable(var1, var2)
+		return
 
 	} else if expr.Operator != nil {
 		// operator search
@@ -808,38 +545,18 @@ func (e *encoder) encodeOperator(opr *parser.Operator, parVar string) (curVar st
 		return
 
 	case textFullContainsOperator, textTermExactOperator, textTermContainsOperator, textExactOperator:
-		// text, full, match, not := e.extractOperatorText(opr)
-		// if text == "" {
-		// 	return
-		// }
-		// filter := ""
-		// if full || match {
-		// 	filter = e.exactTextFilter(o.Predicate, text, not, match)
-		// } else {
-		// 	filter = e.fullTextFilter(o.Predicate, text, not, (o.Type == textTermExactOperator || o.Type == textExactOperator))
-		// }
-		// if o.IsRootFilter {
-		// 	sel := fmt.Sprintf(`%s %s`, o.SelectionStart, o.SelectionEnd)
-		// 	curVar = e.addVariableWithFilter(filter, sel, parVar)
-		// 	return
-		// }
-
-		// sel := fmt.Sprintf(`%s %s %s`, o.SelectionStart, filter, o.SelectionEnd)
-		// curVar = e.addVariableWithFilter("", sel, parVar)
-		// return
-
 		text, exact, match, not := e.extractOperatorText(opr)
 		if text == "" {
 			return
 		}
-		filter := e.encodeTextFilter(o.Predicate, o.Type, text, exact, match)
+		filter := e.generateTextFilter(o.Predicate, o.Type, text, exact, match)
 		if filter == nil || len(filter) == 0 {
 			return
 		}
 		if not {
-			filter = e.encodeNotFilter(filter)
+			filter = e.generateNotFilter(filter)
 		}
-		filter = e.encodeFilterExpression(filter)
+		filter = e.generateFilterExpression(filter)
 		if o.IsRootFilter {
 			sel := fmt.Sprintf(`%s %s`, o.SelectionStart, o.SelectionEnd)
 			curVar = e.addVariableWithFilter(string(filter), sel, parVar)
@@ -1441,198 +1158,7 @@ func (e *encoder) extractOperatorText(opr *parser.Operator) (text string, exact,
 	return
 }
 
-// func (e *encoder) extractOperatorBoolean(opr *parser.Operator) (value, ok bool) {
-// 	var val *parser.Text
-// 	negate := false
-
-// 	// check if the operator is a range, comparison or a plain value
-// 	if opr.Range != nil {
-// 		// ignore
-// 		return
-// 	} else if opr.Value != nil {
-// 		val = opr.Value
-// 	} else if opr.Comparison != nil {
-// 		val = opr.Comparison.Value
-// 		switch opr.Comparison.Operator {
-// 		case parser.CompOpEq:
-// 			break
-// 		case parser.CompOpNe:
-// 			negate = true
-// 		default:
-// 			// ignore
-// 			return
-// 		}
-// 	}
-// 	if val == nil {
-// 		return
-// 	}
-
-// 	// extract the value as text
-// 	text := ""
-// 	if val.Words != nil {
-// 		text = *val.Words
-// 	} else {
-// 		text = *val.Exact
-// 	}
-
-// 	// convert to boolean
-// 	b, ok := stringutil.ParseBool(text)
-// 	if !ok {
-// 		return false, false
-// 	}
-// 	if negate {
-// 		b = !b
-// 	}
-// 	return b, true
-// }
-
-// exactTextFilter returns a filter for exact text search. If match is true, the
-// whole string needs to match.
-func (e *encoder) exactTextFilter(predicate, text string, not, match bool) string {
-	if strings.Contains(text, "*") {
-		text = multGlobPattern.ReplaceAllString(text, "*")
-		parts := strings.Split(text, "*")
-		if len(parts) <= 3 { // allow up to 3 wildcards
-			for i, part := range parts {
-				parts[i] = regexp.QuoteMeta(part)
-			}
-			var b strings.Builder
-			b.WriteRune('/')
-			if match {
-				b.WriteRune('^')
-			}
-			for j, part := range parts {
-				if part == "" {
-					if j == len(parts)-1 {
-						// if glob is last -> match until end of string
-						b.WriteString(`.*?`)
-					}
-					continue
-				}
-				if j != 0 {
-					// max distance between matches of 5
-					b.WriteString(`(\s*\S*){0,5}`)
-				}
-				b.WriteString(part)
-			}
-			if match {
-				b.WriteRune('$')
-			}
-			b.WriteString(`/i`)
-			arg := e.CrateArg(b.String(), "string")
-			if not {
-				return fmt.Sprintf(`@filter(NOT regexp(%s, %s))`, predicate, arg)
-			}
-			return fmt.Sprintf(`@filter(regexp(%s, %s))`, predicate, arg)
-		}
-	}
-
-	// without wildcards
-	text = regexp.QuoteMeta(text)
-	// TODO: implement a custom strings.contains filter in database that allows case insensitive matching and use that instead of regex
-	var b strings.Builder
-	b.Grow(len(text) + 10)
-	b.WriteRune('/')
-	if match {
-		b.WriteRune('^')
-	}
-	b.WriteString(text)
-	if match {
-		b.WriteRune('$')
-	}
-	b.WriteString(`/i`)
-	arg := e.CrateArg(b.String(), "string")
-	if not {
-		return fmt.Sprintf(`@filter(NOT regexp(%s, %s))`, predicate, arg)
-	}
-	return fmt.Sprintf(`@filter(regexp(%s, %s))`, predicate, arg)
-}
-
-// fullTextFilter returns a filter for full text search. If terms is set,
-// `allofterms` will be used instead of `alloftext`.
-func (e *encoder) fullTextFilter(predicate, text string, not, terms bool) string {
-	fltName := "alloftext"
-	if terms {
-		fltName = "allofterms"
-	}
-
-	// regex for words with globs (*)
-	if strings.Contains(text, "*") {
-		words := strings.Split(text, " ")
-		asFullText := []string{}
-		var fb strings.Builder
-		for _, word := range words {
-			if word == "" {
-				continue
-			}
-
-			if strings.Contains(word, "*") {
-				word = multGlobPattern.ReplaceAllString(word, "*")
-
-				parts := strings.Split(word, "*")
-				for i, part := range parts {
-					parts[i] = regexp.QuoteMeta(part)
-				}
-				var b strings.Builder
-				b.WriteString(`/`)
-				for j, part := range parts {
-					if part == "" {
-						if j == len(parts)-1 {
-							// if glob is last -> match until next word
-							b.WriteString(`(\s*\S*)?`)
-						}
-						continue
-					}
-					if j != 0 {
-						// max distance between matches of 5
-						b.WriteString(`(\s*\S*){0,5}`)
-					}
-
-					b.WriteString(part)
-				}
-				b.WriteString(`/i`)
-				arg := e.CrateArg(b.String(), "string")
-
-				if fb.Len() > 0 {
-					fb.WriteString(` AND `)
-				}
-				fb.WriteString(`regexp(`)
-				fb.WriteString(predicate)
-				fb.WriteString(`, `)
-				fb.WriteString(arg)
-				fb.WriteString(`)`)
-
-			} else {
-				asFullText = append(asFullText, word)
-			}
-		}
-		// use full text search for the rest
-		if len(asFullText) > 0 {
-			s := strings.Join(asFullText, " ")
-			arg := e.CrateArg(s, "string")
-			fb.WriteString(` AND `)
-			fb.WriteString(fltName)
-			fb.WriteString(`(`)
-			fb.WriteString(predicate)
-			fb.WriteString(`, `)
-			fb.WriteString(arg)
-			fb.WriteString(`)`)
-		}
-		if not {
-			return fmt.Sprintf(`@filter(NOT (%s))`, fb.String())
-		}
-		return fmt.Sprintf(`@filter(%s)`, fb.String())
-	}
-
-	// without wildcards
-	arg := e.CrateArg(text, "string")
-	if not {
-		return fmt.Sprintf(`@filter(NOT %s(%s, %s))`, fltName, predicate, arg)
-	}
-	return fmt.Sprintf(`@filter(%s(%s, %s))`, fltName, predicate, arg)
-}
-
-func (e *encoder) encodeNotFilter(sub []byte) []byte {
+func (e *encoder) generateNotFilter(sub []byte) []byte {
 	if sub == nil || len(sub) == 0 {
 		return nil
 	}
@@ -1643,9 +1169,12 @@ func (e *encoder) encodeNotFilter(sub []byte) []byte {
 	return b.Bytes()
 }
 
-func (e *encoder) encodeOrFilter(subs [][]byte) []byte {
+func (e *encoder) generateOrFilter(subs ...[]byte) []byte {
 	if subs == nil || len(subs) == 0 {
 		return nil
+	}
+	if len(subs) == 1 {
+		return subs[0]
 	}
 	var b bytes.Buffer
 	first := true
@@ -1654,15 +1183,17 @@ func (e *encoder) encodeOrFilter(subs [][]byte) []byte {
 			continue
 		}
 		if !first {
-			b.WriteString(` OR `)
+			b.WriteString(`) OR `)
 		}
+		b.WriteRune('(')
 		b.Write(sub)
 		first = false
 	}
+	b.WriteRune(')')
 	return b.Bytes()
 }
 
-func (e *encoder) encodeFilterExpression(filter []byte) []byte {
+func (e *encoder) generateFilterExpression(filter []byte) []byte {
 	if filter == nil || len(filter) == 0 {
 		return nil
 	}
@@ -1673,10 +1204,10 @@ func (e *encoder) encodeFilterExpression(filter []byte) []byte {
 	return b.Bytes()
 }
 
-// encodeTextFilter ...
+// generateTextFilter ...
 //
 // match indicates whether the text need to be matched (enclosed with quotes "")
-func (e *encoder) encodeTextFilter(predicate string, oprTyp operatorType, text string, exact, match bool) []byte {
+func (e *encoder) generateTextFilter(predicate string, oprTyp operatorType, text string, exact, match bool) []byte {
 	var b bytes.Buffer
 
 	if oprTyp == textExactOperator { // only supports exact matches

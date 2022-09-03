@@ -9,127 +9,12 @@ import (
 	"losh/internal/lib/util/reflectutil"
 )
 
-// type NodeSet struct {
-// 	m *orderedmap.OrderedMap
-// }
-
-// // models.NewNodeSet creates a new NodeSet.
-// func models.NewNodeSet() *models.NodeSet {
-// 	return &NodeSet{
-// 		m: orderedmap.New(),
-// 	}
-// }
-
-// // Len returns the number of elements in the set.
-// func (ns *models.NodeSet) Len() int {
-// 	return ns.m.Len()
-// }
-
-// // add adds a node to the set. If the node is already in the set, it is not
-// // added again. The keys are used in order of given priority.
-// func (ns *models.NodeSet) add(value interface{}, key ...string) {
-// 	if _, ok := ns.get(key...); ok {
-// 		return
-// 	}
-// 	for _, k := range key {
-// 		if k == "" {
-// 			continue
-// 		}
-// 		ns.m.Set(k, value)
-// 		return
-// 	}
-// 	return
-// }
-
 func s(s *string) string {
 	if s == nil {
 		return ""
 	}
 	return *s
 }
-
-// // Add adds a node to the set.
-// func (ns *models.NodeSet) Add(node models.Node) {
-// 	if node == nil {
-// 		return
-// 	}
-// 	ns.m.Set(node, node)
-// }
-
-// // add adds a node to the set. If the node is already in the set, it is not
-// // added again. The keys are used in order of given priority.
-// func (ns *models.NodeSet) get(key ...string) (models.Node, bool) {
-// 	for _, k := range key {
-// 		if k == "" {
-// 			continue
-// 		}
-// 		if v, ok := ns.m.Get(k); ok {
-// 			return v.(models.Node), true
-// 		}
-// 	}
-// 	return nil, false
-// }
-
-// // Get returns a node.
-// func (ns *models.NodeSet) Get(node models.Node) (models.Node, bool) {
-// 	ns.m.GetPair()
-// 	if node == nil {
-// 		return nil, false
-// 	}
-// 	if v, ok := ns.m.Get(node); ok {
-// 		return v.(models.Node), true
-// 	}
-// 	return nil, false
-// }
-
-// // RangeReverse works like Range, but in reverse order.
-// func (ns *models.NodeSet) RangeReverse(f func(key interface{}, node models.Node) bool) {
-// 	fw := func(key, value interface{}) bool {
-// 		n, ok := models.AssertNode(value)
-// 		if !ok {
-// 			panic(fmt.Sprintf("unsupported node type: %T", n))
-// 		}
-// 		return f(key, value.(models.Node))
-// 	}
-// 	ns.m.RangeReverse(fw)
-// }
-
-// 1. traverse graph
-//     1. if visited -> return
-//     2. add Node to a 'visited' list
-//     5. visit children
-// // first pass - create nodes that are not yet in the DB
-// 3. For each Node in list reversed:
-//     1. has ID
-//         1. continue
-
-//     3. try to figure out, if already exists in DB -> get ID (requires knowledge about get query -> map type to get function )
-//         1. different for each type -> switch type statement
-//         2. type 'xid'
-//         3. Host with 'domain'
-//         4. function: getNodeID() Node
-
-//     2. if only leaf values
-//         1. save values
-//     3. else has leaf values
-//         1. if all of them have IDs
-//             1. save all
-//             2. store ID
-//         2. else one or more of them don't have an ID
-//             1. save mandatory (needs to be recursive)
-//                 for each mandatory sub node
-//                     1. if sub Node is mandatory
-//                         1. mandatory save sub node first (recursion will eventually stop, because they cannot all mandatory require each other)
-//                         2. store their ID
-//                 1. save mandatory value
-//             2. store ID
-//             3. add to 'secondPass'
-
-// // second pass - update nodes
-// 4. For each Node in Second pass
-//     1. add each sub Node and lists of Nodes (non mandatory)
-
-// each save requires knowledge about query - mapping between type and query document
 
 func (s *Service) SaveNodes(ctx context.Context, node []models.Node) (err error) {
 	for _, n := range node {
@@ -170,6 +55,12 @@ func (s *Service) SaveNode(ctx context.Context, node models.Node) (err error) {
 		return
 	}
 
+	// fmt.Println("before")
+	// traversed.Range(func(node models.Node) bool {
+	// 	fmt.Println("node type", reflect.TypeOf(node))
+	// 	return true
+	// })
+
 	// reorder nodes so that mandatory sub nodes will be saved before their
 	// parent node
 	processed := make(map[models.Node]struct{}, traversed.Len())
@@ -177,6 +68,13 @@ func (s *Service) SaveNode(ctx context.Context, node models.Node) (err error) {
 		reorderMandatory(node, traversed, processed)
 		return true
 	})
+
+	// fmt.Println("")
+	// fmt.Println("after")
+	// traversed.Range(func(node models.Node) bool {
+	// 	fmt.Println("node type", reflect.TypeOf(node))
+	// 	return true
+	// })
 
 	// create or update nodes on best effort basis
 	updateRequired := models.NewNodeSet()
@@ -429,79 +327,3 @@ func (s *Service) saveNode(ctx context.Context, node models.Node, update bool) e
 		panic(fmt.Sprintf("unsupported node type: %T", n))
 	}
 }
-
-// func (s *Service) createNode(ctx context.Context, node models.Node) error {
-// 	if node.GetID() != "" {
-// 		return nil
-// 	}
-
-// 	// create mandatory sub nodes first (fields of type struct that are not pointers)
-// 	ndeVal := reflect.ValueOf(node)
-// 	for i := 0; i < ndeVal.NumField(); i++ {
-// 		field := ndeVal.Field(i)
-// 		if field.Kind() == reflect.Pointer {
-// 			continue
-// 		}
-// 		if field.Kind() != reflect.Struct || !field.IsValid() {
-// 			continue
-// 		}
-// 		// is expected to implement Node interface
-// 		n := field.Interface().(models.Node)
-// 		if err := s.saveNode(ctx, n, true); err != nil {
-// 			return err
-// 		}
-// 	}
-
-// 	// create the node itself
-// 	return s.saveNode(ctx, node, false)
-// }
-
-// // saveMandatory saves mandatory values of a node.
-// func (s *Service) saveMandatory(ctx context.Context, node models.Node) error {
-
-// 	switch n := node.(type) {
-// 	case *models.Product:
-// 		return s.saveMandatoryProduct(ctx, n)
-
-// 	case *models.Component:
-// 		return ns.get(n.ID, fmt.Sprintf("%T|%v", n.Xid, n.Xid), fmt.Sprintf("%v", n))
-// 	case *models.Software:
-// 		return ns.get(n.ID, fmt.Sprintf("%v", n))
-// 	case *models.Repository:
-// 		return ns.get(n.ID, fmt.Sprintf("%T|%v", n.Xid, n.Xid), fmt.Sprintf("%v", n))
-// 	case *models.TechnologySpecificDocumentationCriteria:
-// 		return ns.get(n.ID, fmt.Sprintf("%T|%v", n.Xid, n.Xid), fmt.Sprintf("%v", n))
-// 	case *models.TechnicalStandard:
-// 		return ns.get(n.ID, fmt.Sprintf("%T|%v", n.Xid, n.Xid), fmt.Sprintf("%v", n))
-// 	case *models.User:
-// 		return ns.get(n.ID, fmt.Sprintf("%T|%v", n.Xid, n.Xid), fmt.Sprintf("%v", n))
-// 	case *models.Group:
-// 		return ns.get(n.ID, fmt.Sprintf("%T|%v", n.Xid, n.Xid), fmt.Sprintf("%v", n))
-// 	case *models.File:
-// 		return ns.get(n.ID, fmt.Sprintf("%T|%v", n.Xid, n.Xid), fmt.Sprintf("%v", n))
-// 	case *models.KeyValue:
-// 		return ns.get(n.ID, fmt.Sprintf("%v", n))
-// 	case *models.StringV:
-// 		return ns.get(n.ID, fmt.Sprintf("%v", n))
-// 	case *models.FloatV:
-// 		return ns.get(n.ID, fmt.Sprintf("%v", n))
-// 	case *models.Material:
-// 		return ns.get(n.ID, fmt.Sprintf("%v", n))
-// 	case *models.ManufacturingProcess:
-// 		return ns.get(n.ID, fmt.Sprintf("%v", n))
-// 	case *models.BoundingBoxDimensions:
-// 		return ns.get(n.ID, fmt.Sprintf("%v", n))
-// 	case *models.OpenSCADDimensions:
-// 		return ns.get(n.ID, fmt.Sprintf("%v", n))
-// 	case *models.Category:
-// 		return ns.get(n.ID, fmt.Sprintf("%T|%v", n.Xid, n.Xid), fmt.Sprintf("%v", n))
-// 	case *models.Tag:
-// 		return ns.get(n.ID, fmt.Sprintf("%T|%v", n.Xid, n.Xid), fmt.Sprintf("%v", n))
-// 	case *models.License:
-// 		return ns.get(n.ID, fmt.Sprintf("%T|%v", n.Xid, n.Xid), fmt.Sprintf("%v", n))
-// 	case *models.Host:
-// 		return ns.get(n.ID, n.Domain, fmt.Sprintf("%v", n))
-// 	default:
-// 		panic(fmt.Sprintf("unsupported node type: %T", n))
-// 	}
-// }
