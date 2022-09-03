@@ -913,7 +913,7 @@ type operator struct {
 
 var operators = map[string]operator{
 	//
-	// Product Operators
+	// Product
 	//
 	"name": {
 		Type:           textFullContainsOperator,
@@ -925,6 +925,30 @@ var operators = map[string]operator{
 		Type:           textFullContainsOperator,
 		IsRootFilter:   true,
 		Predicate:      "Product.description",
+		SelectionStart: "uid",
+	},
+	"documentationlanguage": {
+		Type:           textExactOperator,
+		Predicate:      "Component.documentationLanguage",
+		SelectionStart: `Product.release`,
+		SelectionEnd:   `{uid}`,
+	},
+	"language": {
+		Type:           textExactOperator,
+		Predicate:      "Component.documentationLanguage",
+		SelectionStart: `Product.release`,
+		SelectionEnd:   `{uid}`,
+	},
+	"version": {
+		Type:           textExactOperator,
+		IsRootFilter:   true,
+		Predicate:      "Product.version",
+		SelectionStart: "uid",
+	},
+	"website": {
+		Type:           textFullContainsOperator,
+		IsRootFilter:   true,
+		Predicate:      "Product.website",
 		SelectionStart: "uid",
 	},
 	"starcount": {
@@ -939,10 +963,28 @@ var operators = map[string]operator{
 		Predicate:      "Product.forkCount",
 		SelectionStart: "uid",
 	},
+	"discoveredat": {
+		Type:           dateTimeOperator,
+		IsRootFilter:   true,
+		Predicate:      "CrawlerMeta.discoveredAt",
+		SelectionStart: `uid`,
+	},
+	"lastindexedat": {
+		Type:           dateTimeOperator,
+		IsRootFilter:   true,
+		Predicate:      "CrawlerMeta.lastIndexedAt",
+		SelectionStart: `uid`,
+	},
 	"lastupdatedat": {
 		Type:           dateTimeOperator,
 		IsRootFilter:   true,
 		Predicate:      "Product.lastUpdatedAt",
+		SelectionStart: "uid",
+	},
+	"releasecount": {
+		Type:           numberIntOperator,
+		IsRootFilter:   true,
+		Predicate:      "count(Product.releases)",
 		SelectionStart: "uid",
 	},
 
@@ -984,73 +1026,7 @@ var operators = map[string]operator{
 	},
 
 	//
-	// Component Operators
-	//
-	"documentationlanguage": {
-		Type:           textExactOperator,
-		Predicate:      "Component.documentationLanguage",
-		SelectionStart: `Product.release`,
-		SelectionEnd:   `{uid}`,
-	},
-	"language": {
-		Type:           textExactOperator,
-		Predicate:      "Component.documentationLanguage",
-		SelectionStart: `Product.release`,
-		SelectionEnd:   `{uid}`,
-	},
-	"discoveredat": {
-		Type:           dateTimeOperator,
-		Predicate:      "CrawlerMeta.discoveredAt",
-		SelectionStart: `Product.release`,
-		SelectionEnd:   `{uid}`,
-	},
-	"lastindexedat": {
-		Type:           dateTimeOperator,
-		Predicate:      "CrawlerMeta.lastIndexedAt",
-		SelectionStart: `Product.release`,
-		SelectionEnd:   `{uid}`,
-	},
-	"createdat": {
-		Type:           dateTimeOperator,
-		Predicate:      "Component.createdAt",
-		SelectionStart: `Product.release`,
-		SelectionEnd:   `{uid}`,
-	},
-
-	//
-	// Licensor Operators
-	//
-	"licensor": {
-		Type:           textTermExactOperator,
-		Predicate:      "UserOrGroup.name",
-		SelectionStart: `Product.release {Component.licensor`,
-		SelectionEnd:   `{uid}}`,
-	},
-	"licensorname": {
-		Type:           textTermExactOperator,
-		Predicate:      "UserOrGroup.name",
-		SelectionStart: `Product.release {Component.licensor`,
-		SelectionEnd:   `{uid}}`,
-	},
-	"licensorfullname": {
-		Type:           textTermExactOperator,
-		Predicate:      "UserOrGroup.fullName",
-		SelectionStart: `Product.release {Component.licensor`,
-		SelectionEnd:   `{uid}}`,
-	},
-
-	//
-	// Image Operators
-	//
-	"hasimage": {
-		Type:           booleanHasOperator,
-		Predicate:      "Component.image",
-		SelectionStart: `Product.release`,
-		SelectionEnd:   `{uid}`,
-	},
-
-	//
-	// License Operators
+	// License
 	//
 	"haslicense": {
 		Type:           booleanHasOperator,
@@ -1058,7 +1034,13 @@ var operators = map[string]operator{
 		SelectionStart: `Product.release`,
 		SelectionEnd:   `{uid}`,
 	},
-	"license": {
+	"hasadditionallicenses": {
+		Type:           booleanHasOperator,
+		Predicate:      "Component.additionalLicenses",
+		SelectionStart: `Product.release`,
+		SelectionEnd:   `{uid}`,
+	},
+	"license": { // alias for licenseid
 		Type:           textTermExactOperator,
 		Predicate:      "License.xid",
 		SelectionStart: `Product.release {Component.license`,
@@ -1127,6 +1109,299 @@ var operators = map[string]operator{
 		SelectionEnd:   `{uid}}`,
 		Value:          "PERMISSIVE",
 	},
+
+	//
+	// Licensor
+	//
+	"licensor": { // alias for licensorfullname
+		Type:           textTermExactOperator,
+		Predicate:      "UserOrGroup.fullName",
+		SelectionStart: `Product.licensor`,
+		SelectionEnd:   `{uid}`,
+	},
+	"licensorname": {
+		Type:           textTermExactOperator,
+		Predicate:      "UserOrGroup.name",
+		SelectionStart: `Product.licensor`,
+		SelectionEnd:   `{uid}`,
+	},
+	"licensorfullname": {
+		Type:           textTermExactOperator,
+		Predicate:      "UserOrGroup.fullName",
+		SelectionStart: `Product.licensor`,
+		SelectionEnd:   `{uid}`,
+	},
+	"islicensoruser": {
+		Type:           booleanIsOperator,
+		Predicate:      "dgraph.type",
+		SelectionStart: `Product.licensor`,
+		SelectionEnd:   `{uid}`,
+		Value:          "User",
+	},
+	"islicensorgroup": {
+		Type:           booleanIsOperator,
+		Predicate:      "dgraph.type",
+		SelectionStart: `Product.licensor`,
+		SelectionEnd:   `{uid}`,
+		Value:          "Group",
+	},
+
+	//
+	// Categorization
+	//
+	"hastags": {
+		Type:           booleanHasOperator,
+		IsRootFilter:   true,
+		Predicate:      "Product.tags",
+		SelectionStart: "uid",
+	},
+	"tag": {
+		Type:           textFullContainsOperator,
+		Predicate:      "Tag.name",
+		SelectionStart: `Product.tags`,
+		SelectionEnd:   `{uid}`,
+	},
+	"tagcount": {
+		Type:           numberIntOperator,
+		IsRootFilter:   true,
+		Predicate:      "count(Product.tags)",
+		SelectionStart: "uid",
+	},
+	"hascategory": {
+		Type:           booleanHasOperator,
+		IsRootFilter:   true,
+		Predicate:      "Product.category",
+		SelectionStart: "uid",
+	},
+	"category": {
+		Type:           textFullContainsOperator,
+		Predicate:      "Category.name",
+		SelectionStart: `Product.category`,
+		SelectionEnd:   `{uid}`,
+	},
+	"categoryname": {
+		Type:           textFullContainsOperator,
+		Predicate:      "Category.name",
+		SelectionStart: `Product.category`,
+		SelectionEnd:   `{uid}`,
+	},
+	"categoryfullname": {
+		Type:           textFullContainsOperator,
+		Predicate:      "Category.fullName",
+		SelectionStart: `Product.category`,
+		SelectionEnd:   `{uid}`,
+	},
+
+	//
+	// Component
+	//
+	"createdat": {
+		Type:           dateTimeOperator,
+		Predicate:      "Component.createdAt",
+		SelectionStart: `Product.release`,
+		SelectionEnd:   `{uid}`,
+	},
+
+	"repository": { // alias for repositoryhost
+		Type:           textTermExactOperator,
+		Predicate:      "Host.name",
+		SelectionStart: `Product.release {Component.repository {Repository.host`,
+		SelectionEnd:   `{uid}}}`,
+	},
+	"repositoryhost": {
+		Type:           textTermExactOperator,
+		Predicate:      "Host.name",
+		SelectionStart: `Product.release {Component.repository {Repository.host`,
+		SelectionEnd:   `{uid}}}`,
+	},
+	"repositoryowner": {
+		Type:           textTermExactOperator,
+		Predicate:      "UserOrGroup.fullName",
+		SelectionStart: `Product.release {Component.repository {Repository.owner`,
+		SelectionEnd:   `{uid}}}`,
+	},
+	"repositoryname": {
+		Type:           textTermExactOperator,
+		Predicate:      "Repository.name",
+		SelectionStart: `Product.release {Component.repository`,
+		SelectionEnd:   `{uid}}`,
+	},
+
+	"datasource": { // alias for datasourcehost
+		Type:           textTermExactOperator,
+		Predicate:      "Host.name",
+		SelectionStart: `Product.release {Component.dataSource {Repository.host`,
+		SelectionEnd:   `{uid}}}`,
+	},
+	"datasourcehost": {
+		Type:           textTermExactOperator,
+		Predicate:      "Host.name",
+		SelectionStart: `Product.release {Component.dataSource {Repository.host`,
+		SelectionEnd:   `{uid}}}`,
+	},
+	"datasourceowner": {
+		Type:           textTermExactOperator,
+		Predicate:      "UserOrGroup.fullName",
+		SelectionStart: `Product.release {Component.dataSource {Repository.owner`,
+		SelectionEnd:   `{uid}}}`,
+	},
+	"datasourcename": {
+		Type:           textTermExactOperator,
+		Predicate:      "Repository.name",
+		SelectionStart: `Product.release {Component.dataSource`,
+		SelectionEnd:   `{uid}}`,
+	},
+
+	"host": { // alias for repositoryhost
+		Type:           textTermExactOperator,
+		Predicate:      "Host.name",
+		SelectionStart: `Product.release {Component.repository {Repository.host`,
+		SelectionEnd:   `{uid}}}`,
+	},
+
+	// TODO: should be usable like this: technologyreadinesslevel:>=3
+	// "technologyreadinesslevel": {
+	// 	Type:           textTermExactOperator,
+	// 	Predicate:      "Component.technologyReadinessLevel",
+	// 	SelectionStart: `Product.release`,
+	// 	SelectionEnd:   `{uid}`,
+	// },
+	// "documentationreadinesslevel": {
+	// 	Type:           textTermExactOperator,
+	// 	Predicate:      "Component.documentationReadinessLevel",
+	// 	SelectionStart: `Product.release`,
+	// 	SelectionEnd:   `{uid}`,
+	// },
+
+	"hasattestation": {
+		Type:           booleanHasOperator,
+		IsRootFilter:   true,
+		Predicate:      "Component.attestation",
+		SelectionStart: "Product.release",
+		SelectionEnd:   "{uid}",
+	},
+	"haspublication": {
+		Type:           booleanHasOperator,
+		IsRootFilter:   true,
+		Predicate:      "Component.publication",
+		SelectionStart: "Product.release",
+		SelectionEnd:   "{uid}",
+	},
+	"hasissuetracker": {
+		Type:           booleanHasOperator,
+		IsRootFilter:   true,
+		Predicate:      "Component.issues",
+		SelectionStart: "Product.release",
+		SelectionEnd:   "{uid}",
+	},
+	"hascomplieswith": {
+		Type:           booleanHasOperator,
+		IsRootFilter:   true,
+		Predicate:      "Component.compliesWith",
+		SelectionStart: "Product.release",
+		SelectionEnd:   "{uid}",
+	},
+	"complieswith": {
+		Type:           textTermExactOperator,
+		Predicate:      "TechnicalStandard.name",
+		SelectionStart: "Product.release { Component.compliesWith",
+		SelectionEnd:   "{uid}}",
+	},
+	"hascpcpatentclass": {
+		Type:           booleanHasOperator,
+		IsRootFilter:   true,
+		Predicate:      "Component.cpcPatentClass",
+		SelectionStart: "Product.release",
+		SelectionEnd:   "{uid}",
+	},
+	"cpcpatentclass": {
+		Type:           textTermExactOperator,
+		Predicate:      "Component.cpcPatentClass",
+		SelectionStart: "Product.release",
+		SelectionEnd:   "{uid}",
+	},
+	"hastsdc": {
+		Type:           booleanHasOperator,
+		IsRootFilter:   true,
+		Predicate:      "Component.tsdc",
+		SelectionStart: "Product.release",
+		SelectionEnd:   "{uid}",
+	},
+	"tsdc": {
+		Type:           textTermExactOperator,
+		Predicate:      "TechnologySpecificDocumentationCriteria.name",
+		SelectionStart: "Product.release { Component.tsdc",
+		SelectionEnd:   "{uid}}",
+	},
+
+	// TODO: sub components operators
+	// TODO: software operators
+	"hassoftware": {
+		Type:           booleanHasOperator,
+		Predicate:      "Component.software",
+		SelectionStart: `Product.release`,
+		SelectionEnd:   `{uid}`,
+	},
+
+	//
+	// Files
+	//
+	"hasimage": {
+		Type:           booleanHasOperator,
+		Predicate:      "Component.image",
+		SelectionStart: `Product.release`,
+		SelectionEnd:   `{uid}`,
+	},
+	"hasreadme": {
+		Type:           booleanHasOperator,
+		Predicate:      "Component.readme",
+		SelectionStart: `Product.release`,
+		SelectionEnd:   `{uid}`,
+	},
+	"hascontributionguide": {
+		Type:           booleanHasOperator,
+		Predicate:      "Component.contributionGuide",
+		SelectionStart: `Product.release`,
+		SelectionEnd:   `{uid}`,
+	},
+	"hasbom": {
+		Type:           booleanHasOperator,
+		Predicate:      "Component.bom",
+		SelectionStart: `Product.release`,
+		SelectionEnd:   `{uid}`,
+	},
+	"hasmanufacturinginstructions": {
+		Type:           booleanHasOperator,
+		Predicate:      "Component.manufacturingInstructions",
+		SelectionStart: `Product.release`,
+		SelectionEnd:   `{uid}`,
+	},
+	"hasusermanual": {
+		Type:           booleanHasOperator,
+		Predicate:      "Component.userManual",
+		SelectionStart: `Product.release`,
+		SelectionEnd:   `{uid}`,
+	},
+	"hassource": {
+		Type:           booleanHasOperator,
+		Predicate:      "Component.source",
+		SelectionStart: `Product.release`,
+		SelectionEnd:   `{uid}`,
+	},
+	"hasexport": {
+		Type:           booleanHasOperator,
+		Predicate:      "Component.export",
+		SelectionStart: `Product.release`,
+		SelectionEnd:   `{uid}`,
+	},
+	"hasauxiliary": {
+		Type:           booleanHasOperator,
+		Predicate:      "Component.auxiliary",
+		SelectionStart: `Product.release`,
+		SelectionEnd:   `{uid}`,
+	},
+
+	// TODO: more fields
 }
 
 func (e *encoder) extractOperatorText(opr *parser.Operator) (text string, exact, match, not bool) {

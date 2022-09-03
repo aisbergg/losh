@@ -165,6 +165,8 @@ mix.sourceMaps()
     .sass(`${assetsSrcPath}/scss/tabler/tabler-vendors.scss`, "css")
 
     // libs
+    // .js(`node_modules/masonry-layout/dist/masonry.pkgd.min.js`, "js")
+    .copy(`node_modules/masonry-layout/dist/masonry.pkgd.min.js`, `${staticPath}` + "/js/masonry.pkgd.min.js")
 
     // app
     .copyTemplates(`${assetsSrcPath}/tpl`, `${outputPath}/templates`)

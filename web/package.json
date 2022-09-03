@@ -21,6 +21,7 @@
     "imask": "^6.4.2",
     "jsvectormap": "^1.4.5",
     "litepicker": "^2.0.12",
+    "masonry-layout": "^4.2.2",
     "nouislider": "^15.5.1",
     "tom-select": "^2.0.1"
   },

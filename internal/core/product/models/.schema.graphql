@@ -77,7 +77,7 @@ type Product implements Node & CrawlerMeta {
   """
   The latest version of the product.
   """
-  version: String! @search
+  version: String! @search(by: [regexp])
 
   """
   The license used for the component.
@@ -92,7 +92,7 @@ type Product implements Node & CrawlerMeta {
 	"""
   The product website URL, if any.
   """
-  website: String @search(by: [hash, fulltext, regexp])
+  website: String @search(by: [fulltext, regexp])
 
 	"""
 	Indicates if the product is still actively developed or not.
@@ -292,7 +292,7 @@ type Component implements Node & CrawlerMeta {
   The international patent classification (IPC) of the component.
   """
   # TODO: should be a dedicated type
-  cpcPatentClass: String @search(by: [hash])
+  cpcPatentClass: String @search(by: [term, regexp])
 
   """
   The identifier for the applying "Technology-specific Documentation Criteria"
@@ -444,7 +444,7 @@ type Repository implements Node {
   """
   The repository name, if any.
   """
-  name: String @search(by: [hash, fulltext, regexp])
+  name: String @search(by: [fulltext, regexp])
 
   """
   The reference, if any. This could be a Git tag or branch for example.
@@ -478,12 +478,12 @@ type Host implements Node {
 	"""
   The domain name of the host.
   """
-  domain: String! @id @search(by: [hash, regexp])
+  domain: String! @id @search(by: [regexp])
 
 	"""
   The nice name of the host.
   """
-  name: String! @search(by: [hash, term, regexp])
+  name: String! @search(by: [term, regexp])
 }
 
 """

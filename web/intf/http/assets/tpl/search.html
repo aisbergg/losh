@@ -1,25 +1,270 @@
 ---
 layout: layouts/default
+
 # used for adding more columns to the table and cards
 extraProperties:
+  - operator: version
+    title: Version
+    description: The version of the latest release of the product
+    icon: versions
+    path: /Release/Version
+
+  - operator: website
+    title: website
+    description: The website of the product
+    icon: world
+    path: /Website
+
   - operator: createdat
     title: Created At
     description: The date the latest release of the product was created
     icon: calendar
     path: /Release/CreatedAt
 
-  - operator: version
-    title: Version
-    description: The version of the latest release of the product
-    icon: versions
-    path: /Release/Version
+  - operator: discoveredat
+    title: Discovered At
+    description:
+    icon: calendar
+    path: /DiscoveredAt
+
+  - operator: lastindexedat
+    title: Last Indexed At
+    description:
+    icon: calendar
+    path: /LastIndexedAt
+
+  - operator: lastupdatedat
+    title: Last Updated At
+    description:
+    icon: calendar
+    path: /LastUpdatedAt
+
+  - operator: hasadditionallicenses
+    title: Additional Licenses
+    description:
+    icon: license
+    path: /Release/AdditionalLicenses
+
+  - operator: licensename
+    title: name
+    description:
+    icon: license
+    path: /Release/License/Name
+
+  - operator: islicensespdx
+    title: Is Spdx
+    description:
+    icon: license
+    path: /Release/License/IsSpdx
+
+  - operator: islicensedeprecated
+    title: Is Deprecated
+    description:
+    icon: license
+    path: /Release/License/IsDeprecated
+
+  - operator: islicenseosiapproved
+    title: Is Osi Approved
+    description:
+    icon: license
+    path: /Release/License/IsOsiApproved
+
+  - operator: islicensefsflibre
+    title: Is Fsf Libre
+    description:
+    icon: license
+    path: /Release/License/IsFsfLibre
+
+  - operator: islicenseblocked
+    title: Is Blocked
+    description:
+    icon: license
+    path: /Release/License/IsBlocked
+
+  - operator: islicensestrong
+    title: type
+    description:
+    icon: license
+    path: /Release/License/Type
+
+  - operator: islicenseweak
+    title: type
+    description:
+    icon: license
+    path: /Release/License/Type
+
+  - operator: islicensepermissive
+    title: type
+    description:
+    icon: license
+    path: /Release/License/Type
+
+  - operator: licensorname
+    title: name
+    description:
+    icon: person
+    path: /Release/Licensor/Name
+
+  - operator: repositoryhost
+    title: name
+    description:
+    icon: folders
+    path: /Release/Repository/Host/Name
+
+  - operator: repositoryowner
+    title: Full Name
+    description:
+    icon: folders
+    path: /Release/Repository/Owner/FullName
+
+  - operator: repositoryname
+    title: name
+    description:
+    icon: folders
+    path: /Release/Repository/Name
+
+  - operator: datasource
+    title: name
+    description:
+    icon: hexagons
+    path: /Release/DataSource/Host/Name
+
+  - operator: datasourcehost
+    title: name
+    description:
+    icon: hexagons
+    path: /Release/DataSource/Host/Name
+
+  - operator: datasourceowner
+    title: Full Name
+    description:
+    icon: hexagons
+    path: /Release/DataSource/Owner/FullName
+
+  - operator: datasourcename
+    title: name
+    description:
+    icon: hexagons
+    path: /Release/DataSource/Name
+
+  - operator: host
+    title: name
+    description:
+    icon: server
+    path: /Release/Repository/Host/Name
+
+  - operator: hasattestation
+    title: attestation
+    description:
+    icon: certificate
+    path: /Release/Attestation
+
+  - operator: haspublication
+    title: publication
+    description:
+    icon: speakerphone
+    path: /Release/Publication
+
+  - operator: hasissuetracker
+    title: issues
+    description:
+    icon: alert-circle
+    path: /Release/Issues
+
+  - operator: hascomplieswith
+    title: Complies With
+    description:
+    icon: list-check
+    path: /Release/CompliesWith
+
+  - operator: complieswith
+    title: name
+    description:
+    icon: list-check
+    path: /Release/TechnicalStandard/Name
+
+  - operator: hascpcpatentclass
+    title: Cpc Patent Class
+    description:
+    icon: certificate
+    path: /Release/CpcPatentClass
+
+  - operator: cpcpatentclass
+    title: Cpc Patent Class
+    description:
+    icon: certificate
+    path: /Release/CpcPatentClass
+
+  - operator: hastsdc
+    title: tsdc
+    description:
+    icon: list-check
+    path: /Release/Tsdc
+
+  - operator: tsdc
+    title: name
+    description:
+    icon: list-check
+    path: /Release/Tsdc/Name
+
+  - operator: hasimage
+    title: Image
+    description:
+    icon: file-download
+    path: /Release/Image
+
+  - operator: hasreadme
+    title: Readme
+    description:
+    icon: file-download
+    path: /Release/Readme
+
+  - operator: hascontributionguide
+    title: Contribution Guide
+    description:
+    icon: file-download
+    path: /Release/ContributionGuide
+
+  - operator: hasbom
+    title: BOM
+    description:
+    icon: file-download
+    path: /Release/Bom
+
+  - operator: hasmanufacturinginstructions
+    title: Manufacturing Instructions
+    description:
+    icon: file-download
+    path: /Release/ManufacturingInstructions
+
+  - operator: hasusermanual
+    title: User Manual
+    description:
+    icon: file-download
+    path: /Release/UserManual
+
+  - operator: hassource
+    title: Source
+    description:
+    icon: file-download
+    path: /Release/Source
+
+  - operator: hasexport
+    title: Export
+    description:
+    icon: file-download
+    path: /Release/Export
+
+  - operator: hasauxiliary
+    title: Auxiliary
+    description:
+    icon: file-download
+    path: /Release/Auxiliary
 ---
 {%- assign resultsPerPage = req.queryParams.resultsPerPage -%}
 {%- assign results = page.results.items -%}
 {%- assign numResults = page.results.count -%}
 {%- assign numPagedResults = page.results.items | size -%}
-
-{%- assign sortBy = "name" -%}
 {%- assign displayMode = req.queryParams.displayMode -%}
 {% for e in abc %}
 	{{ e }}
@@ -28,9 +273,9 @@ extraProperties:
 	<div class="card-body">
 		{% include ui/form/searchbar.html placeholder='Search Product…' %}
 
-		<div class="accordion mt-2" id="accordion-example">
+		<div class="accordion mt-2" id="accordion">
 			<div class="accordion-item border-0">
-				<h4 class="accordion-header" id="heading-1">
+				<h4 class="accordion-header" id="accordion-heading">
 				<button class="accordion-button collapsed p-0 pt-2 pe-1 w-auto" type="button" data-bs-toggle="collapse" data-bs-target="#syntax" aria-expanded="false">
 					<span class="me-1">Query Syntax</span>
 				</button>
@@ -38,61 +283,61 @@ extraProperties:
 				<div id="syntax" class="accordion-collapse collapse">
 				<!-- <div id="syntax" class="accordion-collapse collapse show"> -->
 					<div class="accordion-body pt-0">
-						<div class="row gy-3 mt-2">
+						<div class="row gy-4 mt-0" data-masonry='{"percentPosition": true }' id="accordion-masonry">
 							<div class="col-12 col-md-6 col-lg-4">
 								<h5>General Expressions</h5>
 								<table class="syntax-cheat-sheet">
 									<tbody>
 										<tr>
 											<td>
-												<code class="syntax-example">word1 word2</span></code></br>
-												<code class="syntax-example"><span class="text-primary">`</span>word1 word2<span class="text-primary">`</span></code>
+												<code class="add-to-search">word1 word2</span></code></br>
+												<code class="add-to-search"><span class="text-primary">`</span>word1 word2<span class="text-primary">`</span></code>
 											</td>
-											<td>Full Text</td>
+											<td>Full Text Search</td>
 										</tr>
 										<tr>
 											<td>
-												<code class="syntax-example"><span class="text-primary">"</span>some text<span class="text-primary">"</span></code></br>
-												<code class="syntax-example"><span class="text-primary">'</span>some text<span class="text-primary">'</span></code>
+												<code class="add-to-search"><span class="text-primary">"</span>some text<span class="text-primary">"</span></code></br>
+												<code class="add-to-search"><span class="text-primary">'</span>some text<span class="text-primary">'</span></code>
 											</td>
-											<td>Exact Text</td>
+											<td>Exact Text Search</td>
 										</tr>
 										<tr>
 											<td>
-												<code class="syntax-example">some <span class="text-primary">*</span> text</code>
+												<code class="add-to-search">some <span class="text-primary">*</span> text</code>
 											</td>
 											<td>Wildcard (Any Text or Phrase)</td>
 										</tr>
 										<tr>
 											<td>
-												<code class="syntax-example">expr1 <span class="text-primary">OR</span> expr2</code></br>
-												<code class="syntax-example">expr1 <span class="text-primary">|</span> expr2</code>
+												<code class="add-to-search">expr1 <span class="text-primary">OR</span> expr2</code></br>
+												<code class="add-to-search">expr1 <span class="text-primary">|</span> expr2</code>
 											</td>
 											<td>Boolean OR</td>
 										</tr>
 										<tr>
 											<td>
-												<code class="syntax-example">expr1 <span class="text-primary">AND</span> expr2</code></br>
-												<code class="syntax-example">expr1 <span class="text-primary">&</span> expr2</code>
+												<code class="add-to-search">expr1 <span class="text-primary">AND</span> expr2</code></br>
+												<code class="add-to-search">expr1 <span class="text-primary">&</span> expr2</code>
 											</td>
 											<td>Boolean AND</td>
 										</tr>
 										<tr>
 											<td>
-												<code class="syntax-example"><span class="text-primary">NOT</span> expr</code></br>
-												<code class="syntax-example"><span class="text-primary">-</span>expr</code>
+												<code class="add-to-search"><span class="text-primary">NOT</span> expr</code></br>
+												<code class="add-to-search"><span class="text-primary">-</span>expr</code>
 											</td>
 											<td>Boolean NOT</td>
 										</tr>
 										<tr>
 											<td>
-												<code class="syntax-example"><span class="text-primary">(</span>expr1 expr2<span class="text-primary">)</span></code>
+												<code class="add-to-search"><span class="text-primary">(</span>expr1 expr2<span class="text-primary">)</span></code>
 											</td>
 											<td>Grouping of Expressions</td>
 										</tr>
 										<tr>
 											<td>
-												<code class="syntax-example"><span class="text-primary"></span>operator:<span class="text-primary">value</span></code>
+												<code class="add-to-search"><span class="text-primary">operator:value</span></code>
 											</td>
 											<td>Operator</td>
 										</tr>
@@ -102,71 +347,121 @@ extraProperties:
 
 							<div class="col-12 col-md-6 col-lg-4">
 								<h5>General Operators</h5>
-								<p>Operators allow to search for specific product properties. The allowed operations on each Operator depends on its type. Generally the following operations are defined:</p>
-								<p>TODO: value: can be either a number (e.g. 42.1), date+time (RFC 3339, e.g. 2022-01-01T10:20:30), or time duration (e.g. 1y2M3w4d5h6m7s)</p>
+								<p>Operators allow searching for specific product properties. The allowed operations on each Operator depend on the property type. <code>value</code> can be text, number(e.g. <code>3.141</code>), date/time (e.g. <code>2020-01-01 10:30:45</code>), or time duration (format: <code>1y2M3w4d5h6m7s</code>, e.g. <code>1d12h</code>).</p>
 								<table class="syntax-cheat-sheet">
 									<tbody>
 										<tr>
 											<td>
-												<code class="syntax-example"><span class="text-primary">operator:</span>value</code></br>
-												<code class="syntax-example">operator:<span class="text-primary">`</span>word1 word2<span class="text-primary">`</span></code>
+												<code class="add-to-search"><span class="text-primary">operator:</span>value</code></br>
+												<code class="add-to-search">operator:<span class="text-primary">`</span>word1 word2<span class="text-primary">`</span></code>
 											</td>
 											<td>Equal Text</td>
 										</tr>
 										<tr>
-											<td><code class="syntax-example"><span class="text-primary">operator:==</span>value</code></td>
+											<td><code class="add-to-search"><span class="text-primary">operator:==</span>value</code></td>
 											<td>Equal</td>
 										</tr>
 										<tr>
-											<td><code class="syntax-example"><span class="text-primary">operator:!=</span>value</code></td>
+											<td><code class="add-to-search"><span class="text-primary">operator:!=</span>value</code></td>
 											<td>Unequal</td>
 										</tr>
 										<tr>
-											<td><code class="syntax-example"><span class="text-primary">operator:&lt;</span>value</code></td>
+											<td><code class="add-to-search"><span class="text-primary">operator:&lt;</span>value</code></td>
 											<td>Less</td>
 										</tr>
 										<tr>
-											<td><code class="syntax-example"><span class="text-primary">operator:&lt;=</span>value</code></td>
+											<td><code class="add-to-search"><span class="text-primary">operator:&lt;=</span>value</code></td>
 											<td>Less or Equal</td>
 										</tr>
 										<tr>
-											<td><code class="syntax-example"><span class="text-primary">operator:&gt;=</span>value</code></td>
+											<td><code class="add-to-search"><span class="text-primary">operator:&gt;=</span>value</code></td>
 											<td>Greater</td>
 										</tr>
 										<tr>
-											<td><code class="syntax-example"><span class="text-primary">operator:&gt;=</span>value</code></td>
+											<td><code class="add-to-search"><span class="text-primary">operator:&gt;=</span>value</code></td>
 											<td>Greater or Equal</td>
 										</tr>
 										<tr>
-											<td><code class="syntax-example"><span class="text-primary">operator:</span>number<span class="text-primary">..</span>number</code></td>
-											<td>Inclusive Range (e.g. <code>2..*</code>, <code>2022-01-01..2022-04-01</code> )</td>
+											<td><code class="add-to-search"><span class="text-primary">operator:</span>value<span class="text-primary">..</span>value</code></td>
+											<td>Range (inclusive, e.g. <code>2..*</code>, <code>2022-01-01..2022-04-01</code> )</td>
 										</tr>
 									</tbody>
 								</table>
 							</div>
 
 							<div class="col-12 col-md-6 col-lg-4">
-								<h5>Product</h5>
+								<h5>Basic</h5>
 								<table class="syntax-cheat-sheet">
 									<tbody>
 										<tr>
-											<td><code class="syntax-example"><span class="text-primary">is:active</span></code></td>
+											<td><code class="add-to-search"><span class="text-primary">name:</span>beehive</code></td>
+											<td>Product Name</td>
+										</tr>
+										<tr>
+											<td><code class="add-to-search"><span class="text-primary">description:</span>beehive</code></td>
+											<td>Product Description</td>
+										</tr>
+										<tr>
+											<td>
+												<code class="add-to-search"><span class="text-primary">language:</span>en</code></br>
+												<code class="add-to-search"><span class="text-primary">documentationLanguage:</span>en</code>
+											</td>
+											<td>Language used for documentation</td>
+										</tr>
+										<tr>
+											<td><code class="add-to-search"><span class="text-primary">version:</span>1.0.0</code></td>
+											<td>Version of latest release </td>
+										</tr>
+										<tr>
+											<td><code class="add-to-search"><span class="text-primary">website:</span></code></td>
+											<td>Product Website</td>
+										</tr>
+										<tr>
+											<td><code class="add-to-search"><span class="text-primary">starCount:</span>>0</code></td>
+											<td>Number of stars</td>
+										</tr>
+										<tr>
+											<td><code class="add-to-search"><span class="text-primary">forkCount:</span>>0</code></td>
+											<td>Number of forks</td>
+										</tr>
+										<tr>
+											<td><code class="add-to-search"><span class="text-primary">releaseCount:</span>>5</code></td>
+											<td>Number of releases</td>
+										</tr>
+										<tr>
+											<td><code class="add-to-search"><span class="text-primary">createdAt:</span>>1y</code></td>
+											<td>Date/Time when the latest release was created</td>
+										</tr>
+										<tr>
+											<td><code class="add-to-search"><span class="text-primary">lastUpdatedAt:</span>>1y</code></td>
+											<td>Date/Time when it was last updated</td>
+										</tr>
+										<tr>
+											<td><code class="add-to-search"><span class="text-primary">discoveredAt:</span>>1y</code></td>
+											<td>Date/Time when it was first found</td>
+										</tr>
+										<tr>
+											<td><code class="add-to-search"><span class="text-primary">lastIndexedAt:</span>>1y</code></td>
+											<td>Date/Time when it was last indexed</td>
+										</tr>
+										<tr>
+											<td><code class="add-to-search"><span class="text-primary">is:active</span></code></td>
 											<td>Is actively developed</td>
 										</tr>
 										<tr>
-											<td><code class="syntax-example"><span class="text-primary">is:inactive</span></code></td>
+											<td><code class="add-to-search"><span class="text-primary">is:inactive</span></code></td>
 											<td>No updates for over 2 years</td>
 										</tr>
 										<tr>
-											<td><code class="syntax-example"><span class="text-primary">is:archived</span></code></td>
+											<td><code class="add-to-search"><span class="text-primary">is:archived</span></code></td>
 											<td>Repository is marked as archived and thus is no longer developed</td>
 										</tr>
 										<tr>
-											<td><code class="syntax-example"><span class="text-primary">is:deprecated</span></code></td>
+											<td><code class="add-to-search"><span class="text-primary">is:deprecated</span></code></td>
 											<td>Is marked as deprecated</td>
 										</tr>
 										<tr>
-											<td><code class="syntax-example"><span class="text-primary">is:missing</span></code></td>
+											<td><code class="add-to-search"><span class="text-primary">is:missing</span></code></td>
 											<td>Source is missing</td>
 										</tr>
 									</tbody>
@@ -178,55 +473,255 @@ extraProperties:
 								<table class="syntax-cheat-sheet">
 									<tbody>
 										<tr>
-											<td><code class="syntax-example"><span class="text-primary">has:license</span></code></td>
+											<td><code class="add-to-search"><span class="text-primary">has:license</span></code></td>
 											<td>Indicates whether Product is licensed</td>
 										</tr>
 										<tr>
+											<td><code class="add-to-search"><span class="text-primary">has:hasAdditionalLicenses</span></code></td>
+											<td>Indicates whether Product has other licenses</td>
+										</tr>
+										<tr>
 											<td>
-												<code class="syntax-example"><span class="text-primary">license:</span>CC-BY-SA-4.0</code></br>
-												<code class="syntax-example"><span class="text-primary">licenseId:</span>CC-BY-SA-4.0</code>
+												<code class="add-to-search"><span class="text-primary">license:</span>CC-BY-SA-4.0</code></br>
+												<code class="add-to-search"><span class="text-primary">licenseId:</span>CC-BY-SA-4.0</code>
 											</td>
 											<td>License SPDX Identifier</td>
 										</tr>
 										<tr>
-											<td><code class="syntax-example"><span class="text-primary">licenseName:</span>value</code></td>
+											<td><code class="add-to-search"><span class="text-primary">licenseName:</span>value</code></td>
 											<td>License Full Name</td>
 										</tr>
 										<tr>
-											<td><code class="syntax-example"><span class="text-primary">is:licenseSpdx</span></code></td>
+											<td><code class="add-to-search"><span class="text-primary">is:licenseSpdx</span></code></td>
 											<td>License is well-known and listed on SPDX.org</td>
 										</tr>
 										<tr>
-											<td><code class="syntax-example"><span class="text-primary">is:licenseDeprecated</span></code></td>
+											<td><code class="add-to-search"><span class="text-primary">is:licenseDeprecated</span></code></td>
 											<td>License is marked as deprecated</td>
 										</tr>
 										<tr>
-											<td><code class="syntax-example"><span class="text-primary">is:licenseOsiApproved</span></code></td>
+											<td><code class="add-to-search"><span class="text-primary">is:licenseOsiApproved</span></code></td>
 											<td>License is approved by OSI</td>
 										</tr>
 										<tr>
-											<td><code class="syntax-example"><span class="text-primary">is:licenseFsfLibre</span></code></td>
+											<td><code class="add-to-search"><span class="text-primary">is:licenseFsfLibre</span></code></td>
 											<td>License is FSF approved</td>
 										</tr>
 										<tr>
-											<td><code class="syntax-example"><span class="text-primary">is:licenseBlocked</span></code></td>
+											<td><code class="add-to-search"><span class="text-primary">is:licenseBlocked</span></code></td>
 											<td>License is not approved by LOSH</td>
 										</tr>
 										<tr>
-											<td><code class="syntax-example"><span class="text-primary">is:licenseStrong</span></code></td>
+											<td><code class="add-to-search"><span class="text-primary">is:licenseStrong</span></code></td>
 											<td>License is considered strong</td>
 										</tr>
 										<tr>
-											<td><code class="syntax-example"><span class="text-primary">is:licenseWeak</span></code></td>
+											<td><code class="add-to-search"><span class="text-primary">is:licenseWeak</span></code></td>
 											<td>License is considered weak</td>
 										</tr>
 										<tr>
-											<td><code class="syntax-example"><span class="text-primary">is:licensePermissive</span></code></td>
+											<td><code class="add-to-search"><span class="text-primary">is:licensePermissive</span></code></td>
 											<td>License is considered permissive</td>
 										</tr>
 									</tbody>
 								</table>
 							</div>
+
+							<div class="col-12 col-md-6 col-lg-4">
+								<h5>Licensor</h5>
+								<table class="syntax-cheat-sheet">
+									<tbody>
+										<tr>
+											<td>
+												<code class="add-to-search"><span class="text-primary">licensor:</span>John</code></br>
+												<code class="add-to-search"><span class="text-primary">licensorFullName:</span>John</code>
+											</td>
+											<td>Licensor Full Name</td>
+										</tr>
+										<tr>
+											<td><code class="add-to-search"><span class="text-primary">licensorName:</span>jhondoe42</code></td>
+											<td>Licensor Username</td>
+										</tr>
+										<tr>
+											<td><code class="add-to-search"><span class="text-primary">is:licensorUser</span></code></td>
+											<td>Licensor is a person</td>
+										</tr>
+										<tr>
+											<td><code class="add-to-search"><span class="text-primary">is:licensorGroup</span></code></td>
+											<td>Licensor is a group (organization)</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+
+							<div class="col-12 col-md-6 col-lg-4">
+								<h5>Files</h5>
+								<table class="syntax-cheat-sheet">
+									<tbody>
+										<tr>
+											<td><code class="add-to-search"><span class="text-primary">has:software</span></code></td>
+											<td>Indicates whether it contains software</td>
+										</tr>
+										<tr>
+											<td><code class="add-to-search"><span class="text-primary">has:image</span></code></td>
+											<td>Indicates whether it has an image</td>
+										</tr>
+										<tr>
+											<td><code class="add-to-search"><span class="text-primary">has:readme</span></code></td>
+											<td>Indicates whether it has a readme file</td>
+										</tr>
+										<tr>
+											<td><code class="add-to-search"><span class="text-primary">has:contributionGuide</span></code></td>
+											<td>Indicates whether it has a contribution guide</td>
+										</tr>
+										<tr>
+											<td><code class="add-to-search"><span class="text-primary">has:bom</span></code></td>
+											<td>Indicates whether it has bill of materials</td>
+										</tr>
+										<tr>
+											<td><code class="add-to-search"><span class="text-primary">has:manufacturingInstructions</span></code></td>
+											<td>Indicates whether it has manufacturing instructions</td>
+										</tr>
+										<tr>
+											<td><code class="add-to-search"><span class="text-primary">has:userManual</span></code></td>
+											<td>Indicates whether it has a user manual</td>
+										</tr>
+										<tr>
+											<td><code class="add-to-search"><span class="text-primary">has:source</span></code></td>
+											<td>Indicates whether it has a source file</td>
+										</tr>
+										<tr>
+											<td><code class="add-to-search"><span class="text-primary">has:export</span></code></td>
+											<td>Indicates whether it has export files</td>
+										</tr>
+										<tr>
+											<td><code class="add-to-search"><span class="text-primary">has:auxiliary</span></code></td>
+											<td>Indicates whether it has auxiliary files</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+
+							<div class="col-12 col-md-6 col-lg-4">
+								<h5>Categorization</h5>
+								<table class="syntax-cheat-sheet">
+									<tbody>
+										<tr>
+											<td><code class="add-to-search"><span class="text-primary">has:category</span></code></td>
+											<td>Indicates whether it has a category assigned</td>
+										</tr>
+										<tr>
+											<td>
+												<code class="add-to-search"><span class="text-primary">category:</span>Robotics</code></br>
+												<code class="add-to-search"><span class="text-primary">categoryfullname:</span>Robotics</code>
+											</td>
+											<td>Full category name (e.g `Computer/PSU`)</td>
+										</tr>
+										<tr>
+											<td><code class="add-to-search"><span class="text-primary">categoryname:</span>Robotics</code></td>
+											<td>Category name</td>
+										</tr>
+										<tr>
+											<td><code class="add-to-search"><span class="text-primary">has:tags</span></code></td>
+											<td>Indicates whether it has tags assigned</td>
+										</tr>
+										<tr>
+											<td><code class="add-to-search"><span class="text-primary">tag:</span>3dprinting</code></td>
+											<td>Tag name</td>
+										</tr>
+										<tr>
+											<td><code class="add-to-search"><span class="text-primary">tagCount:</span>>0</code></td>
+											<td>Number of tags</td>
+										</tr>
+
+									</tbody>
+								</table>
+							</div>
+
+
+							<div class="col-12 col-md-6 col-lg-4">
+								<h5>Repository</h5>
+								<table class="syntax-cheat-sheet">
+									<tbody>
+										<tr>
+											<td>
+												<code class="add-to-search"><span class="text-primary">host:</span>Wikifactory</code></br>
+												<code class="add-to-search"><span class="text-primary">repository:</span>Wikifactory</code></br>
+												<code class="add-to-search"><span class="text-primary">repositoryHost:</span>Wikifactory</code>
+											</td>
+											<td>Host where the product is developed</td>
+										</tr>
+										<tr>
+											<td><code class="add-to-search"><span class="text-primary">repositoryOwner:</span></code></td>
+											<td>Full name of the repository owner</td>
+										</tr>
+										<tr>
+											<td><code class="add-to-search"><span class="text-primary">repositoryName:</span></code></td>
+											<td>Name of repository</td>
+										</tr>
+										<tr>
+											<td>
+												<code class="add-to-search"><span class="text-primary">datasource:</span>GitLab</code></br>
+												<code class="add-to-search"><span class="text-primary">datasourceHost:</span>GitLab</code>
+											</td>
+											<td>Host where the product was found</td>
+										</tr>
+										<tr>
+											<td><code class="add-to-search"><span class="text-primary">datasourceowner:</span>aisberg</code></td>
+											<td>Full name of the data-source owner</td>
+										</tr>
+										<tr>
+											<td><code class="add-to-search"><span class="text-primary">datasourcename:</span>beehive</code></td>
+											<td>Name of the data-source repository</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+
+							<div class="col-12 col-md-6 col-lg-4">
+								<h5>Standard, Publication, Maturity, etc.</h5>
+								<table class="syntax-cheat-sheet">
+									<tbody>
+										<tr>
+											<td><code class="add-to-search"><span class="text-primary">has:attestation</span></code></td>
+											<td>Indicates whether it was attested</td>
+										</tr>
+										<tr>
+											<td><code class="add-to-search"><span class="text-primary">has:publication</span></code></td>
+											<td>Indicates whether it has a publication</td>
+										</tr>
+										<tr>
+											<td><code class="add-to-search"><span class="text-primary">has:issuetracker</span></code></td>
+											<td>Indicates whether it has a dedicated issue tracker</td>
+										</tr>
+										<tr>
+											<td><code class="add-to-search"><span class="text-primary">has:complieswith</span></code></td>
+											<td>Indicates whether it has a standard associated</td>
+										</tr>
+										<tr>
+											<td><code class="add-to-search"><span class="text-primary">compliesWith</span>:"DIN SPEC 3105"</code></td>
+											<td>Complies with a standard (DIN, ISO, etc.)</td>
+										</tr>
+										<tr>
+											<td><code class="add-to-search"><span class="text-primary">has:cpcPatentClass</span></code></td>
+											<td>Indicates whether it has a CPC patent class associated</td>
+										</tr>
+										<tr>
+											<td><code class="add-to-search"><span class="text-primary">cpcPatentClass:</span>A01B</code></td>
+											<td><a href="https://www.cooperativepatentclassification.org/about" class="text-standard">Cooperative Patent Classification (CPC)</a></td>
+										</tr>
+										<tr>
+											<td><code class="add-to-search"><span class="text-primary">has:tsdc</span></code></td>
+											<td>Indicates whether it has a tsdc associated</td>
+										</tr>
+										<tr>
+											<td><code class="add-to-search"><span class="text-primary">tsdc:</span>MEC</code></td>
+											<td><a href="https://gitlab.com/OSEGermany/oh-tsdc#technology-specific-documentation-criteria-for-open-source-hardware" class="text-standard">Technology-specific Documentation Criteria (TSDC)</a></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+
 						</div>
 					</div>
 				</div>
@@ -288,9 +783,14 @@ extraProperties:
 		<table class="table table-vcenter{% if include.mobile %} table-mobile-md{% endif %}{% if include.card %} card-table{% endif %}{% if include.stripped %} table-striped{% endif %}{% if include.nowrap %} table-nowrap{% endif %}">
 			<thead>
 				<tr>
-					<th colspan="2">
+					<th class="ordable" data-value="name" colspan="2">
 						<!-- TODO: sorting via table -->
-						<a href="{{ req.fullPath | url_with_params: 'o', 'zzz' }}" class="text-reset d-block">
+						{%- if req.queryParams.order == 'nameAsc' %}
+						{%- assign orderBy = 'nameDsc' %}
+						{%- elsif req.queryParams.order == 'nameAsc' %}
+						{%- assign orderBy = 'nameAsc' %}
+						{%- endif %}
+						<a href="{{ req.fullPath | url_with_params: 'o', orderBy }}" class="text-reset d-block">
 							Name
 							{%- if req.queryParams.order == 'nameAsc' %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
 							{%- if req.queryParams.order == 'nameDsc' %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
@@ -378,7 +878,14 @@ extraProperties:
 					<td class="text-break">
 						{%- assign val = product | get: ep.path %}
 						{%- unless (val | is_nil) %}
+						{%- if (val | is: "bool") %}
+						{%- if val %}{% assign icon = "check" %}{% else %}{% assign icon = "x" %}{% endif %}
+						{% include ui/icon.html icon="{{ icon }}" size="sm" class="icon-bold" %}
+						{%- elsif ep.icon == "file-download" %}
+						<a href="{{ val.URL }}" class="search-result-info-link m-0">{% include ui/icon.html icon="file-download" %}</a>
+						{%- else %}
 						{{ val | escape }}
+						{%- endif %}
 						{%- endunless %}
 					</td>
 						{%- endif %}
@@ -406,7 +913,7 @@ extraProperties:
 					{%- if (product.Release.Image | is_nil)  %}
 					<div class="card-img-top ratio ratio-4x3 text-bg-primary">
 						<div class="d-flex align-items-center justify-content-center">
-							{% include ui/icon.html icon="package" size="lg" class="" %}
+							{% include ui/icon.html icon="package" size="lg" %}
 						</div>
 					</div>
 					{%- else %}
@@ -438,10 +945,16 @@ extraProperties:
 					<span>{% if product.Release.Licensor.FullName %}{{ product.Release.Licensor.FullName | escape }}{% else %}{{ product.Release.Licensor.Name | escape }}{% endif %}</span>
 				</a>
 				{%- unless (product.Release.License | is_nil) %}
-				<a href="/details/{{ product.Release.License.ID | idhex }}" class="search-result-info-link mb-1" in="">
+				<a href="/details/{{ product.Release.License.ID | idhex }}" class="search-result-info-link mb-1">
 					<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="License">{% include ui/icon.html icon="license" %}</span>
 					<span>{{ product.Release.License.Xid }}</span>
 				</a>
+				{%- endunless %}
+				{%- unless product.Category | is_nil %}
+				<div class="search-result-info mb-1">
+					<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Category">{% include ui/icon.html icon="icons" %}</span>
+					<span class="add-to-search" data-operator='categoryFullName:=="{{ product.Category.FullName }}"'>{{ product.Category.FullName }}</span>
+				</div>
 				{%- endunless %}
 				{%- if (product.Tags | size) > 1 %}
 				<div class="search-result-info mb-1">
@@ -453,12 +966,26 @@ extraProperties:
 					{%- if ep.operator | in: page.results.operators %}
 						{%- assign val = product | get: ep.path %}
 						{%- unless (val | is_nil) %}
+							{%- if ep.icon == "file-download" %}
+				<a href="{{ val.URL }}" class="search-result-info-link mb-1">
+					<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="License">{% include ui/icon.html icon="file-download" %}</span>
+					<span>{{ ep.title }}</span>
+				</a>
+							{%- else %}
 				<div class="search-result-info mb-1">
 					<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ ep.title }}">{% include ui/icon.html icon="{{ ep.icon }}" %}</span>
-					<span class="text-ellipses-line-1" data-text="{{ description }}">
-						{{ val | escape }}
+					<span class="position-relative">
+						<span class="text-ellipses-line-1" data-text="{{ val | escape }}">
+								{%- if (val | is: "bool") %}
+									{%- if val %}{% assign icon = "check" %}{% else %}{% assign icon = "x" %}{% endif %}
+						{{ ep.title }}: {% include ui/icon.html icon="{{ icon }}" size="sm" class="icon-bold" %}
+								{%- else %}
+									{{ val | escape }}
+								{%- endif %}
+						</span>
 					</span>
 				</div>
+							{%- endif %}
 						{%- endunless %}
 					{%- endif %}
 				{%- endfor %}
@@ -493,6 +1020,7 @@ extraProperties:
 </div>
 
 {%- capture_global scripts %}
+<script src="/static/js/masonry.pkgd.min.js"></script>
 <script>
 	// @formatter:off
 	document.getElementById('orderBy').addEventListener('change', function (e) {
@@ -500,22 +1028,28 @@ extraProperties:
 		return true;
 	})
 
-	const querySyntaxExamples = document.getElementsByClassName('syntax-example');
+	const querySyntaxExamples = document.getElementsByClassName('add-to-search');
 	const searchQueryInput = document.getElementById('searchInput');
 	Array.from(querySyntaxExamples).forEach((elm) => {
 		elm.addEventListener('click', function (e) {
 			var selStart = searchQueryInput.selectionStart;
 			var selEnd = searchQueryInput.selectionEnd;
 			var curVal = searchQueryInput.value;
+			var oprVal = this.dataset.operator || this.innerText;
 			if (selStart != selEnd) {
-				searchQueryInput.value = curVal.substring(0, selStart) + elm.innerText + curVal.substring(selEnd);
+				searchQueryInput.value = curVal.substring(0, selStart) + oprVal + curVal.substring(selEnd);
 			} else {
 				if (curVal.length > 0) {
 					curVal += ' ';
 				}
-				searchQueryInput.value = curVal + this.innerText;
+				searchQueryInput.value = curVal + oprVal;
 			}
 		})
+	})
+
+	// add event listener to accordion heading to trigger masonry layout
+	document.getElementById('accordion-heading').addEventListener('click', function (e) {
+		Masonry.data('#accordion-masonry').layout();
 	})
 	// @formatter:on
 </script>
