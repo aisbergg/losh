@@ -25,6 +25,6 @@ type CrawlerConfig struct {
 
 func DefaultCrawlerConfig() CrawlerConfig {
 	return CrawlerConfig{
-		UserAgent: "OKH-LOSH-Crawler github.com/OPEN-NEXT/OKH-LOSH",
+		UserAgent: "LOSH Bot (github.com/aisbergg/losh)",
 	}
 }
