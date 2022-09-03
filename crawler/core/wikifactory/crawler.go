@@ -29,7 +29,7 @@ import (
 // Constants that define the crawler behavior.
 const (
 	crawlerName         = "wikifactory.com"
-	timeout             = time.Duration(30) * time.Second
+	timeout             = time.Duration(5) * time.Minute
 	batchSize           = 10
 	retries             = 5
 	maxFileSizeManifest = 10 * unit.MiB
