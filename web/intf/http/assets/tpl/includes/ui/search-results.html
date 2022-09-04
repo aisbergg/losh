@@ -424,49 +424,47 @@ orderSelect:
 		<table class="table table-vcenter{% if include.mobile %} table-mobile-md{% endif %}{% if include.card %} card-table{% endif %}{% if include.stripped %} table-striped{% endif %}{% if include.nowrap %} table-nowrap{% endif %}">
 			<thead>
 				<tr>
-					{%- assign orderBy = req.queryParams.order | downcase %}
 					<th colspan="2">
 						<a class="text-reset d-block orderable" data-value="name">
 							Name
-							{%- if orderBy == 'nameasc' %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
-							{%- if orderBy == 'namedsc' %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
+							{%- if req.queryParams.order == 'nameasc' %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
+							{%- if req.queryParams.order == 'namedsc' %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
 						</a>
 					</th>
 					<th>Description</th>
 					<th>
 						<a class="text-reset d-block orderable" data-value="licensor">Licensor
-							{%- if orderBy == 'licenseasc' %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
-							{%- if orderBy == 'licensedsc' %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
+							{%- if req.queryParams.order == 'licensorasc' %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
+							{%- if req.queryParams.order == 'licensordsc' %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
 						</a>
 					</th>
 					<th>
-						<!-- license  -->
 						<a class="text-reset d-block orderable" data-value="license">
 							License
-							{%- if orderBy == 'licenseasc' %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
-							{%- if orderBy == 'licensedsc' %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
+							{%- if req.queryParams.order == 'licenseasc' %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
+							{%- if req.queryParams.order == 'licensedsc' %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
 						</a>
 					</th>
 					<th data-bs-toggle="tooltip" data-bs-placement="top" title="Product State (Activeness)">{% include ui/icon.html icon="bolt" %}</th>
 					<th data-bs-toggle="tooltip" data-bs-placement="top" title="Language">
 						<a class="text-reset d-block orderable" data-value="language">
 							{% include ui/icon.html icon="language" %}
-							{%- if orderBy == 'languageasc' %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
-							{%- if orderBy == 'languagedsc' %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
+							{%- if req.queryParams.order == 'languageasc' %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
+							{%- if req.queryParams.order == 'languagedsc' %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
 						</a>
 					</th>
 					<th data-bs-toggle="tooltip" data-bs-placement="top" title="Star Count">
 						<a class="text-reset d-block orderable" data-value="starcount">
 							{% include ui/icon.html icon="star" %}
-							{%- if orderBy == 'starcountasc' %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
-							{%- if orderBy == 'starcountdsc' %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
+							{%- if req.queryParams.order == 'starcountasc' %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
+							{%- if req.queryParams.order == 'starcountdsc' %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
 						</a>
 					</th>
 					<th data-bs-toggle="tooltip" data-bs-placement="top" title="Fork Count">
 						<a class="text-reset d-block orderable" data-value="forkcount">
 							{% include ui/icon.html icon="git-fork" %}
-							{%- if orderBy == 'forkcountasc' %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
-							{%- if orderBy == 'forkcountdsc' %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
+							{%- if req.queryParams.order == 'forkcountasc' %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
+							{%- if req.queryParams.order == 'forkcountdsc' %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
 						</a>
 					</th>
 					{%- for ep in extraProperties %}
@@ -475,8 +473,8 @@ orderSelect:
 					<th>
 						<a class="text-reset d-block orderable" data-value="{{ ep.operator }}">
 							{{ ep.title }}
-							{%- if orderBy == (ep.operator | append: 'asc') %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
-							{%- if orderBy == (ep.operator | append: 'dsc') %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
+							{%- if req.queryParams.order == (ep.operator | append: 'asc') %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
+							{%- if req.queryParams.order == (ep.operator | append: 'dsc') %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
 						</a>
 					</th>
 							{%- else %}
@@ -732,15 +730,13 @@ orderSelect:
 	// add orderBy links to anchors with 'orderable' class
 	const orderableAnchors = document.getElementsByClassName('orderable');
 	Array.from(orderableAnchors).forEach((elm) => {
-		const elmVal = elm.dataset['value']
-		const params = new URLSearchParams(window.location.search);
+		var elmVal = elm.dataset['value']
+		var params = new URLSearchParams(window.location.search);
 		orderBy = params.get('o')
 		if (orderBy) {
 			orderBy = orderBy.toLowerCase();
 			if (elmVal + 'asc' == orderBy) {
 				params.set('o', elmVal + 'dsc');
-			} else if (elmVal + 'dsc' == orderBy) {
-				params.delete('o');
 			} else {
 				params.set('o', elmVal + 'asc');
 			}
