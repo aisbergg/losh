@@ -43,17 +43,18 @@ var _ Node = (*User)(nil)
 var _ UserOrGroup = (*Group)(nil)
 
 type User struct {
-	ID       *string    `id:"true" mandatory:"true" json:"id,omitempty" graphql:"id" dql:"uid"`
-	Xid      *string    `altID:"true" mandatory:"true" json:"xid,omitempty" graphql:"xid" dql:"UserOrGroup.xid"`
-	Host     *Host      `mandatory:"true" json:"host,omitempty" graphql:"host" dql:"UserOrGroup.host"`
-	Name     *string    `mandatory:"true" json:"name,omitempty" graphql:"name" dql:"UserOrGroup.name"`
-	FullName *string    `json:"fullName,omitempty" graphql:"fullName" dql:"UserOrGroup.fullName"`
-	Email    *string    `json:"email,omitempty" graphql:"email" dql:"UserOrGroup.email"`
-	Avatar   *File      `json:"avatar,omitempty" graphql:"avatar" dql:"UserOrGroup.avatar"`
-	URL      *string    `json:"url,omitempty" graphql:"url" dql:"UserOrGroup.url"`
-	MemberOf []*Group   `json:"memberOf,omitempty" graphql:"memberOf" dql:"UserOrGroup.memberOf"`
-	Products []*Product `json:"products,omitempty" graphql:"products" dql:"UserOrGroup.products"`
-	Locale   *string    `json:"locale,omitempty" graphql:"locale" dql:"User.locale"`
+	ID          *string    `id:"true" mandatory:"true" json:"id,omitempty" graphql:"id" dql:"uid"`
+	Xid         *string    `altID:"true" mandatory:"true" json:"xid,omitempty" graphql:"xid" dql:"UserOrGroup.xid"`
+	Host        *Host      `mandatory:"true" json:"host,omitempty" graphql:"host" dql:"UserOrGroup.host"`
+	Name        *string    `mandatory:"true" json:"name,omitempty" graphql:"name" dql:"UserOrGroup.name"`
+	FullName    *string    `json:"fullName,omitempty" graphql:"fullName" dql:"UserOrGroup.fullName"`
+	Email       *string    `json:"email,omitempty" graphql:"email" dql:"UserOrGroup.email"`
+	Description *string    `json:"description,omitempty" graphql:"description" dql:"UserOrGroup.description"`
+	Avatar      *File      `json:"avatar,omitempty" graphql:"avatar" dql:"UserOrGroup.avatar"`
+	URL         *string    `json:"url,omitempty" graphql:"url" dql:"UserOrGroup.url"`
+	MemberOf    []*Group   `json:"memberOf,omitempty" graphql:"memberOf" dql:"UserOrGroup.memberOf"`
+	Products    []*Product `json:"products,omitempty" graphql:"products" dql:"UserOrGroup.products"`
+	Locale      *string    `json:"locale,omitempty" graphql:"locale" dql:"User.locale"`
 }
 
 // GetID returns the ID of the node.
@@ -86,17 +87,18 @@ var _ Node = (*Group)(nil)
 var _ UserOrGroup = (*Group)(nil)
 
 type Group struct {
-	ID       *string       `id:"true" mandatory:"true" json:"id,omitempty" graphql:"id" dql:"uid"`
-	Xid      *string       `altID:"true" mandatory:"true" json:"xid,omitempty" graphql:"xid" dql:"UserOrGroup.xid"`
-	Host     *Host         `mandatory:"true" json:"host,omitempty" graphql:"host" dql:"UserOrGroup.host"`
-	Name     *string       `mandatory:"true" json:"name,omitempty" graphql:"name" dql:"UserOrGroup.name"`
-	FullName *string       `json:"fullName,omitempty" graphql:"fullName" dql:"UserOrGroup.fullName"`
-	Email    *string       `json:"email,omitempty" graphql:"email" dql:"UserOrGroup.email"`
-	Avatar   *File         `json:"avatar,omitempty" graphql:"avatar" dql:"UserOrGroup.avatar"`
-	URL      *string       `json:"url,omitempty" graphql:"url" dql:"UserOrGroup.url"`
-	MemberOf []*Group      `json:"memberOf,omitempty" graphql:"memberOf" dql:"UserOrGroup.memberOf"`
-	Products []*Product    `json:"products,omitempty" graphql:"products" dql:"UserOrGroup.products"`
-	Members  []UserOrGroup `json:"members,omitempty" graphql:"members" dql:"Group.members"`
+	ID          *string       `id:"true" mandatory:"true" json:"id,omitempty" graphql:"id" dql:"uid"`
+	Xid         *string       `altID:"true" mandatory:"true" json:"xid,omitempty" graphql:"xid" dql:"UserOrGroup.xid"`
+	Host        *Host         `mandatory:"true" json:"host,omitempty" graphql:"host" dql:"UserOrGroup.host"`
+	Name        *string       `mandatory:"true" json:"name,omitempty" graphql:"name" dql:"UserOrGroup.name"`
+	FullName    *string       `json:"fullName,omitempty" graphql:"fullName" dql:"UserOrGroup.fullName"`
+	Email       *string       `json:"email,omitempty" graphql:"email" dql:"UserOrGroup.email"`
+	Description *string       `json:"description,omitempty" graphql:"description" dql:"UserOrGroup.description"`
+	Avatar      *File         `json:"avatar,omitempty" graphql:"avatar" dql:"UserOrGroup.avatar"`
+	URL         *string       `json:"url,omitempty" graphql:"url" dql:"UserOrGroup.url"`
+	MemberOf    []*Group      `json:"memberOf,omitempty" graphql:"memberOf" dql:"UserOrGroup.memberOf"`
+	Products    []*Product    `json:"products,omitempty" graphql:"products" dql:"UserOrGroup.products"`
+	Members     []UserOrGroup `json:"members,omitempty" graphql:"members" dql:"Group.members"`
 }
 
 // GetID returns the ID of the node.

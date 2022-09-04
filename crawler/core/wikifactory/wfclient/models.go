@@ -83,7 +83,6 @@ type ActivityContent struct {
 	PageviewsCount        int64              `json:"pageviewsCount"`
 	PublicRead            bool               `json:"publicRead"`
 	RegisteredRead        bool               `json:"registeredRead"`
-	FeaturedIn            *string            `json:"featuredIn"`
 	Creator               *User              `json:"creator"`
 	Followers             *ProfileConnection `json:"followers"`
 	Tags                  []*Tag             `json:"tags"`
@@ -143,7 +142,6 @@ type ActivityOrigin struct {
 	PageviewsCount        int64              `json:"pageviewsCount"`
 	PublicRead            bool               `json:"publicRead"`
 	RegisteredRead        bool               `json:"registeredRead"`
-	FeaturedIn            *string            `json:"featuredIn"`
 	Creator               *User              `json:"creator"`
 	Followers             *ProfileConnection `json:"followers"`
 	Tags                  []*Tag             `json:"tags"`
@@ -584,7 +582,6 @@ type Channel struct {
 	Ctas                  *string               `json:"ctas"`
 	Configuration         *string               `json:"configuration"`
 	TaggedCount           *int64                `json:"taggedCount"`
-	FeaturedIn            *string               `json:"featuredIn"`
 	Avatar                *File                 `json:"avatar"`
 	Story                 *Story                `json:"story"`
 	Creator               *User                 `json:"creator"`
@@ -668,7 +665,6 @@ type Collection struct {
 	Name                  *string            `json:"name"`
 	Description           *string            `json:"description"`
 	ProjectsCount         *int64             `json:"projectsCount"`
-	FeaturedIn            *string            `json:"featuredIn"`
 	Creator               *User              `json:"creator"`
 	Space                 *Space             `json:"space"`
 	Followers             *ProfileConnection `json:"followers"`
@@ -756,7 +752,6 @@ type Comment struct {
 	Body                  string             `json:"body"`
 	OriginID              int64              `json:"originId"`
 	ReplytoID             *int64             `json:"replytoId"`
-	FeaturedIn            *string            `json:"featuredIn"`
 	Origin                ContentInterface   `json:"origin"`
 	Replyto               *Comment           `json:"replyto"`
 	Creator               *User              `json:"creator"`
@@ -782,9 +777,9 @@ type Comment struct {
 	CreatorProfile        *Profile           `json:"creatorProfile"`
 }
 
+func (Comment) IsNotificationTarget() {}
 func (Comment) IsNode()               {}
 func (Comment) IsContentInterface()   {}
-func (Comment) IsNotificationTarget() {}
 
 type CommentConnection struct {
 	PageInfo   PageInfo       `json:"pageInfo"`
@@ -967,7 +962,6 @@ type Contribution struct {
 	Version               *string            `json:"version"`
 	OldVersion            *int64             `json:"oldVersion"`
 	ZipArchiveGeneratedID *int64             `json:"zipArchiveGeneratedId"`
-	FeaturedIn            *string            `json:"featuredIn"`
 	Project               *Project           `json:"project"`
 	Children              []*Contribution    `json:"children"`
 	Parent                *Contribution      `json:"parent"`
@@ -1447,7 +1441,6 @@ type FederatedFile struct {
 	License               *string            `json:"license"`
 	Md5                   *string            `json:"md5"`
 	GitHash               *string            `json:"gitHash"`
-	FeaturedIn            *string            `json:"featuredIn"`
 	Creator               *User              `json:"creator"`
 	Followers             *ProfileConnection `json:"followers"`
 	Tags                  []*Tag             `json:"tags"`
@@ -1515,7 +1508,6 @@ type FederatedInitiative struct {
 	PreferedPlanID                 *int64                 `json:"preferedPlanId"`
 	HasAvatar                      *string                `json:"hasAvatar"`
 	IsConfirmed                    *string                `json:"isConfirmed"`
-	FeaturedIn                     *string                `json:"featuredIn"`
 	Avatar                         *File                  `json:"avatar"`
 	OrganizationType               *OrganizationType      `json:"organizationType"`
 	PreferedPlan                   *BillingPlan           `json:"preferedPlan"`
@@ -1598,7 +1590,6 @@ type File struct {
 	License               *string            `json:"license"`
 	Md5                   *string            `json:"md5"`
 	GitHash               *string            `json:"gitHash"`
-	FeaturedIn            *string            `json:"featuredIn"`
 	Creator               *User              `json:"creator"`
 	Space                 *Space             `json:"space"`
 	Followers             *ProfileConnection `json:"followers"`
@@ -1719,7 +1710,6 @@ type Forum struct {
 	Description         string            `json:"description"`
 	ThreadsCount        int64             `json:"threadsCount"`
 	ThreadsCountPublic  int64             `json:"threadsCountPublic"`
-	FeaturedIn          *string           `json:"featuredIn"`
 	Categories          []*Category       `json:"categories"`
 	Pinned              []*Thread         `json:"pinned"`
 	Threads             *ThreadConnection `json:"threads"`
@@ -1920,7 +1910,6 @@ type Initiative struct {
 	PreferedPlanID                 *int64                 `json:"preferedPlanId"`
 	HasAvatar                      *string                `json:"hasAvatar"`
 	IsConfirmed                    *string                `json:"isConfirmed"`
-	FeaturedIn                     *string                `json:"featuredIn"`
 	Avatar                         *File                  `json:"avatar"`
 	OrganizationType               *OrganizationType      `json:"organizationType"`
 	PreferedPlan                   *BillingPlan           `json:"preferedPlan"`
@@ -2086,7 +2075,6 @@ type Issue struct {
 	Status                *string            `json:"status"`
 	ProjectID             int64              `json:"projectId"`
 	CanAppearOnHome       *string            `json:"canAppearOnHome"`
-	FeaturedIn            *string            `json:"featuredIn"`
 	Project               *Project           `json:"project"`
 	Creator               *User              `json:"creator"`
 	Space                 *Space             `json:"space"`
@@ -2610,7 +2598,6 @@ type Post struct {
 	CategoryID            *float64           `json:"categoryId"`
 	MembersOnly           bool               `json:"membersOnly"`
 	UpvoteCount           *int64             `json:"upvoteCount"`
-	FeaturedIn            *string            `json:"featuredIn"`
 	Creator               *User              `json:"creator"`
 	Followers             *ProfileConnection `json:"followers"`
 	Tags                  []*Tag             `json:"tags"`
@@ -2701,8 +2688,8 @@ type ProductBuild struct {
 	Releases     []*Release           `json:"releases"`
 }
 
-func (ProductBuild) IsNode()        {}
 func (ProductBuild) IsProductNode() {}
+func (ProductBuild) IsNode()        {}
 
 type ProductItem struct {
 	ID        string         `json:"id"`
@@ -2712,8 +2699,8 @@ type ProductItem struct {
 	Build     Build          `json:"build"`
 }
 
-func (ProductItem) IsProductNode() {}
 func (ProductItem) IsNode()        {}
+func (ProductItem) IsProductNode() {}
 
 type Profile struct {
 	ID                             string                  `json:"id"`
@@ -2748,7 +2735,6 @@ type Profile struct {
 	HasAvatar                      *string                 `json:"hasAvatar"`
 	IsConfirmed                    *string                 `json:"isConfirmed"`
 	HasBio                         *string                 `json:"hasBio"`
-	FeaturedIn                     *string                 `json:"featuredIn"`
 	Avatar                         *File                   `json:"avatar"`
 	UserType                       *ProfileUserType        `json:"userType"`
 	Intent                         *ProfileIntent          `json:"intent"`
@@ -2897,7 +2883,6 @@ type Project struct {
 	HasContributions          *string                 `json:"hasContributions"`
 	CanAppearOnHome           *string                 `json:"canAppearOnHome"`
 	StarCount                 *int64                  `json:"starCount"`
-	FeaturedIn                *string                 `json:"featuredIn"`
 	Image                     *File                   `json:"image"`
 	Phase                     *ProjectPhase           `json:"phase"`
 	Context                   *Context                `json:"context"`
@@ -3439,7 +3424,6 @@ type Story struct {
 	Body                  *string            `json:"body"`
 	BodyWordCount         int64              `json:"bodyWordCount"`
 	CanAppearOnHome       *string            `json:"canAppearOnHome"`
-	FeaturedIn            *string            `json:"featuredIn"`
 	Avatar                *File              `json:"avatar"`
 	Creator               *User              `json:"creator"`
 	Space                 *Space             `json:"space"`
@@ -3464,9 +3448,9 @@ type Story struct {
 	CreatorProfile        *Profile           `json:"creatorProfile"`
 }
 
+func (Story) IsNotificationTarget() {}
 func (Story) IsNode()               {}
 func (Story) IsContentInterface()   {}
-func (Story) IsNotificationTarget() {}
 
 type StoryConnection struct {
 	PageInfo   PageInfo     `json:"pageInfo"`
@@ -3609,7 +3593,6 @@ type Thread struct {
 	CategoryID            *string            `json:"categoryId"`
 	MembersOnly           bool               `json:"membersOnly"`
 	UpvoteCount           *string            `json:"upvoteCount"`
-	FeaturedIn            *string            `json:"featuredIn"`
 	Forum                 *Forum             `json:"forum"`
 	Category              *Category          `json:"category"`
 	Creator               *User              `json:"creator"`

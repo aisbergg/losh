@@ -537,17 +537,18 @@ type TechnologySpecificDocumentationCriteriaFragment struct {
 	Components      []*TechnologySpecificDocumentationCriteriaFragment_Components "json:\"components\" graphql:\"components\""
 }
 type UserOrGroupFragment struct {
-	Typename *string                         "json:\"__typename\" graphql:\"__typename\""
-	ID       string                          "json:\"id\" graphql:\"id\""
-	Xid      string                          "json:\"xid\" graphql:\"xid\""
-	Host     UserOrGroupFragment_Host        "json:\"host\" graphql:\"host\""
-	Name     string                          "json:\"name\" graphql:\"name\""
-	FullName *string                         "json:\"fullName\" graphql:\"fullName\""
-	Email    *string                         "json:\"email\" graphql:\"email\""
-	Avatar   *UserOrGroupFragment_Avatar     "json:\"avatar\" graphql:\"avatar\""
-	URL      *string                         "json:\"url\" graphql:\"url\""
-	MemberOf []*UserOrGroupFragment_MemberOf "json:\"memberOf\" graphql:\"memberOf\""
-	Products []*UserOrGroupFragment_Products "json:\"products\" graphql:\"products\""
+	Typename    *string                         "json:\"__typename\" graphql:\"__typename\""
+	ID          string                          "json:\"id\" graphql:\"id\""
+	Xid         string                          "json:\"xid\" graphql:\"xid\""
+	Host        UserOrGroupFragment_Host        "json:\"host\" graphql:\"host\""
+	Name        string                          "json:\"name\" graphql:\"name\""
+	FullName    *string                         "json:\"fullName\" graphql:\"fullName\""
+	Email       *string                         "json:\"email\" graphql:\"email\""
+	Description *string                         "json:\"description\" graphql:\"description\""
+	Avatar      *UserOrGroupFragment_Avatar     "json:\"avatar\" graphql:\"avatar\""
+	URL         *string                         "json:\"url\" graphql:\"url\""
+	MemberOf    []*UserOrGroupFragment_MemberOf "json:\"memberOf\" graphql:\"memberOf\""
+	Products    []*UserOrGroupFragment_Products "json:\"products\" graphql:\"products\""
 }
 type UserOrGroupBasicFragment struct {
 	Typename *string "json:\"__typename\" graphql:\"__typename\""
@@ -556,32 +557,34 @@ type UserOrGroupBasicFragment struct {
 	ID       string  "json:\"id\" graphql:\"id\""
 }
 type UserFragment struct {
-	Typename *string                                      "json:\"__typename\" graphql:\"__typename\""
-	ID       string                                       "json:\"id\" graphql:\"id\""
-	Xid      string                                       "json:\"xid\" graphql:\"xid\""
-	Host     UserFragment_UserOrGroupFragment_Host        "json:\"host\" graphql:\"host\""
-	Name     string                                       "json:\"name\" graphql:\"name\""
-	FullName *string                                      "json:\"fullName\" graphql:\"fullName\""
-	Email    *string                                      "json:\"email\" graphql:\"email\""
-	Avatar   *UserFragment_UserOrGroupFragment_Avatar     "json:\"avatar\" graphql:\"avatar\""
-	URL      *string                                      "json:\"url\" graphql:\"url\""
-	MemberOf []*UserFragment_UserOrGroupFragment_MemberOf "json:\"memberOf\" graphql:\"memberOf\""
-	Products []*UserFragment_UserOrGroupFragment_Products "json:\"products\" graphql:\"products\""
-	Locale   *string                                      "json:\"locale\" graphql:\"locale\""
+	Typename    *string                                      "json:\"__typename\" graphql:\"__typename\""
+	ID          string                                       "json:\"id\" graphql:\"id\""
+	Xid         string                                       "json:\"xid\" graphql:\"xid\""
+	Host        UserFragment_UserOrGroupFragment_Host        "json:\"host\" graphql:\"host\""
+	Name        string                                       "json:\"name\" graphql:\"name\""
+	FullName    *string                                      "json:\"fullName\" graphql:\"fullName\""
+	Email       *string                                      "json:\"email\" graphql:\"email\""
+	Description *string                                      "json:\"description\" graphql:\"description\""
+	Avatar      *UserFragment_UserOrGroupFragment_Avatar     "json:\"avatar\" graphql:\"avatar\""
+	URL         *string                                      "json:\"url\" graphql:\"url\""
+	MemberOf    []*UserFragment_UserOrGroupFragment_MemberOf "json:\"memberOf\" graphql:\"memberOf\""
+	Products    []*UserFragment_UserOrGroupFragment_Products "json:\"products\" graphql:\"products\""
+	Locale      *string                                      "json:\"locale\" graphql:\"locale\""
 }
 type GroupFragment struct {
-	Typename *string                                       "json:\"__typename\" graphql:\"__typename\""
-	ID       string                                        "json:\"id\" graphql:\"id\""
-	Xid      string                                        "json:\"xid\" graphql:\"xid\""
-	Host     GroupFragment_UserOrGroupFragment_Host        "json:\"host\" graphql:\"host\""
-	Name     string                                        "json:\"name\" graphql:\"name\""
-	FullName *string                                       "json:\"fullName\" graphql:\"fullName\""
-	Email    *string                                       "json:\"email\" graphql:\"email\""
-	Avatar   *GroupFragment_UserOrGroupFragment_Avatar     "json:\"avatar\" graphql:\"avatar\""
-	URL      *string                                       "json:\"url\" graphql:\"url\""
-	MemberOf []*GroupFragment_UserOrGroupFragment_MemberOf "json:\"memberOf\" graphql:\"memberOf\""
-	Products []*GroupFragment_UserOrGroupFragment_Products "json:\"products\" graphql:\"products\""
-	Members  []*GroupFragment_Members                      "json:\"members\" graphql:\"members\""
+	Typename    *string                                       "json:\"__typename\" graphql:\"__typename\""
+	ID          string                                        "json:\"id\" graphql:\"id\""
+	Xid         string                                        "json:\"xid\" graphql:\"xid\""
+	Host        GroupFragment_UserOrGroupFragment_Host        "json:\"host\" graphql:\"host\""
+	Name        string                                        "json:\"name\" graphql:\"name\""
+	FullName    *string                                       "json:\"fullName\" graphql:\"fullName\""
+	Email       *string                                       "json:\"email\" graphql:\"email\""
+	Description *string                                       "json:\"description\" graphql:\"description\""
+	Avatar      *GroupFragment_UserOrGroupFragment_Avatar     "json:\"avatar\" graphql:\"avatar\""
+	URL         *string                                       "json:\"url\" graphql:\"url\""
+	MemberOf    []*GroupFragment_UserOrGroupFragment_MemberOf "json:\"memberOf\" graphql:\"memberOf\""
+	Products    []*GroupFragment_UserOrGroupFragment_Products "json:\"products\" graphql:\"products\""
+	Members     []*GroupFragment_Members                      "json:\"members\" graphql:\"members\""
 }
 type UserOrGroupFullFragment struct {
 	Typename *string       "json:\"__typename\" graphql:\"__typename\""
@@ -3282,6 +3285,32 @@ const GetComponentByIDDocument = `query GetComponentByID ($id: ID!) {
 		... ComponentFragment
 	}
 }
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
+}
+fragment OuterDimensionsFragment on OuterDimensions {
+	__typename
+	... on BoundingBoxDimensions {
+		... BoundingBoxDimensionsFragment
+	}
+	... on OpenSCADDimensions {
+		... OpenSCADDimensionsFragment
+	}
+}
+fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
+	id
+	height
+	width
+	depth
+}
+fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
+	id
+	openscad
+	unit
+}
 fragment KeyValueFragment on KeyValue {
 	id
 	key
@@ -3407,32 +3436,6 @@ fragment ComponentFragment on Component {
 	productionMetadata {
 		... KeyValueFragment
 	}
-}
-fragment UserOrGroupBasicFragment on UserOrGroup {
-	__typename
-	name
-	fullName
-	id
-}
-fragment OuterDimensionsFragment on OuterDimensions {
-	__typename
-	... on BoundingBoxDimensions {
-		... BoundingBoxDimensionsFragment
-	}
-	... on OpenSCADDimensions {
-		... OpenSCADDimensionsFragment
-	}
-}
-fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
-	id
-	height
-	width
-	depth
-}
-fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
-	id
-	openscad
-	unit
 }
 `
 
@@ -3476,46 +3479,6 @@ const GetComponentByXidDocument = `query GetComponentByXid ($xid: String!) {
 		... ComponentFragment
 	}
 }
-fragment UserOrGroupBasicFragment on UserOrGroup {
-	__typename
-	name
-	fullName
-	id
-}
-fragment OuterDimensionsFragment on OuterDimensions {
-	__typename
-	... on BoundingBoxDimensions {
-		... BoundingBoxDimensionsFragment
-	}
-	... on OpenSCADDimensions {
-		... OpenSCADDimensionsFragment
-	}
-}
-fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
-	id
-	height
-	width
-	depth
-}
-fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
-	id
-	openscad
-	unit
-}
-fragment KeyValueFragment on KeyValue {
-	id
-	key
-	value {
-		... on StringV {
-			id
-			stringValue: value
-		}
-		... on FloatV {
-			id
-			floatValue: value
-		}
-	}
-}
 fragment ComponentFragment on Component {
 	id
 	xid
@@ -3626,6 +3589,46 @@ fragment ComponentFragment on Component {
 	}
 	productionMetadata {
 		... KeyValueFragment
+	}
+}
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
+}
+fragment OuterDimensionsFragment on OuterDimensions {
+	__typename
+	... on BoundingBoxDimensions {
+		... BoundingBoxDimensionsFragment
+	}
+	... on OpenSCADDimensions {
+		... OpenSCADDimensionsFragment
+	}
+}
+fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
+	id
+	height
+	width
+	depth
+}
+fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
+	id
+	openscad
+	unit
+}
+fragment KeyValueFragment on KeyValue {
+	id
+	key
+	value {
+		... on StringV {
+			id
+			stringValue: value
+		}
+		... on FloatV {
+			id
+			floatValue: value
+		}
 	}
 }
 `
@@ -7619,10 +7622,6 @@ const SearchProductsDocument = `query SearchProducts ($getFilter: ProductFilter,
 		count
 	}
 }
-fragment CrawlerMetaFragment on CrawlerMeta {
-	discoveredAt
-	lastIndexedAt
-}
 fragment CategoryFragment on Category {
 	id
 	xid
@@ -7642,6 +7641,35 @@ fragment CategoryFragment on Category {
 		name
 	}
 }
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
+}
+fragment UserFragment on User {
+	... UserOrGroupFragment
+	locale
+}
+fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
+	id
+	openscad
+	unit
+}
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
+}
+fragment LicenseFragmentBasic on License {
+	id
+	xid
+	name
+	isSpdx
+	isDeprecated
+	isOsiApproved
+	isFsfLibre
+	isBlocked
+}
 fragment UserOrGroupFragment on UserOrGroup {
 	__typename
 	id
@@ -7653,6 +7681,7 @@ fragment UserOrGroupFragment on UserOrGroup {
 	name
 	fullName
 	email
+	description
 	avatar {
 		id
 		url
@@ -7667,25 +7696,11 @@ fragment UserOrGroupFragment on UserOrGroup {
 		name
 	}
 }
-fragment FileFragment on File {
-	... CrawlerMetaFragment
-	id
-	name
-	path
-	mimeType
-	url
-	createdAt
-}
-fragment TagFragment on Tag {
-	id
-	name
-	aliases {
+fragment GroupFragment on Group {
+	... UserOrGroupFragment
+	members {
+		__typename
 		id
-		name
-	}
-	related {
-		id
-		name
 	}
 }
 fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
@@ -7822,6 +7837,18 @@ fragment ProductSearchFragment on Product {
 		}
 	}
 }
+fragment TagFragment on Tag {
+	id
+	name
+	aliases {
+		id
+		name
+	}
+	related {
+		id
+		name
+	}
+}
 fragment RepositoryFragment on Repository {
 	id
 	xid
@@ -7838,34 +7865,6 @@ fragment RepositoryFragment on Repository {
 	reference
 	path
 }
-fragment UserOrGroupBasicFragment on UserOrGroup {
-	__typename
-	name
-	fullName
-	id
-}
-fragment GroupFragment on Group {
-	... UserOrGroupFragment
-	members {
-		__typename
-		id
-	}
-}
-fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
-	id
-	openscad
-	unit
-}
-fragment LicenseFragmentBasic on License {
-	id
-	xid
-	name
-	isSpdx
-	isDeprecated
-	isOsiApproved
-	isFsfLibre
-	isBlocked
-}
 fragment UserOrGroupFullFragment on UserOrGroup {
 	__typename
 	... on User {
@@ -7875,9 +7874,14 @@ fragment UserOrGroupFullFragment on UserOrGroup {
 		... GroupFragment
 	}
 }
-fragment UserFragment on User {
-	... UserOrGroupFragment
-	locale
+fragment FileFragment on File {
+	... CrawlerMetaFragment
+	id
+	name
+	path
+	mimeType
+	url
+	createdAt
 }
 fragment OuterDimensionsFragment on OuterDimensions {
 	__typename
@@ -8507,6 +8511,10 @@ const GetSoftwaresDocument = `query GetSoftwares ($getFilter: SoftwareFilter, $o
 		count
 	}
 }
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
+}
 fragment SoftwareFragment on Software {
 	... CrawlerMetaFragment
 	id
@@ -8521,10 +8529,6 @@ fragment SoftwareFragment on Software {
 		xid
 	}
 	licensor
-}
-fragment CrawlerMetaFragment on CrawlerMeta {
-	discoveredAt
-	lastIndexedAt
 }
 `
 
@@ -9777,6 +9781,13 @@ const GetUserOrGroupByIDDocument = `query GetUserOrGroupByID ($id: ID!) {
 		}
 	}
 }
+fragment GroupFragment on Group {
+	... UserOrGroupFragment
+	members {
+		__typename
+		id
+	}
+}
 fragment UserFragment on User {
 	... UserOrGroupFragment
 	locale
@@ -9792,6 +9803,7 @@ fragment UserOrGroupFragment on UserOrGroup {
 	name
 	fullName
 	email
+	description
 	avatar {
 		id
 		url
@@ -9804,13 +9816,6 @@ fragment UserOrGroupFragment on UserOrGroup {
 	products {
 		id
 		name
-	}
-}
-fragment GroupFragment on Group {
-	... UserOrGroupFragment
-	members {
-		__typename
-		id
 	}
 }
 `
@@ -9875,6 +9880,7 @@ fragment UserOrGroupFragment on UserOrGroup {
 	name
 	fullName
 	email
+	description
 	avatar {
 		id
 		url
@@ -10003,6 +10009,7 @@ fragment UserOrGroupFragment on UserOrGroup {
 	name
 	fullName
 	email
+	description
 	avatar {
 		id
 		url
@@ -10175,6 +10182,7 @@ fragment UserOrGroupFragment on UserOrGroup {
 	name
 	fullName
 	email
+	description
 	avatar {
 		id
 		url
@@ -10231,10 +10239,6 @@ const GetUserByXidDocument = `query GetUserByXid ($xid: String!) {
 		... UserFragment
 	}
 }
-fragment UserFragment on User {
-	... UserOrGroupFragment
-	locale
-}
 fragment UserOrGroupFragment on UserOrGroup {
 	__typename
 	id
@@ -10246,6 +10250,7 @@ fragment UserOrGroupFragment on UserOrGroup {
 	name
 	fullName
 	email
+	description
 	avatar {
 		id
 		url
@@ -10259,6 +10264,10 @@ fragment UserOrGroupFragment on UserOrGroup {
 		id
 		name
 	}
+}
+fragment UserFragment on User {
+	... UserOrGroupFragment
+	locale
 }
 `
 
@@ -10362,6 +10371,7 @@ fragment UserOrGroupFragment on UserOrGroup {
 	name
 	fullName
 	email
+	description
 	avatar {
 		id
 		url
@@ -10574,6 +10584,7 @@ fragment UserOrGroupFragment on UserOrGroup {
 	name
 	fullName
 	email
+	description
 	avatar {
 		id
 		url
@@ -10648,6 +10659,7 @@ fragment UserOrGroupFragment on UserOrGroup {
 	name
 	fullName
 	email
+	description
 	avatar {
 		id
 		url
@@ -10749,13 +10761,6 @@ const GetGroupsDocument = `query GetGroups ($getFilter: GroupFilter, $order: Gro
 		count
 	}
 }
-fragment GroupFragment on Group {
-	... UserOrGroupFragment
-	members {
-		__typename
-		id
-	}
-}
 fragment UserOrGroupFragment on UserOrGroup {
 	__typename
 	id
@@ -10767,6 +10772,7 @@ fragment UserOrGroupFragment on UserOrGroup {
 	name
 	fullName
 	email
+	description
 	avatar {
 		id
 		url
@@ -10779,6 +10785,13 @@ fragment UserOrGroupFragment on UserOrGroup {
 	products {
 		id
 		name
+	}
+}
+fragment GroupFragment on Group {
+	... UserOrGroupFragment
+	members {
+		__typename
+		id
 	}
 }
 `

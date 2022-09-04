@@ -675,6 +675,11 @@ interface UserOrGroup {
   email: String @search(by: [term, regexp])
 
 	"""
+	A description text for the user or group.
+	"""
+	description: String
+
+	"""
 	Avatar image of the user or group.
 	"""
   avatar: File

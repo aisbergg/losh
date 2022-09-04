@@ -139,6 +139,7 @@ q(func: uid(%s), first: $first, offset: $offset, %s) {
 			UserOrGroup.name
 			UserOrGroup.fullName
 			UserOrGroup.email
+			UserOrGroup.description
 			UserOrGroup.avatar {
 				uid
 				File.path

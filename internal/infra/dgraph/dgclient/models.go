@@ -175,16 +175,17 @@ type AddFloatVPayload struct {
 }
 
 type AddGroupInput struct {
-	Xid      string            `json:"xid"`
-	Host     HostRef           `json:"host"`
-	Name     string            `json:"name"`
-	FullName *string           `json:"fullName,omitempty"`
-	Email    *string           `json:"email,omitempty"`
-	Avatar   *FileRef          `json:"avatar,omitempty"`
-	URL      *string           `json:"url,omitempty"`
-	MemberOf []*GroupRef       `json:"memberOf,omitempty"`
-	Products []*ProductRef     `json:"products,omitempty"`
-	Members  []*UserOrGroupRef `json:"members,omitempty"`
+	Xid         string            `json:"xid"`
+	Host        HostRef           `json:"host"`
+	Name        string            `json:"name"`
+	FullName    *string           `json:"fullName,omitempty"`
+	Email       *string           `json:"email,omitempty"`
+	Description *string           `json:"description,omitempty"`
+	Avatar      *FileRef          `json:"avatar,omitempty"`
+	URL         *string           `json:"url,omitempty"`
+	MemberOf    []*GroupRef       `json:"memberOf,omitempty"`
+	Products    []*ProductRef     `json:"products,omitempty"`
+	Members     []*UserOrGroupRef `json:"members,omitempty"`
 }
 
 type AddGroupPayload struct {
@@ -420,15 +421,16 @@ type AddTechnologySpecificDocumentationCriteriaPayload struct {
 }
 
 type AddUserInput struct {
-	Xid      string        `json:"xid"`
-	Host     HostRef       `json:"host"`
-	Name     string        `json:"name"`
-	FullName *string       `json:"fullName,omitempty"`
-	Email    *string       `json:"email,omitempty"`
-	Avatar   *FileRef      `json:"avatar,omitempty"`
-	URL      *string       `json:"url,omitempty"`
-	MemberOf []*GroupRef   `json:"memberOf,omitempty"`
-	Products []*ProductRef `json:"products,omitempty"`
+	Xid         string        `json:"xid"`
+	Host        HostRef       `json:"host"`
+	Name        string        `json:"name"`
+	FullName    *string       `json:"fullName,omitempty"`
+	Email       *string       `json:"email,omitempty"`
+	Description *string       `json:"description,omitempty"`
+	Avatar      *FileRef      `json:"avatar,omitempty"`
+	URL         *string       `json:"url,omitempty"`
+	MemberOf    []*GroupRef   `json:"memberOf,omitempty"`
+	Products    []*ProductRef `json:"products,omitempty"`
 	// Localization of the user.
 	Locale *string `json:"locale,omitempty"`
 }
@@ -1249,8 +1251,8 @@ type FloatV struct {
 	Value float64 `json:"value"`
 }
 
-func (FloatV) IsStringOrFloat() {}
 func (FloatV) IsNode()          {}
+func (FloatV) IsStringOrFloat() {}
 
 type FloatVAggregateResult struct {
 	Count    *int64   `json:"count"`
@@ -1297,16 +1299,17 @@ type GenerateQueryParams struct {
 }
 
 type Group struct {
-	Xid      string     `json:"xid"`
-	Host     Host       `json:"host"`
-	Name     string     `json:"name"`
-	FullName *string    `json:"fullName"`
-	Email    *string    `json:"email"`
-	Avatar   *File      `json:"avatar"`
-	URL      *string    `json:"url"`
-	MemberOf []*Group   `json:"memberOf"`
-	Products []*Product `json:"products"`
-	ID       string     `json:"id"`
+	Xid         string     `json:"xid"`
+	Host        Host       `json:"host"`
+	Name        string     `json:"name"`
+	FullName    *string    `json:"fullName"`
+	Email       *string    `json:"email"`
+	Description *string    `json:"description"`
+	Avatar      *File      `json:"avatar"`
+	URL         *string    `json:"url"`
+	MemberOf    []*Group   `json:"memberOf"`
+	Products    []*Product `json:"products"`
+	ID          string     `json:"id"`
 	// Members of the group.
 	Members           []UserOrGroup               `json:"members"`
 	MemberOfAggregate *GroupAggregateResult       `json:"memberOfAggregate"`
@@ -1318,17 +1321,19 @@ func (Group) IsNode()        {}
 func (Group) IsUserOrGroup() {}
 
 type GroupAggregateResult struct {
-	Count       *int64  `json:"count"`
-	XidMin      *string `json:"xidMin"`
-	XidMax      *string `json:"xidMax"`
-	NameMin     *string `json:"nameMin"`
-	NameMax     *string `json:"nameMax"`
-	FullNameMin *string `json:"fullNameMin"`
-	FullNameMax *string `json:"fullNameMax"`
-	EmailMin    *string `json:"emailMin"`
-	EmailMax    *string `json:"emailMax"`
-	URLMin      *string `json:"urlMin"`
-	URLMax      *string `json:"urlMax"`
+	Count          *int64  `json:"count"`
+	XidMin         *string `json:"xidMin"`
+	XidMax         *string `json:"xidMax"`
+	NameMin        *string `json:"nameMin"`
+	NameMax        *string `json:"nameMax"`
+	FullNameMin    *string `json:"fullNameMin"`
+	FullNameMax    *string `json:"fullNameMax"`
+	EmailMin       *string `json:"emailMin"`
+	EmailMax       *string `json:"emailMax"`
+	DescriptionMin *string `json:"descriptionMin"`
+	DescriptionMax *string `json:"descriptionMax"`
+	URLMin         *string `json:"urlMin"`
+	URLMax         *string `json:"urlMax"`
 }
 
 type GroupFilter struct {
@@ -1350,30 +1355,32 @@ type GroupOrder struct {
 }
 
 type GroupPatch struct {
-	Xid      *string           `json:"xid,omitempty"`
-	Host     *HostRef          `json:"host,omitempty"`
-	Name     *string           `json:"name,omitempty"`
-	FullName *string           `json:"fullName,omitempty"`
-	Email    *string           `json:"email,omitempty"`
-	Avatar   *FileRef          `json:"avatar,omitempty"`
-	URL      *string           `json:"url,omitempty"`
-	MemberOf []*GroupRef       `json:"memberOf,omitempty"`
-	Products []*ProductRef     `json:"products,omitempty"`
-	Members  []*UserOrGroupRef `json:"members,omitempty"`
+	Xid         *string           `json:"xid,omitempty"`
+	Host        *HostRef          `json:"host,omitempty"`
+	Name        *string           `json:"name,omitempty"`
+	FullName    *string           `json:"fullName,omitempty"`
+	Email       *string           `json:"email,omitempty"`
+	Description *string           `json:"description,omitempty"`
+	Avatar      *FileRef          `json:"avatar,omitempty"`
+	URL         *string           `json:"url,omitempty"`
+	MemberOf    []*GroupRef       `json:"memberOf,omitempty"`
+	Products    []*ProductRef     `json:"products,omitempty"`
+	Members     []*UserOrGroupRef `json:"members,omitempty"`
 }
 
 type GroupRef struct {
-	ID       *string           `json:"id,omitempty"`
-	Xid      *string           `json:"xid,omitempty"`
-	Host     *HostRef          `json:"host,omitempty"`
-	Name     *string           `json:"name,omitempty"`
-	FullName *string           `json:"fullName,omitempty"`
-	Email    *string           `json:"email,omitempty"`
-	Avatar   *FileRef          `json:"avatar,omitempty"`
-	URL      *string           `json:"url,omitempty"`
-	MemberOf []*GroupRef       `json:"memberOf,omitempty"`
-	Products []*ProductRef     `json:"products,omitempty"`
-	Members  []*UserOrGroupRef `json:"members,omitempty"`
+	ID          *string           `json:"id,omitempty"`
+	Xid         *string           `json:"xid,omitempty"`
+	Host        *HostRef          `json:"host,omitempty"`
+	Name        *string           `json:"name,omitempty"`
+	FullName    *string           `json:"fullName,omitempty"`
+	Email       *string           `json:"email,omitempty"`
+	Description *string           `json:"description,omitempty"`
+	Avatar      *FileRef          `json:"avatar,omitempty"`
+	URL         *string           `json:"url,omitempty"`
+	MemberOf    []*GroupRef       `json:"memberOf,omitempty"`
+	Products    []*ProductRef     `json:"products,omitempty"`
+	Members     []*UserOrGroupRef `json:"members,omitempty"`
 }
 
 // A host is a platform that is accessible over the network.
@@ -2290,8 +2297,8 @@ type StringV struct {
 	Value string `json:"value"`
 }
 
-func (StringV) IsStringOrFloat() {}
 func (StringV) IsNode()          {}
+func (StringV) IsStringOrFloat() {}
 
 type StringVAggregateResult struct {
 	Count    *int64  `json:"count"`
@@ -2762,16 +2769,17 @@ type UpdateUserPayload struct {
 }
 
 type User struct {
-	Xid      string     `json:"xid"`
-	Host     Host       `json:"host"`
-	Name     string     `json:"name"`
-	FullName *string    `json:"fullName"`
-	Email    *string    `json:"email"`
-	Avatar   *File      `json:"avatar"`
-	URL      *string    `json:"url"`
-	MemberOf []*Group   `json:"memberOf"`
-	Products []*Product `json:"products"`
-	ID       string     `json:"id"`
+	Xid         string     `json:"xid"`
+	Host        Host       `json:"host"`
+	Name        string     `json:"name"`
+	FullName    *string    `json:"fullName"`
+	Email       *string    `json:"email"`
+	Description *string    `json:"description"`
+	Avatar      *File      `json:"avatar"`
+	URL         *string    `json:"url"`
+	MemberOf    []*Group   `json:"memberOf"`
+	Products    []*Product `json:"products"`
+	ID          string     `json:"id"`
 	// Localization of the user.
 	Locale            *string                 `json:"locale"`
 	MemberOfAggregate *GroupAggregateResult   `json:"memberOfAggregate"`
@@ -2782,19 +2790,21 @@ func (User) IsNode()        {}
 func (User) IsUserOrGroup() {}
 
 type UserAggregateResult struct {
-	Count       *int64  `json:"count"`
-	XidMin      *string `json:"xidMin"`
-	XidMax      *string `json:"xidMax"`
-	NameMin     *string `json:"nameMin"`
-	NameMax     *string `json:"nameMax"`
-	FullNameMin *string `json:"fullNameMin"`
-	FullNameMax *string `json:"fullNameMax"`
-	EmailMin    *string `json:"emailMin"`
-	EmailMax    *string `json:"emailMax"`
-	URLMin      *string `json:"urlMin"`
-	URLMax      *string `json:"urlMax"`
-	LocaleMin   *string `json:"localeMin"`
-	LocaleMax   *string `json:"localeMax"`
+	Count          *int64  `json:"count"`
+	XidMin         *string `json:"xidMin"`
+	XidMax         *string `json:"xidMax"`
+	NameMin        *string `json:"nameMin"`
+	NameMax        *string `json:"nameMax"`
+	FullNameMin    *string `json:"fullNameMin"`
+	FullNameMax    *string `json:"fullNameMax"`
+	EmailMin       *string `json:"emailMin"`
+	EmailMax       *string `json:"emailMax"`
+	DescriptionMin *string `json:"descriptionMin"`
+	DescriptionMax *string `json:"descriptionMax"`
+	URLMin         *string `json:"urlMin"`
+	URLMax         *string `json:"urlMax"`
+	LocaleMin      *string `json:"localeMin"`
+	LocaleMax      *string `json:"localeMax"`
 }
 
 type UserFilter struct {
@@ -2810,17 +2820,19 @@ type UserFilter struct {
 }
 
 type UserOrGroupAggregateResult struct {
-	Count       *int64  `json:"count"`
-	XidMin      *string `json:"xidMin"`
-	XidMax      *string `json:"xidMax"`
-	NameMin     *string `json:"nameMin"`
-	NameMax     *string `json:"nameMax"`
-	FullNameMin *string `json:"fullNameMin"`
-	FullNameMax *string `json:"fullNameMax"`
-	EmailMin    *string `json:"emailMin"`
-	EmailMax    *string `json:"emailMax"`
-	URLMin      *string `json:"urlMin"`
-	URLMax      *string `json:"urlMax"`
+	Count          *int64  `json:"count"`
+	XidMin         *string `json:"xidMin"`
+	XidMax         *string `json:"xidMax"`
+	NameMin        *string `json:"nameMin"`
+	NameMax        *string `json:"nameMax"`
+	FullNameMin    *string `json:"fullNameMin"`
+	FullNameMax    *string `json:"fullNameMax"`
+	EmailMin       *string `json:"emailMin"`
+	EmailMax       *string `json:"emailMax"`
+	DescriptionMin *string `json:"descriptionMin"`
+	DescriptionMax *string `json:"descriptionMax"`
+	URLMin         *string `json:"urlMin"`
+	URLMax         *string `json:"urlMax"`
 }
 
 type UserOrGroupFilter struct {
@@ -2852,8 +2864,10 @@ type UserOrGroupPatch struct {
 	// Full name of the person.
 	FullName *string `json:"fullName,omitempty"`
 	// Email address of the user or group.
-	Email  *string  `json:"email,omitempty"`
-	Avatar *FileRef `json:"avatar,omitempty"`
+	Email *string `json:"email,omitempty"`
+	// A description text for the user or group.
+	Description *string  `json:"description,omitempty"`
+	Avatar      *FileRef `json:"avatar,omitempty"`
 	// URL to the user or groups profile on the host platform.
 	URL      *string       `json:"url,omitempty"`
 	MemberOf []*GroupRef   `json:"memberOf,omitempty"`
@@ -2876,30 +2890,32 @@ type UserOrder struct {
 }
 
 type UserPatch struct {
-	Xid      *string       `json:"xid,omitempty"`
-	Host     *HostRef      `json:"host,omitempty"`
-	Name     *string       `json:"name,omitempty"`
-	FullName *string       `json:"fullName,omitempty"`
-	Email    *string       `json:"email,omitempty"`
-	Avatar   *FileRef      `json:"avatar,omitempty"`
-	URL      *string       `json:"url,omitempty"`
-	MemberOf []*GroupRef   `json:"memberOf,omitempty"`
-	Products []*ProductRef `json:"products,omitempty"`
+	Xid         *string       `json:"xid,omitempty"`
+	Host        *HostRef      `json:"host,omitempty"`
+	Name        *string       `json:"name,omitempty"`
+	FullName    *string       `json:"fullName,omitempty"`
+	Email       *string       `json:"email,omitempty"`
+	Description *string       `json:"description,omitempty"`
+	Avatar      *FileRef      `json:"avatar,omitempty"`
+	URL         *string       `json:"url,omitempty"`
+	MemberOf    []*GroupRef   `json:"memberOf,omitempty"`
+	Products    []*ProductRef `json:"products,omitempty"`
 	// Localization of the user.
 	Locale *string `json:"locale,omitempty"`
 }
 
 type UserRef struct {
-	ID       *string       `json:"id,omitempty"`
-	Xid      *string       `json:"xid,omitempty"`
-	Host     *HostRef      `json:"host,omitempty"`
-	Name     *string       `json:"name,omitempty"`
-	FullName *string       `json:"fullName,omitempty"`
-	Email    *string       `json:"email,omitempty"`
-	Avatar   *FileRef      `json:"avatar,omitempty"`
-	URL      *string       `json:"url,omitempty"`
-	MemberOf []*GroupRef   `json:"memberOf,omitempty"`
-	Products []*ProductRef `json:"products,omitempty"`
+	ID          *string       `json:"id,omitempty"`
+	Xid         *string       `json:"xid,omitempty"`
+	Host        *HostRef      `json:"host,omitempty"`
+	Name        *string       `json:"name,omitempty"`
+	FullName    *string       `json:"fullName,omitempty"`
+	Email       *string       `json:"email,omitempty"`
+	Description *string       `json:"description,omitempty"`
+	Avatar      *FileRef      `json:"avatar,omitempty"`
+	URL         *string       `json:"url,omitempty"`
+	MemberOf    []*GroupRef   `json:"memberOf,omitempty"`
+	Products    []*ProductRef `json:"products,omitempty"`
 	// Localization of the user.
 	Locale *string `json:"locale,omitempty"`
 }
@@ -3742,16 +3758,17 @@ func (e FloatVOrderable) MarshalGQL(w io.Writer) {
 type GroupHasFilter string
 
 const (
-	GroupHasFilterXid      GroupHasFilter = "xid"
-	GroupHasFilterHost     GroupHasFilter = "host"
-	GroupHasFilterName     GroupHasFilter = "name"
-	GroupHasFilterFullName GroupHasFilter = "fullName"
-	GroupHasFilterEmail    GroupHasFilter = "email"
-	GroupHasFilterAvatar   GroupHasFilter = "avatar"
-	GroupHasFilterURL      GroupHasFilter = "url"
-	GroupHasFilterMemberOf GroupHasFilter = "memberOf"
-	GroupHasFilterProducts GroupHasFilter = "products"
-	GroupHasFilterMembers  GroupHasFilter = "members"
+	GroupHasFilterXid         GroupHasFilter = "xid"
+	GroupHasFilterHost        GroupHasFilter = "host"
+	GroupHasFilterName        GroupHasFilter = "name"
+	GroupHasFilterFullName    GroupHasFilter = "fullName"
+	GroupHasFilterEmail       GroupHasFilter = "email"
+	GroupHasFilterDescription GroupHasFilter = "description"
+	GroupHasFilterAvatar      GroupHasFilter = "avatar"
+	GroupHasFilterURL         GroupHasFilter = "url"
+	GroupHasFilterMemberOf    GroupHasFilter = "memberOf"
+	GroupHasFilterProducts    GroupHasFilter = "products"
+	GroupHasFilterMembers     GroupHasFilter = "members"
 )
 
 var AllGroupHasFilter = []GroupHasFilter{
@@ -3760,6 +3777,7 @@ var AllGroupHasFilter = []GroupHasFilter{
 	GroupHasFilterName,
 	GroupHasFilterFullName,
 	GroupHasFilterEmail,
+	GroupHasFilterDescription,
 	GroupHasFilterAvatar,
 	GroupHasFilterURL,
 	GroupHasFilterMemberOf,
@@ -3769,7 +3787,7 @@ var AllGroupHasFilter = []GroupHasFilter{
 
 func (e GroupHasFilter) IsValid() bool {
 	switch e {
-	case GroupHasFilterXid, GroupHasFilterHost, GroupHasFilterName, GroupHasFilterFullName, GroupHasFilterEmail, GroupHasFilterAvatar, GroupHasFilterURL, GroupHasFilterMemberOf, GroupHasFilterProducts, GroupHasFilterMembers:
+	case GroupHasFilterXid, GroupHasFilterHost, GroupHasFilterName, GroupHasFilterFullName, GroupHasFilterEmail, GroupHasFilterDescription, GroupHasFilterAvatar, GroupHasFilterURL, GroupHasFilterMemberOf, GroupHasFilterProducts, GroupHasFilterMembers:
 		return true
 	}
 	return false
@@ -3799,11 +3817,12 @@ func (e GroupHasFilter) MarshalGQL(w io.Writer) {
 type GroupOrderable string
 
 const (
-	GroupOrderableXid      GroupOrderable = "xid"
-	GroupOrderableName     GroupOrderable = "name"
-	GroupOrderableFullName GroupOrderable = "fullName"
-	GroupOrderableEmail    GroupOrderable = "email"
-	GroupOrderableURL      GroupOrderable = "url"
+	GroupOrderableXid         GroupOrderable = "xid"
+	GroupOrderableName        GroupOrderable = "name"
+	GroupOrderableFullName    GroupOrderable = "fullName"
+	GroupOrderableEmail       GroupOrderable = "email"
+	GroupOrderableDescription GroupOrderable = "description"
+	GroupOrderableURL         GroupOrderable = "url"
 )
 
 var AllGroupOrderable = []GroupOrderable{
@@ -3811,12 +3830,13 @@ var AllGroupOrderable = []GroupOrderable{
 	GroupOrderableName,
 	GroupOrderableFullName,
 	GroupOrderableEmail,
+	GroupOrderableDescription,
 	GroupOrderableURL,
 }
 
 func (e GroupOrderable) IsValid() bool {
 	switch e {
-	case GroupOrderableXid, GroupOrderableName, GroupOrderableFullName, GroupOrderableEmail, GroupOrderableURL:
+	case GroupOrderableXid, GroupOrderableName, GroupOrderableFullName, GroupOrderableEmail, GroupOrderableDescription, GroupOrderableURL:
 		return true
 	}
 	return false
@@ -5416,16 +5436,17 @@ func (e TechnologySpecificDocumentationCriteriaOrderable) MarshalGQL(w io.Writer
 type UserHasFilter string
 
 const (
-	UserHasFilterXid      UserHasFilter = "xid"
-	UserHasFilterHost     UserHasFilter = "host"
-	UserHasFilterName     UserHasFilter = "name"
-	UserHasFilterFullName UserHasFilter = "fullName"
-	UserHasFilterEmail    UserHasFilter = "email"
-	UserHasFilterAvatar   UserHasFilter = "avatar"
-	UserHasFilterURL      UserHasFilter = "url"
-	UserHasFilterMemberOf UserHasFilter = "memberOf"
-	UserHasFilterProducts UserHasFilter = "products"
-	UserHasFilterLocale   UserHasFilter = "locale"
+	UserHasFilterXid         UserHasFilter = "xid"
+	UserHasFilterHost        UserHasFilter = "host"
+	UserHasFilterName        UserHasFilter = "name"
+	UserHasFilterFullName    UserHasFilter = "fullName"
+	UserHasFilterEmail       UserHasFilter = "email"
+	UserHasFilterDescription UserHasFilter = "description"
+	UserHasFilterAvatar      UserHasFilter = "avatar"
+	UserHasFilterURL         UserHasFilter = "url"
+	UserHasFilterMemberOf    UserHasFilter = "memberOf"
+	UserHasFilterProducts    UserHasFilter = "products"
+	UserHasFilterLocale      UserHasFilter = "locale"
 )
 
 var AllUserHasFilter = []UserHasFilter{
@@ -5434,6 +5455,7 @@ var AllUserHasFilter = []UserHasFilter{
 	UserHasFilterName,
 	UserHasFilterFullName,
 	UserHasFilterEmail,
+	UserHasFilterDescription,
 	UserHasFilterAvatar,
 	UserHasFilterURL,
 	UserHasFilterMemberOf,
@@ -5443,7 +5465,7 @@ var AllUserHasFilter = []UserHasFilter{
 
 func (e UserHasFilter) IsValid() bool {
 	switch e {
-	case UserHasFilterXid, UserHasFilterHost, UserHasFilterName, UserHasFilterFullName, UserHasFilterEmail, UserHasFilterAvatar, UserHasFilterURL, UserHasFilterMemberOf, UserHasFilterProducts, UserHasFilterLocale:
+	case UserHasFilterXid, UserHasFilterHost, UserHasFilterName, UserHasFilterFullName, UserHasFilterEmail, UserHasFilterDescription, UserHasFilterAvatar, UserHasFilterURL, UserHasFilterMemberOf, UserHasFilterProducts, UserHasFilterLocale:
 		return true
 	}
 	return false
@@ -5473,15 +5495,16 @@ func (e UserHasFilter) MarshalGQL(w io.Writer) {
 type UserOrGroupHasFilter string
 
 const (
-	UserOrGroupHasFilterXid      UserOrGroupHasFilter = "xid"
-	UserOrGroupHasFilterHost     UserOrGroupHasFilter = "host"
-	UserOrGroupHasFilterName     UserOrGroupHasFilter = "name"
-	UserOrGroupHasFilterFullName UserOrGroupHasFilter = "fullName"
-	UserOrGroupHasFilterEmail    UserOrGroupHasFilter = "email"
-	UserOrGroupHasFilterAvatar   UserOrGroupHasFilter = "avatar"
-	UserOrGroupHasFilterURL      UserOrGroupHasFilter = "url"
-	UserOrGroupHasFilterMemberOf UserOrGroupHasFilter = "memberOf"
-	UserOrGroupHasFilterProducts UserOrGroupHasFilter = "products"
+	UserOrGroupHasFilterXid         UserOrGroupHasFilter = "xid"
+	UserOrGroupHasFilterHost        UserOrGroupHasFilter = "host"
+	UserOrGroupHasFilterName        UserOrGroupHasFilter = "name"
+	UserOrGroupHasFilterFullName    UserOrGroupHasFilter = "fullName"
+	UserOrGroupHasFilterEmail       UserOrGroupHasFilter = "email"
+	UserOrGroupHasFilterDescription UserOrGroupHasFilter = "description"
+	UserOrGroupHasFilterAvatar      UserOrGroupHasFilter = "avatar"
+	UserOrGroupHasFilterURL         UserOrGroupHasFilter = "url"
+	UserOrGroupHasFilterMemberOf    UserOrGroupHasFilter = "memberOf"
+	UserOrGroupHasFilterProducts    UserOrGroupHasFilter = "products"
 )
 
 var AllUserOrGroupHasFilter = []UserOrGroupHasFilter{
@@ -5490,6 +5513,7 @@ var AllUserOrGroupHasFilter = []UserOrGroupHasFilter{
 	UserOrGroupHasFilterName,
 	UserOrGroupHasFilterFullName,
 	UserOrGroupHasFilterEmail,
+	UserOrGroupHasFilterDescription,
 	UserOrGroupHasFilterAvatar,
 	UserOrGroupHasFilterURL,
 	UserOrGroupHasFilterMemberOf,
@@ -5498,7 +5522,7 @@ var AllUserOrGroupHasFilter = []UserOrGroupHasFilter{
 
 func (e UserOrGroupHasFilter) IsValid() bool {
 	switch e {
-	case UserOrGroupHasFilterXid, UserOrGroupHasFilterHost, UserOrGroupHasFilterName, UserOrGroupHasFilterFullName, UserOrGroupHasFilterEmail, UserOrGroupHasFilterAvatar, UserOrGroupHasFilterURL, UserOrGroupHasFilterMemberOf, UserOrGroupHasFilterProducts:
+	case UserOrGroupHasFilterXid, UserOrGroupHasFilterHost, UserOrGroupHasFilterName, UserOrGroupHasFilterFullName, UserOrGroupHasFilterEmail, UserOrGroupHasFilterDescription, UserOrGroupHasFilterAvatar, UserOrGroupHasFilterURL, UserOrGroupHasFilterMemberOf, UserOrGroupHasFilterProducts:
 		return true
 	}
 	return false
@@ -5528,11 +5552,12 @@ func (e UserOrGroupHasFilter) MarshalGQL(w io.Writer) {
 type UserOrGroupOrderable string
 
 const (
-	UserOrGroupOrderableXid      UserOrGroupOrderable = "xid"
-	UserOrGroupOrderableName     UserOrGroupOrderable = "name"
-	UserOrGroupOrderableFullName UserOrGroupOrderable = "fullName"
-	UserOrGroupOrderableEmail    UserOrGroupOrderable = "email"
-	UserOrGroupOrderableURL      UserOrGroupOrderable = "url"
+	UserOrGroupOrderableXid         UserOrGroupOrderable = "xid"
+	UserOrGroupOrderableName        UserOrGroupOrderable = "name"
+	UserOrGroupOrderableFullName    UserOrGroupOrderable = "fullName"
+	UserOrGroupOrderableEmail       UserOrGroupOrderable = "email"
+	UserOrGroupOrderableDescription UserOrGroupOrderable = "description"
+	UserOrGroupOrderableURL         UserOrGroupOrderable = "url"
 )
 
 var AllUserOrGroupOrderable = []UserOrGroupOrderable{
@@ -5540,12 +5565,13 @@ var AllUserOrGroupOrderable = []UserOrGroupOrderable{
 	UserOrGroupOrderableName,
 	UserOrGroupOrderableFullName,
 	UserOrGroupOrderableEmail,
+	UserOrGroupOrderableDescription,
 	UserOrGroupOrderableURL,
 }
 
 func (e UserOrGroupOrderable) IsValid() bool {
 	switch e {
-	case UserOrGroupOrderableXid, UserOrGroupOrderableName, UserOrGroupOrderableFullName, UserOrGroupOrderableEmail, UserOrGroupOrderableURL:
+	case UserOrGroupOrderableXid, UserOrGroupOrderableName, UserOrGroupOrderableFullName, UserOrGroupOrderableEmail, UserOrGroupOrderableDescription, UserOrGroupOrderableURL:
 		return true
 	}
 	return false
@@ -5575,12 +5601,13 @@ func (e UserOrGroupOrderable) MarshalGQL(w io.Writer) {
 type UserOrderable string
 
 const (
-	UserOrderableXid      UserOrderable = "xid"
-	UserOrderableName     UserOrderable = "name"
-	UserOrderableFullName UserOrderable = "fullName"
-	UserOrderableEmail    UserOrderable = "email"
-	UserOrderableURL      UserOrderable = "url"
-	UserOrderableLocale   UserOrderable = "locale"
+	UserOrderableXid         UserOrderable = "xid"
+	UserOrderableName        UserOrderable = "name"
+	UserOrderableFullName    UserOrderable = "fullName"
+	UserOrderableEmail       UserOrderable = "email"
+	UserOrderableDescription UserOrderable = "description"
+	UserOrderableURL         UserOrderable = "url"
+	UserOrderableLocale      UserOrderable = "locale"
 )
 
 var AllUserOrderable = []UserOrderable{
@@ -5588,13 +5615,14 @@ var AllUserOrderable = []UserOrderable{
 	UserOrderableName,
 	UserOrderableFullName,
 	UserOrderableEmail,
+	UserOrderableDescription,
 	UserOrderableURL,
 	UserOrderableLocale,
 }
 
 func (e UserOrderable) IsValid() bool {
 	switch e {
-	case UserOrderableXid, UserOrderableName, UserOrderableFullName, UserOrderableEmail, UserOrderableURL, UserOrderableLocale:
+	case UserOrderableXid, UserOrderableName, UserOrderableFullName, UserOrderableEmail, UserOrderableDescription, UserOrderableURL, UserOrderableLocale:
 		return true
 	}
 	return false

@@ -9,6 +9,7 @@ fragment UserOrGroupFragment on UserOrGroup {
 	name
 	fullName
 	email
+	description
 	avatar {
 		id
 		url

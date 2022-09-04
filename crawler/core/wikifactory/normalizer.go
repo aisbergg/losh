@@ -406,12 +406,13 @@ func (c *WikifactoryCrawler) normLicensor(ctx context.Context, prjInfo *wfclient
 		xid := asXid(*host.Domain, *groupInfo.Slug)
 		url := "https://" + *xid
 		group := &models.Group{
-			Xid:      xid,
-			Host:     host,
-			Name:     groupInfo.Slug,
-			FullName: groupInfo.Title,
-			Members:  []models.UserOrGroup{}, //TODO
-			URL:      &url,
+			Xid:         xid,
+			Host:        host,
+			Name:        groupInfo.Slug,
+			FullName:    groupInfo.Title,
+			Description: stringOrNil(sp(groupInfo.Description)),
+			Members:     []models.UserOrGroup{}, //TODO
+			URL:         &url,
 		}
 
 		if groupInfo.Avatar != nil {
@@ -434,13 +435,14 @@ func (c *WikifactoryCrawler) normLicensor(ctx context.Context, prjInfo *wfclient
 		xid := asXid(*host.Domain, *prjInfo.Creator.Profile.Username)
 		url := "https://" + *xid
 		user := &models.User{
-			Xid:      xid,
-			Host:     host,
-			Name:     prjInfo.Creator.Profile.Username,
-			FullName: stringOrNil(sp(prjInfo.Creator.Profile.FullName)),
-			Email:    stringOrNil(sp(prjInfo.Creator.Profile.Email)),
-			Locale:   stringOrNil(prjInfo.Creator.Profile.Locale),
-			URL:      &url,
+			Xid:         xid,
+			Host:        host,
+			Name:        prjInfo.Creator.Profile.Username,
+			FullName:    stringOrNil(sp(prjInfo.Creator.Profile.FullName)),
+			Email:       stringOrNil(sp(prjInfo.Creator.Profile.Email)),
+			Description: stringOrNil(sp(prjInfo.Creator.Profile.Description)),
+			Locale:      stringOrNil(prjInfo.Creator.Profile.Locale),
+			URL:         &url,
 		}
 
 		if prjInfo.Creator.Profile.Avatar != nil {

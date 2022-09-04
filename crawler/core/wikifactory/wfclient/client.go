@@ -286,11 +286,12 @@ type ProjectFullFragment_Tags struct {
 	Name *string "json:\"name\" graphql:\"name\""
 }
 type ProjectFullFragment_Creator_Profile struct {
-	FullName *string       "json:\"fullName\" graphql:\"fullName\""
-	Username *string       "json:\"username\" graphql:\"username\""
-	Email    *string       "json:\"email\" graphql:\"email\""
-	Locale   *string       "json:\"locale\" graphql:\"locale\""
-	Avatar   *FileFragment "json:\"avatar\" graphql:\"avatar\""
+	FullName    *string       "json:\"fullName\" graphql:\"fullName\""
+	Username    *string       "json:\"username\" graphql:\"username\""
+	Email       *string       "json:\"email\" graphql:\"email\""
+	Description *string       "json:\"description\" graphql:\"description\""
+	Locale      *string       "json:\"locale\" graphql:\"locale\""
+	Avatar      *FileFragment "json:\"avatar\" graphql:\"avatar\""
 }
 type ProjectFullFragment_Creator struct {
 	ID      string                               "json:\"id\" graphql:\"id\""
@@ -365,11 +366,12 @@ type GetProjectFullByID_Project_Result_ProjectFullFragment_Tags struct {
 	Name *string "json:\"name\" graphql:\"name\""
 }
 type GetProjectFullByID_Project_Result_ProjectFullFragment_Creator_Profile struct {
-	FullName *string       "json:\"fullName\" graphql:\"fullName\""
-	Username *string       "json:\"username\" graphql:\"username\""
-	Email    *string       "json:\"email\" graphql:\"email\""
-	Locale   *string       "json:\"locale\" graphql:\"locale\""
-	Avatar   *FileFragment "json:\"avatar\" graphql:\"avatar\""
+	FullName    *string       "json:\"fullName\" graphql:\"fullName\""
+	Username    *string       "json:\"username\" graphql:\"username\""
+	Email       *string       "json:\"email\" graphql:\"email\""
+	Description *string       "json:\"description\" graphql:\"description\""
+	Locale      *string       "json:\"locale\" graphql:\"locale\""
+	Avatar      *FileFragment "json:\"avatar\" graphql:\"avatar\""
 }
 type GetProjectFullByID_Project_Result_ProjectFullFragment_Creator struct {
 	ID      string                                                                 "json:\"id\" graphql:\"id\""
@@ -417,11 +419,12 @@ type GetProjectFullBySlug_Project_Result_ProjectFullFragment_Tags struct {
 	Name *string "json:\"name\" graphql:\"name\""
 }
 type GetProjectFullBySlug_Project_Result_ProjectFullFragment_Creator_Profile struct {
-	FullName *string       "json:\"fullName\" graphql:\"fullName\""
-	Username *string       "json:\"username\" graphql:\"username\""
-	Email    *string       "json:\"email\" graphql:\"email\""
-	Locale   *string       "json:\"locale\" graphql:\"locale\""
-	Avatar   *FileFragment "json:\"avatar\" graphql:\"avatar\""
+	FullName    *string       "json:\"fullName\" graphql:\"fullName\""
+	Username    *string       "json:\"username\" graphql:\"username\""
+	Email       *string       "json:\"email\" graphql:\"email\""
+	Description *string       "json:\"description\" graphql:\"description\""
+	Locale      *string       "json:\"locale\" graphql:\"locale\""
+	Avatar      *FileFragment "json:\"avatar\" graphql:\"avatar\""
 }
 type GetProjectFullBySlug_Project_Result_ProjectFullFragment_Creator struct {
 	ID      string                                                                   "json:\"id\" graphql:\"id\""
@@ -521,10 +524,11 @@ type GetGroup_Initiative_Result_Members struct {
 	Edges []*GetGroup_Initiative_Result_Members_Edges "json:\"edges\" graphql:\"edges\""
 }
 type GetGroup_Initiative_Result struct {
-	Slug    *string                             "json:\"slug\" graphql:\"slug\""
-	Title   *string                             "json:\"title\" graphql:\"title\""
-	Avatar  *FileFragment                       "json:\"avatar\" graphql:\"avatar\""
-	Members *GetGroup_Initiative_Result_Members "json:\"members\" graphql:\"members\""
+	Slug        *string                             "json:\"slug\" graphql:\"slug\""
+	Title       *string                             "json:\"title\" graphql:\"title\""
+	Description *string                             "json:\"description\" graphql:\"description\""
+	Avatar      *FileFragment                       "json:\"avatar\" graphql:\"avatar\""
+	Members     *GetGroup_Initiative_Result_Members "json:\"members\" graphql:\"members\""
 }
 type GetGroup_Initiative struct {
 	Result *GetGroup_Initiative_Result "json:\"result\" graphql:\"result\""
@@ -655,6 +659,7 @@ fragment ProjectFullFragment on Project {
 			fullName
 			username
 			email
+			description
 			locale
 			avatar {
 				... FileFragment
@@ -761,17 +766,6 @@ const GetProjectFullBySlugDocument = `query GetProjectFullBySlug ($space: String
 		}
 	}
 }
-fragment ContributionFragment on Contribution {
-	title
-	dateCreated
-	version
-	files {
-		dirname
-		file {
-			... FileFragment
-		}
-	}
-}
 fragment ProjectFullFragment on Project {
 	id
 	name
@@ -789,6 +783,7 @@ fragment ProjectFullFragment on Project {
 			fullName
 			username
 			email
+			description
 			locale
 			avatar {
 				... FileFragment
@@ -839,6 +834,17 @@ fragment FileFragment on File {
 	dateCreated
 	lastUpdated
 	license
+}
+fragment ContributionFragment on Contribution {
+	title
+	dateCreated
+	version
+	files {
+		dirname
+		file {
+			... FileFragment
+		}
+	}
 }
 `
 
@@ -1022,6 +1028,7 @@ const GetGroupDocument = `query GetGroup ($slug: String!) {
 		result {
 			slug
 			title
+			description
 			avatar {
 				... FileFragment
 			}
