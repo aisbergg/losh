@@ -274,8 +274,8 @@ func (dr *DgraphRepository) SearchProducts(ctx context.Context, query *parser.Qu
 	dr.log.Debugw("search Products")
 
 	q, v := createDQLQuery(query, order, pagination)
-	fmt.Println("q: ", q)
-	fmt.Println("v: ", v)
+	// fmt.Println("q: ", q)
+	// fmt.Println("v: ", v)
 
 	rsp, err := dr.dgraphClient.NewTxn().QueryWithVars(ctx, q, v)
 	if err != nil {
