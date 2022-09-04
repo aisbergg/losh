@@ -68,11 +68,6 @@ func (c DetailsController) Handle(ctx *fiber.Ctx) error {
 		page["title"] = "Product Details"
 		page["page-header"] = "Product Details"
 
-	case *models.Component:
-		tplNme = "details-component.html"
-		page["title"] = "Component Details"
-		page["page-header"] = "Component Details"
-
 	case *models.License:
 		tplNme = "details-license.html"
 		page["title"] = "License Details"
@@ -80,42 +75,23 @@ func (c DetailsController) Handle(ctx *fiber.Ctx) error {
 
 	case *models.User, *models.Group:
 		tplNme = "details-user-group.html"
-		// first := mathutil.Max(1, queryParams.ResultsPerPage)
-		// offset := mathutil.Max(0, (queryParams.Page-1)*queryParams.ResultsPerPage)
-		// var results searchmodels.Results
+		page := tplBnd["page"].(map[string]interface{})
 		if u, ok := data.(*models.User); ok {
-			page["title"] = "User Details"
-			// results, err = c.searchService.Search3(
-			// 	svcCtx,
-			// 	"licensor",
-			// 	searchmodels.OrderByFromCombinedStr(queryParams.Order),
-			// 	searchmodels.Pagination{First: first, Offset: offset},
-			// )
-			_ = u
+			queryParams.Query = "licensoruid:" + *u.ID
 		} else if g, ok := data.(*models.Group); ok {
-			page["title"] = "Group Details"
-			_ = g
+			queryParams.Query = "licensoruid:" + *g.ID
 		}
 
-		_ = queryParams
+		// export results
+		if queryParams.Export != "" {
+			return performExport(ctx, svcCtx, c.searchService, queryParams)
+		}
 
-		// page := tplBnd["page"].(map[string]interface{})
-		// if err != nil {
-		// 	if serr, ok := err.(*search.Error); ok && serr.Type == search.ErrorLimitExceeded {
-		// 		page["error"] = serr.Error()
-		// 	} else {
-		// 		// if not a search error handle it as an internal server error
-		// 		return err
-		// 	}
-		// }
-
-		// numPages := int(math.Ceil(float64(results.Count) / float64(queryParams.ResultsPerPage)))
-		// if queryParams.Page > numPages {
-		// 	queryParams.Page = numPages
-		// }
-		// page["results"] = results
-		// page["curPage"] = queryParams.Page
-		// page["numPages"] = numPages
+		// perform search
+		tplBnd["page"], err = performSearch(svcCtx, c.searchService, queryParams, page)
+		if err != nil {
+			return err
+		}
 
 	default:
 		return fiber.ErrNotFound

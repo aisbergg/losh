@@ -541,6 +541,26 @@ func (e *encoder) encodeOperator(opr *parser.Operator, parVar string) (curVar st
 		return
 	}
 	switch o.Type {
+	case uidOperator:
+		text, _, _, _ := e.extractOperatorText(opr)
+		if text == "" {
+			return
+		}
+		filter := e.generateUIDFilter(text)
+		if filter == nil || len(filter) == 0 {
+			return
+		}
+		filter = e.generateFilterExpression(filter)
+		if o.IsRootFilter {
+			sel := fmt.Sprintf(`%s %s`, o.SelectionStart, o.SelectionEnd)
+			curVar = e.addVariableWithFilter(string(filter), sel, parVar)
+			return
+		}
+
+		sel := fmt.Sprintf(`%s %s %s`, o.SelectionStart, string(filter), o.SelectionEnd)
+		curVar = e.addVariableWithFilter("", sel, parVar)
+		return
+
 	case booleanIsOperator, booleanHasOperator:
 		// ignore; handled by special operators
 		return
@@ -583,6 +603,7 @@ func (e *encoder) encodeOperator(opr *parser.Operator, parVar string) (curVar st
 type operatorType int
 
 const (
+	uidOperator operatorType = iota
 	// Matches either full-text or phrases contained in the text.
 	// Requires indexes: fulltext, regexp, exacti
 	//   opr:text or opr:`text` -> full-text-match (alloftext)
@@ -590,7 +611,7 @@ const (
 	//   opr:* or opr:`text*` -> wildcard-contains-match (regexp: /.../i and alloftext)
 	//   opr:"*" -> wildcard-contains-match (regexp: /.../i)
 	//   opr:==text -> exact-match (allof with exacti index)
-	textFullContainsOperator operatorType = iota
+	textFullContainsOperator
 	// Matches either terms or the exact text.
 	// Requires indexes: term, regexp, exacti
 	//   opr:text or opr:`text` -> term-match (allofterms)
@@ -831,6 +852,11 @@ var operators = map[string]operator{
 	//
 	// Licensor
 	//
+	"licensoruid": {
+		Type:           uidOperator,
+		SelectionStart: `Product.licensor`,
+		SelectionEnd:   `{uid}`,
+	},
 	"licensor": { // alias for licensorfullname
 		Type:           textTermExactOperator,
 		Predicate:      "UserOrGroup.fullName",
@@ -1219,6 +1245,23 @@ func (e *encoder) generateFilterExpression(filter []byte) []byte {
 	var b bytes.Buffer
 	b.WriteString(`@filter(`)
 	b.Write(filter)
+	b.WriteString(`)`)
+	return b.Bytes()
+}
+
+var uidPattern = regexp.MustCompile(`^0x[a-f0-9]{1,16}$`)
+
+func (e *encoder) generateUIDFilter(uid string) []byte {
+	if len(uid) == 0 {
+		return nil
+	}
+	if !uidPattern.MatchString(uid) {
+		return nil
+	}
+	var b bytes.Buffer
+	b.WriteString(`uid(`)
+	arg := e.CrateArg(uid, "string")
+	b.WriteString(arg)
 	b.WriteString(`)`)
 	return b.Bytes()
 }
@@ -1822,38 +1865,6 @@ func (e *encoder) appendNegationVariable(parVar, notVar string) string {
 	e.buf.WriteString(")) {uid}\n")
 	return curVar
 }
-
-// func (e *encoder) appendOrderByVariable(orderBy searchmodels.OrderBy, parVar string) string {
-// 	e.buf.WriteString("var(func:uid(")
-// 	e.buf.WriteString(parVar)
-// 	e.buf.WriteString(")) {")
-
-// 	switch orderBy.Field {
-// 	case searchmodels.OrderByName:
-// 		e.buf.WriteString(`order as Product.name`)
-// 	case searchmodels.OrderByCreatedAt:
-// 		e.buf.WriteString(`Product.release { O1 as Component.createdAt } order as min(val(O1))`)
-// 	case searchmodels.OrderByDiscoveredAt:
-// 		e.buf.WriteString(`order as CrawlerMeta.discoveredAt`)
-// 	case searchmodels.OrderByLastIndexedAt:
-// 		e.buf.WriteString(`order as CrawlerMeta.lastIndexedAt`)
-// 	case searchmodels.OrderByDocumentationLanguage:
-// 		e.buf.WriteString(`order as Product.documentationLanguage`)
-// 	case searchmodels.OrderByState:
-// 		e.buf.WriteString(`order as Product.state`)
-// 	case searchmodels.OrderByForkCount:
-// 		e.buf.WriteString(`order as Product.forkCount`)
-// 	case searchmodels.OrderByStarCount:
-// 		e.buf.WriteString(`order as Product.starCount`)
-// 	case searchmodels.OrderByLicenseId:
-// 		e.buf.WriteString(`Product.release { Component.license { O2 as License.xid } O1 as min(val(O2)) } order as min(val(O1))`)
-// 	default:
-// 		panic("unsupported order by field")
-// 	}
-
-//		e.buf.WriteString("}\n")
-//		return parVar
-//	}
 
 func (e *encoder) appendOrderByVariable(orderBy searchmodels.OrderBy, parVar string) string {
 	e.buf.WriteString("var(func:uid(")

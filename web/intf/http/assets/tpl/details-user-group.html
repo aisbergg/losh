@@ -1,20 +1,25 @@
+---
+layout: layouts/default
+---
 {% assign entity = page.data %}
 <div class="container-xl d-flex justify-content-center">
-	<div class="p-4 position-relative d-flex flex-column align-items-center">
+	<div class="col-lg-6 p-5 position-relative d-flex flex-column align-items-center">
 		{%- if entity.Avatar.URL %}
 		<span class="avatar avatar-xl mb-3 avatar-rounded" style="background-image: url({{ entity.Avatar.URL }})"></span>
 		{%- else %}
 		<span class="avatar avatar-xl mb-3 avatar-rounded text-bg-primary">{{ entity.FullName | first_letters | escape }}</span>
 		{%- endif %}
 
-		<h3 class="m-0 mb-1">{% if entity.FullName %}{{ entity.FullName | escape }}{% else %}{{ entity.Name | escape }}{% endif %}</h3>
-		<div class="text-muted">{{ entity.Name | escape }}</div>
+		<h3 class="m-0">{% if entity.FullName %}{{ entity.FullName | escape }}{% else %}{{ entity.Name | escape }}{% endif %}</h3>
+		<div class="text-muted mt-1">{{ entity.Name | escape }}</div>
+
+		{% if entity.Description %}<p class="text-center mt-3">{{ entity.Description | escape }}</p>{% endif %}
 		<a class="stretched-link" href="{{ entity.URL }}"></a>
 	</div>
 </div>
 
-<div class="d-print-none mt-3">
-	<h2>Products</h2>
-</div>
-
-<!-- TODO: add same card style view like on search page -->
+<div class="card">
+	<div class="card-body">
+		<h2>Products</h2>
+	</div>
+{% include ui/search-results.html %}
