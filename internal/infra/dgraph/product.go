@@ -1915,13 +1915,13 @@ func (e *encoder) appendOrderByVariable(orderBy searchmodels.OrderBy, parVar str
 	case searchmodels.OrderByLicensorName:
 		e.buf.WriteString(`Product.release { Component.licensor { O2 as UserOrGroup.name } O1 as min(val(O2)) } order as min(val(O1))`)
 	case searchmodels.OrderByRepositoryHost:
-		e.buf.WriteString(`Product.release { Component.repository { Repository.host { O3 as Host.name } O2 as min(val(O3)) } } O1 as min(val(O2)) } order as min(val(O1))`)
+		e.buf.WriteString(`Product.release { Component.repository { Repository.host { O3 as Host.name } O2 as min(val(O3)) } O1 as min(val(O2)) } order as min(val(O1))`)
 	case searchmodels.OrderByRepositoryOwner:
 		e.buf.WriteString(`Product.release { Component.repository { Repository.owner { O3 as UserOrGroup.fullName } O2 as min(val(O3)) } } O1 as min(val(O2)) } order as min(val(O1))`)
 	case searchmodels.OrderByRepositoryName:
 		e.buf.WriteString(`Product.release { Component.repository { O2 as Repository.name } O1 as min(val(O2)) } order as min(val(O1))`)
 	case searchmodels.OrderByDatasourceHost:
-		e.buf.WriteString(`Product.release { CrawlerMeta.dataSource { Repository.host { O3 as Host.name } O2 as min(val(O3)) } } O1 as min(val(O2)) } order as min(val(O1))`)
+		e.buf.WriteString(`Product.release { CrawlerMeta.dataSource { Repository.host { O3 as Host.name } O2 as min(val(O3)) } O1 as min(val(O2)) } order as min(val(O1))`)
 	case searchmodels.OrderByDatasourceOwner:
 		e.buf.WriteString(`Product.release { CrawlerMeta.dataSource { Repository.owner { O3 as UserOrGroup.fullName } O2 as min(val(O3)) } } O1 as min(val(O2)) } order as min(val(O1))`)
 	case searchmodels.OrderByDatasourceName:
