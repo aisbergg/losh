@@ -8,7 +8,7 @@ import (
 
 type Results struct {
 	// Count is the total number of results.
-	Count int64                    `json:"count" liquid:"count"`
+	Count uint64                   `json:"count" liquid:"count"`
 	Items []*productmodels.Product `json:"items" liquid:"items"`
 
 	// Operators used in the query (lowercased).

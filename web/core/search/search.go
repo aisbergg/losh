@@ -23,7 +23,7 @@ func (s *Service) Search3(ctx context.Context, queryStr string, orderBy searchmo
 	}
 
 	return searchmodels.Results{
-		Count:     int64(count),
+		Count:     count,
 		Items:     prds,
 		Operators: operators,
 	}, nil

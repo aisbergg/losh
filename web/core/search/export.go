@@ -13,26 +13,16 @@ import (
 	searchmodels "losh/web/core/search/models"
 )
 
-// func (s *Service) ExportResults(query string, results searchmodels.Results, t searchmodels.ExportType) ([]byte, error) {
-// 	switch t {
-// 	case searchmodels.ExportTypeCSV, searchmodels.ExportTypeTSV:
-// 		return dumpCSVorTSV(results, t)
-// 	default:
-// 		// should never happen unless we missed something
-// 		panic("invalid export type")
-// 	}
-// }
-
-const batchSize = 100
+const batchSize = 150
 
 func (s *Service) ExportResults(t searchmodels.ExportType, ctx context.Context, queryStr string, orderBy searchmodels.OrderBy, limit, offset int) ([]byte, error) {
 	pgdRes := dgraph.NewPaginatedList(
-		func(first int, offset int) ([]*models.Product, error) {
+		func(first int, offset int) ([]*models.Product, uint64, error) {
 			res, err := s.Search3(ctx, queryStr, orderBy, searchmodels.Pagination{First: first, Offset: offset})
 			if err != nil {
-				return nil, err
+				return nil, 0, err
 			}
-			return res.Items, nil
+			return res.Items, res.Count, nil
 		},
 		batchSize,
 		offset,
@@ -71,6 +61,7 @@ func dumpCSVorTSV(results *dgraph.PaginatedList[*models.Product], t searchmodels
 		"tags",
 		"category",
 		"version",
+		"lastUpdatedAt",
 		"createdAt",
 		"repository",
 		"license",
@@ -222,6 +213,7 @@ func dumpCSVorTSV(results *dgraph.PaginatedList[*models.Product], t searchmodels
 			strings.Join(tags, ","),
 			category,
 			pd(prd.Release.Version),
+			pd(prd.LastUpdatedAt).String(),
 			pd(prd.Release.CreatedAt).String(),
 			pd(prd.Release.Repository.URL),
 			license,

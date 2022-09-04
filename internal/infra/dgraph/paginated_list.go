@@ -8,13 +8,14 @@ type PaginatableType interface {
 	*models.Product
 }
 
-type ItemProvider[T PaginatableType] func(first int, offset int) ([]T, error)
+type ItemProvider[T PaginatableType] func(first int, offset int) (items []T, total uint64, err error)
 
 type PaginatedList[T PaginatableType] struct {
 	itemPrvFn ItemProvider[T]
 
 	first  int
 	offset int
+	total  uint64
 	i      int
 	items  []T
 }
@@ -55,11 +56,18 @@ func (pl *PaginatedList[T]) HasNext() (bool, error) {
 
 // nextPage returns the next page of items in the list.
 func (pl *PaginatedList[T]) nextPage() error {
-	items, err := pl.itemPrvFn(pl.first, pl.offset)
+	// going past the end of the list results in all items being returned ->
+	// check if we're already at the end
+	if pl.offset > 0 && uint64(pl.offset) >= pl.total {
+		pl.items = []T{}
+		return nil
+	}
+	items, total, err := pl.itemPrvFn(pl.first, pl.offset)
 	if err != nil {
 		return err
 	}
 	pl.items = items
+	pl.total = total
 	pl.i = 0
 	pl.offset += int(len(items))
 	return nil
