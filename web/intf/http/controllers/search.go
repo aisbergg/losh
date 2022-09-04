@@ -5,6 +5,7 @@ import (
 	"math"
 	gourl "net/url"
 	"strconv"
+	"strings"
 
 	"losh/internal/infra/dgraph"
 	"losh/internal/lib/util/mathutil"
@@ -113,15 +114,13 @@ func (c SearchController) Handle(ctx *fiber.Ctx) error {
 func parseSearchQueryParams(ctx *fiber.Ctx) interface{} {
 	params := SearchQueryParams{}
 	ctx.QueryParser(&params)
-
 	if params.Page < 1 {
 		params.Page = 1
 	}
-
 	if params.ResultsPerPage < 1 || params.ResultsPerPage > 100 {
 		params.ResultsPerPage = 10
 	}
-
+	params.Order = strings.ToLower(strings.TrimSpace(params.Order))
 	return params
 }
 

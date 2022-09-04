@@ -8,168 +8,211 @@ extraProperties:
     description: The version of the latest release of the product
     icon: versions
     path: /Release/Version
+    orderable: true
 
   - operator: website
     title: website
     description: The website of the product
     icon: world
     path: /Website
+    orderable: true
+    is: url
 
   - operator: createdat
     title: Created At
     description: The date the latest release of the product was created
     icon: calendar
     path: /Release/CreatedAt
+    orderable: true
 
   - operator: discoveredat
     title: Discovered At
     description:
     icon: calendar
     path: /DiscoveredAt
+    orderable: true
 
   - operator: lastindexedat
     title: Last Indexed At
     description:
     icon: calendar
     path: /LastIndexedAt
+    orderable: true
 
   - operator: lastupdatedat
     title: Last Updated At
     description:
     icon: calendar
     path: /LastUpdatedAt
+    orderable: true
 
   - operator: hasadditionallicenses
     title: Additional Licenses
     description:
     icon: license
     path: /Release/AdditionalLicenses
+    orderable: false
 
   - operator: licensename
     title: name
     description:
     icon: license
     path: /Release/License/Name
+    orderable: true
 
   - operator: islicensespdx
     title: Is Spdx
     description:
     icon: license
     path: /Release/License/IsSpdx
+    orderable: true
 
   - operator: islicensedeprecated
     title: Is Deprecated
     description:
     icon: license
     path: /Release/License/IsDeprecated
+    orderable: true
 
   - operator: islicenseosiapproved
     title: Is Osi Approved
     description:
     icon: license
     path: /Release/License/IsOsiApproved
+    orderable: true
 
   - operator: islicensefsflibre
     title: Is Fsf Libre
     description:
     icon: license
     path: /Release/License/IsFsfLibre
+    orderable: true
 
   - operator: islicenseblocked
     title: Is Blocked
     description:
     icon: license
     path: /Release/License/IsBlocked
+    orderable: true
 
   - operator: islicensestrong
     title: type
     description:
     icon: license
     path: /Release/License/Type
+    orderable: false
 
   - operator: islicenseweak
     title: type
     description:
     icon: license
     path: /Release/License/Type
+    orderable: false
 
   - operator: islicensepermissive
     title: type
     description:
     icon: license
     path: /Release/License/Type
+    orderable: false
 
   - operator: licensorname
     title: name
     description:
     icon: person
     path: /Release/Licensor/Name
+    orderable: true
 
   - operator: repositoryhost
     title: name
     description:
     icon: folders
     path: /Release/Repository/Host/Name
+    orderable: true
 
   - operator: repositoryowner
     title: Full Name
     description:
     icon: folders
     path: /Release/Repository/Owner/FullName
+    orderable: true
 
   - operator: repositoryname
     title: name
     description:
     icon: folders
     path: /Release/Repository/Name
+    orderable: true
 
   - operator: datasource
     title: name
     description:
     icon: hexagons
     path: /Release/DataSource/Host/Name
+    orderable: true
 
   - operator: datasourcehost
     title: name
     description:
     icon: hexagons
     path: /Release/DataSource/Host/Name
+    orderable: true
 
   - operator: datasourceowner
     title: Full Name
     description:
     icon: hexagons
     path: /Release/DataSource/Owner/FullName
+    orderable: true
 
   - operator: datasourcename
     title: name
     description:
     icon: hexagons
     path: /Release/DataSource/Name
+    orderable: true
 
   - operator: host
     title: name
     description:
     icon: server
     path: /Release/Repository/Host/Name
+    orderable: true
 
   - operator: hasattestation
     title: attestation
     description:
     icon: certificate
     path: /Release/Attestation
+    is: url
+
+  - operator: attestation
+    title: attestation
+    description:
+    icon: certificate
+    path: /Release/Attestation
+    is: url
 
   - operator: haspublication
     title: publication
     description:
     icon: speakerphone
     path: /Release/Publication
+    is: url
+
+  - operator: publication
+    title: publication
+    description:
+    icon: speakerphone
+    path: /Release/Publication
+    is: url
 
   - operator: hasissuetracker
     title: issues
     description:
     icon: alert-circle
     path: /Release/Issues
+    is: url
 
   - operator: hascomplieswith
     title: Complies With
@@ -182,18 +225,22 @@ extraProperties:
     description:
     icon: list-check
     path: /Release/TechnicalStandard/Name
+    orderable: true
 
   - operator: hascpcpatentclass
     title: Cpc Patent Class
     description:
     icon: certificate
     path: /Release/CpcPatentClass
+    is: url
 
   - operator: cpcpatentclass
     title: Cpc Patent Class
     description:
     icon: certificate
     path: /Release/CpcPatentClass
+    orderable: true
+    is: url
 
   - operator: hastsdc
     title: tsdc
@@ -206,60 +253,117 @@ extraProperties:
     description:
     icon: list-check
     path: /Release/Tsdc/Name
+    orderable: true
 
   - operator: hasimage
     title: Image
     description:
     icon: file-download
     path: /Release/Image
+    orderable: false
+    is: file
 
   - operator: hasreadme
     title: Readme
     description:
     icon: file-download
     path: /Release/Readme
+    orderable: false
+    is: file
 
   - operator: hascontributionguide
     title: Contribution Guide
     description:
     icon: file-download
     path: /Release/ContributionGuide
+    orderable: false
+    is: file
 
   - operator: hasbom
     title: BOM
     description:
     icon: file-download
     path: /Release/Bom
+    orderable: false
+    is: file
 
   - operator: hasmanufacturinginstructions
     title: Manufacturing Instructions
     description:
     icon: file-download
     path: /Release/ManufacturingInstructions
+    orderable: false
+    is: file
 
   - operator: hasusermanual
     title: User Manual
     description:
     icon: file-download
     path: /Release/UserManual
+    orderable: false
+    is: file
 
   - operator: hassource
     title: Source
     description:
     icon: file-download
     path: /Release/Source
+    orderable: false
+    is: file
 
   - operator: hasexport
     title: Export
     description:
     icon: file-download
     path: /Release/Export
+    orderable: false
+    is: file
 
   - operator: hasauxiliary
     title: Auxiliary
     description:
     icon: file-download
     path: /Release/Auxiliary
+    orderable: false
+    is: file
+
+orderSelect:
+  - operator: name
+    title: Name
+
+  - operator: language
+    title: Language
+
+  - operator: state
+    title: State (Activeness)
+
+  - operator: starcount
+    title: Star Count
+
+  - operator: forkcount
+    title: Fork Count
+
+  - operator: version
+    title: Version
+
+  - operator: createdat
+    title: Created At
+
+  - operator: lastupdatedat
+    title: Last Updated At
+
+  - operator: licenseid
+    title: License
+
+  - operator: licensetype
+    title: License Type
+
+  - operator: licensorname
+    title: Licensor
+
+  - operator: repositoryhost
+    title: Host
+
 ---
 {%- assign resultsPerPage = req.queryParams.resultsPerPage -%}
 {%- assign results = page.results.items -%}
@@ -734,10 +838,10 @@ extraProperties:
 			<div class="text-muted me-auto">{% if numPagedResults > 0 %}Showing {{ page.curPage | minus: 1 | times: resultsPerPage | plus: 1 | int64 }} to {{ page.curPage | minus: 1 | times: resultsPerPage | plus: numPagedResults | int64 }} of {% endif %}{{ numResults }} results</div>
 			<form class="ms-2">
 				<select id="orderBy" name="orderBy" class="form-select ms-auto w-auto" data-bs-toggle="tooltip" data-bs-placement="top" title="Order Results By">
-					<option value="nameAsc"{% if req.queryParams.order == 'nameAsc' %} selected{% endif %}>Name ↥</option>
-					<option value="nameDsc"{% if req.queryParams.order == 'nameDsc' %} selected{% endif %}>Name ↧</option>
-					<option value="licenseAsc"{% if req.queryParams.order == 'licenseAsc' %} selected{% endif %}>License ↥</option>
-					<option value="licenseDsc"{% if req.queryParams.order == 'licenseDsc' %} selected{% endif %}>License ↧</option>
+					{%- for ep in orderSelect %}
+					<option value="{{ ep.operator | append: 'asc' }}"{% if req.queryParams.order == (ep.operator | append: 'asc') %} selected{% endif %}>{{ ep.title }} ▲</option>
+					<option value="{{ ep.operator | append: 'dsc' }}"{% if req.queryParams.order == (ep.operator | append: 'dsc') %} selected{% endif %}>{{ ep.title }} ▼</option>
+					{%- endfor %}
 				</select>
 			</form>
 			<div class="btn-group ms-2">
@@ -783,29 +887,64 @@ extraProperties:
 		<table class="table table-vcenter{% if include.mobile %} table-mobile-md{% endif %}{% if include.card %} card-table{% endif %}{% if include.stripped %} table-striped{% endif %}{% if include.nowrap %} table-nowrap{% endif %}">
 			<thead>
 				<tr>
-					<th class="ordable" data-value="name" colspan="2">
-						<!-- TODO: sorting via table -->
-						{%- if req.queryParams.order == 'nameAsc' %}
-						{%- assign orderBy = 'nameDsc' %}
-						{%- elsif req.queryParams.order == 'nameAsc' %}
-						{%- assign orderBy = 'nameAsc' %}
-						{%- endif %}
-						<a href="{{ req.fullPath | url_with_params: 'o', orderBy }}" class="text-reset d-block">
+					{%- assign orderBy = req.queryParams.order | downcase %}
+					<th colspan="2">
+						<a class="text-reset d-block orderable" data-value="name">
 							Name
-							{%- if req.queryParams.order == 'nameAsc' %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
-							{%- if req.queryParams.order == 'nameDsc' %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
+							{%- if orderBy == 'nameasc' %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
+							{%- if orderBy == 'namedsc' %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
 						</a>
 					</th>
 					<th>Description</th>
-					<th>Licensor</th>
-					<th>License</th>
+					<th>
+						<a class="text-reset d-block orderable" data-value="licensor">Licensor
+							{%- if orderBy == 'licenseasc' %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
+							{%- if orderBy == 'licensedsc' %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
+						</a>
+					</th>
+					<th>
+						<!-- license  -->
+						<a class="text-reset d-block orderable" data-value="license">
+							License
+							{%- if orderBy == 'licenseasc' %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
+							{%- if orderBy == 'licensedsc' %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
+						</a>
+					</th>
 					<th data-bs-toggle="tooltip" data-bs-placement="top" title="Product State (Activeness)">{% include ui/icon.html icon="bolt" %}</th>
-					<th data-bs-toggle="tooltip" data-bs-placement="top" title="Language">{% include ui/icon.html icon="language" %}</th>
-					<th data-bs-toggle="tooltip" data-bs-placement="top" title="Star Count">{% include ui/icon.html icon="star" %}</th>
-					<th data-bs-toggle="tooltip" data-bs-placement="top" title="Fork Count">{% include ui/icon.html icon="git-fork" %}</th>
+					<th data-bs-toggle="tooltip" data-bs-placement="top" title="Language">
+						<a class="text-reset d-block orderable" data-value="language">
+							{% include ui/icon.html icon="language" %}
+							{%- if orderBy == 'languageasc' %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
+							{%- if orderBy == 'languagedsc' %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
+						</a>
+					</th>
+					<th data-bs-toggle="tooltip" data-bs-placement="top" title="Star Count">
+						<a class="text-reset d-block orderable" data-value="starcount">
+							{% include ui/icon.html icon="star" %}
+							{%- if orderBy == 'starcountasc' %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
+							{%- if orderBy == 'starcountdsc' %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
+						</a>
+					</th>
+					<th data-bs-toggle="tooltip" data-bs-placement="top" title="Fork Count">
+						<a class="text-reset d-block orderable" data-value="forkcount">
+							{% include ui/icon.html icon="git-fork" %}
+							{%- if orderBy == 'forkcountasc' %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
+							{%- if orderBy == 'forkcountdsc' %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
+						</a>
+					</th>
 					{%- for ep in extraProperties %}
 						{%- if ep.operator | in: page.results.operators %}
+							{%- if ep.orderable == true %}
+					<th>
+						<a class="text-reset d-block orderable" data-value="{{ ep.operator }}">
+							{{ ep.title }}
+							{%- if orderBy == (ep.operator | append: 'asc') %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
+							{%- if orderBy == (ep.operator | append: 'dsc') %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
+						</a>
+					</th>
+							{%- else %}
 					<th data-bs-toggle="tooltip" data-bs-placement="top" title="{{ ep.description }}">{{ ep.title }}</th>
+							{%- endif %}
 						{%- endif %}
 					{%- endfor %}
 					<th></th>
@@ -881,8 +1020,10 @@ extraProperties:
 						{%- if (val | is: "bool") %}
 						{%- if val %}{% assign icon = "check" %}{% else %}{% assign icon = "x" %}{% endif %}
 						{% include ui/icon.html icon="{{ icon }}" size="sm" class="icon-bold" %}
-						{%- elsif ep.icon == "file-download" %}
+						{%- elsif ep.is == "file" %}
 						<a href="{{ val.URL }}" class="search-result-info-link m-0">{% include ui/icon.html icon="file-download" %}</a>
+						{%- elsif ep.is == "url" %}
+						<a href="{{ val }}" class="search-result-info-link m-0">{{ val }}</a>
 						{%- else %}
 						{{ val | escape }}
 						{%- endif %}
@@ -966,10 +1107,15 @@ extraProperties:
 					{%- if ep.operator | in: page.results.operators %}
 						{%- assign val = product | get: ep.path %}
 						{%- unless (val | is_nil) %}
-							{%- if ep.icon == "file-download" %}
+							{%- if ep.is == "file" %}
 				<a href="{{ val.URL }}" class="search-result-info-link mb-1">
-					<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="License">{% include ui/icon.html icon="file-download" %}</span>
+					<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ ep.title }}">{% include ui/icon.html icon="file-download" %}</span>
 					<span>{{ ep.title }}</span>
+				</a>
+							{%- elsif ep.is == "url" %}
+				<a href="{{ val }}" class="search-result-info-link mb-1">
+					<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ ep.title }}">{% include ui/icon.html icon="{{ ep.icon }}" %}</span>
+					<span>{{ val }}</span>
 				</a>
 							{%- else %}
 				<div class="search-result-info mb-1">
@@ -1050,6 +1196,27 @@ extraProperties:
 	// add event listener to accordion heading to trigger masonry layout
 	document.getElementById('accordion-heading').addEventListener('click', function (e) {
 		Masonry.data('#accordion-masonry').layout();
+	})
+
+	// add orderBy links to anchors with 'orderable' class
+	const orderableAnchors = document.getElementsByClassName('orderable');
+	Array.from(orderableAnchors).forEach((elm) => {
+		const elmVal = elm.dataset['value']
+		const params = new URLSearchParams(window.location.search);
+		orderBy = params.get('o')
+		if (orderBy) {
+			orderBy = orderBy.toLowerCase();
+			if (elmVal + 'asc' == orderBy) {
+				params.set('o', elmVal + 'dsc');
+			} else if (elmVal + 'dsc' == orderBy) {
+				params.delete('o');
+			} else {
+				params.set('o', elmVal + 'asc');
+			}
+		} else {
+			params.set('o', elmVal + 'asc');
+		}
+		elm.href = location.href.replace(location.search, '?' + params.toString());
 	})
 	// @formatter:on
 </script>

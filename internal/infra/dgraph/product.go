@@ -997,6 +997,12 @@ var operators = map[string]operator{
 		SelectionStart: "Product.release",
 		SelectionEnd:   "{uid}",
 	},
+	"attestation": {
+		Type:           textTermExactOperator,
+		Predicate:      "Component.attestation",
+		SelectionStart: "Product.release",
+		SelectionEnd:   "{uid}",
+	},
 	"haspublication": {
 		Type:           booleanHasOperator,
 		IsRootFilter:   true,
@@ -1004,9 +1010,21 @@ var operators = map[string]operator{
 		SelectionStart: "Product.release",
 		SelectionEnd:   "{uid}",
 	},
+	"publication": {
+		Type:           textTermExactOperator,
+		Predicate:      "Component.publication",
+		SelectionStart: "Product.release",
+		SelectionEnd:   "{uid}",
+	},
 	"hasissuetracker": {
 		Type:           booleanHasOperator,
 		IsRootFilter:   true,
+		Predicate:      "Component.issues",
+		SelectionStart: "Product.release",
+		SelectionEnd:   "{uid}",
+	},
+	"issuetracker": {
+		Type:           textTermExactOperator,
 		Predicate:      "Component.issues",
 		SelectionStart: "Product.release",
 		SelectionEnd:   "{uid}",
@@ -1804,6 +1822,38 @@ func (e *encoder) appendNegationVariable(parVar, notVar string) string {
 	return curVar
 }
 
+// func (e *encoder) appendOrderByVariable(orderBy searchmodels.OrderBy, parVar string) string {
+// 	e.buf.WriteString("var(func:uid(")
+// 	e.buf.WriteString(parVar)
+// 	e.buf.WriteString(")) {")
+
+// 	switch orderBy.Field {
+// 	case searchmodels.OrderByName:
+// 		e.buf.WriteString(`order as Product.name`)
+// 	case searchmodels.OrderByCreatedAt:
+// 		e.buf.WriteString(`Product.release { O1 as Component.createdAt } order as min(val(O1))`)
+// 	case searchmodels.OrderByDiscoveredAt:
+// 		e.buf.WriteString(`order as CrawlerMeta.discoveredAt`)
+// 	case searchmodels.OrderByLastIndexedAt:
+// 		e.buf.WriteString(`order as CrawlerMeta.lastIndexedAt`)
+// 	case searchmodels.OrderByDocumentationLanguage:
+// 		e.buf.WriteString(`order as Product.documentationLanguage`)
+// 	case searchmodels.OrderByState:
+// 		e.buf.WriteString(`order as Product.state`)
+// 	case searchmodels.OrderByForkCount:
+// 		e.buf.WriteString(`order as Product.forkCount`)
+// 	case searchmodels.OrderByStarCount:
+// 		e.buf.WriteString(`order as Product.starCount`)
+// 	case searchmodels.OrderByLicenseId:
+// 		e.buf.WriteString(`Product.release { Component.license { O2 as License.xid } O1 as min(val(O2)) } order as min(val(O1))`)
+// 	default:
+// 		panic("unsupported order by field")
+// 	}
+
+//		e.buf.WriteString("}\n")
+//		return parVar
+//	}
+
 func (e *encoder) appendOrderByVariable(orderBy searchmodels.OrderBy, parVar string) string {
 	e.buf.WriteString("var(func:uid(")
 	e.buf.WriteString(parVar)
@@ -1812,12 +1862,6 @@ func (e *encoder) appendOrderByVariable(orderBy searchmodels.OrderBy, parVar str
 	switch orderBy.Field {
 	case searchmodels.OrderByName:
 		e.buf.WriteString(`order as Product.name`)
-	case searchmodels.OrderByCreatedAt:
-		e.buf.WriteString(`Product.release { O1 as Component.createdAt } order as min(val(O1))`)
-	case searchmodels.OrderByDiscoveredAt:
-		e.buf.WriteString(`order as CrawlerMeta.discoveredAt`)
-	case searchmodels.OrderByLastIndexedAt:
-		e.buf.WriteString(`order as CrawlerMeta.lastIndexedAt`)
 	case searchmodels.OrderByDocumentationLanguage:
 		e.buf.WriteString(`order as Product.documentationLanguage`)
 	case searchmodels.OrderByState:
@@ -1826,10 +1870,139 @@ func (e *encoder) appendOrderByVariable(orderBy searchmodels.OrderBy, parVar str
 		e.buf.WriteString(`order as Product.forkCount`)
 	case searchmodels.OrderByStarCount:
 		e.buf.WriteString(`order as Product.starCount`)
-	case searchmodels.OrderByLicense:
+	case searchmodels.OrderByVersion:
+		e.buf.WriteString(`order as Product.version`)
+	case searchmodels.OrderByWebsite:
+		e.buf.WriteString(`order as Product.website`)
+	case searchmodels.OrderByCreatedAt:
+		e.buf.WriteString(`Product.release { O1 as Component.createdAt } order as min(val(O1))`)
+	case searchmodels.OrderByDiscoveredAt:
+		e.buf.WriteString(`Product.release { O1 as CrawlerMeta.discoveredAt } order as min(val(O1))`)
+	case searchmodels.OrderByLastIndexedAt:
+		e.buf.WriteString(`Product.release { O1 as CrawlerMeta.lastIndexedAt } order as min(val(O1))`)
+	case searchmodels.OrderByLastUpdatedAt:
+		e.buf.WriteString(`order as Product.lastUpdatedAt`)
+	case searchmodels.OrderByHasAdditionalLicenses:
+		// TODO:
+		e.buf.WriteString(`Product.release { Component.license { O2 as License.hasAdditionalLicenses } O1 as min(val(O2)) } order as min(val(O1))`)
+	case searchmodels.OrderByLicenseID:
 		e.buf.WriteString(`Product.release { Component.license { O2 as License.xid } O1 as min(val(O2)) } order as min(val(O1))`)
+	case searchmodels.OrderByLicenseName:
+		e.buf.WriteString(`Product.release { Component.license { O2 as License.name } O1 as min(val(O2)) } order as min(val(O1))`)
+	case searchmodels.OrderByIsLicenseSpdx:
+		e.buf.WriteString(`Product.release { Component.license { O2 as License.isSpdx } O1 as min(val(O2)) } order as min(val(O1))`)
+	case searchmodels.OrderByIsLicenseDeprecated:
+		e.buf.WriteString(`Product.release { Component.license { O2 as License.isDeprecated } O1 as min(val(O2)) } order as min(val(O1))`)
+	case searchmodels.OrderByIsLicenseOsiApproved:
+		e.buf.WriteString(`Product.release { Component.license { O2 as License.isOsiApproved } O1 as min(val(O2)) } order as min(val(O1))`)
+	case searchmodels.OrderByIsLicenseFsfLibre:
+		e.buf.WriteString(`Product.release { Component.license { O2 as License.isFsfLibre } O1 as min(val(O2)) } order as min(val(O1))`)
+	case searchmodels.OrderByIsLicenseBlocked:
+		e.buf.WriteString(`Product.release { Component.license { O2 as License.isBlocked } O1 as min(val(O2)) } order as min(val(O1))`)
+	case searchmodels.OrderByLicenseType:
+		e.buf.WriteString(`Product.release { Component.license { O2 as License.type } O1 as min(val(O2)) } order as min(val(O1))`)
+	case searchmodels.OrderByIsLicenseStrong:
+		// TODO:
+		e.buf.WriteString(`Product.release { Component.license { O2 as eq(License.type, "STRONG") } O1 as min(val(O2)) } order as min(val(O1))`)
+	case searchmodels.OrderByIsLicenseWeak:
+		// TODO:
+		e.buf.WriteString(`Product.release { Component.license { O2 as eq(License.type, "WEAK") } O1 as min(val(O2)) } order as min(val(O1))`)
+	case searchmodels.OrderByIsLicensePermissive:
+		// TODO:
+		e.buf.WriteString(`Product.release { Component.license { O2 as eq(License.type, "PERMISSIVE") } O1 as min(val(O2)) } order as min(val(O1))`)
+	case searchmodels.OrderByLicensorFullName:
+		e.buf.WriteString(`Product.release { Component.licensor { O2 as UserOrGroup.fullName } O1 as min(val(O2)) } order as min(val(O1))`)
+	case searchmodels.OrderByLicensorName:
+		e.buf.WriteString(`Product.release { Component.licensor { O2 as UserOrGroup.name } O1 as min(val(O2)) } order as min(val(O1))`)
+	case searchmodels.OrderByRepositoryHost:
+		e.buf.WriteString(`Product.release { Component.repository { Repository.host { O3 as Host.name } O2 as min(val(O3)) } } O1 as min(val(O2)) } order as min(val(O1))`)
+	case searchmodels.OrderByRepositoryOwner:
+		e.buf.WriteString(`Product.release { Component.repository { Repository.owner { O3 as UserOrGroup.fullName } O2 as min(val(O3)) } } O1 as min(val(O2)) } order as min(val(O1))`)
+	case searchmodels.OrderByRepositoryName:
+		e.buf.WriteString(`Product.release { Component.repository { O2 as Repository.name } O1 as min(val(O2)) } order as min(val(O1))`)
+	case searchmodels.OrderByDatasourceHost:
+		e.buf.WriteString(`Product.release { CrawlerMeta.dataSource { Repository.host { O3 as Host.name } O2 as min(val(O3)) } } O1 as min(val(O2)) } order as min(val(O1))`)
+	case searchmodels.OrderByDatasourceOwner:
+		e.buf.WriteString(`Product.release { CrawlerMeta.dataSource { Repository.owner { O3 as UserOrGroup.fullName } O2 as min(val(O3)) } } O1 as min(val(O2)) } order as min(val(O1))`)
+	case searchmodels.OrderByDatasourceName:
+		e.buf.WriteString(`Product.release { CrawlerMeta.dataSource { O2 as Repository.name } O1 as min(val(O2)) } order as min(val(O1))`)
+	case searchmodels.OrderByHasAttestation:
+		// TODO:
+		e.buf.WriteString(`Product.release { O1 as Component.attestation } order as min(val(O1))`)
+	case searchmodels.OrderByAttestation:
+		e.buf.WriteString(`Product.release { O1 as Component.attestation } order as min(val(O1))`)
+	case searchmodels.OrderByHasPublication:
+		// TODO:
+		e.buf.WriteString(`Product.release { O1 as Component.publication } order as min(val(O1))`)
+	case searchmodels.OrderByPublication:
+		e.buf.WriteString(`Product.release { O1 as Component.publication } order as min(val(O1))`)
+	case searchmodels.OrderByHasIssueTracker:
+		// TODO:
+		e.buf.WriteString(`Product.release { O1 as Component.issues } order as min(val(O1))`)
+	case searchmodels.OrderByIssueTracker:
+		e.buf.WriteString(`Product.release { O1 as Component.issues } order as min(val(O1))`)
+	case searchmodels.OrderByHasComplieswith:
+		// TODO:
+		e.buf.WriteString(`Product.release { O1 as Component.complieswith } order as min(val(O1))`)
+	case searchmodels.OrderByComplieswith:
+		e.buf.WriteString(`Product.release { O1 as Component.complieswith } order as min(val(O1))`)
+	case searchmodels.OrderByHasCpcpatentclass:
+		// TODO:
+		e.buf.WriteString(`Product.release { O1 as Component.cpcPatentClass } order as min(val(O1))`)
+	case searchmodels.OrderByCpcPatentClass:
+		e.buf.WriteString(`Product.release { O1 as Component.cpcPatentClass } order as min(val(O1))`)
+	case searchmodels.OrderByHasTsdc:
+		// TODO:
+		e.buf.WriteString(`Product.release { O1 as Component.tsdc } order as min(val(O1))`)
+	case searchmodels.OrderByTsdc:
+		e.buf.WriteString(`Product.release { O1 as Component.tsdc } order as min(val(O1))`)
+	case searchmodels.OrderByHasImage:
+		// TODO:
+		e.buf.WriteString(`Product.release { O1 as Component.image } order as min(val(O1))`)
+	case searchmodels.OrderByImage:
+		e.buf.WriteString(`Product.release { O1 as Component.image } order as min(val(O1))`)
+	case searchmodels.OrderByHasReadme:
+		// TODO:
+		e.buf.WriteString(`Product.release { O1 as Component.readme } order as min(val(O1))`)
+	case searchmodels.OrderByReadme:
+		e.buf.WriteString(`Product.release { O1 as Component.readme } order as min(val(O1))`)
+	case searchmodels.OrderByHasContributionGuide:
+		// TODO:
+		e.buf.WriteString(`Product.release { O1 as Component.contributionGuide } order as min(val(O1))`)
+	case searchmodels.OrderByContributionGuide:
+		e.buf.WriteString(`Product.release { O1 as Component.contributionGuide } order as min(val(O1))`)
+	case searchmodels.OrderByHasBom:
+		// TODO:
+		e.buf.WriteString(`Product.release { O1 as Component.bom } order as min(val(O1))`)
+	case searchmodels.OrderByBom:
+		e.buf.WriteString(`Product.release { O1 as Component.bom } order as min(val(O1))`)
+	case searchmodels.OrderByHasManufacturingInstructions:
+		// TODO:
+		e.buf.WriteString(`Product.release { O1 as Component.manufacturingInstructions } order as min(val(O1))`)
+	case searchmodels.OrderByManufacturingInstructions:
+		e.buf.WriteString(`Product.release { O1 as Component.manufacturingInstructions } order as min(val(O1))`)
+	case searchmodels.OrderByHasUserManual:
+		// TODO:
+		e.buf.WriteString(`Product.release { O1 as Component.userManual } order as min(val(O1))`)
+	case searchmodels.OrderByUserManual:
+		e.buf.WriteString(`Product.release { O1 as Component.userManual } order as min(val(O1))`)
+	case searchmodels.OrderByHasSource:
+		// TODO:
+		e.buf.WriteString(`Product.release { O1 as Component.source } order as min(val(O1))`)
+	case searchmodels.OrderBySource:
+		e.buf.WriteString(`Product.release { O1 as Component.source } order as min(val(O1))`)
+	case searchmodels.OrderByHasExport:
+		// TODO:
+		e.buf.WriteString(`Product.release { O1 as Component.export } order as min(val(O1))`)
+	case searchmodels.OrderByExport:
+		e.buf.WriteString(`Product.release { O1 as Component.export } order as min(val(O1))`)
+	case searchmodels.OrderByHasAuxiliary:
+		// TODO:
+		e.buf.WriteString(`Product.release { O1 as Component.auxiliary } order as min(val(O1))`)
+	case searchmodels.OrderByAuxiliary:
+		e.buf.WriteString(`Product.release { O1 as Component.auxiliary } order as min(val(O1))`)
 	default:
-		panic("unsupported order by field")
+		panic("unsupported orderBy field")
 	}
 
 	e.buf.WriteString("}\n")
