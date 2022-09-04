@@ -52,61 +52,19 @@ func (c SearchController) Handle(ctx *fiber.Ctx) error {
 
 	// export results
 	if params.Export != "" {
-		switch params.Export {
-		case "csv":
-			b, err := c.searchService.ExportUpTo300Results(searchmodels.ExportTypeCSV, svcCtx, params.Query, searchmodels.OrderByFromCombinedStr(params.Order))
-			if err != nil {
-				return errors.CEWrap(err, "failed to export results as CSV").
-					Add("query", params.Query).
-					Add("oder", params.Order).
-					Add("page", params.Page)
-			}
-			ctx.Response().Header.SetContentType(MIMECSVCharsetUTF8)
-			ctx.Response().Header.SetContentLength(len(b))
-			ctx.Set("Content-Disposition", "attachment; filename=results.csv")
-			return ctx.Send(b)
-
-		case "tsv":
-			b, err := c.searchService.ExportUpTo300Results(searchmodels.ExportTypeTSV, svcCtx, params.Query, searchmodels.OrderByFromCombinedStr(params.Order))
-			if err != nil {
-				return errors.CEWrap(err, "failed to export results as TSV").
-					Add("query", params.Query).
-					Add("oder", params.Order).
-					Add("page", params.Page)
-			}
-			ctx.Response().Header.SetContentType(MIMETSVCharsetUTF8)
-			ctx.Response().Header.SetContentLength(len(b))
-			ctx.Set("Content-Disposition", "attachment; filename=results.tsv")
-			return ctx.Send(b)
-		}
-		// invalid export type -> continue serving search page
+		return performExport(ctx, svcCtx, c.searchService, params)
 	}
 
 	// search and display results page
-	first := mathutil.Max(1, params.ResultsPerPage)
-	offset := mathutil.Max(0, (params.Page-1)*params.ResultsPerPage)
-	results, err := c.searchService.Search3(svcCtx, params.Query, searchmodels.OrderByFromCombinedStr(params.Order), searchmodels.Pagination{First: first, Offset: offset})
+	var err error
 	page := tplBnd["page"].(map[string]interface{})
-	if err != nil {
-		if serr, ok := err.(*search.Error); ok && serr.Type == search.ErrorLimitExceeded {
-			page["error"] = serr.Error()
-		} else {
-			// if not a search error handle it as an internal server error
-			return err
-		}
-	}
-
-	numPages := int(math.Ceil(float64(results.Count) / float64(params.ResultsPerPage)))
-	if params.Page > numPages {
-		params.Page = numPages
-	}
-
 	page["title"] = "Search"
 	page["menu"] = "search"
 	page["page-header"] = "Product Search"
-	page["results"] = results
-	page["curPage"] = params.Page
-	page["numPages"] = numPages
+	tplBnd["page"], err = performSearch(svcCtx, c.searchService, params, page)
+	if err != nil {
+		return err
+	}
 
 	return ctx.Render("search", tplBnd)
 }
@@ -140,4 +98,67 @@ func (p SearchQueryParams) String() string {
 	v.Set("page", strconv.Itoa(p.Page))
 	v.Set("rpp", strconv.Itoa(p.ResultsPerPage))
 	return v.Encode()
+}
+
+func performSearch(ctx context.Context, searchService *search.Service, queryParams SearchQueryParams, pageBinding map[string]interface{}) (map[string]interface{}, error) {
+	first := mathutil.Max(1, queryParams.ResultsPerPage)
+	offset := mathutil.Max(0, (queryParams.Page-1)*queryParams.ResultsPerPage)
+	results, err := searchService.Search3(
+		ctx,
+		queryParams.Query,
+		searchmodels.OrderByFromCombinedStr(queryParams.Order),
+		searchmodels.Pagination{First: first, Offset: offset},
+	)
+
+	if err != nil {
+		if serr, ok := err.(*search.Error); ok && serr.Type == search.ErrorLimitExceeded {
+			pageBinding["error"] = serr.Error()
+		} else {
+			// if not a search error handle it as an internal server error
+			return pageBinding, err
+		}
+	}
+
+	numPages := int(math.Ceil(float64(results.Count) / float64(queryParams.ResultsPerPage)))
+	if queryParams.Page > numPages {
+		queryParams.Page = numPages
+	}
+	pageBinding["results"] = results
+	pageBinding["curPage"] = queryParams.Page
+	pageBinding["numPages"] = numPages
+
+	return pageBinding, nil
+}
+
+func performExport(fbrCtx *fiber.Ctx, svcCtx context.Context, searchService *search.Service, queryParams SearchQueryParams) error {
+	switch queryParams.Export {
+	case "csv":
+		b, err := searchService.ExportUpTo300Results(searchmodels.ExportTypeCSV, svcCtx, queryParams.Query, searchmodels.OrderByFromCombinedStr(queryParams.Order))
+		if err != nil {
+			return errors.CEWrap(err, "failed to export results as CSV").
+				Add("query", queryParams.Query).
+				Add("oder", queryParams.Order).
+				Add("page", queryParams.Page)
+		}
+		fbrCtx.Response().Header.SetContentType(MIMECSVCharsetUTF8)
+		fbrCtx.Response().Header.SetContentLength(len(b))
+		fbrCtx.Set("Content-Disposition", "attachment; filename=results.csv")
+		return fbrCtx.Send(b)
+
+	case "tsv":
+		b, err := searchService.ExportUpTo300Results(searchmodels.ExportTypeTSV, svcCtx, queryParams.Query, searchmodels.OrderByFromCombinedStr(queryParams.Order))
+		if err != nil {
+			return errors.CEWrap(err, "failed to export results as TSV").
+				Add("query", queryParams.Query).
+				Add("oder", queryParams.Order).
+				Add("page", queryParams.Page)
+		}
+		fbrCtx.Response().Header.SetContentType(MIMETSVCharsetUTF8)
+		fbrCtx.Response().Header.SetContentLength(len(b))
+		fbrCtx.Set("Content-Disposition", "attachment; filename=results.tsv")
+		return fbrCtx.Send(b)
+
+	default:
+		return fiber.ErrBadRequest
+	}
 }

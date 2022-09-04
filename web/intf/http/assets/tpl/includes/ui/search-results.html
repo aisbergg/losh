@@ -1,0 +1,754 @@
+---
+# used for adding more columns to the table and cards
+extraProperties:
+  - operator: version
+    title: Version
+    description: The version of the latest release of the product
+    icon: versions
+    path: /Release/Version
+    orderable: true
+
+  - operator: website
+    title: website
+    description: The website of the product
+    icon: world
+    path: /Website
+    orderable: true
+    is: url
+
+  - operator: createdat
+    title: Created At
+    description: The date the latest release of the product was created
+    icon: calendar
+    path: /Release/CreatedAt
+    orderable: true
+
+  - operator: discoveredat
+    title: Discovered At
+    description:
+    icon: calendar
+    path: /DiscoveredAt
+    orderable: true
+
+  - operator: lastindexedat
+    title: Last Indexed At
+    description:
+    icon: calendar
+    path: /LastIndexedAt
+    orderable: true
+
+  - operator: lastupdatedat
+    title: Last Updated At
+    description:
+    icon: calendar
+    path: /LastUpdatedAt
+    orderable: true
+
+  - operator: hasadditionallicenses
+    title: Additional Licenses
+    description:
+    icon: license
+    path: /Release/AdditionalLicenses
+    orderable: false
+
+  - operator: licensename
+    title: name
+    description:
+    icon: license
+    path: /Release/License/Name
+    orderable: true
+
+  - operator: islicensespdx
+    title: Is Spdx
+    description:
+    icon: license
+    path: /Release/License/IsSpdx
+    orderable: true
+
+  - operator: islicensedeprecated
+    title: Is Deprecated
+    description:
+    icon: license
+    path: /Release/License/IsDeprecated
+    orderable: true
+
+  - operator: islicenseosiapproved
+    title: Is Osi Approved
+    description:
+    icon: license
+    path: /Release/License/IsOsiApproved
+    orderable: true
+
+  - operator: islicensefsflibre
+    title: Is Fsf Libre
+    description:
+    icon: license
+    path: /Release/License/IsFsfLibre
+    orderable: true
+
+  - operator: islicenseblocked
+    title: Is Blocked
+    description:
+    icon: license
+    path: /Release/License/IsBlocked
+    orderable: true
+
+  - operator: islicensestrong
+    title: type
+    description:
+    icon: license
+    path: /Release/License/Type
+    orderable: false
+
+  - operator: islicenseweak
+    title: type
+    description:
+    icon: license
+    path: /Release/License/Type
+    orderable: false
+
+  - operator: islicensepermissive
+    title: type
+    description:
+    icon: license
+    path: /Release/License/Type
+    orderable: false
+
+  - operator: licensorname
+    title: name
+    description:
+    icon: person
+    path: /Release/Licensor/Name
+    orderable: true
+
+  - operator: repositoryhost
+    title: name
+    description:
+    icon: folders
+    path: /Release/Repository/Host/Name
+    orderable: true
+
+  - operator: repositoryowner
+    title: Full Name
+    description:
+    icon: folders
+    path: /Release/Repository/Owner/FullName
+    orderable: true
+
+  - operator: repositoryname
+    title: name
+    description:
+    icon: folders
+    path: /Release/Repository/Name
+    orderable: true
+
+  - operator: datasource
+    title: name
+    description:
+    icon: hexagons
+    path: /Release/DataSource/Host/Name
+    orderable: true
+
+  - operator: datasourcehost
+    title: name
+    description:
+    icon: hexagons
+    path: /Release/DataSource/Host/Name
+    orderable: true
+
+  - operator: datasourceowner
+    title: Full Name
+    description:
+    icon: hexagons
+    path: /Release/DataSource/Owner/FullName
+    orderable: true
+
+  - operator: datasourcename
+    title: name
+    description:
+    icon: hexagons
+    path: /Release/DataSource/Name
+    orderable: true
+
+  - operator: host
+    title: name
+    description:
+    icon: server
+    path: /Release/Repository/Host/Name
+    orderable: true
+
+  - operator: hasattestation
+    title: attestation
+    description:
+    icon: certificate
+    path: /Release/Attestation
+    is: url
+
+  - operator: attestation
+    title: attestation
+    description:
+    icon: certificate
+    path: /Release/Attestation
+    is: url
+
+  - operator: haspublication
+    title: publication
+    description:
+    icon: speakerphone
+    path: /Release/Publication
+    is: url
+
+  - operator: publication
+    title: publication
+    description:
+    icon: speakerphone
+    path: /Release/Publication
+    is: url
+
+  - operator: hasissuetracker
+    title: issues
+    description:
+    icon: alert-circle
+    path: /Release/Issues
+    is: url
+
+  - operator: hascomplieswith
+    title: Complies With
+    description:
+    icon: list-check
+    path: /Release/CompliesWith
+
+  - operator: complieswith
+    title: name
+    description:
+    icon: list-check
+    path: /Release/TechnicalStandard/Name
+    orderable: true
+
+  - operator: hascpcpatentclass
+    title: Cpc Patent Class
+    description:
+    icon: certificate
+    path: /Release/CpcPatentClass
+    is: url
+
+  - operator: cpcpatentclass
+    title: Cpc Patent Class
+    description:
+    icon: certificate
+    path: /Release/CpcPatentClass
+    orderable: true
+    is: url
+
+  - operator: hastsdc
+    title: tsdc
+    description:
+    icon: list-check
+    path: /Release/Tsdc
+
+  - operator: tsdc
+    title: name
+    description:
+    icon: list-check
+    path: /Release/Tsdc/Name
+    orderable: true
+
+  - operator: hasimage
+    title: Image
+    description:
+    icon: file-download
+    path: /Release/Image
+    orderable: false
+    is: file
+
+  - operator: hasreadme
+    title: Readme
+    description:
+    icon: file-download
+    path: /Release/Readme
+    orderable: false
+    is: file
+
+  - operator: hascontributionguide
+    title: Contribution Guide
+    description:
+    icon: file-download
+    path: /Release/ContributionGuide
+    orderable: false
+    is: file
+
+  - operator: hasbom
+    title: BOM
+    description:
+    icon: file-download
+    path: /Release/Bom
+    orderable: false
+    is: file
+
+  - operator: hasmanufacturinginstructions
+    title: Manufacturing Instructions
+    description:
+    icon: file-download
+    path: /Release/ManufacturingInstructions
+    orderable: false
+    is: file
+
+  - operator: hasusermanual
+    title: User Manual
+    description:
+    icon: file-download
+    path: /Release/UserManual
+    orderable: false
+    is: file
+
+  - operator: hassource
+    title: Source
+    description:
+    icon: file-download
+    path: /Release/Source
+    orderable: false
+    is: file
+
+  - operator: hasexport
+    title: Export
+    description:
+    icon: file-download
+    path: /Release/Export
+    orderable: false
+    is: file
+
+  - operator: hasauxiliary
+    title: Auxiliary
+    description:
+    icon: file-download
+    path: /Release/Auxiliary
+    orderable: false
+    is: file
+
+orderSelect:
+  - operator: name
+    title: Name
+
+  - operator: language
+    title: Language
+
+  - operator: state
+    title: State (Activeness)
+
+  - operator: starcount
+    title: Star Count
+
+  - operator: forkcount
+    title: Fork Count
+
+  - operator: version
+    title: Version
+
+  - operator: createdat
+    title: Created At
+
+  - operator: lastupdatedat
+    title: Last Updated At
+
+  - operator: licenseid
+    title: License
+
+  - operator: licensetype
+    title: License Type
+
+  - operator: licensorname
+    title: Licensor
+
+  - operator: repositoryhost
+    title: Host
+---
+{%- assign resultsPerPage = req.queryParams.resultsPerPage -%}
+{%- assign results = page.results.items -%}
+{%- assign numResults = page.results.count -%}
+{%- assign numPagedResults = page.results.items | size -%}
+{%- assign displayMode = req.queryParams.displayMode -%}
+{% for e in abc %}
+	{{ e }}
+{% endfor %}
+
+	<div class="card-body">
+		<div class="d-flex justify-content-between align-items-center">
+			<div class="text-muted me-auto">{% if numPagedResults > 0 %}Showing {{ page.curPage | minus: 1 | times: resultsPerPage | plus: 1 | int64 }} to {{ page.curPage | minus: 1 | times: resultsPerPage | plus: numPagedResults | int64 }} of {% endif %}{{ numResults }} results</div>
+			<form class="ms-2">
+				<select id="orderBy" name="orderBy" class="form-select ms-auto w-auto" data-bs-toggle="tooltip" data-bs-placement="top" title="Order Results By">
+					{%- for ep in orderSelect %}
+					<option value="{{ ep.operator | append: 'asc' }}"{% if req.queryParams.order == (ep.operator | append: 'asc') %} selected{% endif %}>{{ ep.title }} ▲</option>
+					<option value="{{ ep.operator | append: 'dsc' }}"{% if req.queryParams.order == (ep.operator | append: 'dsc') %} selected{% endif %}>{{ ep.title }} ▼</option>
+					{%- endfor %}
+				</select>
+			</form>
+			<div class="btn-group ms-2">
+				<a href="{{ req.fullPath | url_with_params: 'dm', 'card' }}" class="btn btn-md btn-icon" aria-label="Button" name="ds" value="cards" data-bs-toggle="tooltip" data-bs-placement="top" title="Card Style View">
+					{% include ui/icon.html icon="layout-grid" %}
+				</a>
+				<a href="{{ req.fullPath | url_with_params: 'dm', 'table' }}" class="btn btn-md btn-icon" aria-label="Button" name="ds" value="table" data-bs-toggle="tooltip" data-bs-placement="top" title="Table Style View">
+					{% include ui/icon.html icon="table" %}
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+{%- if page.error %}
+<div class="empty my-4">
+	<div class="empty-icon">
+		{% include ui/icon.html icon="mood-sad" %}
+	</div>
+	<p class="empty-title">{{ page.error | capitalize }}</p>
+	<p class="empty-subtitle text-muted">
+		Try adjusting your search query and making it simpler.
+	</p>
+</div>
+
+
+{%- elsif page.results.count == 0 %}
+<div class="empty my-4">
+	<div class="empty-icon">
+		{% include ui/icon.html icon="mood-sad" %}
+	</div>
+	<p class="empty-title">No results found</p>
+	<p class="empty-subtitle text-muted">
+		Try adjusting your search query to find what you're looking for.
+	</p>
+</div>
+
+
+{%- elsif displayMode == "table" %}
+<div class="card mt-3">
+	<div class="table-responsive">
+		<table class="table table-vcenter{% if include.mobile %} table-mobile-md{% endif %}{% if include.card %} card-table{% endif %}{% if include.stripped %} table-striped{% endif %}{% if include.nowrap %} table-nowrap{% endif %}">
+			<thead>
+				<tr>
+					{%- assign orderBy = req.queryParams.order | downcase %}
+					<th colspan="2">
+						<a class="text-reset d-block orderable" data-value="name">
+							Name
+							{%- if orderBy == 'nameasc' %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
+							{%- if orderBy == 'namedsc' %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
+						</a>
+					</th>
+					<th>Description</th>
+					<th>
+						<a class="text-reset d-block orderable" data-value="licensor">Licensor
+							{%- if orderBy == 'licenseasc' %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
+							{%- if orderBy == 'licensedsc' %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
+						</a>
+					</th>
+					<th>
+						<!-- license  -->
+						<a class="text-reset d-block orderable" data-value="license">
+							License
+							{%- if orderBy == 'licenseasc' %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
+							{%- if orderBy == 'licensedsc' %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
+						</a>
+					</th>
+					<th data-bs-toggle="tooltip" data-bs-placement="top" title="Product State (Activeness)">{% include ui/icon.html icon="bolt" %}</th>
+					<th data-bs-toggle="tooltip" data-bs-placement="top" title="Language">
+						<a class="text-reset d-block orderable" data-value="language">
+							{% include ui/icon.html icon="language" %}
+							{%- if orderBy == 'languageasc' %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
+							{%- if orderBy == 'languagedsc' %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
+						</a>
+					</th>
+					<th data-bs-toggle="tooltip" data-bs-placement="top" title="Star Count">
+						<a class="text-reset d-block orderable" data-value="starcount">
+							{% include ui/icon.html icon="star" %}
+							{%- if orderBy == 'starcountasc' %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
+							{%- if orderBy == 'starcountdsc' %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
+						</a>
+					</th>
+					<th data-bs-toggle="tooltip" data-bs-placement="top" title="Fork Count">
+						<a class="text-reset d-block orderable" data-value="forkcount">
+							{% include ui/icon.html icon="git-fork" %}
+							{%- if orderBy == 'forkcountasc' %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
+							{%- if orderBy == 'forkcountdsc' %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
+						</a>
+					</th>
+					{%- for ep in extraProperties %}
+						{%- if ep.operator | in: page.results.operators %}
+							{%- if ep.orderable == true %}
+					<th>
+						<a class="text-reset d-block orderable" data-value="{{ ep.operator }}">
+							{{ ep.title }}
+							{%- if orderBy == (ep.operator | append: 'asc') %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
+							{%- if orderBy == (ep.operator | append: 'dsc') %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
+						</a>
+					</th>
+							{%- else %}
+					<th data-bs-toggle="tooltip" data-bs-placement="top" title="{{ ep.description }}">{{ ep.title }}</th>
+							{%- endif %}
+						{%- endif %}
+					{%- endfor %}
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				{%- for product in page.results.items %}
+				<tr>
+					<td>
+						<a href="/details/{{ product.ID | idhex }}" class="search-result-info-link">
+							{%- if (product.Release.Image | is_nil)  %}
+							<div class="card-img ratio ratio-4x3 text-bg-primary" style="width: 6rem; height: auto;">
+								<div class="d-flex align-items-center justify-content-center">
+									{% include ui/icon.html icon="package" class="" %}
+								</div>
+							</div>
+							{%- else %}
+							<div class="card-img img-responsive img-responsive-4x3" style="background-image: url({{ product.Release.Image.URL }}); width: 6rem; height: auto;"></div>
+							{%- endif %}
+						</a>
+					</td>
+
+					<td>
+						<a href="/details/{{ product.ID | idhex }}" class="search-result-info-link">{{ product.Name | escape }}</a>
+					</td>
+
+					<td>
+						{%- assign description=(product.Release.Description | ellipses: 800 | escape ) %}
+						<span class="position-relative">
+							<span class="text-ellipses-line-2" data-text="{{ description }}">{{ description }}</span>
+						</span>
+					</td>
+
+					<td>
+						<a href="/details/{{ product.Release.Licensor.ID | idhex }}" class="search-result-info-link">{% if product.Release.Licensor.FullName %}{{ product.Release.Licensor.FullName | escape }}{% else %}{{ product.Release.Licensor.Name | escape }}{% endif %}</a>
+					</td>
+
+					<td>
+						<a href="/details/{{ product.Release.License.ID | idhex }}" class="search-result-info-link">{{ product.Release.License.Xid }}</a>
+					</td>
+
+					<td>
+						{%- if product.State == 'ACTIVE' %}
+						<span class="badge bg-green m-0" data-bs-toggle="tooltip" data-bs-placement="top" title="ACTIVE: is actively developed"></span>
+						{%- elsif product.State == 'INACTIVE' %}
+						<span class="badge bg-red m-0" data-bs-toggle="tooltip" data-bs-placement="top" title="INACTIVE: no updates for over 2 years"></span>
+						{%- elsif product.State == 'ARCHIVED' %}
+						<span class="badge bg-red m-0" data-bs-toggle="tooltip" data-bs-placement="top" title="ARCHIVED: repository is marked as archived and thus is no longer developed"></span>
+						{%- elsif product.State == 'DEPRECATED' %}
+						<span class="badge bg-purple m-0" data-bs-toggle="tooltip" data-bs-placement="top" title="DEPRECATED: is marked as deprecated</br>MISSING: source was deleted"></span>
+						{%- elsif product.State == 'MISSING' %}
+						<span class="badge bg-red m-0" data-bs-toggle="tooltip" data-bs-placement="top" title="MISSING: source was deleted"></span>
+						{%- endif %}
+					</td>
+
+					<td>
+						{{ product.Release.DocumentationLanguage }}
+					</td>
+
+					<td>
+						{{ product.StarCount }}
+					</td>
+
+					<td>
+						{{ product.ForkCount }}
+					</td>
+
+					{%- for ep in extraProperties %}
+						{%- if ep.operator | in: page.results.operators %}
+					<td class="text-break">
+						{%- assign val = product | get: ep.path %}
+						{%- unless (val | is_nil) %}
+						{%- if (val | is: "bool") %}
+						{%- if val %}{% assign icon = "check" %}{% else %}{% assign icon = "x" %}{% endif %}
+						{% include ui/icon.html icon="{{ icon }}" size="sm" class="icon-bold" %}
+						{%- elsif ep.is == "file" %}
+						<a href="{{ val.URL }}" class="search-result-info-link m-0">{% include ui/icon.html icon="file-download" %}</a>
+						{%- elsif ep.is == "url" %}
+						<a href="{{ val }}" class="search-result-info-link m-0">{{ val }}</a>
+						{%- else %}
+						{{ val | escape }}
+						{%- endif %}
+						{%- endunless %}
+					</td>
+						{%- endif %}
+					{%- endfor %}
+
+					<td>
+						<a href="{{ product.Website }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-circle btn-primary mx-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Go to Website">{% include ui/icon.html icon="external-link" class="m-0 icon-bold" %}</a>
+					</td>
+
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+
+{%- else %}
+<div class="row row-cards mt-0">
+	{%- for product in page.results.items %}
+	<div class="col-md-4 col-lg-3">
+		<div class="card">
+			<div class="position-relative">
+				<a href="/details/{{ product.ID | idhex }}">
+					{%- if (product.Release.Image | is_nil)  %}
+					<div class="card-img-top ratio ratio-4x3 text-bg-primary">
+						<div class="d-flex align-items-center justify-content-center">
+							{% include ui/icon.html icon="package" size="lg" %}
+						</div>
+					</div>
+					{%- else %}
+					<div class="card-img-top img-responsive img-responsive-4x3" style="background-image: url({{ product.Release.Image.URL }})"></div>
+					{%- endif %}
+				</a>
+				<div class="d-flex position-absolute bottom-0 w-100 p-1">
+					{%- if product.State == 'ACTIVE' %}{%- assign stateColor = 'green' %}{% else %}{%- assign stateColor = 'red' %}{% endif %}
+					<span class="badge badge-outline bg-white text-{{stateColor}} me-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" title="Product State (Activeness)</br>ACTIVE: is actively developed</br>INACTIVE: no updates for over 2 years</br>ARCHIVED: repository is marked as archived and thus is no longer developed</br>DEPRECATED: is marked as deprecated</br>MISSING: source was deleted">{% include ui/icon.html icon="bolt" %} {{ product.State }}</span>
+					<span class="badge badge-outline bg-white text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="top" title="Language">{% include ui/icon.html icon="language" %} {{ product.Release.DocumentationLanguage | escape }}</span>
+					<span class="badge badge-outline bg-white text-muted me-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Star Count">{% include ui/icon.html icon="star" %} {{ product.StarCount }}</span>
+					<span class="badge badge-outline bg-white text-muted" data-bs-toggle="tooltip" data-bs-placement="top" title="Fork Count">{% include ui/icon.html icon="git-fork" %} {{ product.ForkCount }}</span>
+				</div>
+			</div>
+			<div class="card-body">
+				<div class="d-flex align-items-start">
+					<a href="/details/{{ product.ID | idhex }}" class="search-result-info-link flex-grow-1"><h3 class="card-title">{{ product.Name | escape }}</h3></a>
+					<a href="{{ product.Website }}" target="_blank" rel="noopener noreferrer" class="btn btn-circle btn-primary" style="margin-top: -0.4rem; margin-right: -0.4rem;" data-bs-toggle="tooltip" data-bs-placement="top" title="Go to Website">{% include ui/icon.html icon="external-link" class="m-0 icon-bold" %}</a>
+				</div>
+				<div class="search-result-info mb-1">
+					{%- assign description=(product.Release.Description | ellipses: 800 | escape ) %}
+					<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Description">{% include ui/icon.html icon="file-description" %}</span>
+					<span class="position-relative">
+						<span class="text-ellipses-line-3" data-text="{{ description }}">{{ description }}</span>
+					</span>
+				</div>
+				<a href="/details/{{ product.Release.Licensor.ID | idhex }}" class="search-result-info-link mb-1">
+					<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Owner">{% include ui/icon.html icon="user" %}</span>
+					<span>{% if product.Release.Licensor.FullName %}{{ product.Release.Licensor.FullName | escape }}{% else %}{{ product.Release.Licensor.Name | escape }}{% endif %}</span>
+				</a>
+				{%- unless (product.Release.License | is_nil) %}
+				<a href="/details/{{ product.Release.License.ID | idhex }}" class="search-result-info-link mb-1">
+					<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="License">{% include ui/icon.html icon="license" %}</span>
+					<span>{{ product.Release.License.Xid }}</span>
+				</a>
+				{%- endunless %}
+				{%- unless product.Category | is_nil %}
+				<div class="search-result-info mb-1">
+					<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Category">{% include ui/icon.html icon="icons" %}</span>
+					{{ product.Category.FullName }}
+				</div>
+				{%- endunless %}
+				{%- if (product.Tags | size) > 1 %}
+				<div class="search-result-info mb-1">
+					<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Tags">{% include ui/icon.html icon="tag" %}</span>
+					<span>{% for tag in product.Tags %}{{ tag.Name }}{% unless forloop.last %}, {% endunless %}{% endfor %}</span>
+				</div>
+				{%- endif %}
+				{%- for ep in extraProperties %}
+					{%- if ep.operator | in: page.results.operators %}
+						{%- assign val = product | get: ep.path %}
+						{%- unless (val | is_nil) %}
+							{%- if ep.is == "file" %}
+				<a href="{{ val.URL }}" class="search-result-info-link mb-1">
+					<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ ep.title }}">{% include ui/icon.html icon="file-download" %}</span>
+					<span>{{ ep.title }}</span>
+				</a>
+							{%- elsif ep.is == "url" %}
+				<a href="{{ val }}" class="search-result-info-link mb-1">
+					<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ ep.title }}">{% include ui/icon.html icon="{{ ep.icon }}" %}</span>
+					<span>{{ val }}</span>
+				</a>
+							{%- else %}
+				<div class="search-result-info mb-1">
+					<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ ep.title }}">{% include ui/icon.html icon="{{ ep.icon }}" %}</span>
+					<span class="position-relative">
+						<span class="text-ellipses-line-1" data-text="{{ val | escape }}">
+								{%- if (val | is: "bool") %}
+									{%- if val %}{% assign icon = "check" %}{% else %}{% assign icon = "x" %}{% endif %}
+						{{ ep.title }}: {% include ui/icon.html icon="{{ icon }}" size="sm" class="icon-bold" %}
+								{%- else %}
+									{{ val | escape }}
+								{%- endif %}
+						</span>
+					</span>
+				</div>
+							{%- endif %}
+						{%- endunless %}
+					{%- endif %}
+				{%- endfor %}
+			</div>
+		</div>
+	</div>
+	{%- endfor %}
+</div>
+
+{%- endif %}
+
+<div class="d-inline-flex flex-column flex-md-row align-items-center mt-3 gap-3">
+	<div>
+		<div class="btn-group" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Export up to 300 results in a machine-readable format.">
+			<button id="exportResults" type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" {% if page.results.count == 0 %} disabled{% endif %}>
+				{% include ui/icon.html icon="file-download" use-svg=true %}
+				Export Results
+			</button>
+			<div class="dropdown-menu dropdown-menu-end">
+				<a class="dropdown-item" href="{{ req.url | url_with_params: 'export', 'csv' }}">
+					CSV
+				</a>
+				<a class="dropdown-item" href="{{ req.url | url_with_params: 'export', 'tsv' }}">
+					TSV
+				</a>
+			</div>
+		</div>
+	</div>
+	<div class="d-inline-flex flex-column flex-md-row align-items-center ms-md-auto gap-2">
+		{% include ui/pagination.html icons=true numPages={{ page.numPages }} curPage={{ page.curPage }} resultsPerPage={{ req.queryParams.resultsPerPage }} %}
+	</div>
+</div>
+
+{%- capture_global scripts %}
+<script>
+	// @formatter:off
+	document.getElementById('orderBy').addEventListener('change', function (e) {
+		setQueryParameter('o', new FormData(this.form).get('orderBy'));
+		return true;
+	})
+
+	const querySyntaxExamples = document.getElementsByClassName('add-to-search');
+	const searchQueryInput = document.getElementById('searchInput');
+	Array.from(querySyntaxExamples).forEach((elm) => {
+		elm.addEventListener('click', function (e) {
+			var selStart = searchQueryInput.selectionStart;
+			var selEnd = searchQueryInput.selectionEnd;
+			var curVal = searchQueryInput.value;
+			var oprVal = this.dataset.operator || this.innerText;
+			if (selStart != selEnd) {
+				searchQueryInput.value = curVal.substring(0, selStart) + oprVal + curVal.substring(selEnd);
+			} else {
+				if (curVal.length > 0) {
+					curVal += ' ';
+				}
+				searchQueryInput.value = curVal + oprVal;
+			}
+		})
+	})
+
+	// add orderBy links to anchors with 'orderable' class
+	const orderableAnchors = document.getElementsByClassName('orderable');
+	Array.from(orderableAnchors).forEach((elm) => {
+		const elmVal = elm.dataset['value']
+		const params = new URLSearchParams(window.location.search);
+		orderBy = params.get('o')
+		if (orderBy) {
+			orderBy = orderBy.toLowerCase();
+			if (elmVal + 'asc' == orderBy) {
+				params.set('o', elmVal + 'dsc');
+			} else if (elmVal + 'dsc' == orderBy) {
+				params.delete('o');
+			} else {
+				params.set('o', elmVal + 'asc');
+			}
+		} else {
+			params.set('o', elmVal + 'asc');
+		}
+		elm.href = location.href.replace(location.search, '?' + params.toString());
+	})
+	// @formatter:on
+</script>
+{%- endcapture_global %}

@@ -30,44 +30,6 @@ type OrderBy struct {
 
 type OrderByField int
 
-// const (
-// 	OrderByName OrderByField = iota
-// 	OrderByLastIndexedAt
-// 	OrderByDiscoveredAt
-// 	OrderByCreatedAt
-// 	OrderByUpdatedAt
-// 	OrderByDocumentationLanguage
-// 	OrderByState
-// 	OrderByForkCount
-// 	OrderByStarCount
-// 	OrderByLicense
-// )
-
-//	func OrderByFromStr(s string, descending bool) OrderBy {
-//		orderBy := OrderBy{Field: OrderByName, Descending: descending}
-//		switch strings.ToLower(s) {
-//		case "createdat":
-//			orderBy.Field = OrderByCreatedAt
-//		case "discoveredat":
-//			orderBy.Field = OrderByCreatedAt
-//		case "lastindexedat":
-//			orderBy.Field = OrderByLastIndexedAt
-//		case "documentationlanguage":
-//			orderBy.Field = OrderByDocumentationLanguage
-//		case "state":
-//			orderBy.Field = OrderByState
-//		case "forkcount":
-//			orderBy.Field = OrderByForkCount
-//		case "starcount":
-//			orderBy.Field = OrderByStarCount
-//		case "license":
-//			orderBy.Field = OrderByLicenseID
-//		default:
-//			orderBy.Field = OrderByName
-//			orderBy.Descending = false
-//		}
-//		return orderBy
-//	}
 const (
 	OrderByName OrderByField = iota
 	OrderByDocumentationLanguage
