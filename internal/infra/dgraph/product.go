@@ -1596,7 +1596,7 @@ func (e *encoder) appendNumberFilter(predicate string, opr *parser.Operator, isI
 	e.buf.WriteString(`))`)
 }
 
-func extractDateTimeValue(rawVal *parser.Text) (dt time.Time, ok bool) {
+func extractDateTimeValue(rawVal *parser.Text) (dt time.Time, isDuration, ok bool) {
 	if rawVal == nil {
 		return
 	}
@@ -1610,26 +1610,27 @@ func extractDateTimeValue(rawVal *parser.Text) (dt time.Time, ok bool) {
 	return parseDateTimeValue(strVal)
 }
 
-func parseDateTimeValue(rawVal *string) (dt time.Time, ok bool) {
+// parseDateTimeValue parses the given string value and returns the time.Time.
+func parseDateTimeValue(rawVal *string) (dt time.Time, isDuration, ok bool) {
 	strVal := strings.TrimSpace(*rawVal)
 
 	// try parsing as time duration
 	duration, ok := parseDuration(strVal)
 	if ok {
-		return time.Now().Add(-1 * duration), true
+		return time.Now().Add(-1 * duration), true, true
 	}
 
 	// try parsing as date time
 	c := carbon.Parse(strVal)
 	if c.Error == nil {
-		return c.Carbon2Time(), true
+		return c.Carbon2Time(), false, true
 	}
 
 	// invalid value -> ignore
 	return
 }
 
-var timeDurationPattern = regexp.MustCompile(`^(?P<years>\d+y)?(?P<months>\d+M)?(?P<weeks>\d+w)?(?P<days>\d+d)?T?(?P<hours>\d+h)?(?P<minutes>\d+m)?(?P<seconds>\d+s)?$`)
+var timeDurationPattern = regexp.MustCompile(`^(?P<years>\d+[yY])?(?P<months>\d+[mM])?(?P<weeks>\d+[wW])?(?P<days>\d+[dD])?$`)
 
 func parseDuration(str string) (time.Duration, bool) {
 	str = strings.ReplaceAll(str, " ", "")
@@ -1642,14 +1643,9 @@ func parseDuration(str string) (time.Duration, bool) {
 	months := parseDurationMatch(matches[2])
 	weeks := parseDurationMatch(matches[3])
 	days := parseDurationMatch(matches[4])
-	hours := parseDurationMatch(matches[5])
-	minutes := parseDurationMatch(matches[6])
-	seconds := parseDurationMatch(matches[7])
 
 	hour := int64(time.Hour)
-	minute := int64(time.Minute)
-	second := int64(time.Second)
-	return time.Duration(years*24*365*hour + months*30*24*hour + weeks*7*24*hour + days*24*hour + hours*hour + minutes*minute + seconds*second), true
+	return time.Duration(years*24*365*hour + months*30*24*hour + weeks*7*24*hour + days*24*hour), true
 }
 
 func parseDurationMatch(value string) int64 {
@@ -1678,7 +1674,7 @@ func (e *encoder) appendDateTimeFilter(predicate string, opr *parser.Operator) {
 		var b bytes.Buffer
 		b.WriteString(`@filter(`)
 		if !opr.Range.OpenStart {
-			dt, ok := parseDateTimeValue(opr.Range.Start)
+			dt, _, ok := parseDateTimeValue(opr.Range.Start)
 			if !ok {
 				return
 			}
@@ -1693,7 +1689,7 @@ func (e *encoder) appendDateTimeFilter(predicate string, opr *parser.Operator) {
 			if !opr.Range.OpenStart {
 				b.WriteString(` AND `)
 			}
-			dt, ok := parseDateTimeValue(opr.Range.End)
+			dt, _, ok := parseDateTimeValue(opr.Range.End)
 			if !ok {
 				return
 			}
@@ -1718,7 +1714,7 @@ func (e *encoder) appendDateTimeFilter(predicate string, opr *parser.Operator) {
 		txtVal = opr.Comparison.Value
 		cmpOpr = opr.Comparison.Operator
 	}
-	dt, ok := extractDateTimeValue(txtVal)
+	dt, isDuration, ok := extractDateTimeValue(txtVal)
 	if !ok {
 		return
 	}
@@ -1730,13 +1726,29 @@ func (e *encoder) appendDateTimeFilter(predicate string, opr *parser.Operator) {
 	case parser.CompOpNe:
 		e.buf.WriteString(`ne(`)
 	case parser.CompOpLt:
-		e.buf.WriteString(`lt(`)
+		if isDuration {
+			e.buf.WriteString(`gt(`)
+		} else {
+			e.buf.WriteString(`lt(`)
+		}
 	case parser.CompOpLe:
-		e.buf.WriteString(`le(`)
+		if isDuration {
+			e.buf.WriteString(`ge(`)
+		} else {
+			e.buf.WriteString(`le(`)
+		}
 	case parser.CompOpGt:
-		e.buf.WriteString(`gt(`)
+		if isDuration {
+			e.buf.WriteString(`lt(`)
+		} else {
+			e.buf.WriteString(`gt(`)
+		}
 	case parser.CompOpGe:
-		e.buf.WriteString(`ge(`)
+		if isDuration {
+			e.buf.WriteString(`le(`)
+		} else {
+			e.buf.WriteString(`ge(`)
+		}
 	default:
 		panic("unknown comparison operator")
 	}
