@@ -441,8 +441,8 @@ orderSelect:
 					<th>
 						<a class="text-reset d-block orderable" data-value="license">
 							License
-							{%- if req.queryParams.order == 'licenseasc' %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
-							{%- if req.queryParams.order == 'licensedsc' %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
+							{%- if req.queryParams.order == 'licenseidasc' %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
+							{%- if req.queryParams.order == 'licenseiddsc' %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
 						</a>
 					</th>
 					<th data-bs-toggle="tooltip" data-bs-placement="top" title="Product State (Activeness)">{% include ui/icon.html icon="bolt" %}</th>
@@ -743,7 +743,12 @@ orderSelect:
 		} else {
 			params.set('o', elmVal + 'asc');
 		}
-		elm.href = location.href.replace(location.search, '?' + params.toString());
+
+		if (location.search === "") {
+			elm.href = location.search + '?' + params.toString();
+		} else {
+			elm.href = location.href.replace(location.search, '?' + params.toString());
+		}
 	})
 	// @formatter:on
 </script>

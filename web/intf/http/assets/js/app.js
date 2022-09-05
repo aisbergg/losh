@@ -4,7 +4,11 @@ window.setQueryParameter = function(param, value) {
     params.set(param, value);
 
     // change target location
-    location = location.href.replace(location.search, '?' + params.toString());
+    if (location.search === "") {
+		location = location.search + '?' + params.toString();
+	} else {
+		location = location.href.replace(location.search, '?' + params.toString());
+	}
 }
 
 // Setting items
