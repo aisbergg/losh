@@ -1639,7 +1639,19 @@ func parseDateTimeValue(rawVal *string) (dt time.Time, isDuration, ok bool) {
 	return
 }
 
-var timeDurationPattern = regexp.MustCompile(`^(?P<years>\d+[yY])?(?P<months>\d+[mM])?(?P<weeks>\d+[wW])?(?P<days>\d+[dD])?$`)
+var (
+	timeDurationPattern = regexp.MustCompile( //
+		// years
+		`^(?P<years>[-+]?\d+(_\d+)*(\.\d+(_\d+)*)?[yY])?` +
+			// months
+			`(?P<months>[-+]?\d+(_\d+)*(\.\d+(_\d+)*)?[mM])?` +
+			// weeks
+			`(?P<weeks>[-+]?\d+(_\d+)*(\.\d+(_\d+)*)?[wW])?` +
+			// days
+			`(?P<days>[-+]?\d+(_\d+)*(\.\d+(_\d+)*)?[dD])?$`)
+
+	timeDurationPatternGroups = timeDurationPattern.SubexpNames()
+)
 
 func parseDuration(str string) (time.Duration, bool) {
 	str = strings.ReplaceAll(str, " ", "")
@@ -1648,20 +1660,39 @@ func parseDuration(str string) (time.Duration, bool) {
 		return 0, false
 	}
 
-	years := parseDurationMatch(matches[1])
-	months := parseDurationMatch(matches[2])
-	weeks := parseDurationMatch(matches[3])
-	days := parseDurationMatch(matches[4])
+	var (
+		years  float64
+		months float64
+		weeks  float64
+		days   float64
+	)
 
-	hour := int64(time.Hour)
-	return time.Duration(years*24*365*hour + months*30*24*hour + weeks*7*24*hour + days*24*hour), true
+	for i, match := range matches {
+		name := timeDurationPatternGroups[i]
+		if name == "" || match == "" {
+			continue
+		}
+		switch name {
+		case "years":
+			years = parseDurationMatch(match)
+		case "months":
+			months = parseDurationMatch(match)
+		case "weeks":
+			weeks = parseDurationMatch(match)
+		case "days":
+			days = parseDurationMatch(match)
+		}
+	}
+
+	hour := float64(time.Hour)
+	return time.Duration(int64(years*24*365*hour + months*30*24*hour + weeks*7*24*hour + days*24*hour)), true
 }
 
-func parseDurationMatch(value string) int64 {
+func parseDurationMatch(value string) float64 {
 	if len(value) == 0 {
 		return 0
 	}
-	parsed, err := strconv.ParseInt(value[:len(value)-1], 10, 64)
+	parsed, err := strconv.ParseFloat(value[:len(value)-1], 64)
 	if err != nil {
 		return 0
 	}
