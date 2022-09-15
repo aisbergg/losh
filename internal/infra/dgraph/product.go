@@ -415,20 +415,29 @@ func (e *encoder) encodeQuery(query *parser.Query, parVar string) (curVar string
 	}
 
 	// encode OR conditions
-	vars := make([]string, 0, len(query.Or))
+	unionVars := make([]string, 0, len(query.Or))
 	for _, orCnd := range query.Or {
+		// and condition is created by passing the results of the previous
+		// (curVar) to the next condition
+		lastAndVar := curVar
 		for _, andCnd := range orCnd.And {
-			v := e.encodeAndCondition(andCnd, curVar)
+			v := e.encodeAndCondition(andCnd, lastAndVar)
 			if v != "" {
-				vars = append(vars, v)
+				lastAndVar = v
 			}
 		}
+		if lastAndVar != "" {
+			unionVars = append(unionVars, lastAndVar)
+		}
 	}
-	if len(vars) == 0 {
+	if len(unionVars) == 0 {
 		return
 	}
-	// create union
-	return e.appendUnionVariable(vars...)
+	if len(unionVars) == 1 {
+		return unionVars[0]
+	}
+	// create an union by combining the results via uid(v1, v2, ..., vn) filter
+	return e.appendUnionVariable(unionVars...)
 }
 
 func (e *encoder) encodeAndCondition(andCnd *parser.AndCondition, parVar string) (curVar string) {
