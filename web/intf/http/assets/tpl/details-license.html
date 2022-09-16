@@ -1,17 +1,19 @@
+---
+layout: layouts/default
+page:
+  title: License Details
+  page-header: License Details
+---
 {% assign license = page.data %}
 <div class="row row-cards">
 	<div class="col-12">
 		<div class="card card-body">
-			<!-- <div class="row"> -->
 			<div class="d-flex flex-row">
-				<!-- icon -->
 				<div class="details-icon">
 					{% include ui/icon.html icon="license" class="w-100 h-auto" %}
 				</div>
 
-				<!-- details -->
 				<div class="p-3">
-					<!-- <h3 class="col lh-1">{{ license.Name }} <small class="text-muted fs-5">({{ license.Xid }})</small></h3> -->
 					<div class="d-flex flex-row flex-wrap">
 						<h3 class="lh-1 m-0 mb-1 me-1">{{ license.Name }}</h3>
 						<h3 class="lh-1"><small class="text-muted fs-5">({{ license.Xid }})</small></h3>
@@ -24,6 +26,7 @@
 						<li><span data-bs-toggle="tooltip" data-bs-placement="top" title="Indicates whether the license is deprecated and should no longer be used.">{% include ui/icon.html icon="{{ (license.IsDeprecated) | ternary: "checkbox", "square" }}" %} Is Deprecated</span></li>
 						<li><span data-bs-toggle="tooltip" data-bs-placement="top" title="Indicates whether the license is approved by the Open Source Initiative. More information: https://opensource.org/licenses">{% include ui/icon.html icon="{{ (license.IsOsiApproved) | ternary: "checkbox", "square" }}" %} Is OSI Approved</span></li>
 						<li><span data-bs-toggle="tooltip" data-bs-placement="top" title="Indicates whether the license is listed as free by the Free Software Foundation. More information: https://www.gnu.org/licenses/license-list.en.html">{% include ui/icon.html icon="{{ (license.IsFsfLibre) | ternary: "checkbox", "square" }}" %} Is FSF Libre</span></li>
+						<li><span data-bs-toggle="tooltip" data-bs-placement="top" title="Indicates whether the license is considered a LOSH unapproved license (e.g. cannot be used commercially)">{% include ui/icon.html icon="{{ (license.IsBlocked) | ternary: "checkbox", "square" }}" %} Is Blocked</span></li>
 					</ul>
 				</div>
 			</div>

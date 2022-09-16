@@ -18,7 +18,7 @@ const batchSize = 150
 func (s *Service) ExportResults(t searchmodels.ExportType, ctx context.Context, queryStr string, orderBy searchmodels.OrderBy, limit, offset int) ([]byte, error) {
 	pgdRes := dgraph.NewPaginatedList(
 		func(first int, offset int) ([]*models.Product, uint64, error) {
-			res, err := s.Search3(ctx, queryStr, orderBy, searchmodels.Pagination{First: first, Offset: offset})
+			res, err := s.Search(ctx, queryStr, orderBy, searchmodels.Pagination{First: first, Offset: offset})
 			if err != nil {
 				return nil, 0, err
 			}

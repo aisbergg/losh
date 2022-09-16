@@ -79,7 +79,7 @@ layout: layouts/default
 											<td>
 												<code class="add-to-search"><span class="text-primary">operator:value</span></code>
 											</td>
-											<td>Operator</td>
+											<td>Filter Operator</td>
 										</tr>
 									</tbody>
 								</table>
@@ -87,7 +87,7 @@ layout: layouts/default
 
 							<div class="col-12 col-md-6 col-lg-4">
 								<h5>General Operators</h5>
-								<p>Operators allow searching for specific product properties. The allowed operations on each Operator depend on the property type. <code>value</code> can be text, number(e.g. <code>3.141</code>), date/time (e.g. <code>2020-01-01 10:30:45</code>), or time duration (format: <code>1y2m3w4d</code>, e.g. <code>1w2d</code>).</p>
+								<p>Operators allow searching for specific product properties. The allowed operations on each Operator depend on the property type. <code>value</code> can be text, number(e.g. <code>3.141</code>), date/time (e.g. <code>2020-01-01 10:30:45</code>), or time duration (format: <code&lt;1y2m3w4d</code>, e.g. <code>1w2d</code>).</p>
 								<table class="syntax-cheat-sheet">
 									<tbody>
 										<tr>
@@ -143,8 +143,7 @@ layout: layouts/default
 										</tr>
 										<tr>
 											<td>
-												<code class="add-to-search"><span class="text-primary">language:</span>en</code></br>
-												<code class="add-to-search"><span class="text-primary">documentationLanguage:</span>en</code>
+												<code class="add-to-search"><span class="text-primary">language:</span>en</code>
 											</td>
 											<td>Language used for documentation</td>
 										</tr>
@@ -169,19 +168,19 @@ layout: layouts/default
 											<td>Number of releases</td>
 										</tr>
 										<tr>
-											<td><code class="add-to-search"><span class="text-primary">createdAt:</span>>1y</code></td>
+											<td><code class="add-to-search"><span class="text-primary">createdAt:</span>&lt;1y</code></td>
 											<td>Date/Time when the latest release was created</td>
 										</tr>
 										<tr>
-											<td><code class="add-to-search"><span class="text-primary">lastUpdatedAt:</span>>1y</code></td>
+											<td><code class="add-to-search"><span class="text-primary">lastUpdatedAt:</span>&lt;1y</code></td>
 											<td>Date/Time when it was last updated</td>
 										</tr>
 										<tr>
-											<td><code class="add-to-search"><span class="text-primary">discoveredAt:</span>>1y</code></td>
+											<td><code class="add-to-search"><span class="text-primary">discoveredAt:</span>&lt;1y</code></td>
 											<td>Date/Time when it was first found</td>
 										</tr>
 										<tr>
-											<td><code class="add-to-search"><span class="text-primary">lastIndexedAt:</span>>1y</code></td>
+											<td><code class="add-to-search"><span class="text-primary">lastIndexedAt:</span>&lt;1y</code></td>
 											<td>Date/Time when it was last indexed</td>
 										</tr>
 										<tr>
@@ -221,10 +220,7 @@ layout: layouts/default
 											<td>Indicates whether Product has other licenses</td>
 										</tr>
 										<tr>
-											<td>
-												<code class="add-to-search"><span class="text-primary">license:</span>CC-BY-SA-4.0</code></br>
-												<code class="add-to-search"><span class="text-primary">licenseId:</span>CC-BY-SA-4.0</code>
-											</td>
+											<td><code class="add-to-search"><span class="text-primary">license:</span>CC-BY-SA-4.0</code></td>
 											<td>License SPDX Identifier</td>
 										</tr>
 										<tr>
@@ -273,8 +269,7 @@ layout: layouts/default
 									<tbody>
 										<tr>
 											<td>
-												<code class="add-to-search"><span class="text-primary">licensor:</span>John</code></br>
-												<code class="add-to-search"><span class="text-primary">licensorFullName:</span>John</code>
+												<code class="add-to-search"><span class="text-primary">licensor:</span>John</code>
 											</td>
 											<td>Licensor Full Name</td>
 										</tr>
@@ -352,13 +347,12 @@ layout: layouts/default
 										</tr>
 										<tr>
 											<td>
-												<code class="add-to-search"><span class="text-primary">category:</span>Robotics</code></br>
-												<code class="add-to-search"><span class="text-primary">categoryfullname:</span>Robotics</code>
+												<code class="add-to-search"><span class="text-primary">category:</span>Robotics</code>
 											</td>
 											<td>Full category name (e.g `Computer/PSU`)</td>
 										</tr>
 										<tr>
-											<td><code class="add-to-search"><span class="text-primary">categoryname:</span>Robotics</code></td>
+											<td><code class="add-to-search"><span class="text-primary">categoryName:</span>Robotics</code></td>
 											<td>Category name</td>
 										</tr>
 										<tr>
@@ -386,8 +380,7 @@ layout: layouts/default
 										<tr>
 											<td>
 												<code class="add-to-search"><span class="text-primary">host:</span>Wikifactory</code></br>
-												<code class="add-to-search"><span class="text-primary">repository:</span>Wikifactory</code></br>
-												<code class="add-to-search"><span class="text-primary">repositoryHost:</span>Wikifactory</code>
+												<code class="add-to-search"><span class="text-primary">repository:</span>Wikifactory</code>
 											</td>
 											<td>Host where the product is developed</td>
 										</tr>
@@ -401,17 +394,16 @@ layout: layouts/default
 										</tr>
 										<tr>
 											<td>
-												<code class="add-to-search"><span class="text-primary">datasource:</span>GitLab</code></br>
-												<code class="add-to-search"><span class="text-primary">datasourceHost:</span>GitLab</code>
+												<code class="add-to-search"><span class="text-primary">datasource:</span>GitLab</code>
 											</td>
 											<td>Host where the product was found</td>
 										</tr>
 										<tr>
-											<td><code class="add-to-search"><span class="text-primary">datasourceowner:</span>aisberg</code></td>
+											<td><code class="add-to-search"><span class="text-primary">datasourceOwner:</span>aisberg</code></td>
 											<td>Full name of the data-source owner</td>
 										</tr>
 										<tr>
-											<td><code class="add-to-search"><span class="text-primary">datasourcename:</span>beehive</code></td>
+											<td><code class="add-to-search"><span class="text-primary">datasourceName:</span>beehive</code></td>
 											<td>Name of the data-source repository</td>
 										</tr>
 									</tbody>
@@ -431,11 +423,11 @@ layout: layouts/default
 											<td>Indicates whether it has a publication</td>
 										</tr>
 										<tr>
-											<td><code class="add-to-search"><span class="text-primary">has:issuetracker</span></code></td>
+											<td><code class="add-to-search"><span class="text-primary">has:issueTracker</span></code></td>
 											<td>Indicates whether it has a dedicated issue tracker</td>
 										</tr>
 										<tr>
-											<td><code class="add-to-search"><span class="text-primary">has:complieswith</span></code></td>
+											<td><code class="add-to-search"><span class="text-primary">has:compliesWith</span></code></td>
 											<td>Indicates whether it has a standard associated</td>
 										</tr>
 										<tr>

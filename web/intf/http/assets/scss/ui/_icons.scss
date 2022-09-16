@@ -7,6 +7,16 @@
   @include transition(stroke-width $transition-time);
 }
 
+.icon-semibold {
+  stroke-width: 1.5 !important;
+}
+
+.icon-hover-semibold:hover, .icon-hover-semibold:focus {
+  stroke-width: 1.5 !important;
+  @include transition(stroke-width $transition-time);
+}
+
+
 .icon-bold {
   stroke-width: 2 !important;
 }

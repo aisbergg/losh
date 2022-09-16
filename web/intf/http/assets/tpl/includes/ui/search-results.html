@@ -1,5 +1,5 @@
 ---
-# used for adding more columns to the table and cards
+# used for adding more columns to the list and cards view
 extraProperties:
   - operator: version
     title: Version
@@ -326,31 +326,22 @@ extraProperties:
     is: file
 
 orderSelect:
-  - operator: name
-    title: Name
-
-  - operator: language
-    title: Language
-
   - operator: state
-    title: State (Activeness)
-
-  - operator: starcount
-    title: Star Count
-
-  - operator: forkcount
-    title: Fork Count
-
-  - operator: version
-    title: Version
+    title: Activity State
 
   - operator: createdat
     title: Created At
 
+  - operator: forkcount
+    title: Fork Count
+
+  - operator: language
+    title: Language
+
   - operator: lastupdatedat
     title: Last Updated At
 
-  - operator: licenseid
+  - operator: license
     title: License
 
   - operator: licensetype
@@ -359,14 +350,25 @@ orderSelect:
   - operator: licensorname
     title: Licensor
 
+  - operator: name
+    title: Name
+
   - operator: repositoryhost
     title: Host
+
+  - operator: starcount
+    title: Star Count
+
+  - operator: version
+    title: Version
+
 ---
 {%- assign resultsPerPage = req.queryParams.resultsPerPage -%}
 {%- assign results = page.results.items -%}
 {%- assign numResults = page.results.count -%}
 {%- assign numPagedResults = page.results.items | size -%}
 {%- assign displayMode = req.queryParams.displayMode -%}
+{%- assign order = req.queryParams.order | default:"nameasc" -%}
 {% for e in abc %}
 	{{ e }}
 {% endfor %}
@@ -377,8 +379,8 @@ orderSelect:
 			<form class="ms-2">
 				<select id="orderBy" name="orderBy" class="form-select ms-auto w-auto" data-bs-toggle="tooltip" data-bs-placement="top" title="Order Results By">
 					{%- for ep in orderSelect %}
-					<option value="{{ ep.operator | append: 'asc' }}"{% if req.queryParams.order == (ep.operator | append: 'asc') %} selected{% endif %}>{{ ep.title }} ▲</option>
-					<option value="{{ ep.operator | append: 'dsc' }}"{% if req.queryParams.order == (ep.operator | append: 'dsc') %} selected{% endif %}>{{ ep.title }} ▼</option>
+					<option value="{{ ep.operator | append: 'asc' }}"{% if order == (ep.operator | append: 'asc') %} selected{% endif %}>{{ ep.title }} ▲</option>
+					<option value="{{ ep.operator | append: 'dsc' }}"{% if order == (ep.operator | append: 'dsc') %} selected{% endif %}>{{ ep.title }} ▼</option>
 					{%- endfor %}
 				</select>
 			</form>
@@ -386,8 +388,8 @@ orderSelect:
 				<a href="{{ req.fullPath | url_with_params: 'dm', 'card' }}" class="btn btn-md btn-icon" aria-label="Button" name="ds" value="cards" data-bs-toggle="tooltip" data-bs-placement="top" title="Card Style View">
 					{% include ui/icon.html icon="layout-grid" %}
 				</a>
-				<a href="{{ req.fullPath | url_with_params: 'dm', 'table' }}" class="btn btn-md btn-icon" aria-label="Button" name="ds" value="table" data-bs-toggle="tooltip" data-bs-placement="top" title="Table Style View">
-					{% include ui/icon.html icon="table" %}
+				<a href="{{ req.fullPath | url_with_params: 'dm', 'list' }}" class="btn btn-md btn-icon" aria-label="Button" name="ds" value="list" data-bs-toggle="tooltip" data-bs-placement="top" title="List Style View">
+					{% include ui/icon.html icon="list-details" %}
 				</a>
 			</div>
 		</div>
@@ -418,7 +420,7 @@ orderSelect:
 </div>
 
 
-{%- elsif displayMode == "table" %}
+{%- elsif displayMode == "list" %}
 <div class="card mt-3">
 	<div class="table-responsive">
 		<table class="table table-vcenter{% if include.mobile %} table-mobile-md{% endif %}{% if include.card %} card-table{% endif %}{% if include.stripped %} table-striped{% endif %}{% if include.nowrap %} table-nowrap{% endif %}">
@@ -427,44 +429,50 @@ orderSelect:
 					<th colspan="2">
 						<a class="text-reset d-block orderable" data-value="name">
 							Name
-							{%- if req.queryParams.order == 'nameasc' %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
-							{%- if req.queryParams.order == 'namedsc' %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
+							{%- if order == 'nameasc' %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
+							{%- if order == 'namedsc' %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
 						</a>
 					</th>
 					<th>Description</th>
 					<th>
 						<a class="text-reset d-block orderable" data-value="licensor">Licensor
-							{%- if req.queryParams.order == 'licensorasc' %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
-							{%- if req.queryParams.order == 'licensordsc' %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
+							{%- if order == 'licensorasc' %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
+							{%- if order == 'licensordsc' %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
 						</a>
 					</th>
 					<th>
 						<a class="text-reset d-block orderable" data-value="license">
 							License
-							{%- if req.queryParams.order == 'licenseidasc' %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
-							{%- if req.queryParams.order == 'licenseiddsc' %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
+							{%- if order == 'licenseasc' %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
+							{%- if order == 'licensedsc' %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
 						</a>
 					</th>
-					<th data-bs-toggle="tooltip" data-bs-placement="top" title="Product State (Activeness)">{% include ui/icon.html icon="bolt" %}</th>
+					<th data-bs-toggle="tooltip" data-bs-placement="top" title="Activity State">
+						<a class="text-reset d-block orderable" data-value="state">
+							{% include ui/icon.html icon="bolt" %}
+							{%- if order == 'stateasc' %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
+							{%- if order == 'statedsc' %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
+						</a>
+					</th>
 					<th data-bs-toggle="tooltip" data-bs-placement="top" title="Language">
 						<a class="text-reset d-block orderable" data-value="language">
 							{% include ui/icon.html icon="language" %}
-							{%- if req.queryParams.order == 'languageasc' %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
-							{%- if req.queryParams.order == 'languagedsc' %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
+							{%- if order == 'languageasc' %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
+							{%- if order == 'languagedsc' %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
 						</a>
 					</th>
 					<th data-bs-toggle="tooltip" data-bs-placement="top" title="Star Count">
 						<a class="text-reset d-block orderable" data-value="starcount">
 							{% include ui/icon.html icon="star" %}
-							{%- if req.queryParams.order == 'starcountasc' %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
-							{%- if req.queryParams.order == 'starcountdsc' %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
+							{%- if order == 'starcountasc' %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
+							{%- if order == 'starcountdsc' %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
 						</a>
 					</th>
 					<th data-bs-toggle="tooltip" data-bs-placement="top" title="Fork Count">
 						<a class="text-reset d-block orderable" data-value="forkcount">
 							{% include ui/icon.html icon="git-fork" %}
-							{%- if req.queryParams.order == 'forkcountasc' %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
-							{%- if req.queryParams.order == 'forkcountdsc' %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
+							{%- if order == 'forkcountasc' %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
+							{%- if order == 'forkcountdsc' %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
 						</a>
 					</th>
 					{%- for ep in extraProperties %}
@@ -473,8 +481,8 @@ orderSelect:
 					<th>
 						<a class="text-reset d-block orderable" data-value="{{ ep.operator }}">
 							{{ ep.title }}
-							{%- if req.queryParams.order == (ep.operator | append: 'asc') %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
-							{%- if req.queryParams.order == (ep.operator | append: 'dsc') %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
+							{%- if order == (ep.operator | append: 'asc') %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
+							{%- if order == (ep.operator | append: 'dsc') %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
 						</a>
 					</th>
 							{%- else %}
@@ -493,7 +501,7 @@ orderSelect:
 							{%- if (product.Release.Image | is_nil)  %}
 							<div class="card-img ratio ratio-4x3 text-bg-primary" style="width: 6rem; height: auto;">
 								<div class="d-flex align-items-center justify-content-center">
-									{% include ui/icon.html icon="package" class="" %}
+									{% include ui/icon.html icon="camera-off" class="icon-bold" %}
 								</div>
 							</div>
 							{%- else %}
@@ -589,7 +597,7 @@ orderSelect:
 					{%- if (product.Release.Image | is_nil)  %}
 					<div class="card-img-top ratio ratio-4x3 text-bg-primary">
 						<div class="d-flex align-items-center justify-content-center">
-							{% include ui/icon.html icon="package" size="lg" %}
+							{% include ui/icon.html icon="camera-off" size="lg" class="icon-semibold" %}
 						</div>
 					</div>
 					{%- else %}
@@ -617,7 +625,7 @@ orderSelect:
 					</span>
 				</div>
 				<a href="/details/{{ product.Release.Licensor.ID | idhex }}" class="search-result-info-link mb-1">
-					<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Owner">{% include ui/icon.html icon="user" %}</span>
+					<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Licensor">{% include ui/icon.html icon="user" %}</span>
 					<span>{% if product.Release.Licensor.FullName %}{{ product.Release.Licensor.FullName | escape }}{% else %}{{ product.Release.Licensor.Name | escape }}{% endif %}</span>
 				</a>
 				{%- unless (product.Release.License | is_nil) %}
