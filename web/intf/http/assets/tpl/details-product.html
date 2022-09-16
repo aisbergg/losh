@@ -1,9 +1,139 @@
+---
+layout: layouts/default
+page:
+  title: Product Details
+  #page-header: Product Details
+---
 {% assign product = page.data %}
+{% assign release = page.release %}
+
+<div id="images" class="carousel slide bg-dark" data-bs-interval="false">
+	<div class="carousel-indicators carousel-indicators-thumb">
+		{%- for image in page.images %}
+		<button type="button" data-bs-target="#images" data-bs-slide-to="{{ forloop.index | minus: 1 }}" class="ratio ratio-4x3{% if forloop.index == 1 %} active{% endif %}" style="background-image: url({{ image.URL }})"></button>
+		{%- endfor %}
+	</div>
+	<div class="carousel-inner">
+		{%- for image in page.images %}
+		<div class="carousel-item{% if forloop.index == 1 %} active{% endif %}">
+			<img src="{{ image.URL }}" alt="" class="d-block mx-auto" style="height: 30vh;">
+		</div>
+		{%- endfor %}
+	</div>
+	<button class="carousel-control-prev" type="button" data-bs-target="#images" data-bs-slide="prev">
+		<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+		<span class="visually-hidden">Previous</span>
+	</button>
+	<button class="carousel-control-next" type="button" data-bs-target="#images" data-bs-slide="next">
+		<span class="carousel-control-next-icon" aria-hidden="true"></span>
+		<span class="visually-hidden">Next</span>
+	</button>
+</div>
+
 <div class="row row-cards">
 	<div class="col-12">
 		<div class="card card-body">
-			<h3 class="text-danger">TODO</h3>
-			<p>Name: {{ product.name }}</p>
+			<form class="">
+				<select id="versionSelect" name="versionSelect" class="form-select ms-auto w-auto" data-bs-toggle="tooltip" data-bs-placement="top" title="Select Version">
+					{%- for release in product.Releases %}
+					<option value="{{ release.Version | escape }}"{% if req.queryParams.version == release.Version %} selected{% endif %}>{{ release.Version | short_version | escape }}{% if forloop.index == 1 %} (latest){% endif %}</option>
+					{%- endfor %}
+				</select>
+			</form>
+
+			<div class="d-flex flex-row">
+				<div class="details-icon">
+					{%- if (release.Image | is_nil)  %}
+					<div class="card-img ratio ratio-4x3 text-bg-primary">
+						<div class="d-flex align-items-center justify-content-center">
+							{% include ui/icon.html icon="package" size="lg" %}
+						</div>
+					</div>
+					{%- else %}
+					<div class="card-img img-responsive img-responsive-4x3" style="background-image: url({{ release.Image.URL }})"></div>
+					{%- endif %}
+				</div>
+
+				<div class="card-body">
+					<div class="d-flex align-items-start">
+						<h3 class="flex-grow-1">{{ product.Name | escape }}</h3>
+
+						<a href="{{ release.Repository.URL }}" target="_blank" rel="noopener noreferrer" class="btn btn-circle btn-primary" style="margin-top: -0.4rem; margin-right: -0.4rem;" data-bs-toggle="tooltip" data-bs-placement="top" title="Go to Website">{% include ui/icon.html icon="external-link" class="m-0 icon-bold" %}</a>
+					</div>
+					<div class="search-result-info mb-1">
+						{%- assign description=(release.Description | ellipses: 800 | escape ) %}
+						<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Description">{% include ui/icon.html icon="file-description" %}</span>
+						<span class="position-relative">
+							<span class="text-ellipses-line-3" data-text="{{ description }}">{{ description }}</span>
+						</span>
+					</div>
+					<a href="/details/{{ release.Licensor.ID | idhex }}" class="search-result-info-link mb-1">
+						<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Owner">{% include ui/icon.html icon="user" %}</span>
+						<span>{% if release.Licensor.FullName %}{{ release.Licensor.FullName | escape }}{% else %}{{ release.Licensor.Name | escape }}{% endif %}</span>
+					</a>
+					{%- unless (release.License | is_nil) %}
+					<a href="/details/{{ release.License.ID | idhex }}" class="search-result-info-link mb-1">
+						<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="License">{% include ui/icon.html icon="license" %}</span>
+						<span>{{ release.License.Xid }}</span>
+					</a>
+					{%- endunless %}
+					{%- unless product.Category | is_nil %}
+					<div class="search-result-info mb-1">
+						<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Category">{% include ui/icon.html icon="icons" %}</span>
+						{{ product.Category.FullName }}
+					</div>
+					{%- endunless %}
+					{%- if (product.Tags | size) > 1 %}
+					<div class="search-result-info mb-1">
+						<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Tags">{% include ui/icon.html icon="tag" %}</span>
+						<span>{% for tag in product.Tags %}{{ tag.Name }}{% unless forloop.last %}, {% endunless %}{% endfor %}</span>
+					</div>
+					{%- endif %}
+					{%- for ep in extraProperties %}
+						{%- if ep.operator | in: page.results.operators %}
+							{%- assign val = product | get: ep.path %}
+							{%- unless (val | is_nil) %}
+								{%- if ep.is == "file" %}
+					<a href="{{ val.URL }}" class="search-result-info-link mb-1">
+						<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ ep.title }}">{% include ui/icon.html icon="file-download" %}</span>
+						<span>{{ ep.title }}</span>
+					</a>
+								{%- elsif ep.is == "url" %}
+					<a href="{{ val }}" class="search-result-info-link mb-1">
+						<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ ep.title }}">{% include ui/icon.html icon="{{ ep.icon }}" %}</span>
+						<span>{{ val }}</span>
+					</a>
+								{%- else %}
+					<div class="search-result-info mb-1">
+						<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ ep.title }}">{% include ui/icon.html icon="{{ ep.icon }}" %}</span>
+						<span class="position-relative">
+							<span class="text-ellipses-line-1" data-text="{{ val | escape }}">
+									{%- if (val | is: "bool") %}
+										{%- if val %}{% assign icon = "check" %}{% else %}{% assign icon = "x" %}{% endif %}
+							{{ ep.title }}: {% include ui/icon.html icon="{{ icon }}" size="sm" class="icon-bold" %}
+									{%- else %}
+										{{ val | escape }}
+									{%- endif %}
+							</span>
+						</span>
+					</div>
+								{%- endif %}
+							{%- endunless %}
+						{%- endif %}
+					{%- endfor %}
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
+
+{%- capture_global scripts %}
+<script>
+	// @formatter:off
+	document.getElementById('versionSelect').addEventListener('change', function (e) {
+		setQueryParameter('v', new FormData(this.form).get('versionSelect'));
+		return true;
+	})
+	// @formatter:on
+</script>
+{%- endcapture_global %}

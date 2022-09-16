@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"context"
+	gourl "net/url"
 	"time"
 
 	"losh/internal/core/product/models"
@@ -39,9 +40,8 @@ func (c DetailsController) Register(router fiber.Router) {
 // Handle handles the request for the resource details page.
 func (c DetailsController) Handle(ctx *fiber.Ctx) error {
 	// parse request info including params
-	reqInfo, tplBnd := c.preprocessRequest(ctx, parseSearchQueryParams, parseDetailsParams)
+	reqInfo, tplBnd := c.preprocessRequest(ctx, nil, parseDetailsParams)
 	params := reqInfo.Params.(DetailsParams)
-	queryParams := reqInfo.QueryParams.(SearchQueryParams)
 
 	// return 404 if params are invalid
 	if params.ID == "" {
@@ -64,16 +64,42 @@ func (c DetailsController) Handle(ctx *fiber.Ctx) error {
 	tplNme := ""
 	switch data.(type) {
 	case *models.Product:
+		queryParams := parseDetailsQueryParams(ctx).(DetailsQueryParams)
+		reqInfo.QueryParams = queryParams
+		tplBnd["req"] = reqInfo
 		tplNme = "details-product.html"
-		page["title"] = "Product Details"
-		page["page-header"] = "Product Details"
+
+		// select specific release version
+		var selectedRelease *models.Component
+		for _, r := range data.(*models.Product).Releases {
+			if *r.Version == queryParams.Version {
+				selectedRelease = r
+				break
+			}
+		}
+		if selectedRelease == nil {
+			selectedRelease = data.(*models.Product).Releases[0]
+		}
+		page["release"] = selectedRelease
+
+		// get list of images
+		images := make([]*models.File, 0)
+		if selectedRelease.Image != nil {
+			images = append(images, selectedRelease.Image)
+		}
+		for _, c := range selectedRelease.Components {
+			if c.Image != nil {
+				images = append(images, c.Image)
+			}
+		}
+		page["images"] = images
 
 	case *models.License:
 		tplNme = "details-license.html"
-		page["title"] = "License Details"
-		page["page-header"] = "License Details"
 
 	case *models.User, *models.Group:
+		queryParams := parseSearchQueryParams(ctx).(SearchQueryParams)
+		tplBnd["req"].(*RequestInfo).QueryParams = queryParams
 		tplNme = "details-user-group.html"
 		page := tplBnd["page"].(map[string]interface{})
 		if u, ok := data.(*models.User); ok {
@@ -116,4 +142,20 @@ func parseDetailsParams(ctx *fiber.Ctx) interface{} {
 
 type DetailsParams struct {
 	ID string `liquid:"id"`
+}
+
+func parseDetailsQueryParams(ctx *fiber.Ctx) interface{} {
+	params := DetailsQueryParams{}
+	ctx.QueryParser(&params)
+	return params
+}
+
+type DetailsQueryParams struct {
+	Version string `query:"v" json:"version" liquid:"version"`
+}
+
+func (p DetailsQueryParams) String() string {
+	v := gourl.Values{}
+	v.Set("v", p.Version)
+	return v.Encode()
 }
