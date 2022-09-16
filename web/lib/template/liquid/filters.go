@@ -38,6 +38,7 @@ func addFilters(e *liquid.Engine) {
 	e.RegisterFilter("first_letters", firstLettersFilter)
 	e.RegisterFilter("replace_regex", replaceRegexFilter)
 	e.RegisterFilter("idhex", idhexFilter)
+	e.RegisterFilter("short_version", shortenVersionFilter)
 
 	// number filters
 	e.RegisterFilter("min", minFilter)
@@ -155,6 +156,18 @@ func formatNumberFilter(input interface{}) string {
 
 func idhexFilter(input string) string {
 	return strings.TrimPrefix(strings.TrimSpace(input), "0x")
+}
+
+var hashVersionPattern = regexp.MustCompile(`^([a-f0-9]{40}|[a-f0-9]{64})$`)
+
+func shortenVersionFilter(version string) string {
+	if hashVersionPattern.MatchString(version) {
+		// return first 7 characters of hash
+		return version[:7]
+	}
+
+	// return as is
+	return version
 }
 
 func isFilter(value interface{}, t ...string) bool {
