@@ -1,54 +1,54 @@
-fragment ProductFragment on Product {
-	...CrawlerMetaFragment
-	id
-	xid
-	name
-	description
-	documentationLanguage
-	version
-	license {
-		id
-		xid
-	}
-	licensor {...UserOrGroupBasicFragment}
-	website
-	state
-	lastUpdatedAt
-	release {
-		id
-		name
-	}
-	releases {
-		id
-		name
-	}
-	renamedTo {
-		id
-		name
-	}
-	renamedFrom {
-		id
-		name
-	}
-	forkOf {
-		id
-		name
-	}
-	forks {
-		id
-		name
-	}
-	forkCount
-	starCount
-	tags {
-		id
-		name
-	}
-	category {
-		id
-		fullName
-	}
-}
+# fragment ProductFragment on Product {
+# 	...CrawlerMetaFragment
+# 	id
+# 	xid
+# 	name
+# 	description
+# 	documentationLanguage
+# 	version
+# 	license {
+# 		id
+# 		xid
+# 	}
+# 	licensor {...UserOrGroupBasicFragment}
+# 	website
+# 	state
+# 	lastUpdatedAt
+# 	release {
+# 		id
+# 		name
+# 	}
+# 	releases {
+# 		id
+# 		name
+# 	}
+# 	renamedTo {
+# 		id
+# 		name
+# 	}
+# 	renamedFrom {
+# 		id
+# 		name
+# 	}
+# 	forkOf {
+# 		id
+# 		name
+# 	}
+# 	forks {
+# 		id
+# 		name
+# 	}
+# 	forkCount
+# 	starCount
+# 	tags {
+# 		id
+# 		name
+# 	}
+# 	category {
+# 		id
+# 		fullName
+# 	}
+# }
 
 fragment ProductSearchFragment on Product {
 	...CrawlerMetaFragment
@@ -76,56 +76,46 @@ fragment ProductSearchFragment on Product {
 
 	releases {id}
 	release {
-		id
-		xid
-		name
-		description
-		version
-		createdAt
-		releases {id}
-		isLatest
-		repository {...RepositoryFragment}
-		license {...LicenseFragmentBasic}
-		additionalLicenses {...LicenseFragmentBasic}
-		licensor {...UserOrGroupFullFragment}
-		documentationLanguage
-		technologyReadinessLevel
-		documentationReadinessLevel
-		attestation
-		publication
-		compliesWith {name}
-		cpcPatentClass
-		tsdc {id}
-		components {id}
-		software {id}
-		image {...FileFragment}
-		readme {...FileFragment}
-		contributionGuide {...FileFragment}
-		bom {...FileFragment}
-		manufacturingInstructions {...FileFragment}
-		userManual {...FileFragment}
-		product {id}
-		usedIn {id}
-		source {...FileFragment}
-		export {...FileFragment}
-		auxiliary {...FileFragment}
-		organization {id}
-		mass
-		outerDimensions {...OuterDimensionsFragment}
-		material {id}
-		manufacturingProcess {id}
-		productionMetadata {id}
+		...ComponentFullFragment
 	}
+}
+
+fragment ProductFullFragment on Product {
+	...CrawlerMetaFragment
+	id
+	xid
+	name
+	website
+	state
+	lastUpdatedAt
+	renamedTo {id}
+	renamedFrom {id}
+	forkOf {
+		id
+		release {
+			repository {
+				url
+			}
+		}
+	}
+	forks {id}
+	forkCount
+	starCount
+	tags {...TagFragment}
+	category {...CategoryFragment}
+
+	releases {...ComponentFullFragment}
+	release {...ComponentFullFragment}
 }
 
 # ------------------------------------------------------------------------------
 
 query GetProductByID($id: ID!) {
-	getProduct(id: $id) {...ProductFragment}
+	getProduct(id: $id) {...ProductFullFragment}
 }
 
 query GetProductByXid($xid: String!) {
-	getProduct(xid: $xid) {...ProductFragment}
+	getProduct(xid: $xid) {...ProductFullFragment}
 }
 
 query GetProductID($xid: String!) {
@@ -133,7 +123,7 @@ query GetProductID($xid: String!) {
 }
 
 query GetProducts($getFilter: ProductFilter, $order: ProductOrder, $first: Int, $offset: Int) {
-	queryProduct(filter: $getFilter, order: $order, first: $first, offset: $offset) {...ProductFragment}
+	queryProduct(filter: $getFilter, order: $order, first: $first, offset: $offset) {...ProductFullFragment}
 	aggregateProduct(filter: $getFilter) {count}
 }
 

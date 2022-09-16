@@ -103,6 +103,48 @@ fragment ComponentFragment on Component {
 	productionMetadata {...KeyValueFragment}
 }
 
+fragment ComponentFullFragment on Component {
+	id
+	xid
+	name
+	description
+	version
+	createdAt
+	releases {id}
+	isLatest
+	repository {...RepositoryFragment}
+	license {...LicenseFragmentBasic}
+	additionalLicenses {...LicenseFragmentBasic}
+	licensor {...UserOrGroupFullFragment}
+	documentationLanguage
+	technologyReadinessLevel
+	documentationReadinessLevel
+	attestation
+	publication
+	compliesWith {name}
+	cpcPatentClass
+	tsdc {id}
+	components {id}
+	software {id}
+	image {...FileFragment}
+	readme {...FileFragment}
+	contributionGuide {...FileFragment}
+	bom {...FileFragment}
+	manufacturingInstructions {...FileFragment}
+	userManual {...FileFragment}
+	product {id}
+	usedIn {id}
+	source {...FileFragment}
+	export {...FileFragment}
+	auxiliary {...FileFragment}
+	organization {id}
+	mass
+	outerDimensions {...OuterDimensionsFragment}
+	material {id}
+	manufacturingProcess {id}
+	productionMetadata {...KeyValueFragment}
+}
+
 # ------------------------------------------------------------------------------
 
 query GetComponentByID($id: ID!) {

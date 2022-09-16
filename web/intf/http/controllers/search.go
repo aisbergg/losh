@@ -103,7 +103,7 @@ func (p SearchQueryParams) String() string {
 func performSearch(ctx context.Context, searchService *search.Service, queryParams SearchQueryParams, pageBinding map[string]interface{}) (map[string]interface{}, error) {
 	first := mathutil.Max(1, queryParams.ResultsPerPage)
 	offset := mathutil.Max(0, (queryParams.Page-1)*queryParams.ResultsPerPage)
-	results, err := searchService.Search3(
+	results, err := searchService.Search(
 		ctx,
 		queryParams.Query,
 		searchmodels.OrderByFromCombinedStr(queryParams.Order),

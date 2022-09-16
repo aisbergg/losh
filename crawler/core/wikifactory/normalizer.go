@@ -570,7 +570,8 @@ func (c *WikifactoryCrawler) getSubComponents(files []*models.File, prjInfo *wfc
 	return cmps
 }
 
-// TODO: make this better
+// TODO: make this better, e.g. https://github.com/abhinav/goldmark-hashtag
+// https://meta.stackexchange.com/a/298981
 var validTagPattern = regexp.MustCompile(`^[a-z0-9_.+-]+$`)
 
 // parseTags parses the given string into a slice of tags.

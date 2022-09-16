@@ -526,27 +526,27 @@ type License implements Node {
   type: LicenseType!
 
   """
-  Indicates if the license is a standard license.
+  Indicates whether the license is a standard license.
   """
   isSpdx: Boolean! @search
 
   """
-  Indicates if the license identifier is deprecated in favor of another license identifier and should no longer be used.
+  Indicates whether the license identifier is deprecated in favor of another license identifier and should no longer be used.
   """
   isDeprecated: Boolean! @search
 
   """
-  Indicates if the license is OSI approved.
+  Indicates whether the license is OSI approved.
   """
   isOsiApproved: Boolean! @search
 
   """
-  Indicates if the license is FSF approved.
+  Indicates whether the license is FSF approved.
   """
   isFsfLibre: Boolean! @search
 
   """
-  Indicates if the license is considered a LOSH unapproved license.
+  Indicates whether the license is considered a LOSH unapproved license.
   """
   isBlocked: Boolean! @search
 }

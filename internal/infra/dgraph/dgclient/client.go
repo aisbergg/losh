@@ -358,6 +358,47 @@ type ComponentFragment struct {
 	ManufacturingProcess        *ComponentFragment_ManufacturingProcess      "json:\"manufacturingProcess\" graphql:\"manufacturingProcess\""
 	ProductionMetadata          []*KeyValueFragment                          "json:\"productionMetadata\" graphql:\"productionMetadata\""
 }
+type ComponentFullFragment struct {
+	ID                          string                                      "json:\"id\" graphql:\"id\""
+	Xid                         string                                      "json:\"xid\" graphql:\"xid\""
+	Name                        string                                      "json:\"name\" graphql:\"name\""
+	Description                 string                                      "json:\"description\" graphql:\"description\""
+	Version                     string                                      "json:\"version\" graphql:\"version\""
+	CreatedAt                   time.Time                                   "json:\"createdAt\" graphql:\"createdAt\""
+	Releases                    []*ComponentFullFragment_Releases           "json:\"releases\" graphql:\"releases\""
+	IsLatest                    bool                                        "json:\"isLatest\" graphql:\"isLatest\""
+	Repository                  *RepositoryFragment                         "json:\"repository\" graphql:\"repository\""
+	License                     *LicenseFragmentBasic                       "json:\"license\" graphql:\"license\""
+	AdditionalLicenses          []*LicenseFragmentBasic                     "json:\"additionalLicenses\" graphql:\"additionalLicenses\""
+	Licensor                    *UserOrGroupFullFragment                    "json:\"licensor\" graphql:\"licensor\""
+	DocumentationLanguage       string                                      "json:\"documentationLanguage\" graphql:\"documentationLanguage\""
+	TechnologyReadinessLevel    TechnologyReadinessLevel                    "json:\"technologyReadinessLevel\" graphql:\"technologyReadinessLevel\""
+	DocumentationReadinessLevel DocumentationReadinessLevel                 "json:\"documentationReadinessLevel\" graphql:\"documentationReadinessLevel\""
+	Attestation                 *string                                     "json:\"attestation\" graphql:\"attestation\""
+	Publication                 *string                                     "json:\"publication\" graphql:\"publication\""
+	CompliesWith                *ComponentFullFragment_CompliesWith         "json:\"compliesWith\" graphql:\"compliesWith\""
+	CpcPatentClass              *string                                     "json:\"cpcPatentClass\" graphql:\"cpcPatentClass\""
+	Tsdc                        *ComponentFullFragment_Tsdc                 "json:\"tsdc\" graphql:\"tsdc\""
+	Components                  []*ComponentFullFragment_Components         "json:\"components\" graphql:\"components\""
+	Software                    []*ComponentFullFragment_Software           "json:\"software\" graphql:\"software\""
+	Image                       *FileFragment                               "json:\"image\" graphql:\"image\""
+	Readme                      *FileFragment                               "json:\"readme\" graphql:\"readme\""
+	ContributionGuide           *FileFragment                               "json:\"contributionGuide\" graphql:\"contributionGuide\""
+	Bom                         *FileFragment                               "json:\"bom\" graphql:\"bom\""
+	ManufacturingInstructions   *FileFragment                               "json:\"manufacturingInstructions\" graphql:\"manufacturingInstructions\""
+	UserManual                  *FileFragment                               "json:\"userManual\" graphql:\"userManual\""
+	Product                     *ComponentFullFragment_Product              "json:\"product\" graphql:\"product\""
+	UsedIn                      []*ComponentFullFragment_UsedIn             "json:\"usedIn\" graphql:\"usedIn\""
+	Source                      *FileFragment                               "json:\"source\" graphql:\"source\""
+	Export                      []*FileFragment                             "json:\"export\" graphql:\"export\""
+	Auxiliary                   []*FileFragment                             "json:\"auxiliary\" graphql:\"auxiliary\""
+	Organization                *ComponentFullFragment_Organization         "json:\"organization\" graphql:\"organization\""
+	Mass                        *float64                                    "json:\"mass\" graphql:\"mass\""
+	OuterDimensions             *OuterDimensionsFragment                    "json:\"outerDimensions\" graphql:\"outerDimensions\""
+	Material                    *ComponentFullFragment_Material             "json:\"material\" graphql:\"material\""
+	ManufacturingProcess        *ComponentFullFragment_ManufacturingProcess "json:\"manufacturingProcess\" graphql:\"manufacturingProcess\""
+	ProductionMetadata          []*KeyValueFragment                         "json:\"productionMetadata\" graphql:\"productionMetadata\""
+}
 type DatabaseFragment struct {
 	ID      string "json:\"id\" graphql:\"id\""
 	Version string "json:\"version\" graphql:\"version\""
@@ -449,31 +490,6 @@ type OpenSCADDimensionsFragment struct {
 	Openscad string "json:\"openscad\" graphql:\"openscad\""
 	Unit     string "json:\"unit\" graphql:\"unit\""
 }
-type ProductFragment struct {
-	DiscoveredAt          time.Time                    "json:\"discoveredAt\" graphql:\"discoveredAt\""
-	LastIndexedAt         time.Time                    "json:\"lastIndexedAt\" graphql:\"lastIndexedAt\""
-	ID                    string                       "json:\"id\" graphql:\"id\""
-	Xid                   string                       "json:\"xid\" graphql:\"xid\""
-	Name                  string                       "json:\"name\" graphql:\"name\""
-	Description           string                       "json:\"description\" graphql:\"description\""
-	DocumentationLanguage string                       "json:\"documentationLanguage\" graphql:\"documentationLanguage\""
-	Version               string                       "json:\"version\" graphql:\"version\""
-	License               *ProductFragment_License     "json:\"license\" graphql:\"license\""
-	Licensor              *UserOrGroupBasicFragment    "json:\"licensor\" graphql:\"licensor\""
-	Website               *string                      "json:\"website\" graphql:\"website\""
-	State                 ProductState                 "json:\"state\" graphql:\"state\""
-	LastUpdatedAt         *time.Time                   "json:\"lastUpdatedAt\" graphql:\"lastUpdatedAt\""
-	Release               ProductFragment_Release      "json:\"release\" graphql:\"release\""
-	Releases              []*ProductFragment_Releases  "json:\"releases\" graphql:\"releases\""
-	RenamedTo             *ProductFragment_RenamedTo   "json:\"renamedTo\" graphql:\"renamedTo\""
-	RenamedFrom           *ProductFragment_RenamedFrom "json:\"renamedFrom\" graphql:\"renamedFrom\""
-	ForkOf                *ProductFragment_ForkOf      "json:\"forkOf\" graphql:\"forkOf\""
-	Forks                 []*ProductFragment_Forks     "json:\"forks\" graphql:\"forks\""
-	ForkCount             *int64                       "json:\"forkCount\" graphql:\"forkCount\""
-	StarCount             *int64                       "json:\"starCount\" graphql:\"starCount\""
-	Tags                  []*ProductFragment_Tags      "json:\"tags\" graphql:\"tags\""
-	Category              *ProductFragment_Category    "json:\"category\" graphql:\"category\""
-}
 type ProductSearchFragment struct {
 	DiscoveredAt  time.Time                          "json:\"discoveredAt\" graphql:\"discoveredAt\""
 	LastIndexedAt time.Time                          "json:\"lastIndexedAt\" graphql:\"lastIndexedAt\""
@@ -492,7 +508,27 @@ type ProductSearchFragment struct {
 	Tags          []*TagFragment                     "json:\"tags\" graphql:\"tags\""
 	Category      *CategoryFragment                  "json:\"category\" graphql:\"category\""
 	Releases      []*ProductSearchFragment_Releases  "json:\"releases\" graphql:\"releases\""
-	Release       ProductSearchFragment_Release      "json:\"release\" graphql:\"release\""
+	Release       *ComponentFullFragment             "json:\"release\" graphql:\"release\""
+}
+type ProductFullFragment struct {
+	DiscoveredAt  time.Time                        "json:\"discoveredAt\" graphql:\"discoveredAt\""
+	LastIndexedAt time.Time                        "json:\"lastIndexedAt\" graphql:\"lastIndexedAt\""
+	ID            string                           "json:\"id\" graphql:\"id\""
+	Xid           string                           "json:\"xid\" graphql:\"xid\""
+	Name          string                           "json:\"name\" graphql:\"name\""
+	Website       *string                          "json:\"website\" graphql:\"website\""
+	State         ProductState                     "json:\"state\" graphql:\"state\""
+	LastUpdatedAt *time.Time                       "json:\"lastUpdatedAt\" graphql:\"lastUpdatedAt\""
+	RenamedTo     *ProductFullFragment_RenamedTo   "json:\"renamedTo\" graphql:\"renamedTo\""
+	RenamedFrom   *ProductFullFragment_RenamedFrom "json:\"renamedFrom\" graphql:\"renamedFrom\""
+	ForkOf        *ProductFullFragment_ForkOf      "json:\"forkOf\" graphql:\"forkOf\""
+	Forks         []*ProductFullFragment_Forks     "json:\"forks\" graphql:\"forks\""
+	ForkCount     *int64                           "json:\"forkCount\" graphql:\"forkCount\""
+	StarCount     *int64                           "json:\"starCount\" graphql:\"starCount\""
+	Tags          []*TagFragment                   "json:\"tags\" graphql:\"tags\""
+	Category      *CategoryFragment                "json:\"category\" graphql:\"category\""
+	Releases      []*ComponentFullFragment         "json:\"releases\" graphql:\"releases\""
+	Release       *ComponentFullFragment           "json:\"release\" graphql:\"release\""
 }
 type RepositoryFragment struct {
 	ID        string                    "json:\"id\" graphql:\"id\""
@@ -702,6 +738,88 @@ type ComponentFragment_ProductionMetadata_KeyValueFragment_Value struct {
 	StringV ComponentFragment_ProductionMetadata_KeyValueFragment_Value_StringV "graphql:\"... on StringV\""
 	FloatV  ComponentFragment_ProductionMetadata_KeyValueFragment_Value_FloatV  "graphql:\"... on FloatV\""
 }
+type ComponentFullFragment_Releases struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type ComponentFullFragment_Repository_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Avatar struct {
+	ID  string "json:\"id\" graphql:\"id\""
+	URL string "json:\"url\" graphql:\"url\""
+}
+type ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_MemberOf struct {
+	ID       string  "json:\"id\" graphql:\"id\""
+	FullName *string "json:\"fullName\" graphql:\"fullName\""
+}
+type ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Products struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Avatar struct {
+	ID  string "json:\"id\" graphql:\"id\""
+	URL string "json:\"url\" graphql:\"url\""
+}
+type ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_MemberOf struct {
+	ID       string  "json:\"id\" graphql:\"id\""
+	FullName *string "json:\"fullName\" graphql:\"fullName\""
+}
+type ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Products struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_Members struct {
+	Typename *string "json:\"__typename\" graphql:\"__typename\""
+	ID       string  "json:\"id\" graphql:\"id\""
+}
+type ComponentFullFragment_CompliesWith struct {
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ComponentFullFragment_Tsdc struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type ComponentFullFragment_Components struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type ComponentFullFragment_Software struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type ComponentFullFragment_Product struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type ComponentFullFragment_UsedIn struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type ComponentFullFragment_Organization struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type ComponentFullFragment_Material struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type ComponentFullFragment_ManufacturingProcess struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_StringV struct {
+	ID          string "json:\"id\" graphql:\"id\""
+	StringValue string "json:\"stringValue\" graphql:\"stringValue\""
+}
+type ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_FloatV struct {
+	ID         string  "json:\"id\" graphql:\"id\""
+	FloatValue float64 "json:\"floatValue\" graphql:\"floatValue\""
+}
+type ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value struct {
+	StringV ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_StringV "graphql:\"... on StringV\""
+	FloatV  ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_FloatV  "graphql:\"... on FloatV\""
+}
 type KeyValueFragment_Value_StringV struct {
 	ID          string "json:\"id\" graphql:\"id\""
 	StringValue string "json:\"stringValue\" graphql:\"stringValue\""
@@ -713,42 +831,6 @@ type KeyValueFragment_Value_FloatV struct {
 type KeyValueFragment_Value struct {
 	StringV KeyValueFragment_Value_StringV "graphql:\"... on StringV\""
 	FloatV  KeyValueFragment_Value_FloatV  "graphql:\"... on FloatV\""
-}
-type ProductFragment_License struct {
-	ID  string "json:\"id\" graphql:\"id\""
-	Xid string "json:\"xid\" graphql:\"xid\""
-}
-type ProductFragment_Release struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Name string "json:\"name\" graphql:\"name\""
-}
-type ProductFragment_Releases struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Name string "json:\"name\" graphql:\"name\""
-}
-type ProductFragment_RenamedTo struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Name string "json:\"name\" graphql:\"name\""
-}
-type ProductFragment_RenamedFrom struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Name string "json:\"name\" graphql:\"name\""
-}
-type ProductFragment_ForkOf struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Name string "json:\"name\" graphql:\"name\""
-}
-type ProductFragment_Forks struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Name string "json:\"name\" graphql:\"name\""
-}
-type ProductFragment_Tags struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Name string "json:\"name\" graphql:\"name\""
-}
-type ProductFragment_Category struct {
-	ID       string "json:\"id\" graphql:\"id\""
-	FullName string "json:\"fullName\" graphql:\"fullName\""
 }
 type ProductSearchFragment_RenamedTo struct {
 	ID string "json:\"id\" graphql:\"id\""
@@ -792,119 +874,290 @@ type ProductSearchFragment_Category_CategoryFragment_Products struct {
 type ProductSearchFragment_Releases struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type ProductSearchFragment_Release_Releases struct {
+type ProductSearchFragment_Release_ComponentFullFragment_Releases struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type ProductSearchFragment_Release_Repository_RepositoryFragment_Host struct {
+type ProductSearchFragment_Release_ComponentFullFragment_Repository_RepositoryFragment_Host struct {
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Host struct {
+type ProductSearchFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Host struct {
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Avatar struct {
+type ProductSearchFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Avatar struct {
 	ID  string "json:\"id\" graphql:\"id\""
 	URL string "json:\"url\" graphql:\"url\""
 }
-type ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_MemberOf struct {
+type ProductSearchFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
 	FullName *string "json:\"fullName\" graphql:\"fullName\""
 }
-type ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Products struct {
+type ProductSearchFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Products struct {
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Host struct {
+type ProductSearchFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Host struct {
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Avatar struct {
+type ProductSearchFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Avatar struct {
 	ID  string "json:\"id\" graphql:\"id\""
 	URL string "json:\"url\" graphql:\"url\""
 }
-type ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_MemberOf struct {
+type ProductSearchFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
 	FullName *string "json:\"fullName\" graphql:\"fullName\""
 }
-type ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Products struct {
+type ProductSearchFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Products struct {
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_Group_GroupFragment_Members struct {
+type ProductSearchFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_Members struct {
 	Typename *string "json:\"__typename\" graphql:\"__typename\""
 	ID       string  "json:\"id\" graphql:\"id\""
 }
-type ProductSearchFragment_Release_CompliesWith struct {
+type ProductSearchFragment_Release_ComponentFullFragment_CompliesWith struct {
 	Name string "json:\"name\" graphql:\"name\""
 }
-type ProductSearchFragment_Release_Tsdc struct {
+type ProductSearchFragment_Release_ComponentFullFragment_Tsdc struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type ProductSearchFragment_Release_Components struct {
+type ProductSearchFragment_Release_ComponentFullFragment_Components struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type ProductSearchFragment_Release_Software struct {
+type ProductSearchFragment_Release_ComponentFullFragment_Software struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type ProductSearchFragment_Release_Product struct {
+type ProductSearchFragment_Release_ComponentFullFragment_Product struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type ProductSearchFragment_Release_UsedIn struct {
+type ProductSearchFragment_Release_ComponentFullFragment_UsedIn struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type ProductSearchFragment_Release_Organization struct {
+type ProductSearchFragment_Release_ComponentFullFragment_Organization struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type ProductSearchFragment_Release_Material struct {
+type ProductSearchFragment_Release_ComponentFullFragment_Material struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type ProductSearchFragment_Release_ManufacturingProcess struct {
+type ProductSearchFragment_Release_ComponentFullFragment_ManufacturingProcess struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type ProductSearchFragment_Release_ProductionMetadata struct {
+type ProductSearchFragment_Release_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_StringV struct {
+	ID          string "json:\"id\" graphql:\"id\""
+	StringValue string "json:\"stringValue\" graphql:\"stringValue\""
+}
+type ProductSearchFragment_Release_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_FloatV struct {
+	ID         string  "json:\"id\" graphql:\"id\""
+	FloatValue float64 "json:\"floatValue\" graphql:\"floatValue\""
+}
+type ProductSearchFragment_Release_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value struct {
+	StringV ProductSearchFragment_Release_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_StringV "graphql:\"... on StringV\""
+	FloatV  ProductSearchFragment_Release_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_FloatV  "graphql:\"... on FloatV\""
+}
+type ProductFullFragment_RenamedTo struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type ProductSearchFragment_Release struct {
-	ID                          string                                              "json:\"id\" graphql:\"id\""
-	Xid                         string                                              "json:\"xid\" graphql:\"xid\""
-	Name                        string                                              "json:\"name\" graphql:\"name\""
-	Description                 string                                              "json:\"description\" graphql:\"description\""
-	Version                     string                                              "json:\"version\" graphql:\"version\""
-	CreatedAt                   time.Time                                           "json:\"createdAt\" graphql:\"createdAt\""
-	Releases                    []*ProductSearchFragment_Release_Releases           "json:\"releases\" graphql:\"releases\""
-	IsLatest                    bool                                                "json:\"isLatest\" graphql:\"isLatest\""
-	Repository                  *RepositoryFragment                                 "json:\"repository\" graphql:\"repository\""
-	License                     *LicenseFragmentBasic                               "json:\"license\" graphql:\"license\""
-	AdditionalLicenses          []*LicenseFragmentBasic                             "json:\"additionalLicenses\" graphql:\"additionalLicenses\""
-	Licensor                    *UserOrGroupFullFragment                            "json:\"licensor\" graphql:\"licensor\""
-	DocumentationLanguage       string                                              "json:\"documentationLanguage\" graphql:\"documentationLanguage\""
-	TechnologyReadinessLevel    TechnologyReadinessLevel                            "json:\"technologyReadinessLevel\" graphql:\"technologyReadinessLevel\""
-	DocumentationReadinessLevel DocumentationReadinessLevel                         "json:\"documentationReadinessLevel\" graphql:\"documentationReadinessLevel\""
-	Attestation                 *string                                             "json:\"attestation\" graphql:\"attestation\""
-	Publication                 *string                                             "json:\"publication\" graphql:\"publication\""
-	CompliesWith                *ProductSearchFragment_Release_CompliesWith         "json:\"compliesWith\" graphql:\"compliesWith\""
-	CpcPatentClass              *string                                             "json:\"cpcPatentClass\" graphql:\"cpcPatentClass\""
-	Tsdc                        *ProductSearchFragment_Release_Tsdc                 "json:\"tsdc\" graphql:\"tsdc\""
-	Components                  []*ProductSearchFragment_Release_Components         "json:\"components\" graphql:\"components\""
-	Software                    []*ProductSearchFragment_Release_Software           "json:\"software\" graphql:\"software\""
-	Image                       *FileFragment                                       "json:\"image\" graphql:\"image\""
-	Readme                      *FileFragment                                       "json:\"readme\" graphql:\"readme\""
-	ContributionGuide           *FileFragment                                       "json:\"contributionGuide\" graphql:\"contributionGuide\""
-	Bom                         *FileFragment                                       "json:\"bom\" graphql:\"bom\""
-	ManufacturingInstructions   *FileFragment                                       "json:\"manufacturingInstructions\" graphql:\"manufacturingInstructions\""
-	UserManual                  *FileFragment                                       "json:\"userManual\" graphql:\"userManual\""
-	Product                     *ProductSearchFragment_Release_Product              "json:\"product\" graphql:\"product\""
-	UsedIn                      []*ProductSearchFragment_Release_UsedIn             "json:\"usedIn\" graphql:\"usedIn\""
-	Source                      *FileFragment                                       "json:\"source\" graphql:\"source\""
-	Export                      []*FileFragment                                     "json:\"export\" graphql:\"export\""
-	Auxiliary                   []*FileFragment                                     "json:\"auxiliary\" graphql:\"auxiliary\""
-	Organization                *ProductSearchFragment_Release_Organization         "json:\"organization\" graphql:\"organization\""
-	Mass                        *float64                                            "json:\"mass\" graphql:\"mass\""
-	OuterDimensions             *OuterDimensionsFragment                            "json:\"outerDimensions\" graphql:\"outerDimensions\""
-	Material                    *ProductSearchFragment_Release_Material             "json:\"material\" graphql:\"material\""
-	ManufacturingProcess        *ProductSearchFragment_Release_ManufacturingProcess "json:\"manufacturingProcess\" graphql:\"manufacturingProcess\""
-	ProductionMetadata          []*ProductSearchFragment_Release_ProductionMetadata "json:\"productionMetadata\" graphql:\"productionMetadata\""
+type ProductFullFragment_RenamedFrom struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type ProductFullFragment_ForkOf_Release_Repository struct {
+	URL string "json:\"url\" graphql:\"url\""
+}
+type ProductFullFragment_ForkOf_Release struct {
+	Repository ProductFullFragment_ForkOf_Release_Repository "json:\"repository\" graphql:\"repository\""
+}
+type ProductFullFragment_ForkOf struct {
+	ID      string                             "json:\"id\" graphql:\"id\""
+	Release ProductFullFragment_ForkOf_Release "json:\"release\" graphql:\"release\""
+}
+type ProductFullFragment_Forks struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type ProductFullFragment_Tags_TagFragment_Aliases struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductFullFragment_Tags_TagFragment_Related struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductFullFragment_Category_CategoryFragment_Parent struct {
+	ID       string "json:\"id\" graphql:\"id\""
+	FullName string "json:\"fullName\" graphql:\"fullName\""
+}
+type ProductFullFragment_Category_CategoryFragment_Children struct {
+	ID       string "json:\"id\" graphql:\"id\""
+	FullName string "json:\"fullName\" graphql:\"fullName\""
+}
+type ProductFullFragment_Category_CategoryFragment_Products struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductFullFragment_Releases_ComponentFullFragment_Releases struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type ProductFullFragment_Releases_ComponentFullFragment_Repository_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Avatar struct {
+	ID  string "json:\"id\" graphql:\"id\""
+	URL string "json:\"url\" graphql:\"url\""
+}
+type ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_MemberOf struct {
+	ID       string  "json:\"id\" graphql:\"id\""
+	FullName *string "json:\"fullName\" graphql:\"fullName\""
+}
+type ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Products struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Avatar struct {
+	ID  string "json:\"id\" graphql:\"id\""
+	URL string "json:\"url\" graphql:\"url\""
+}
+type ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_MemberOf struct {
+	ID       string  "json:\"id\" graphql:\"id\""
+	FullName *string "json:\"fullName\" graphql:\"fullName\""
+}
+type ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Products struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_Members struct {
+	Typename *string "json:\"__typename\" graphql:\"__typename\""
+	ID       string  "json:\"id\" graphql:\"id\""
+}
+type ProductFullFragment_Releases_ComponentFullFragment_CompliesWith struct {
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductFullFragment_Releases_ComponentFullFragment_Tsdc struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type ProductFullFragment_Releases_ComponentFullFragment_Components struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type ProductFullFragment_Releases_ComponentFullFragment_Software struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type ProductFullFragment_Releases_ComponentFullFragment_Product struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type ProductFullFragment_Releases_ComponentFullFragment_UsedIn struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type ProductFullFragment_Releases_ComponentFullFragment_Organization struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type ProductFullFragment_Releases_ComponentFullFragment_Material struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type ProductFullFragment_Releases_ComponentFullFragment_ManufacturingProcess struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type ProductFullFragment_Releases_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_StringV struct {
+	ID          string "json:\"id\" graphql:\"id\""
+	StringValue string "json:\"stringValue\" graphql:\"stringValue\""
+}
+type ProductFullFragment_Releases_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_FloatV struct {
+	ID         string  "json:\"id\" graphql:\"id\""
+	FloatValue float64 "json:\"floatValue\" graphql:\"floatValue\""
+}
+type ProductFullFragment_Releases_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value struct {
+	StringV ProductFullFragment_Releases_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_StringV "graphql:\"... on StringV\""
+	FloatV  ProductFullFragment_Releases_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_FloatV  "graphql:\"... on FloatV\""
+}
+type ProductFullFragment_Release_ComponentFullFragment_Releases struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type ProductFullFragment_Release_ComponentFullFragment_Repository_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Avatar struct {
+	ID  string "json:\"id\" graphql:\"id\""
+	URL string "json:\"url\" graphql:\"url\""
+}
+type ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_MemberOf struct {
+	ID       string  "json:\"id\" graphql:\"id\""
+	FullName *string "json:\"fullName\" graphql:\"fullName\""
+}
+type ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Products struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Avatar struct {
+	ID  string "json:\"id\" graphql:\"id\""
+	URL string "json:\"url\" graphql:\"url\""
+}
+type ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_MemberOf struct {
+	ID       string  "json:\"id\" graphql:\"id\""
+	FullName *string "json:\"fullName\" graphql:\"fullName\""
+}
+type ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Products struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_Members struct {
+	Typename *string "json:\"__typename\" graphql:\"__typename\""
+	ID       string  "json:\"id\" graphql:\"id\""
+}
+type ProductFullFragment_Release_ComponentFullFragment_CompliesWith struct {
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductFullFragment_Release_ComponentFullFragment_Tsdc struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type ProductFullFragment_Release_ComponentFullFragment_Components struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type ProductFullFragment_Release_ComponentFullFragment_Software struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type ProductFullFragment_Release_ComponentFullFragment_Product struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type ProductFullFragment_Release_ComponentFullFragment_UsedIn struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type ProductFullFragment_Release_ComponentFullFragment_Organization struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type ProductFullFragment_Release_ComponentFullFragment_Material struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type ProductFullFragment_Release_ComponentFullFragment_ManufacturingProcess struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type ProductFullFragment_Release_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_StringV struct {
+	ID          string "json:\"id\" graphql:\"id\""
+	StringValue string "json:\"stringValue\" graphql:\"stringValue\""
+}
+type ProductFullFragment_Release_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_FloatV struct {
+	ID         string  "json:\"id\" graphql:\"id\""
+	FloatValue float64 "json:\"floatValue\" graphql:\"floatValue\""
+}
+type ProductFullFragment_Release_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value struct {
+	StringV ProductFullFragment_Release_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_StringV "graphql:\"... on StringV\""
+	FloatV  ProductFullFragment_Release_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_FloatV  "graphql:\"... on FloatV\""
 }
 type RepositoryFragment_Host struct {
 	ID   string "json:\"id\" graphql:\"id\""
@@ -1676,116 +1929,617 @@ type DeleteOpenSCADDimensionss_DeleteOpenSCADDimensions_OpenSCADDimensions struc
 type DeleteOpenSCADDimensionss_DeleteOpenSCADDimensions struct {
 	OpenSCADDimensions []*DeleteOpenSCADDimensionss_DeleteOpenSCADDimensions_OpenSCADDimensions "json:\"openSCADDimensions\" graphql:\"openSCADDimensions\""
 }
-type GetProductByID_GetProduct_ProductFragment_License struct {
-	ID  string "json:\"id\" graphql:\"id\""
-	Xid string "json:\"xid\" graphql:\"xid\""
+type GetProductByID_GetProduct_ProductFullFragment_RenamedTo struct {
+	ID string "json:\"id\" graphql:\"id\""
 }
-type GetProductByID_GetProduct_ProductFragment_Release struct {
+type GetProductByID_GetProduct_ProductFullFragment_RenamedFrom struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_ForkOf_Release_Repository struct {
+	URL string "json:\"url\" graphql:\"url\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_ForkOf_Release struct {
+	Repository GetProductByID_GetProduct_ProductFullFragment_ForkOf_Release_Repository "json:\"repository\" graphql:\"repository\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_ForkOf struct {
+	ID      string                                                       "json:\"id\" graphql:\"id\""
+	Release GetProductByID_GetProduct_ProductFullFragment_ForkOf_Release "json:\"release\" graphql:\"release\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Forks struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Tags_TagFragment_Aliases struct {
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type GetProductByID_GetProduct_ProductFragment_Releases struct {
+type GetProductByID_GetProduct_ProductFullFragment_Tags_TagFragment_Related struct {
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type GetProductByID_GetProduct_ProductFragment_RenamedTo struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Name string "json:\"name\" graphql:\"name\""
-}
-type GetProductByID_GetProduct_ProductFragment_RenamedFrom struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Name string "json:\"name\" graphql:\"name\""
-}
-type GetProductByID_GetProduct_ProductFragment_ForkOf struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Name string "json:\"name\" graphql:\"name\""
-}
-type GetProductByID_GetProduct_ProductFragment_Forks struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Name string "json:\"name\" graphql:\"name\""
-}
-type GetProductByID_GetProduct_ProductFragment_Tags struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Name string "json:\"name\" graphql:\"name\""
-}
-type GetProductByID_GetProduct_ProductFragment_Category struct {
+type GetProductByID_GetProduct_ProductFullFragment_Category_CategoryFragment_Parent struct {
 	ID       string "json:\"id\" graphql:\"id\""
 	FullName string "json:\"fullName\" graphql:\"fullName\""
 }
-type GetProductByXid_GetProduct_ProductFragment_License struct {
-	ID  string "json:\"id\" graphql:\"id\""
-	Xid string "json:\"xid\" graphql:\"xid\""
-}
-type GetProductByXid_GetProduct_ProductFragment_Release struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Name string "json:\"name\" graphql:\"name\""
-}
-type GetProductByXid_GetProduct_ProductFragment_Releases struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Name string "json:\"name\" graphql:\"name\""
-}
-type GetProductByXid_GetProduct_ProductFragment_RenamedTo struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Name string "json:\"name\" graphql:\"name\""
-}
-type GetProductByXid_GetProduct_ProductFragment_RenamedFrom struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Name string "json:\"name\" graphql:\"name\""
-}
-type GetProductByXid_GetProduct_ProductFragment_ForkOf struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Name string "json:\"name\" graphql:\"name\""
-}
-type GetProductByXid_GetProduct_ProductFragment_Forks struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Name string "json:\"name\" graphql:\"name\""
-}
-type GetProductByXid_GetProduct_ProductFragment_Tags struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Name string "json:\"name\" graphql:\"name\""
-}
-type GetProductByXid_GetProduct_ProductFragment_Category struct {
+type GetProductByID_GetProduct_ProductFullFragment_Category_CategoryFragment_Children struct {
 	ID       string "json:\"id\" graphql:\"id\""
 	FullName string "json:\"fullName\" graphql:\"fullName\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Category_CategoryFragment_Products struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Releases struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Repository_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Avatar struct {
+	ID  string "json:\"id\" graphql:\"id\""
+	URL string "json:\"url\" graphql:\"url\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_MemberOf struct {
+	ID       string  "json:\"id\" graphql:\"id\""
+	FullName *string "json:\"fullName\" graphql:\"fullName\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Products struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Avatar struct {
+	ID  string "json:\"id\" graphql:\"id\""
+	URL string "json:\"url\" graphql:\"url\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_MemberOf struct {
+	ID       string  "json:\"id\" graphql:\"id\""
+	FullName *string "json:\"fullName\" graphql:\"fullName\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Products struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_Members struct {
+	Typename *string "json:\"__typename\" graphql:\"__typename\""
+	ID       string  "json:\"id\" graphql:\"id\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_CompliesWith struct {
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Tsdc struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Components struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Software struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Product struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_UsedIn struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Organization struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Material struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_ManufacturingProcess struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_StringV struct {
+	ID          string "json:\"id\" graphql:\"id\""
+	StringValue string "json:\"stringValue\" graphql:\"stringValue\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_FloatV struct {
+	ID         string  "json:\"id\" graphql:\"id\""
+	FloatValue float64 "json:\"floatValue\" graphql:\"floatValue\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value struct {
+	StringV GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_StringV "graphql:\"... on StringV\""
+	FloatV  GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_FloatV  "graphql:\"... on FloatV\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Releases struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Repository_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Avatar struct {
+	ID  string "json:\"id\" graphql:\"id\""
+	URL string "json:\"url\" graphql:\"url\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_MemberOf struct {
+	ID       string  "json:\"id\" graphql:\"id\""
+	FullName *string "json:\"fullName\" graphql:\"fullName\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Products struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Avatar struct {
+	ID  string "json:\"id\" graphql:\"id\""
+	URL string "json:\"url\" graphql:\"url\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_MemberOf struct {
+	ID       string  "json:\"id\" graphql:\"id\""
+	FullName *string "json:\"fullName\" graphql:\"fullName\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Products struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_Members struct {
+	Typename *string "json:\"__typename\" graphql:\"__typename\""
+	ID       string  "json:\"id\" graphql:\"id\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_CompliesWith struct {
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Tsdc struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Components struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Software struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Product struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_UsedIn struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Organization struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Material struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_ManufacturingProcess struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_StringV struct {
+	ID          string "json:\"id\" graphql:\"id\""
+	StringValue string "json:\"stringValue\" graphql:\"stringValue\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_FloatV struct {
+	ID         string  "json:\"id\" graphql:\"id\""
+	FloatValue float64 "json:\"floatValue\" graphql:\"floatValue\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value struct {
+	StringV GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_StringV "graphql:\"... on StringV\""
+	FloatV  GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_FloatV  "graphql:\"... on FloatV\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_RenamedTo struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_RenamedFrom struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_ForkOf_Release_Repository struct {
+	URL string "json:\"url\" graphql:\"url\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_ForkOf_Release struct {
+	Repository GetProductByXid_GetProduct_ProductFullFragment_ForkOf_Release_Repository "json:\"repository\" graphql:\"repository\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_ForkOf struct {
+	ID      string                                                        "json:\"id\" graphql:\"id\""
+	Release GetProductByXid_GetProduct_ProductFullFragment_ForkOf_Release "json:\"release\" graphql:\"release\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Forks struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Tags_TagFragment_Aliases struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Tags_TagFragment_Related struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Category_CategoryFragment_Parent struct {
+	ID       string "json:\"id\" graphql:\"id\""
+	FullName string "json:\"fullName\" graphql:\"fullName\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Category_CategoryFragment_Children struct {
+	ID       string "json:\"id\" graphql:\"id\""
+	FullName string "json:\"fullName\" graphql:\"fullName\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Category_CategoryFragment_Products struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Releases struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Repository_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Avatar struct {
+	ID  string "json:\"id\" graphql:\"id\""
+	URL string "json:\"url\" graphql:\"url\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_MemberOf struct {
+	ID       string  "json:\"id\" graphql:\"id\""
+	FullName *string "json:\"fullName\" graphql:\"fullName\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Products struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Avatar struct {
+	ID  string "json:\"id\" graphql:\"id\""
+	URL string "json:\"url\" graphql:\"url\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_MemberOf struct {
+	ID       string  "json:\"id\" graphql:\"id\""
+	FullName *string "json:\"fullName\" graphql:\"fullName\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Products struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_Members struct {
+	Typename *string "json:\"__typename\" graphql:\"__typename\""
+	ID       string  "json:\"id\" graphql:\"id\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_CompliesWith struct {
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Tsdc struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Components struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Software struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Product struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_UsedIn struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Organization struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Material struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_ManufacturingProcess struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_StringV struct {
+	ID          string "json:\"id\" graphql:\"id\""
+	StringValue string "json:\"stringValue\" graphql:\"stringValue\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_FloatV struct {
+	ID         string  "json:\"id\" graphql:\"id\""
+	FloatValue float64 "json:\"floatValue\" graphql:\"floatValue\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value struct {
+	StringV GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_StringV "graphql:\"... on StringV\""
+	FloatV  GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_FloatV  "graphql:\"... on FloatV\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Releases struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Repository_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Avatar struct {
+	ID  string "json:\"id\" graphql:\"id\""
+	URL string "json:\"url\" graphql:\"url\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_MemberOf struct {
+	ID       string  "json:\"id\" graphql:\"id\""
+	FullName *string "json:\"fullName\" graphql:\"fullName\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Products struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Avatar struct {
+	ID  string "json:\"id\" graphql:\"id\""
+	URL string "json:\"url\" graphql:\"url\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_MemberOf struct {
+	ID       string  "json:\"id\" graphql:\"id\""
+	FullName *string "json:\"fullName\" graphql:\"fullName\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Products struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_Members struct {
+	Typename *string "json:\"__typename\" graphql:\"__typename\""
+	ID       string  "json:\"id\" graphql:\"id\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_CompliesWith struct {
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Tsdc struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Components struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Software struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Product struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_UsedIn struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Organization struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Material struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_ManufacturingProcess struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_StringV struct {
+	ID          string "json:\"id\" graphql:\"id\""
+	StringValue string "json:\"stringValue\" graphql:\"stringValue\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_FloatV struct {
+	ID         string  "json:\"id\" graphql:\"id\""
+	FloatValue float64 "json:\"floatValue\" graphql:\"floatValue\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value struct {
+	StringV GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_StringV "graphql:\"... on StringV\""
+	FloatV  GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_FloatV  "graphql:\"... on FloatV\""
 }
 type GetProductID_GetProduct struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type GetProducts_QueryProduct_ProductFragment_License struct {
-	ID  string "json:\"id\" graphql:\"id\""
-	Xid string "json:\"xid\" graphql:\"xid\""
+type GetProducts_QueryProduct_ProductFullFragment_RenamedTo struct {
+	ID string "json:\"id\" graphql:\"id\""
 }
-type GetProducts_QueryProduct_ProductFragment_Release struct {
+type GetProducts_QueryProduct_ProductFullFragment_RenamedFrom struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_ForkOf_Release_Repository struct {
+	URL string "json:\"url\" graphql:\"url\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_ForkOf_Release struct {
+	Repository GetProducts_QueryProduct_ProductFullFragment_ForkOf_Release_Repository "json:\"repository\" graphql:\"repository\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_ForkOf struct {
+	ID      string                                                      "json:\"id\" graphql:\"id\""
+	Release GetProducts_QueryProduct_ProductFullFragment_ForkOf_Release "json:\"release\" graphql:\"release\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Forks struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Tags_TagFragment_Aliases struct {
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type GetProducts_QueryProduct_ProductFragment_Releases struct {
+type GetProducts_QueryProduct_ProductFullFragment_Tags_TagFragment_Related struct {
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type GetProducts_QueryProduct_ProductFragment_RenamedTo struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Name string "json:\"name\" graphql:\"name\""
-}
-type GetProducts_QueryProduct_ProductFragment_RenamedFrom struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Name string "json:\"name\" graphql:\"name\""
-}
-type GetProducts_QueryProduct_ProductFragment_ForkOf struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Name string "json:\"name\" graphql:\"name\""
-}
-type GetProducts_QueryProduct_ProductFragment_Forks struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Name string "json:\"name\" graphql:\"name\""
-}
-type GetProducts_QueryProduct_ProductFragment_Tags struct {
-	ID   string "json:\"id\" graphql:\"id\""
-	Name string "json:\"name\" graphql:\"name\""
-}
-type GetProducts_QueryProduct_ProductFragment_Category struct {
+type GetProducts_QueryProduct_ProductFullFragment_Category_CategoryFragment_Parent struct {
 	ID       string "json:\"id\" graphql:\"id\""
 	FullName string "json:\"fullName\" graphql:\"fullName\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Category_CategoryFragment_Children struct {
+	ID       string "json:\"id\" graphql:\"id\""
+	FullName string "json:\"fullName\" graphql:\"fullName\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Category_CategoryFragment_Products struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_Releases struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_Repository_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Avatar struct {
+	ID  string "json:\"id\" graphql:\"id\""
+	URL string "json:\"url\" graphql:\"url\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_MemberOf struct {
+	ID       string  "json:\"id\" graphql:\"id\""
+	FullName *string "json:\"fullName\" graphql:\"fullName\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Products struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Avatar struct {
+	ID  string "json:\"id\" graphql:\"id\""
+	URL string "json:\"url\" graphql:\"url\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_MemberOf struct {
+	ID       string  "json:\"id\" graphql:\"id\""
+	FullName *string "json:\"fullName\" graphql:\"fullName\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Products struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_Members struct {
+	Typename *string "json:\"__typename\" graphql:\"__typename\""
+	ID       string  "json:\"id\" graphql:\"id\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_CompliesWith struct {
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_Tsdc struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_Components struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_Software struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_Product struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_UsedIn struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_Organization struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_Material struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_ManufacturingProcess struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_StringV struct {
+	ID          string "json:\"id\" graphql:\"id\""
+	StringValue string "json:\"stringValue\" graphql:\"stringValue\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_FloatV struct {
+	ID         string  "json:\"id\" graphql:\"id\""
+	FloatValue float64 "json:\"floatValue\" graphql:\"floatValue\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value struct {
+	StringV GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_StringV "graphql:\"... on StringV\""
+	FloatV  GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_FloatV  "graphql:\"... on FloatV\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_Releases struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_Repository_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Avatar struct {
+	ID  string "json:\"id\" graphql:\"id\""
+	URL string "json:\"url\" graphql:\"url\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_MemberOf struct {
+	ID       string  "json:\"id\" graphql:\"id\""
+	FullName *string "json:\"fullName\" graphql:\"fullName\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Products struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Avatar struct {
+	ID  string "json:\"id\" graphql:\"id\""
+	URL string "json:\"url\" graphql:\"url\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_MemberOf struct {
+	ID       string  "json:\"id\" graphql:\"id\""
+	FullName *string "json:\"fullName\" graphql:\"fullName\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Products struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_Members struct {
+	Typename *string "json:\"__typename\" graphql:\"__typename\""
+	ID       string  "json:\"id\" graphql:\"id\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_CompliesWith struct {
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_Tsdc struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_Components struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_Software struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_Product struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_UsedIn struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_Organization struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_Material struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_ManufacturingProcess struct {
+	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_StringV struct {
+	ID          string "json:\"id\" graphql:\"id\""
+	StringValue string "json:\"stringValue\" graphql:\"stringValue\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_FloatV struct {
+	ID         string  "json:\"id\" graphql:\"id\""
+	FloatValue float64 "json:\"floatValue\" graphql:\"floatValue\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value struct {
+	StringV GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_StringV "graphql:\"... on StringV\""
+	FloatV  GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_FloatV  "graphql:\"... on FloatV\""
 }
 type GetProducts_AggregateProduct struct {
 	Count *int64 "json:\"count\" graphql:\"count\""
@@ -1832,119 +2586,87 @@ type SearchProducts_QueryProduct_ProductSearchFragment_Category_CategoryFragment
 type SearchProducts_QueryProduct_ProductSearchFragment_Releases struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type SearchProducts_QueryProduct_ProductSearchFragment_Release_Releases struct {
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_Releases struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type SearchProducts_QueryProduct_ProductSearchFragment_Release_Repository_RepositoryFragment_Host struct {
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_Repository_RepositoryFragment_Host struct {
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type SearchProducts_QueryProduct_ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Host struct {
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Host struct {
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type SearchProducts_QueryProduct_ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Avatar struct {
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Avatar struct {
 	ID  string "json:\"id\" graphql:\"id\""
 	URL string "json:\"url\" graphql:\"url\""
 }
-type SearchProducts_QueryProduct_ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_MemberOf struct {
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
 	FullName *string "json:\"fullName\" graphql:\"fullName\""
 }
-type SearchProducts_QueryProduct_ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Products struct {
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Products struct {
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type SearchProducts_QueryProduct_ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Host struct {
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Host struct {
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type SearchProducts_QueryProduct_ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Avatar struct {
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Avatar struct {
 	ID  string "json:\"id\" graphql:\"id\""
 	URL string "json:\"url\" graphql:\"url\""
 }
-type SearchProducts_QueryProduct_ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_MemberOf struct {
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
 	FullName *string "json:\"fullName\" graphql:\"fullName\""
 }
-type SearchProducts_QueryProduct_ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Products struct {
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Products struct {
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type SearchProducts_QueryProduct_ProductSearchFragment_Release_Licensor_UserOrGroupFullFragment_Group_GroupFragment_Members struct {
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_Members struct {
 	Typename *string "json:\"__typename\" graphql:\"__typename\""
 	ID       string  "json:\"id\" graphql:\"id\""
 }
-type SearchProducts_QueryProduct_ProductSearchFragment_Release_CompliesWith struct {
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_CompliesWith struct {
 	Name string "json:\"name\" graphql:\"name\""
 }
-type SearchProducts_QueryProduct_ProductSearchFragment_Release_Tsdc struct {
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_Tsdc struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type SearchProducts_QueryProduct_ProductSearchFragment_Release_Components struct {
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_Components struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type SearchProducts_QueryProduct_ProductSearchFragment_Release_Software struct {
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_Software struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type SearchProducts_QueryProduct_ProductSearchFragment_Release_Product struct {
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_Product struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type SearchProducts_QueryProduct_ProductSearchFragment_Release_UsedIn struct {
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_UsedIn struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type SearchProducts_QueryProduct_ProductSearchFragment_Release_Organization struct {
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_Organization struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type SearchProducts_QueryProduct_ProductSearchFragment_Release_Material struct {
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_Material struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type SearchProducts_QueryProduct_ProductSearchFragment_Release_ManufacturingProcess struct {
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_ManufacturingProcess struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
-type SearchProducts_QueryProduct_ProductSearchFragment_Release_ProductionMetadata struct {
-	ID string "json:\"id\" graphql:\"id\""
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_StringV struct {
+	ID          string "json:\"id\" graphql:\"id\""
+	StringValue string "json:\"stringValue\" graphql:\"stringValue\""
 }
-type SearchProducts_QueryProduct_ProductSearchFragment_Release struct {
-	ID                          string                                                                          "json:\"id\" graphql:\"id\""
-	Xid                         string                                                                          "json:\"xid\" graphql:\"xid\""
-	Name                        string                                                                          "json:\"name\" graphql:\"name\""
-	Description                 string                                                                          "json:\"description\" graphql:\"description\""
-	Version                     string                                                                          "json:\"version\" graphql:\"version\""
-	CreatedAt                   time.Time                                                                       "json:\"createdAt\" graphql:\"createdAt\""
-	Releases                    []*SearchProducts_QueryProduct_ProductSearchFragment_Release_Releases           "json:\"releases\" graphql:\"releases\""
-	IsLatest                    bool                                                                            "json:\"isLatest\" graphql:\"isLatest\""
-	Repository                  *RepositoryFragment                                                             "json:\"repository\" graphql:\"repository\""
-	License                     *LicenseFragmentBasic                                                           "json:\"license\" graphql:\"license\""
-	AdditionalLicenses          []*LicenseFragmentBasic                                                         "json:\"additionalLicenses\" graphql:\"additionalLicenses\""
-	Licensor                    *UserOrGroupFullFragment                                                        "json:\"licensor\" graphql:\"licensor\""
-	DocumentationLanguage       string                                                                          "json:\"documentationLanguage\" graphql:\"documentationLanguage\""
-	TechnologyReadinessLevel    TechnologyReadinessLevel                                                        "json:\"technologyReadinessLevel\" graphql:\"technologyReadinessLevel\""
-	DocumentationReadinessLevel DocumentationReadinessLevel                                                     "json:\"documentationReadinessLevel\" graphql:\"documentationReadinessLevel\""
-	Attestation                 *string                                                                         "json:\"attestation\" graphql:\"attestation\""
-	Publication                 *string                                                                         "json:\"publication\" graphql:\"publication\""
-	CompliesWith                *SearchProducts_QueryProduct_ProductSearchFragment_Release_CompliesWith         "json:\"compliesWith\" graphql:\"compliesWith\""
-	CpcPatentClass              *string                                                                         "json:\"cpcPatentClass\" graphql:\"cpcPatentClass\""
-	Tsdc                        *SearchProducts_QueryProduct_ProductSearchFragment_Release_Tsdc                 "json:\"tsdc\" graphql:\"tsdc\""
-	Components                  []*SearchProducts_QueryProduct_ProductSearchFragment_Release_Components         "json:\"components\" graphql:\"components\""
-	Software                    []*SearchProducts_QueryProduct_ProductSearchFragment_Release_Software           "json:\"software\" graphql:\"software\""
-	Image                       *FileFragment                                                                   "json:\"image\" graphql:\"image\""
-	Readme                      *FileFragment                                                                   "json:\"readme\" graphql:\"readme\""
-	ContributionGuide           *FileFragment                                                                   "json:\"contributionGuide\" graphql:\"contributionGuide\""
-	Bom                         *FileFragment                                                                   "json:\"bom\" graphql:\"bom\""
-	ManufacturingInstructions   *FileFragment                                                                   "json:\"manufacturingInstructions\" graphql:\"manufacturingInstructions\""
-	UserManual                  *FileFragment                                                                   "json:\"userManual\" graphql:\"userManual\""
-	Product                     *SearchProducts_QueryProduct_ProductSearchFragment_Release_Product              "json:\"product\" graphql:\"product\""
-	UsedIn                      []*SearchProducts_QueryProduct_ProductSearchFragment_Release_UsedIn             "json:\"usedIn\" graphql:\"usedIn\""
-	Source                      *FileFragment                                                                   "json:\"source\" graphql:\"source\""
-	Export                      []*FileFragment                                                                 "json:\"export\" graphql:\"export\""
-	Auxiliary                   []*FileFragment                                                                 "json:\"auxiliary\" graphql:\"auxiliary\""
-	Organization                *SearchProducts_QueryProduct_ProductSearchFragment_Release_Organization         "json:\"organization\" graphql:\"organization\""
-	Mass                        *float64                                                                        "json:\"mass\" graphql:\"mass\""
-	OuterDimensions             *OuterDimensionsFragment                                                        "json:\"outerDimensions\" graphql:\"outerDimensions\""
-	Material                    *SearchProducts_QueryProduct_ProductSearchFragment_Release_Material             "json:\"material\" graphql:\"material\""
-	ManufacturingProcess        *SearchProducts_QueryProduct_ProductSearchFragment_Release_ManufacturingProcess "json:\"manufacturingProcess\" graphql:\"manufacturingProcess\""
-	ProductionMetadata          []*SearchProducts_QueryProduct_ProductSearchFragment_Release_ProductionMetadata "json:\"productionMetadata\" graphql:\"productionMetadata\""
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_FloatV struct {
+	ID         string  "json:\"id\" graphql:\"id\""
+	FloatValue float64 "json:\"floatValue\" graphql:\"floatValue\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value struct {
+	StringV SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_StringV "graphql:\"... on StringV\""
+	FloatV  SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_FloatV  "graphql:\"... on FloatV\""
 }
 type SearchProducts_AggregateProduct struct {
 	Count *int64 "json:\"count\" graphql:\"count\""
@@ -2718,16 +3440,16 @@ type DeleteOpenSCADDimensionss struct {
 	DeleteOpenSCADDimensions *DeleteOpenSCADDimensionss_DeleteOpenSCADDimensions "json:\"deleteOpenSCADDimensions\" graphql:\"deleteOpenSCADDimensions\""
 }
 type GetProductByID struct {
-	GetProduct *ProductFragment "json:\"getProduct\" graphql:\"getProduct\""
+	GetProduct *ProductFullFragment "json:\"getProduct\" graphql:\"getProduct\""
 }
 type GetProductByXid struct {
-	GetProduct *ProductFragment "json:\"getProduct\" graphql:\"getProduct\""
+	GetProduct *ProductFullFragment "json:\"getProduct\" graphql:\"getProduct\""
 }
 type GetProductID struct {
 	GetProduct *GetProductID_GetProduct "json:\"getProduct\" graphql:\"getProduct\""
 }
 type GetProducts struct {
-	QueryProduct     []*ProductFragment            "json:\"queryProduct\" graphql:\"queryProduct\""
+	QueryProduct     []*ProductFullFragment        "json:\"queryProduct\" graphql:\"queryProduct\""
 	AggregateProduct *GetProducts_AggregateProduct "json:\"aggregateProduct\" graphql:\"aggregateProduct\""
 }
 type SearchProducts struct {
@@ -3479,6 +4201,25 @@ const GetComponentByXidDocument = `query GetComponentByXid ($xid: String!) {
 		... ComponentFragment
 	}
 }
+fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
+	id
+	openscad
+	unit
+}
+fragment KeyValueFragment on KeyValue {
+	id
+	key
+	value {
+		... on StringV {
+			id
+			stringValue: value
+		}
+		... on FloatV {
+			id
+			floatValue: value
+		}
+	}
+}
 fragment ComponentFragment on Component {
 	id
 	xid
@@ -3611,25 +4352,6 @@ fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
 	height
 	width
 	depth
-}
-fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
-	id
-	openscad
-	unit
-}
-fragment KeyValueFragment on KeyValue {
-	id
-	key
-	value {
-		... on StringV {
-			id
-			stringValue: value
-		}
-		... on FloatV {
-			id
-			floatValue: value
-		}
-	}
 }
 `
 
@@ -4283,6 +5005,10 @@ const GetFileByIDDocument = `query GetFileByID ($id: ID!) {
 		... FileFragment
 	}
 }
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
+}
 fragment FileFragment on File {
 	... CrawlerMetaFragment
 	id
@@ -4291,10 +5017,6 @@ fragment FileFragment on File {
 	mimeType
 	url
 	createdAt
-}
-fragment CrawlerMetaFragment on CrawlerMeta {
-	discoveredAt
-	lastIndexedAt
 }
 `
 
@@ -7250,71 +7972,295 @@ func (c *Client) DeleteOpenSCADDimensionssWithResponse(ctx context.Context, delF
 
 const GetProductByIDDocument = `query GetProductByID ($id: ID!) {
 	getProduct(id: $id) {
-		... ProductFragment
+		... ProductFullFragment
 	}
 }
-fragment ProductFragment on Product {
-	... CrawlerMetaFragment
+fragment ComponentFullFragment on Component {
 	id
 	xid
 	name
 	description
-	documentationLanguage
 	version
-	license {
-		id
-		xid
-	}
-	licensor {
-		... UserOrGroupBasicFragment
-	}
-	website
-	state
-	lastUpdatedAt
-	release {
-		id
-		name
-	}
+	createdAt
 	releases {
 		id
+	}
+	isLatest
+	repository {
+		... RepositoryFragment
+	}
+	license {
+		... LicenseFragmentBasic
+	}
+	additionalLicenses {
+		... LicenseFragmentBasic
+	}
+	licensor {
+		... UserOrGroupFullFragment
+	}
+	documentationLanguage
+	technologyReadinessLevel
+	documentationReadinessLevel
+	attestation
+	publication
+	compliesWith {
 		name
 	}
-	renamedTo {
+	cpcPatentClass
+	tsdc {
 		id
-		name
 	}
-	renamedFrom {
+	components {
 		id
-		name
 	}
-	forkOf {
+	software {
 		id
-		name
 	}
-	forks {
+	image {
+		... FileFragment
+	}
+	readme {
+		... FileFragment
+	}
+	contributionGuide {
+		... FileFragment
+	}
+	bom {
+		... FileFragment
+	}
+	manufacturingInstructions {
+		... FileFragment
+	}
+	userManual {
+		... FileFragment
+	}
+	product {
 		id
-		name
 	}
-	forkCount
-	starCount
-	tags {
+	usedIn {
 		id
-		name
 	}
-	category {
+	source {
+		... FileFragment
+	}
+	export {
+		... FileFragment
+	}
+	auxiliary {
+		... FileFragment
+	}
+	organization {
+		id
+	}
+	mass
+	outerDimensions {
+		... OuterDimensionsFragment
+	}
+	material {
+		id
+	}
+	manufacturingProcess {
+		id
+	}
+	productionMetadata {
+		... KeyValueFragment
+	}
+}
+fragment CategoryFragment on Category {
+	id
+	xid
+	fullName
+	name
+	description
+	parent {
 		id
 		fullName
 	}
+	children {
+		id
+		fullName
+	}
+	products {
+		id
+		name
+	}
 }
-fragment CrawlerMetaFragment on CrawlerMeta {
-	discoveredAt
-	lastIndexedAt
+fragment TagFragment on Tag {
+	id
+	name
+	aliases {
+		id
+		name
+	}
+	related {
+		id
+		name
+	}
+}
+fragment RepositoryFragment on Repository {
+	id
+	xid
+	url
+	permaUrl
+	host {
+		id
+		name
+	}
+	owner {
+		... UserOrGroupBasicFragment
+	}
+	name
+	reference
+	path
 }
 fragment UserOrGroupBasicFragment on UserOrGroup {
 	__typename
 	name
 	fullName
 	id
+}
+fragment UserFragment on User {
+	... UserOrGroupFragment
+	locale
+}
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
+}
+fragment LicenseFragmentBasic on License {
+	id
+	xid
+	name
+	isSpdx
+	isDeprecated
+	isOsiApproved
+	isFsfLibre
+	isBlocked
+}
+fragment GroupFragment on Group {
+	... UserOrGroupFragment
+	members {
+		__typename
+		id
+	}
+}
+fragment OuterDimensionsFragment on OuterDimensions {
+	__typename
+	... on BoundingBoxDimensions {
+		... BoundingBoxDimensionsFragment
+	}
+	... on OpenSCADDimensions {
+		... OpenSCADDimensionsFragment
+	}
+}
+fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
+	id
+	height
+	width
+	depth
+}
+fragment ProductFullFragment on Product {
+	... CrawlerMetaFragment
+	id
+	xid
+	name
+	website
+	state
+	lastUpdatedAt
+	renamedTo {
+		id
+	}
+	renamedFrom {
+		id
+	}
+	forkOf {
+		id
+		release {
+			repository {
+				url
+			}
+		}
+	}
+	forks {
+		id
+	}
+	forkCount
+	starCount
+	tags {
+		... TagFragment
+	}
+	category {
+		... CategoryFragment
+	}
+	releases {
+		... ComponentFullFragment
+	}
+	release {
+		... ComponentFullFragment
+	}
+}
+fragment UserOrGroupFragment on UserOrGroup {
+	__typename
+	id
+	xid
+	host {
+		id
+		name
+	}
+	name
+	fullName
+	email
+	description
+	avatar {
+		id
+		url
+	}
+	url
+	memberOf {
+		id
+		fullName
+	}
+	products {
+		id
+		name
+	}
+}
+fragment FileFragment on File {
+	... CrawlerMetaFragment
+	id
+	name
+	path
+	mimeType
+	url
+	createdAt
+}
+fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
+	id
+	openscad
+	unit
+}
+fragment KeyValueFragment on KeyValue {
+	id
+	key
+	value {
+		... on StringV {
+			id
+			stringValue: value
+		}
+		... on FloatV {
+			id
+			floatValue: value
+		}
+	}
+}
+fragment UserOrGroupFullFragment on UserOrGroup {
+	__typename
+	... on User {
+		... UserFragment
+	}
+	... on Group {
+		... GroupFragment
+	}
 }
 `
 
@@ -7355,7 +8301,244 @@ func (c *Client) GetProductByIDWithResponse(ctx context.Context, id string, resp
 
 const GetProductByXidDocument = `query GetProductByXid ($xid: String!) {
 	getProduct(xid: $xid) {
-		... ProductFragment
+		... ProductFullFragment
+	}
+}
+fragment ComponentFullFragment on Component {
+	id
+	xid
+	name
+	description
+	version
+	createdAt
+	releases {
+		id
+	}
+	isLatest
+	repository {
+		... RepositoryFragment
+	}
+	license {
+		... LicenseFragmentBasic
+	}
+	additionalLicenses {
+		... LicenseFragmentBasic
+	}
+	licensor {
+		... UserOrGroupFullFragment
+	}
+	documentationLanguage
+	technologyReadinessLevel
+	documentationReadinessLevel
+	attestation
+	publication
+	compliesWith {
+		name
+	}
+	cpcPatentClass
+	tsdc {
+		id
+	}
+	components {
+		id
+	}
+	software {
+		id
+	}
+	image {
+		... FileFragment
+	}
+	readme {
+		... FileFragment
+	}
+	contributionGuide {
+		... FileFragment
+	}
+	bom {
+		... FileFragment
+	}
+	manufacturingInstructions {
+		... FileFragment
+	}
+	userManual {
+		... FileFragment
+	}
+	product {
+		id
+	}
+	usedIn {
+		id
+	}
+	source {
+		... FileFragment
+	}
+	export {
+		... FileFragment
+	}
+	auxiliary {
+		... FileFragment
+	}
+	organization {
+		id
+	}
+	mass
+	outerDimensions {
+		... OuterDimensionsFragment
+	}
+	material {
+		id
+	}
+	manufacturingProcess {
+		id
+	}
+	productionMetadata {
+		... KeyValueFragment
+	}
+}
+fragment RepositoryFragment on Repository {
+	id
+	xid
+	url
+	permaUrl
+	host {
+		id
+		name
+	}
+	owner {
+		... UserOrGroupBasicFragment
+	}
+	name
+	reference
+	path
+}
+fragment LicenseFragmentBasic on License {
+	id
+	xid
+	name
+	isSpdx
+	isDeprecated
+	isOsiApproved
+	isFsfLibre
+	isBlocked
+}
+fragment UserOrGroupFragment on UserOrGroup {
+	__typename
+	id
+	xid
+	host {
+		id
+		name
+	}
+	name
+	fullName
+	email
+	description
+	avatar {
+		id
+		url
+	}
+	url
+	memberOf {
+		id
+		fullName
+	}
+	products {
+		id
+		name
+	}
+}
+fragment KeyValueFragment on KeyValue {
+	id
+	key
+	value {
+		... on StringV {
+			id
+			stringValue: value
+		}
+		... on FloatV {
+			id
+			floatValue: value
+		}
+	}
+}
+fragment ProductFullFragment on Product {
+	... CrawlerMetaFragment
+	id
+	xid
+	name
+	website
+	state
+	lastUpdatedAt
+	renamedTo {
+		id
+	}
+	renamedFrom {
+		id
+	}
+	forkOf {
+		id
+		release {
+			repository {
+				url
+			}
+		}
+	}
+	forks {
+		id
+	}
+	forkCount
+	starCount
+	tags {
+		... TagFragment
+	}
+	category {
+		... CategoryFragment
+	}
+	releases {
+		... ComponentFullFragment
+	}
+	release {
+		... ComponentFullFragment
+	}
+}
+fragment UserFragment on User {
+	... UserOrGroupFragment
+	locale
+}
+fragment OuterDimensionsFragment on OuterDimensions {
+	__typename
+	... on BoundingBoxDimensions {
+		... BoundingBoxDimensionsFragment
+	}
+	... on OpenSCADDimensions {
+		... OpenSCADDimensionsFragment
+	}
+}
+fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
+	id
+	height
+	width
+	depth
+}
+fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
+	id
+	openscad
+	unit
+}
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
+}
+fragment TagFragment on Tag {
+	id
+	name
+	aliases {
+		id
+		name
+	}
+	related {
+		id
+		name
 	}
 }
 fragment UserOrGroupBasicFragment on UserOrGroup {
@@ -7364,62 +8547,49 @@ fragment UserOrGroupBasicFragment on UserOrGroup {
 	fullName
 	id
 }
-fragment ProductFragment on Product {
-	... CrawlerMetaFragment
+fragment GroupFragment on Group {
+	... UserOrGroupFragment
+	members {
+		__typename
+		id
+	}
+}
+fragment CategoryFragment on Category {
 	id
 	xid
+	fullName
 	name
 	description
-	documentationLanguage
-	version
-	license {
-		id
-		xid
-	}
-	licensor {
-		... UserOrGroupBasicFragment
-	}
-	website
-	state
-	lastUpdatedAt
-	release {
-		id
-		name
-	}
-	releases {
-		id
-		name
-	}
-	renamedTo {
-		id
-		name
-	}
-	renamedFrom {
-		id
-		name
-	}
-	forkOf {
-		id
-		name
-	}
-	forks {
-		id
-		name
-	}
-	forkCount
-	starCount
-	tags {
-		id
-		name
-	}
-	category {
+	parent {
 		id
 		fullName
 	}
+	children {
+		id
+		fullName
+	}
+	products {
+		id
+		name
+	}
 }
-fragment CrawlerMetaFragment on CrawlerMeta {
-	discoveredAt
-	lastIndexedAt
+fragment UserOrGroupFullFragment on UserOrGroup {
+	__typename
+	... on User {
+		... UserFragment
+	}
+	... on Group {
+		... GroupFragment
+	}
+}
+fragment FileFragment on File {
+	... CrawlerMetaFragment
+	id
+	name
+	path
+	mimeType
+	url
+	createdAt
 }
 `
 
@@ -7502,74 +8672,298 @@ func (c *Client) GetProductIDWithResponse(ctx context.Context, xid string, resp 
 
 const GetProductsDocument = `query GetProducts ($getFilter: ProductFilter, $order: ProductOrder, $first: Int, $offset: Int) {
 	queryProduct(filter: $getFilter, order: $order, first: $first, offset: $offset) {
-		... ProductFragment
+		... ProductFullFragment
 	}
 	aggregateProduct(filter: $getFilter) {
 		count
 	}
 }
-fragment ProductFragment on Product {
-	... CrawlerMetaFragment
+fragment RepositoryFragment on Repository {
 	id
 	xid
-	name
-	description
-	documentationLanguage
-	version
-	license {
+	url
+	permaUrl
+	host {
 		id
-		xid
+		name
 	}
-	licensor {
+	owner {
 		... UserOrGroupBasicFragment
 	}
-	website
-	state
-	lastUpdatedAt
-	release {
-		id
-		name
-	}
-	releases {
-		id
-		name
-	}
-	renamedTo {
-		id
-		name
-	}
-	renamedFrom {
-		id
-		name
-	}
-	forkOf {
-		id
-		name
-	}
-	forks {
-		id
-		name
-	}
-	forkCount
-	starCount
-	tags {
-		id
-		name
-	}
-	category {
-		id
-		fullName
-	}
-}
-fragment CrawlerMetaFragment on CrawlerMeta {
-	discoveredAt
-	lastIndexedAt
+	name
+	reference
+	path
 }
 fragment UserOrGroupBasicFragment on UserOrGroup {
 	__typename
 	name
 	fullName
 	id
+}
+fragment UserOrGroupFragment on UserOrGroup {
+	__typename
+	id
+	xid
+	host {
+		id
+		name
+	}
+	name
+	fullName
+	email
+	description
+	avatar {
+		id
+		url
+	}
+	url
+	memberOf {
+		id
+		fullName
+	}
+	products {
+		id
+		name
+	}
+}
+fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
+	id
+	openscad
+	unit
+}
+fragment LicenseFragmentBasic on License {
+	id
+	xid
+	name
+	isSpdx
+	isDeprecated
+	isOsiApproved
+	isFsfLibre
+	isBlocked
+}
+fragment UserFragment on User {
+	... UserOrGroupFragment
+	locale
+}
+fragment ProductFullFragment on Product {
+	... CrawlerMetaFragment
+	id
+	xid
+	name
+	website
+	state
+	lastUpdatedAt
+	renamedTo {
+		id
+	}
+	renamedFrom {
+		id
+	}
+	forkOf {
+		id
+		release {
+			repository {
+				url
+			}
+		}
+	}
+	forks {
+		id
+	}
+	forkCount
+	starCount
+	tags {
+		... TagFragment
+	}
+	category {
+		... CategoryFragment
+	}
+	releases {
+		... ComponentFullFragment
+	}
+	release {
+		... ComponentFullFragment
+	}
+}
+fragment UserOrGroupFullFragment on UserOrGroup {
+	__typename
+	... on User {
+		... UserFragment
+	}
+	... on Group {
+		... GroupFragment
+	}
+}
+fragment GroupFragment on Group {
+	... UserOrGroupFragment
+	members {
+		__typename
+		id
+	}
+}
+fragment OuterDimensionsFragment on OuterDimensions {
+	__typename
+	... on BoundingBoxDimensions {
+		... BoundingBoxDimensionsFragment
+	}
+	... on OpenSCADDimensions {
+		... OpenSCADDimensionsFragment
+	}
+}
+fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
+	id
+	height
+	width
+	depth
+}
+fragment KeyValueFragment on KeyValue {
+	id
+	key
+	value {
+		... on StringV {
+			id
+			stringValue: value
+		}
+		... on FloatV {
+			id
+			floatValue: value
+		}
+	}
+}
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
+}
+fragment TagFragment on Tag {
+	id
+	name
+	aliases {
+		id
+		name
+	}
+	related {
+		id
+		name
+	}
+}
+fragment CategoryFragment on Category {
+	id
+	xid
+	fullName
+	name
+	description
+	parent {
+		id
+		fullName
+	}
+	children {
+		id
+		fullName
+	}
+	products {
+		id
+		name
+	}
+}
+fragment ComponentFullFragment on Component {
+	id
+	xid
+	name
+	description
+	version
+	createdAt
+	releases {
+		id
+	}
+	isLatest
+	repository {
+		... RepositoryFragment
+	}
+	license {
+		... LicenseFragmentBasic
+	}
+	additionalLicenses {
+		... LicenseFragmentBasic
+	}
+	licensor {
+		... UserOrGroupFullFragment
+	}
+	documentationLanguage
+	technologyReadinessLevel
+	documentationReadinessLevel
+	attestation
+	publication
+	compliesWith {
+		name
+	}
+	cpcPatentClass
+	tsdc {
+		id
+	}
+	components {
+		id
+	}
+	software {
+		id
+	}
+	image {
+		... FileFragment
+	}
+	readme {
+		... FileFragment
+	}
+	contributionGuide {
+		... FileFragment
+	}
+	bom {
+		... FileFragment
+	}
+	manufacturingInstructions {
+		... FileFragment
+	}
+	userManual {
+		... FileFragment
+	}
+	product {
+		id
+	}
+	usedIn {
+		id
+	}
+	source {
+		... FileFragment
+	}
+	export {
+		... FileFragment
+	}
+	auxiliary {
+		... FileFragment
+	}
+	organization {
+		id
+	}
+	mass
+	outerDimensions {
+		... OuterDimensionsFragment
+	}
+	material {
+		id
+	}
+	manufacturingProcess {
+		id
+	}
+	productionMetadata {
+		... KeyValueFragment
+	}
+}
+fragment FileFragment on File {
+	... CrawlerMetaFragment
+	id
+	name
+	path
+	mimeType
+	url
+	createdAt
 }
 `
 
@@ -7622,53 +9016,9 @@ const SearchProductsDocument = `query SearchProducts ($getFilter: ProductFilter,
 		count
 	}
 }
-fragment CategoryFragment on Category {
-	id
-	xid
-	fullName
-	name
-	description
-	parent {
-		id
-		fullName
-	}
-	children {
-		id
-		fullName
-	}
-	products {
-		id
-		name
-	}
-}
-fragment UserOrGroupBasicFragment on UserOrGroup {
-	__typename
-	name
-	fullName
-	id
-}
 fragment UserFragment on User {
 	... UserOrGroupFragment
 	locale
-}
-fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
-	id
-	openscad
-	unit
-}
-fragment CrawlerMetaFragment on CrawlerMeta {
-	discoveredAt
-	lastIndexedAt
-}
-fragment LicenseFragmentBasic on License {
-	id
-	xid
-	name
-	isSpdx
-	isDeprecated
-	isOsiApproved
-	isFsfLibre
-	isBlocked
 }
 fragment UserOrGroupFragment on UserOrGroup {
 	__typename
@@ -7696,6 +9046,118 @@ fragment UserOrGroupFragment on UserOrGroup {
 		name
 	}
 }
+fragment FileFragment on File {
+	... CrawlerMetaFragment
+	id
+	name
+	path
+	mimeType
+	url
+	createdAt
+}
+fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
+	id
+	height
+	width
+	depth
+}
+fragment ComponentFullFragment on Component {
+	id
+	xid
+	name
+	description
+	version
+	createdAt
+	releases {
+		id
+	}
+	isLatest
+	repository {
+		... RepositoryFragment
+	}
+	license {
+		... LicenseFragmentBasic
+	}
+	additionalLicenses {
+		... LicenseFragmentBasic
+	}
+	licensor {
+		... UserOrGroupFullFragment
+	}
+	documentationLanguage
+	technologyReadinessLevel
+	documentationReadinessLevel
+	attestation
+	publication
+	compliesWith {
+		name
+	}
+	cpcPatentClass
+	tsdc {
+		id
+	}
+	components {
+		id
+	}
+	software {
+		id
+	}
+	image {
+		... FileFragment
+	}
+	readme {
+		... FileFragment
+	}
+	contributionGuide {
+		... FileFragment
+	}
+	bom {
+		... FileFragment
+	}
+	manufacturingInstructions {
+		... FileFragment
+	}
+	userManual {
+		... FileFragment
+	}
+	product {
+		id
+	}
+	usedIn {
+		id
+	}
+	source {
+		... FileFragment
+	}
+	export {
+		... FileFragment
+	}
+	auxiliary {
+		... FileFragment
+	}
+	organization {
+		id
+	}
+	mass
+	outerDimensions {
+		... OuterDimensionsFragment
+	}
+	material {
+		id
+	}
+	manufacturingProcess {
+		id
+	}
+	productionMetadata {
+		... KeyValueFragment
+	}
+}
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
+}
 fragment GroupFragment on Group {
 	... UserOrGroupFragment
 	members {
@@ -7703,11 +9165,14 @@ fragment GroupFragment on Group {
 		id
 	}
 }
-fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
-	id
-	height
-	width
-	depth
+fragment OuterDimensionsFragment on OuterDimensions {
+	__typename
+	... on BoundingBoxDimensions {
+		... BoundingBoxDimensionsFragment
+	}
+	... on OpenSCADDimensions {
+		... OpenSCADDimensionsFragment
+	}
 }
 fragment ProductSearchFragment on Product {
 	... CrawlerMetaFragment
@@ -7746,107 +9211,7 @@ fragment ProductSearchFragment on Product {
 		id
 	}
 	release {
-		id
-		xid
-		name
-		description
-		version
-		createdAt
-		releases {
-			id
-		}
-		isLatest
-		repository {
-			... RepositoryFragment
-		}
-		license {
-			... LicenseFragmentBasic
-		}
-		additionalLicenses {
-			... LicenseFragmentBasic
-		}
-		licensor {
-			... UserOrGroupFullFragment
-		}
-		documentationLanguage
-		technologyReadinessLevel
-		documentationReadinessLevel
-		attestation
-		publication
-		compliesWith {
-			name
-		}
-		cpcPatentClass
-		tsdc {
-			id
-		}
-		components {
-			id
-		}
-		software {
-			id
-		}
-		image {
-			... FileFragment
-		}
-		readme {
-			... FileFragment
-		}
-		contributionGuide {
-			... FileFragment
-		}
-		bom {
-			... FileFragment
-		}
-		manufacturingInstructions {
-			... FileFragment
-		}
-		userManual {
-			... FileFragment
-		}
-		product {
-			id
-		}
-		usedIn {
-			id
-		}
-		source {
-			... FileFragment
-		}
-		export {
-			... FileFragment
-		}
-		auxiliary {
-			... FileFragment
-		}
-		organization {
-			id
-		}
-		mass
-		outerDimensions {
-			... OuterDimensionsFragment
-		}
-		material {
-			id
-		}
-		manufacturingProcess {
-			id
-		}
-		productionMetadata {
-			id
-		}
-	}
-}
-fragment TagFragment on Tag {
-	id
-	name
-	aliases {
-		id
-		name
-	}
-	related {
-		id
-		name
+		... ComponentFullFragment
 	}
 }
 fragment RepositoryFragment on Repository {
@@ -7865,6 +9230,70 @@ fragment RepositoryFragment on Repository {
 	reference
 	path
 }
+fragment LicenseFragmentBasic on License {
+	id
+	xid
+	name
+	isSpdx
+	isDeprecated
+	isOsiApproved
+	isFsfLibre
+	isBlocked
+}
+fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
+	id
+	openscad
+	unit
+}
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
+}
+fragment TagFragment on Tag {
+	id
+	name
+	aliases {
+		id
+		name
+	}
+	related {
+		id
+		name
+	}
+}
+fragment KeyValueFragment on KeyValue {
+	id
+	key
+	value {
+		... on StringV {
+			id
+			stringValue: value
+		}
+		... on FloatV {
+			id
+			floatValue: value
+		}
+	}
+}
+fragment CategoryFragment on Category {
+	id
+	xid
+	fullName
+	name
+	description
+	parent {
+		id
+		fullName
+	}
+	children {
+		id
+		fullName
+	}
+	products {
+		id
+		name
+	}
+}
 fragment UserOrGroupFullFragment on UserOrGroup {
 	__typename
 	... on User {
@@ -7872,24 +9301,6 @@ fragment UserOrGroupFullFragment on UserOrGroup {
 	}
 	... on Group {
 		... GroupFragment
-	}
-}
-fragment FileFragment on File {
-	... CrawlerMetaFragment
-	id
-	name
-	path
-	mimeType
-	url
-	createdAt
-}
-fragment OuterDimensionsFragment on OuterDimensions {
-	__typename
-	... on BoundingBoxDimensions {
-		... BoundingBoxDimensionsFragment
-	}
-	... on OpenSCADDimensions {
-		... OpenSCADDimensionsFragment
 	}
 }
 `
@@ -8511,10 +9922,6 @@ const GetSoftwaresDocument = `query GetSoftwares ($getFilter: SoftwareFilter, $o
 		count
 	}
 }
-fragment CrawlerMetaFragment on CrawlerMeta {
-	discoveredAt
-	lastIndexedAt
-}
 fragment SoftwareFragment on Software {
 	... CrawlerMetaFragment
 	id
@@ -8529,6 +9936,10 @@ fragment SoftwareFragment on Software {
 		xid
 	}
 	licensor
+}
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
 }
 `
 
@@ -9781,13 +11192,6 @@ const GetUserOrGroupByIDDocument = `query GetUserOrGroupByID ($id: ID!) {
 		}
 	}
 }
-fragment GroupFragment on Group {
-	... UserOrGroupFragment
-	members {
-		__typename
-		id
-	}
-}
 fragment UserFragment on User {
 	... UserOrGroupFragment
 	locale
@@ -9816,6 +11220,13 @@ fragment UserOrGroupFragment on UserOrGroup {
 	products {
 		id
 		name
+	}
+}
+fragment GroupFragment on Group {
+	... UserOrGroupFragment
+	members {
+		__typename
+		id
 	}
 }
 `
@@ -9865,10 +11276,6 @@ const GetUserOrGroupByXidDocument = `query GetUserOrGroupByXid ($xid: String!) {
 		}
 	}
 }
-fragment UserFragment on User {
-	... UserOrGroupFragment
-	locale
-}
 fragment UserOrGroupFragment on UserOrGroup {
 	__typename
 	id
@@ -9901,6 +11308,10 @@ fragment GroupFragment on Group {
 		__typename
 		id
 	}
+}
+fragment UserFragment on User {
+	... UserOrGroupFragment
+	locale
 }
 `
 
@@ -10167,10 +11578,6 @@ const GetUserByIDDocument = `query GetUserByID ($id: ID!) {
 		... UserFragment
 	}
 }
-fragment UserFragment on User {
-	... UserOrGroupFragment
-	locale
-}
 fragment UserOrGroupFragment on UserOrGroup {
 	__typename
 	id
@@ -10196,6 +11603,10 @@ fragment UserOrGroupFragment on UserOrGroup {
 		id
 		name
 	}
+}
+fragment UserFragment on User {
+	... UserOrGroupFragment
+	locale
 }
 `
 
@@ -10239,6 +11650,10 @@ const GetUserByXidDocument = `query GetUserByXid ($xid: String!) {
 		... UserFragment
 	}
 }
+fragment UserFragment on User {
+	... UserOrGroupFragment
+	locale
+}
 fragment UserOrGroupFragment on UserOrGroup {
 	__typename
 	id
@@ -10264,10 +11679,6 @@ fragment UserOrGroupFragment on UserOrGroup {
 		id
 		name
 	}
-}
-fragment UserFragment on User {
-	... UserOrGroupFragment
-	locale
 }
 `
 
@@ -10761,6 +12172,13 @@ const GetGroupsDocument = `query GetGroups ($getFilter: GroupFilter, $order: Gro
 		count
 	}
 }
+fragment GroupFragment on Group {
+	... UserOrGroupFragment
+	members {
+		__typename
+		id
+	}
+}
 fragment UserOrGroupFragment on UserOrGroup {
 	__typename
 	id
@@ -10785,13 +12203,6 @@ fragment UserOrGroupFragment on UserOrGroup {
 	products {
 		id
 		name
-	}
-}
-fragment GroupFragment on Group {
-	... UserOrGroupFragment
-	members {
-		__typename
-		id
 	}
 }
 `

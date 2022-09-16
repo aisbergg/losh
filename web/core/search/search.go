@@ -11,7 +11,7 @@ import (
 	"github.com/aisbergg/go-errors/pkg/errors"
 )
 
-func (s *Service) Search3(ctx context.Context, queryStr string, orderBy searchmodels.OrderBy, pagination searchmodels.Pagination) (searchmodels.Results, error) {
+func (s *Service) Search(ctx context.Context, queryStr string, orderBy searchmodels.OrderBy, pagination searchmodels.Pagination) (searchmodels.Results, error) {
 	query, operators, err := s.parseQuery(queryStr)
 	if err != nil {
 		return searchmodels.Results{}, err

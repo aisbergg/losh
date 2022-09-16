@@ -230,15 +230,15 @@ type AddLicenseInput struct {
 	DetailsURL *string `json:"detailsURL,omitempty"`
 	// The type (strength) of the license.
 	Type LicenseType `json:"type"`
-	// Indicates if the license is a standard license.
+	// Indicates whether the license is a standard license.
 	IsSpdx bool `json:"isSpdx"`
-	// Indicates if the license identifier is deprecated in favor of another license identifier and should no longer be used.
+	// Indicates whether the license identifier is deprecated in favor of another license identifier and should no longer be used.
 	IsDeprecated bool `json:"isDeprecated"`
-	// Indicates if the license is OSI approved.
+	// Indicates whether the license is OSI approved.
 	IsOsiApproved bool `json:"isOsiApproved"`
-	// Indicates if the license is FSF approved.
+	// Indicates whether the license is FSF approved.
 	IsFsfLibre bool `json:"isFsfLibre"`
-	// Indicates if the license is considered a LOSH unapproved license.
+	// Indicates whether the license is considered a LOSH unapproved license.
 	IsBlocked bool `json:"isBlocked"`
 }
 
@@ -1251,8 +1251,8 @@ type FloatV struct {
 	Value float64 `json:"value"`
 }
 
-func (FloatV) IsNode()          {}
 func (FloatV) IsStringOrFloat() {}
+func (FloatV) IsNode()          {}
 
 type FloatVAggregateResult struct {
 	Count    *int64   `json:"count"`
@@ -1524,15 +1524,15 @@ type License struct {
 	DetailsURL *string `json:"detailsURL"`
 	// The type (strength) of the license.
 	Type LicenseType `json:"type"`
-	// Indicates if the license is a standard license.
+	// Indicates whether the license is a standard license.
 	IsSpdx bool `json:"isSpdx"`
-	// Indicates if the license identifier is deprecated in favor of another license identifier and should no longer be used.
+	// Indicates whether the license identifier is deprecated in favor of another license identifier and should no longer be used.
 	IsDeprecated bool `json:"isDeprecated"`
-	// Indicates if the license is OSI approved.
+	// Indicates whether the license is OSI approved.
 	IsOsiApproved bool `json:"isOsiApproved"`
-	// Indicates if the license is FSF approved.
+	// Indicates whether the license is FSF approved.
 	IsFsfLibre bool `json:"isFsfLibre"`
-	// Indicates if the license is considered a LOSH unapproved license.
+	// Indicates whether the license is considered a LOSH unapproved license.
 	IsBlocked bool `json:"isBlocked"`
 }
 
@@ -1590,15 +1590,15 @@ type LicensePatch struct {
 	DetailsURL *string `json:"detailsURL,omitempty"`
 	// The type (strength) of the license.
 	Type *LicenseType `json:"type,omitempty"`
-	// Indicates if the license is a standard license.
+	// Indicates whether the license is a standard license.
 	IsSpdx *bool `json:"isSpdx,omitempty"`
-	// Indicates if the license identifier is deprecated in favor of another license identifier and should no longer be used.
+	// Indicates whether the license identifier is deprecated in favor of another license identifier and should no longer be used.
 	IsDeprecated *bool `json:"isDeprecated,omitempty"`
-	// Indicates if the license is OSI approved.
+	// Indicates whether the license is OSI approved.
 	IsOsiApproved *bool `json:"isOsiApproved,omitempty"`
-	// Indicates if the license is FSF approved.
+	// Indicates whether the license is FSF approved.
 	IsFsfLibre *bool `json:"isFsfLibre,omitempty"`
-	// Indicates if the license is considered a LOSH unapproved license.
+	// Indicates whether the license is considered a LOSH unapproved license.
 	IsBlocked *bool `json:"isBlocked,omitempty"`
 }
 
@@ -1618,15 +1618,15 @@ type LicenseRef struct {
 	DetailsURL *string `json:"detailsURL,omitempty"`
 	// The type (strength) of the license.
 	Type *LicenseType `json:"type,omitempty"`
-	// Indicates if the license is a standard license.
+	// Indicates whether the license is a standard license.
 	IsSpdx *bool `json:"isSpdx,omitempty"`
-	// Indicates if the license identifier is deprecated in favor of another license identifier and should no longer be used.
+	// Indicates whether the license identifier is deprecated in favor of another license identifier and should no longer be used.
 	IsDeprecated *bool `json:"isDeprecated,omitempty"`
-	// Indicates if the license is OSI approved.
+	// Indicates whether the license is OSI approved.
 	IsOsiApproved *bool `json:"isOsiApproved,omitempty"`
-	// Indicates if the license is FSF approved.
+	// Indicates whether the license is FSF approved.
 	IsFsfLibre *bool `json:"isFsfLibre,omitempty"`
-	// Indicates if the license is considered a LOSH unapproved license.
+	// Indicates whether the license is considered a LOSH unapproved license.
 	IsBlocked *bool `json:"isBlocked,omitempty"`
 }
 

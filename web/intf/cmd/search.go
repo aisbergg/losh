@@ -52,7 +52,7 @@ var SearchCommand = &gcli.Command{
 		// search
 		offset := mathutil.Max(0, (searchOptions.Page-1)*searchOptions.ResultsPerPage)
 		first := mathutil.Max(1, searchOptions.ResultsPerPage)
-		res, err := searchSvc.Search3(
+		res, err := searchSvc.Search(
 			ctx,
 			sQry,
 			searchmodels.OrderByFromStr(searchOptions.OrderBy, searchOptions.Descending),
@@ -86,7 +86,11 @@ var SearchCommand = &gcli.Command{
 			fmt.Printf("Number of results: %d\n", res.Count)
 			fmt.Printf("Number of retrieved results: %d\n\n", len(res.Items))
 			for _, r := range res.Items {
-				fmt.Printf("%s | %s | %s | %s\n", *r.Name, stringutil.Ellipses(*r.Release.Description, 50), *r.Release.License.Xid, *r.Release.Repository.URL)
+				license := ""
+				if r.Release.License != nil {
+					license = *r.Release.License.Xid
+				}
+				fmt.Printf("%s | %s | %s | %s\n", *r.Name, stringutil.Ellipses(*r.Release.Description, 50), license, *r.Release.Repository.URL)
 			}
 		}
 
