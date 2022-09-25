@@ -71,6 +71,7 @@ func DefaultAccessLogConfig() AccessLogConfig {
 }
 
 type ServerConfig struct {
+	BaseURL        string            `json:"baseUrl"`
 	Interface      string            `json:"interface"`
 	Port           uint16            `json:"port"`
 	TrustedDomains []string          `json:"trustedDomains"`
@@ -81,6 +82,7 @@ type ServerConfig struct {
 
 func DefaultServerConfig() ServerConfig {
 	return ServerConfig{
+		BaseURL:        "",
 		Interface:      "",
 		Port:           3000,
 		TrustedDomains: []string{},

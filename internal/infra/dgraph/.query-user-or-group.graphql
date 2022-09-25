@@ -11,8 +11,7 @@ fragment UserOrGroupFragment on UserOrGroup {
 	email
 	description
 	avatar {
-		id
-		url
+		...FileFragment
 	}
 	url
 	memberOf {

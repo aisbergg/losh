@@ -1,6 +1,7 @@
 fragment FileFragment on File {
 	...CrawlerMetaFragment
 	id
+	xid
 	name
 	path
 	mimeType

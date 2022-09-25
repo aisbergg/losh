@@ -455,8 +455,8 @@ type BoundingBoxDimensions struct {
 	Depth  float64 `json:"depth"`
 }
 
-func (BoundingBoxDimensions) IsOuterDimensions() {}
 func (BoundingBoxDimensions) IsNode()            {}
+func (BoundingBoxDimensions) IsOuterDimensions() {}
 
 type BoundingBoxDimensionsAggregateResult struct {
 	Count     *int64   `json:"count"`
@@ -2297,8 +2297,8 @@ type StringV struct {
 	Value string `json:"value"`
 }
 
-func (StringV) IsNode()          {}
 func (StringV) IsStringOrFloat() {}
+func (StringV) IsNode()          {}
 
 type StringVAggregateResult struct {
 	Count    *int64  `json:"count"`

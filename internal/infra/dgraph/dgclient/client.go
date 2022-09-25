@@ -318,6 +318,9 @@ type CategoryFragment struct {
 	Products    []*CategoryFragment_Products "json:\"products\" graphql:\"products\""
 }
 type ComponentFragment struct {
+	DiscoveredAt                time.Time                                    "json:\"discoveredAt\" graphql:\"discoveredAt\""
+	LastIndexedAt               time.Time                                    "json:\"lastIndexedAt\" graphql:\"lastIndexedAt\""
+	DataSource                  *RepositoryFragment                          "json:\"dataSource\" graphql:\"dataSource\""
 	ID                          string                                       "json:\"id\" graphql:\"id\""
 	Xid                         string                                       "json:\"xid\" graphql:\"xid\""
 	Name                        string                                       "json:\"name\" graphql:\"name\""
@@ -359,6 +362,9 @@ type ComponentFragment struct {
 	ProductionMetadata          []*KeyValueFragment                          "json:\"productionMetadata\" graphql:\"productionMetadata\""
 }
 type ComponentFullFragment struct {
+	DiscoveredAt                time.Time                                   "json:\"discoveredAt\" graphql:\"discoveredAt\""
+	LastIndexedAt               time.Time                                   "json:\"lastIndexedAt\" graphql:\"lastIndexedAt\""
+	DataSource                  *RepositoryFragment                         "json:\"dataSource\" graphql:\"dataSource\""
 	ID                          string                                      "json:\"id\" graphql:\"id\""
 	Xid                         string                                      "json:\"xid\" graphql:\"xid\""
 	Name                        string                                      "json:\"name\" graphql:\"name\""
@@ -404,14 +410,16 @@ type DatabaseFragment struct {
 	Version string "json:\"version\" graphql:\"version\""
 }
 type FileFragment struct {
-	DiscoveredAt  time.Time  "json:\"discoveredAt\" graphql:\"discoveredAt\""
-	LastIndexedAt time.Time  "json:\"lastIndexedAt\" graphql:\"lastIndexedAt\""
-	ID            string     "json:\"id\" graphql:\"id\""
-	Name          string     "json:\"name\" graphql:\"name\""
-	Path          string     "json:\"path\" graphql:\"path\""
-	MimeType      *string    "json:\"mimeType\" graphql:\"mimeType\""
-	URL           string     "json:\"url\" graphql:\"url\""
-	CreatedAt     *time.Time "json:\"createdAt\" graphql:\"createdAt\""
+	DiscoveredAt  time.Time           "json:\"discoveredAt\" graphql:\"discoveredAt\""
+	LastIndexedAt time.Time           "json:\"lastIndexedAt\" graphql:\"lastIndexedAt\""
+	DataSource    *RepositoryFragment "json:\"dataSource\" graphql:\"dataSource\""
+	ID            string              "json:\"id\" graphql:\"id\""
+	Xid           string              "json:\"xid\" graphql:\"xid\""
+	Name          string              "json:\"name\" graphql:\"name\""
+	Path          string              "json:\"path\" graphql:\"path\""
+	MimeType      *string             "json:\"mimeType\" graphql:\"mimeType\""
+	URL           string              "json:\"url\" graphql:\"url\""
+	CreatedAt     *time.Time          "json:\"createdAt\" graphql:\"createdAt\""
 }
 type HostFragment struct {
 	ID     string "json:\"id\" graphql:\"id\""
@@ -471,8 +479,9 @@ type NodeFragment struct {
 	ID       string  "json:\"id\" graphql:\"id\""
 }
 type CrawlerMetaFragment struct {
-	DiscoveredAt  time.Time "json:\"discoveredAt\" graphql:\"discoveredAt\""
-	LastIndexedAt time.Time "json:\"lastIndexedAt\" graphql:\"lastIndexedAt\""
+	DiscoveredAt  time.Time           "json:\"discoveredAt\" graphql:\"discoveredAt\""
+	LastIndexedAt time.Time           "json:\"lastIndexedAt\" graphql:\"lastIndexedAt\""
+	DataSource    *RepositoryFragment "json:\"dataSource\" graphql:\"dataSource\""
 }
 type OuterDimensionsFragment struct {
 	Typename              *string                       "json:\"__typename\" graphql:\"__typename\""
@@ -493,6 +502,7 @@ type OpenSCADDimensionsFragment struct {
 type ProductSearchFragment struct {
 	DiscoveredAt  time.Time                          "json:\"discoveredAt\" graphql:\"discoveredAt\""
 	LastIndexedAt time.Time                          "json:\"lastIndexedAt\" graphql:\"lastIndexedAt\""
+	DataSource    *RepositoryFragment                "json:\"dataSource\" graphql:\"dataSource\""
 	ID            string                             "json:\"id\" graphql:\"id\""
 	Xid           string                             "json:\"xid\" graphql:\"xid\""
 	Name          string                             "json:\"name\" graphql:\"name\""
@@ -511,24 +521,30 @@ type ProductSearchFragment struct {
 	Release       *ComponentFullFragment             "json:\"release\" graphql:\"release\""
 }
 type ProductFullFragment struct {
-	DiscoveredAt  time.Time                        "json:\"discoveredAt\" graphql:\"discoveredAt\""
-	LastIndexedAt time.Time                        "json:\"lastIndexedAt\" graphql:\"lastIndexedAt\""
-	ID            string                           "json:\"id\" graphql:\"id\""
-	Xid           string                           "json:\"xid\" graphql:\"xid\""
-	Name          string                           "json:\"name\" graphql:\"name\""
-	Website       *string                          "json:\"website\" graphql:\"website\""
-	State         ProductState                     "json:\"state\" graphql:\"state\""
-	LastUpdatedAt *time.Time                       "json:\"lastUpdatedAt\" graphql:\"lastUpdatedAt\""
-	RenamedTo     *ProductFullFragment_RenamedTo   "json:\"renamedTo\" graphql:\"renamedTo\""
-	RenamedFrom   *ProductFullFragment_RenamedFrom "json:\"renamedFrom\" graphql:\"renamedFrom\""
-	ForkOf        *ProductFullFragment_ForkOf      "json:\"forkOf\" graphql:\"forkOf\""
-	Forks         []*ProductFullFragment_Forks     "json:\"forks\" graphql:\"forks\""
-	ForkCount     *int64                           "json:\"forkCount\" graphql:\"forkCount\""
-	StarCount     *int64                           "json:\"starCount\" graphql:\"starCount\""
-	Tags          []*TagFragment                   "json:\"tags\" graphql:\"tags\""
-	Category      *CategoryFragment                "json:\"category\" graphql:\"category\""
-	Releases      []*ComponentFullFragment         "json:\"releases\" graphql:\"releases\""
-	Release       *ComponentFullFragment           "json:\"release\" graphql:\"release\""
+	DiscoveredAt          time.Time                        "json:\"discoveredAt\" graphql:\"discoveredAt\""
+	LastIndexedAt         time.Time                        "json:\"lastIndexedAt\" graphql:\"lastIndexedAt\""
+	DataSource            *RepositoryFragment              "json:\"dataSource\" graphql:\"dataSource\""
+	ID                    string                           "json:\"id\" graphql:\"id\""
+	Xid                   string                           "json:\"xid\" graphql:\"xid\""
+	Name                  string                           "json:\"name\" graphql:\"name\""
+	Description           string                           "json:\"description\" graphql:\"description\""
+	DocumentationLanguage string                           "json:\"documentationLanguage\" graphql:\"documentationLanguage\""
+	Version               string                           "json:\"version\" graphql:\"version\""
+	License               *ProductFullFragment_License     "json:\"license\" graphql:\"license\""
+	Licensor              *UserOrGroupBasicFragment        "json:\"licensor\" graphql:\"licensor\""
+	Website               *string                          "json:\"website\" graphql:\"website\""
+	State                 ProductState                     "json:\"state\" graphql:\"state\""
+	LastUpdatedAt         *time.Time                       "json:\"lastUpdatedAt\" graphql:\"lastUpdatedAt\""
+	RenamedTo             *ProductFullFragment_RenamedTo   "json:\"renamedTo\" graphql:\"renamedTo\""
+	RenamedFrom           *ProductFullFragment_RenamedFrom "json:\"renamedFrom\" graphql:\"renamedFrom\""
+	ForkOf                *ProductFullFragment_ForkOf      "json:\"forkOf\" graphql:\"forkOf\""
+	Forks                 []*ProductFullFragment_Forks     "json:\"forks\" graphql:\"forks\""
+	ForkCount             *int64                           "json:\"forkCount\" graphql:\"forkCount\""
+	StarCount             *int64                           "json:\"starCount\" graphql:\"starCount\""
+	Tags                  []*TagFragment                   "json:\"tags\" graphql:\"tags\""
+	Category              *CategoryFragment                "json:\"category\" graphql:\"category\""
+	Releases              []*ComponentFullFragment         "json:\"releases\" graphql:\"releases\""
+	Release               *ComponentFullFragment           "json:\"release\" graphql:\"release\""
 }
 type RepositoryFragment struct {
 	ID        string                    "json:\"id\" graphql:\"id\""
@@ -544,6 +560,7 @@ type RepositoryFragment struct {
 type SoftwareFragment struct {
 	DiscoveredAt          time.Time                           "json:\"discoveredAt\" graphql:\"discoveredAt\""
 	LastIndexedAt         time.Time                           "json:\"lastIndexedAt\" graphql:\"lastIndexedAt\""
+	DataSource            *RepositoryFragment                 "json:\"dataSource\" graphql:\"dataSource\""
 	ID                    string                              "json:\"id\" graphql:\"id\""
 	Release               *string                             "json:\"release\" graphql:\"release\""
 	InstallationGuide     *SoftwareFragment_InstallationGuide "json:\"installationGuide\" graphql:\"installationGuide\""
@@ -581,7 +598,7 @@ type UserOrGroupFragment struct {
 	FullName    *string                         "json:\"fullName\" graphql:\"fullName\""
 	Email       *string                         "json:\"email\" graphql:\"email\""
 	Description *string                         "json:\"description\" graphql:\"description\""
-	Avatar      *UserOrGroupFragment_Avatar     "json:\"avatar\" graphql:\"avatar\""
+	Avatar      *FileFragment                   "json:\"avatar\" graphql:\"avatar\""
 	URL         *string                         "json:\"url\" graphql:\"url\""
 	MemberOf    []*UserOrGroupFragment_MemberOf "json:\"memberOf\" graphql:\"memberOf\""
 	Products    []*UserOrGroupFragment_Products "json:\"products\" graphql:\"products\""
@@ -601,7 +618,7 @@ type UserFragment struct {
 	FullName    *string                                      "json:\"fullName\" graphql:\"fullName\""
 	Email       *string                                      "json:\"email\" graphql:\"email\""
 	Description *string                                      "json:\"description\" graphql:\"description\""
-	Avatar      *UserFragment_UserOrGroupFragment_Avatar     "json:\"avatar\" graphql:\"avatar\""
+	Avatar      *FileFragment                                "json:\"avatar\" graphql:\"avatar\""
 	URL         *string                                      "json:\"url\" graphql:\"url\""
 	MemberOf    []*UserFragment_UserOrGroupFragment_MemberOf "json:\"memberOf\" graphql:\"memberOf\""
 	Products    []*UserFragment_UserOrGroupFragment_Products "json:\"products\" graphql:\"products\""
@@ -616,7 +633,7 @@ type GroupFragment struct {
 	FullName    *string                                       "json:\"fullName\" graphql:\"fullName\""
 	Email       *string                                       "json:\"email\" graphql:\"email\""
 	Description *string                                       "json:\"description\" graphql:\"description\""
-	Avatar      *GroupFragment_UserOrGroupFragment_Avatar     "json:\"avatar\" graphql:\"avatar\""
+	Avatar      *FileFragment                                 "json:\"avatar\" graphql:\"avatar\""
 	URL         *string                                       "json:\"url\" graphql:\"url\""
 	MemberOf    []*GroupFragment_UserOrGroupFragment_MemberOf "json:\"memberOf\" graphql:\"memberOf\""
 	Products    []*GroupFragment_UserOrGroupFragment_Products "json:\"products\" graphql:\"products\""
@@ -636,6 +653,10 @@ type CategoryFragment_Children struct {
 	FullName string "json:\"fullName\" graphql:\"fullName\""
 }
 type CategoryFragment_Products struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ComponentFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
@@ -738,6 +759,10 @@ type ComponentFragment_ProductionMetadata_KeyValueFragment_Value struct {
 	StringV ComponentFragment_ProductionMetadata_KeyValueFragment_Value_StringV "graphql:\"... on StringV\""
 	FloatV  ComponentFragment_ProductionMetadata_KeyValueFragment_Value_FloatV  "graphql:\"... on FloatV\""
 }
+type ComponentFullFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
 type ComponentFullFragment_Releases struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
@@ -749,9 +774,9 @@ type ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_Us
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Avatar struct {
-	ID  string "json:\"id\" graphql:\"id\""
-	URL string "json:\"url\" graphql:\"url\""
+type ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Avatar_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -765,9 +790,9 @@ type ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Avatar struct {
-	ID  string "json:\"id\" graphql:\"id\""
-	URL string "json:\"url\" graphql:\"url\""
+type ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Avatar_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -793,11 +818,47 @@ type ComponentFullFragment_Components struct {
 type ComponentFullFragment_Software struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
+type ComponentFullFragment_Image_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ComponentFullFragment_Readme_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ComponentFullFragment_ContributionGuide_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ComponentFullFragment_Bom_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ComponentFullFragment_ManufacturingInstructions_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ComponentFullFragment_UserManual_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
 type ComponentFullFragment_Product struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
 type ComponentFullFragment_UsedIn struct {
 	ID string "json:\"id\" graphql:\"id\""
+}
+type ComponentFullFragment_Source_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ComponentFullFragment_Export_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ComponentFullFragment_Auxiliary_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type ComponentFullFragment_Organization struct {
 	ID string "json:\"id\" graphql:\"id\""
@@ -820,6 +881,10 @@ type ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value struct {
 	StringV ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_StringV "graphql:\"... on StringV\""
 	FloatV  ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_FloatV  "graphql:\"... on FloatV\""
 }
+type FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
 type KeyValueFragment_Value_StringV struct {
 	ID          string "json:\"id\" graphql:\"id\""
 	StringValue string "json:\"stringValue\" graphql:\"stringValue\""
@@ -831,6 +896,14 @@ type KeyValueFragment_Value_FloatV struct {
 type KeyValueFragment_Value struct {
 	StringV KeyValueFragment_Value_StringV "graphql:\"... on StringV\""
 	FloatV  KeyValueFragment_Value_FloatV  "graphql:\"... on FloatV\""
+}
+type CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductSearchFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type ProductSearchFragment_RenamedTo struct {
 	ID string "json:\"id\" graphql:\"id\""
@@ -874,6 +947,10 @@ type ProductSearchFragment_Category_CategoryFragment_Products struct {
 type ProductSearchFragment_Releases struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
+type ProductSearchFragment_Release_ComponentFullFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
 type ProductSearchFragment_Release_ComponentFullFragment_Releases struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
@@ -885,9 +962,9 @@ type ProductSearchFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFul
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type ProductSearchFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Avatar struct {
-	ID  string "json:\"id\" graphql:\"id\""
-	URL string "json:\"url\" graphql:\"url\""
+type ProductSearchFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Avatar_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type ProductSearchFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -901,9 +978,9 @@ type ProductSearchFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFul
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type ProductSearchFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Avatar struct {
-	ID  string "json:\"id\" graphql:\"id\""
-	URL string "json:\"url\" graphql:\"url\""
+type ProductSearchFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Avatar_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type ProductSearchFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -929,11 +1006,47 @@ type ProductSearchFragment_Release_ComponentFullFragment_Components struct {
 type ProductSearchFragment_Release_ComponentFullFragment_Software struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
+type ProductSearchFragment_Release_ComponentFullFragment_Image_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductSearchFragment_Release_ComponentFullFragment_Readme_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductSearchFragment_Release_ComponentFullFragment_ContributionGuide_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductSearchFragment_Release_ComponentFullFragment_Bom_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductSearchFragment_Release_ComponentFullFragment_ManufacturingInstructions_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductSearchFragment_Release_ComponentFullFragment_UserManual_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
 type ProductSearchFragment_Release_ComponentFullFragment_Product struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
 type ProductSearchFragment_Release_ComponentFullFragment_UsedIn struct {
 	ID string "json:\"id\" graphql:\"id\""
+}
+type ProductSearchFragment_Release_ComponentFullFragment_Source_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductSearchFragment_Release_ComponentFullFragment_Export_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductSearchFragment_Release_ComponentFullFragment_Auxiliary_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type ProductSearchFragment_Release_ComponentFullFragment_Organization struct {
 	ID string "json:\"id\" graphql:\"id\""
@@ -955,6 +1068,14 @@ type ProductSearchFragment_Release_ComponentFullFragment_ProductionMetadata_KeyV
 type ProductSearchFragment_Release_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value struct {
 	StringV ProductSearchFragment_Release_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_StringV "graphql:\"... on StringV\""
 	FloatV  ProductSearchFragment_Release_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_FloatV  "graphql:\"... on FloatV\""
+}
+type ProductFullFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductFullFragment_License struct {
+	ID  string "json:\"id\" graphql:\"id\""
+	Xid string "json:\"xid\" graphql:\"xid\""
 }
 type ProductFullFragment_RenamedTo struct {
 	ID string "json:\"id\" graphql:\"id\""
@@ -995,6 +1116,10 @@ type ProductFullFragment_Category_CategoryFragment_Products struct {
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
+type ProductFullFragment_Releases_ComponentFullFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
 type ProductFullFragment_Releases_ComponentFullFragment_Releases struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
@@ -1006,9 +1131,9 @@ type ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFull
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Avatar struct {
-	ID  string "json:\"id\" graphql:\"id\""
-	URL string "json:\"url\" graphql:\"url\""
+type ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Avatar_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -1022,9 +1147,9 @@ type ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFull
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Avatar struct {
-	ID  string "json:\"id\" graphql:\"id\""
-	URL string "json:\"url\" graphql:\"url\""
+type ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Avatar_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -1050,11 +1175,47 @@ type ProductFullFragment_Releases_ComponentFullFragment_Components struct {
 type ProductFullFragment_Releases_ComponentFullFragment_Software struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
+type ProductFullFragment_Releases_ComponentFullFragment_Image_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductFullFragment_Releases_ComponentFullFragment_Readme_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductFullFragment_Releases_ComponentFullFragment_ContributionGuide_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductFullFragment_Releases_ComponentFullFragment_Bom_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductFullFragment_Releases_ComponentFullFragment_ManufacturingInstructions_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductFullFragment_Releases_ComponentFullFragment_UserManual_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
 type ProductFullFragment_Releases_ComponentFullFragment_Product struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
 type ProductFullFragment_Releases_ComponentFullFragment_UsedIn struct {
 	ID string "json:\"id\" graphql:\"id\""
+}
+type ProductFullFragment_Releases_ComponentFullFragment_Source_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductFullFragment_Releases_ComponentFullFragment_Export_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductFullFragment_Releases_ComponentFullFragment_Auxiliary_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type ProductFullFragment_Releases_ComponentFullFragment_Organization struct {
 	ID string "json:\"id\" graphql:\"id\""
@@ -1077,6 +1238,10 @@ type ProductFullFragment_Releases_ComponentFullFragment_ProductionMetadata_KeyVa
 	StringV ProductFullFragment_Releases_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_StringV "graphql:\"... on StringV\""
 	FloatV  ProductFullFragment_Releases_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_FloatV  "graphql:\"... on FloatV\""
 }
+type ProductFullFragment_Release_ComponentFullFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
 type ProductFullFragment_Release_ComponentFullFragment_Releases struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
@@ -1088,9 +1253,9 @@ type ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullF
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Avatar struct {
-	ID  string "json:\"id\" graphql:\"id\""
-	URL string "json:\"url\" graphql:\"url\""
+type ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Avatar_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -1104,9 +1269,9 @@ type ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullF
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Avatar struct {
-	ID  string "json:\"id\" graphql:\"id\""
-	URL string "json:\"url\" graphql:\"url\""
+type ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Avatar_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -1132,11 +1297,47 @@ type ProductFullFragment_Release_ComponentFullFragment_Components struct {
 type ProductFullFragment_Release_ComponentFullFragment_Software struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
+type ProductFullFragment_Release_ComponentFullFragment_Image_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductFullFragment_Release_ComponentFullFragment_Readme_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductFullFragment_Release_ComponentFullFragment_ContributionGuide_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductFullFragment_Release_ComponentFullFragment_Bom_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductFullFragment_Release_ComponentFullFragment_ManufacturingInstructions_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductFullFragment_Release_ComponentFullFragment_UserManual_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
 type ProductFullFragment_Release_ComponentFullFragment_Product struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
 type ProductFullFragment_Release_ComponentFullFragment_UsedIn struct {
 	ID string "json:\"id\" graphql:\"id\""
+}
+type ProductFullFragment_Release_ComponentFullFragment_Source_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductFullFragment_Release_ComponentFullFragment_Export_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type ProductFullFragment_Release_ComponentFullFragment_Auxiliary_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type ProductFullFragment_Release_ComponentFullFragment_Organization struct {
 	ID string "json:\"id\" graphql:\"id\""
@@ -1160,6 +1361,10 @@ type ProductFullFragment_Release_ComponentFullFragment_ProductionMetadata_KeyVal
 	FloatV  ProductFullFragment_Release_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_FloatV  "graphql:\"... on FloatV\""
 }
 type RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type SoftwareFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
@@ -1191,9 +1396,9 @@ type UserOrGroupFragment_Host struct {
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type UserOrGroupFragment_Avatar struct {
-	ID  string "json:\"id\" graphql:\"id\""
-	URL string "json:\"url\" graphql:\"url\""
+type UserOrGroupFragment_Avatar_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -1207,9 +1412,9 @@ type UserFragment_UserOrGroupFragment_Host struct {
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type UserFragment_UserOrGroupFragment_Avatar struct {
-	ID  string "json:\"id\" graphql:\"id\""
-	URL string "json:\"url\" graphql:\"url\""
+type UserFragment_UserOrGroupFragment_Avatar_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type UserFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -1223,9 +1428,9 @@ type GroupFragment_UserOrGroupFragment_Host struct {
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type GroupFragment_UserOrGroupFragment_Avatar struct {
-	ID  string "json:\"id\" graphql:\"id\""
-	URL string "json:\"url\" graphql:\"url\""
+type GroupFragment_UserOrGroupFragment_Avatar_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GroupFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -1243,9 +1448,9 @@ type UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Host struct {
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Avatar struct {
-	ID  string "json:\"id\" graphql:\"id\""
-	URL string "json:\"url\" graphql:\"url\""
+type UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Avatar_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -1259,9 +1464,9 @@ type UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Host struct
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Avatar struct {
-	ID  string "json:\"id\" graphql:\"id\""
-	URL string "json:\"url\" graphql:\"url\""
+type UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Avatar_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -1334,6 +1539,10 @@ type DeleteCategories_DeleteCategory_Category struct {
 }
 type DeleteCategories_DeleteCategory struct {
 	Category []*DeleteCategories_DeleteCategory_Category "json:\"category\" graphql:\"category\""
+}
+type GetComponentByID_GetComponent_ComponentFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetComponentByID_GetComponent_ComponentFragment_Releases struct {
 	ID   string "json:\"id\" graphql:\"id\""
@@ -1433,6 +1642,10 @@ type GetComponentByID_GetComponent_ComponentFragment_ProductionMetadata_KeyValue
 type GetComponentByID_GetComponent_ComponentFragment_ProductionMetadata_KeyValueFragment_Value struct {
 	StringV GetComponentByID_GetComponent_ComponentFragment_ProductionMetadata_KeyValueFragment_Value_StringV "graphql:\"... on StringV\""
 	FloatV  GetComponentByID_GetComponent_ComponentFragment_ProductionMetadata_KeyValueFragment_Value_FloatV  "graphql:\"... on FloatV\""
+}
+type GetComponentByXid_GetComponent_ComponentFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetComponentByXid_GetComponent_ComponentFragment_Releases struct {
 	ID   string "json:\"id\" graphql:\"id\""
@@ -1535,6 +1748,10 @@ type GetComponentByXid_GetComponent_ComponentFragment_ProductionMetadata_KeyValu
 }
 type GetComponentID_GetComponent struct {
 	ID string "json:\"id\" graphql:\"id\""
+}
+type GetComponents_QueryComponent_ComponentFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetComponents_QueryComponent_ComponentFragment_Releases struct {
 	ID   string "json:\"id\" graphql:\"id\""
@@ -1677,8 +1894,20 @@ type DeleteDatabases_DeleteDatabase_Database struct {
 type DeleteDatabases_DeleteDatabase struct {
 	Database []*DeleteDatabases_DeleteDatabase_Database "json:\"database\" graphql:\"database\""
 }
+type GetFileByID_GetFile_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetFileByXid_GetFile_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
 type GetFileID_GetFile struct {
 	ID string "json:\"id\" graphql:\"id\""
+}
+type GetFiles_QueryFile_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetFiles_AggregateFile struct {
 	Count *int64 "json:\"count\" graphql:\"count\""
@@ -1929,6 +2158,14 @@ type DeleteOpenSCADDimensionss_DeleteOpenSCADDimensions_OpenSCADDimensions struc
 type DeleteOpenSCADDimensionss_DeleteOpenSCADDimensions struct {
 	OpenSCADDimensions []*DeleteOpenSCADDimensionss_DeleteOpenSCADDimensions_OpenSCADDimensions "json:\"openSCADDimensions\" graphql:\"openSCADDimensions\""
 }
+type GetProductByID_GetProduct_ProductFullFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_License struct {
+	ID  string "json:\"id\" graphql:\"id\""
+	Xid string "json:\"xid\" graphql:\"xid\""
+}
 type GetProductByID_GetProduct_ProductFullFragment_RenamedTo struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
@@ -1968,6 +2205,10 @@ type GetProductByID_GetProduct_ProductFullFragment_Category_CategoryFragment_Pro
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
+type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
 type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Releases struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
@@ -1979,9 +2220,9 @@ type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragmen
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Avatar struct {
-	ID  string "json:\"id\" graphql:\"id\""
-	URL string "json:\"url\" graphql:\"url\""
+type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Avatar_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -1995,9 +2236,9 @@ type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragmen
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Avatar struct {
-	ID  string "json:\"id\" graphql:\"id\""
-	URL string "json:\"url\" graphql:\"url\""
+type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Avatar_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -2023,11 +2264,47 @@ type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragmen
 type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Software struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
+type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Image_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Readme_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_ContributionGuide_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Bom_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_ManufacturingInstructions_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_UserManual_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
 type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Product struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
 type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_UsedIn struct {
 	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Source_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Export_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Auxiliary_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Organization struct {
 	ID string "json:\"id\" graphql:\"id\""
@@ -2050,6 +2327,10 @@ type GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragmen
 	StringV GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_StringV "graphql:\"... on StringV\""
 	FloatV  GetProductByID_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_FloatV  "graphql:\"... on FloatV\""
 }
+type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
 type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Releases struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
@@ -2061,9 +2342,9 @@ type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Avatar struct {
-	ID  string "json:\"id\" graphql:\"id\""
-	URL string "json:\"url\" graphql:\"url\""
+type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Avatar_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -2077,9 +2358,9 @@ type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Avatar struct {
-	ID  string "json:\"id\" graphql:\"id\""
-	URL string "json:\"url\" graphql:\"url\""
+type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Avatar_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -2105,11 +2386,47 @@ type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment
 type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Software struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
+type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Image_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Readme_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_ContributionGuide_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Bom_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_ManufacturingInstructions_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_UserManual_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
 type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Product struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
 type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_UsedIn struct {
 	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Source_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Export_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Auxiliary_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Organization struct {
 	ID string "json:\"id\" graphql:\"id\""
@@ -2131,6 +2448,14 @@ type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment
 type GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value struct {
 	StringV GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_StringV "graphql:\"... on StringV\""
 	FloatV  GetProductByID_GetProduct_ProductFullFragment_Release_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_FloatV  "graphql:\"... on FloatV\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_License struct {
+	ID  string "json:\"id\" graphql:\"id\""
+	Xid string "json:\"xid\" graphql:\"xid\""
 }
 type GetProductByXid_GetProduct_ProductFullFragment_RenamedTo struct {
 	ID string "json:\"id\" graphql:\"id\""
@@ -2171,6 +2496,10 @@ type GetProductByXid_GetProduct_ProductFullFragment_Category_CategoryFragment_Pr
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
+type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
 type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Releases struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
@@ -2182,9 +2511,9 @@ type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragme
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Avatar struct {
-	ID  string "json:\"id\" graphql:\"id\""
-	URL string "json:\"url\" graphql:\"url\""
+type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Avatar_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -2198,9 +2527,9 @@ type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragme
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Avatar struct {
-	ID  string "json:\"id\" graphql:\"id\""
-	URL string "json:\"url\" graphql:\"url\""
+type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Avatar_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -2226,11 +2555,47 @@ type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragme
 type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Software struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
+type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Image_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Readme_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_ContributionGuide_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Bom_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_ManufacturingInstructions_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_UserManual_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
 type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Product struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
 type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_UsedIn struct {
 	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Source_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Export_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Auxiliary_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_Organization struct {
 	ID string "json:\"id\" graphql:\"id\""
@@ -2253,6 +2618,10 @@ type GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragme
 	StringV GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_StringV "graphql:\"... on StringV\""
 	FloatV  GetProductByXid_GetProduct_ProductFullFragment_Releases_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_FloatV  "graphql:\"... on FloatV\""
 }
+type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
 type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Releases struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
@@ -2264,9 +2633,9 @@ type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragmen
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Avatar struct {
-	ID  string "json:\"id\" graphql:\"id\""
-	URL string "json:\"url\" graphql:\"url\""
+type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Avatar_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -2280,9 +2649,9 @@ type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragmen
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Avatar struct {
-	ID  string "json:\"id\" graphql:\"id\""
-	URL string "json:\"url\" graphql:\"url\""
+type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Avatar_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -2308,11 +2677,47 @@ type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragmen
 type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Software struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
+type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Image_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Readme_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_ContributionGuide_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Bom_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_ManufacturingInstructions_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_UserManual_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
 type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Product struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
 type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_UsedIn struct {
 	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Source_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Export_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Auxiliary_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragment_Organization struct {
 	ID string "json:\"id\" graphql:\"id\""
@@ -2337,6 +2742,14 @@ type GetProductByXid_GetProduct_ProductFullFragment_Release_ComponentFullFragmen
 }
 type GetProductID_GetProduct struct {
 	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_License struct {
+	ID  string "json:\"id\" graphql:\"id\""
+	Xid string "json:\"xid\" graphql:\"xid\""
 }
 type GetProducts_QueryProduct_ProductFullFragment_RenamedTo struct {
 	ID string "json:\"id\" graphql:\"id\""
@@ -2377,6 +2790,10 @@ type GetProducts_QueryProduct_ProductFullFragment_Category_CategoryFragment_Prod
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
+type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
 type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_Releases struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
@@ -2388,9 +2805,9 @@ type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Avatar struct {
-	ID  string "json:\"id\" graphql:\"id\""
-	URL string "json:\"url\" graphql:\"url\""
+type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Avatar_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -2404,9 +2821,9 @@ type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Avatar struct {
-	ID  string "json:\"id\" graphql:\"id\""
-	URL string "json:\"url\" graphql:\"url\""
+type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Avatar_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -2432,11 +2849,47 @@ type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment
 type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_Software struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
+type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_Image_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_Readme_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_ContributionGuide_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_Bom_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_ManufacturingInstructions_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_UserManual_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
 type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_Product struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
 type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_UsedIn struct {
 	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_Source_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_Export_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_Auxiliary_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_Organization struct {
 	ID string "json:\"id\" graphql:\"id\""
@@ -2459,6 +2912,10 @@ type GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment
 	StringV GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_StringV "graphql:\"... on StringV\""
 	FloatV  GetProducts_QueryProduct_ProductFullFragment_Releases_ComponentFullFragment_ProductionMetadata_KeyValueFragment_Value_FloatV  "graphql:\"... on FloatV\""
 }
+type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
 type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_Releases struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
@@ -2470,9 +2927,9 @@ type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Avatar struct {
-	ID  string "json:\"id\" graphql:\"id\""
-	URL string "json:\"url\" graphql:\"url\""
+type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Avatar_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -2486,9 +2943,9 @@ type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Avatar struct {
-	ID  string "json:\"id\" graphql:\"id\""
-	URL string "json:\"url\" graphql:\"url\""
+type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Avatar_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -2514,11 +2971,47 @@ type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_
 type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_Software struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
+type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_Image_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_Readme_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_ContributionGuide_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_Bom_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_ManufacturingInstructions_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_UserManual_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
 type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_Product struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
 type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_UsedIn struct {
 	ID string "json:\"id\" graphql:\"id\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_Source_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_Export_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_Auxiliary_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_Organization struct {
 	ID string "json:\"id\" graphql:\"id\""
@@ -2543,6 +3036,10 @@ type GetProducts_QueryProduct_ProductFullFragment_Release_ComponentFullFragment_
 }
 type GetProducts_AggregateProduct struct {
 	Count *int64 "json:\"count\" graphql:\"count\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type SearchProducts_QueryProduct_ProductSearchFragment_RenamedTo struct {
 	ID string "json:\"id\" graphql:\"id\""
@@ -2586,6 +3083,10 @@ type SearchProducts_QueryProduct_ProductSearchFragment_Category_CategoryFragment
 type SearchProducts_QueryProduct_ProductSearchFragment_Releases struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
 type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_Releases struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
@@ -2597,9 +3098,9 @@ type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFrag
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Avatar struct {
-	ID  string "json:\"id\" graphql:\"id\""
-	URL string "json:\"url\" graphql:\"url\""
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_Avatar_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_User_UserFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -2613,9 +3114,9 @@ type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFrag
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Avatar struct {
-	ID  string "json:\"id\" graphql:\"id\""
-	URL string "json:\"url\" graphql:\"url\""
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_Avatar_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_Licensor_UserOrGroupFullFragment_Group_GroupFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -2641,11 +3142,47 @@ type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFrag
 type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_Software struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_Image_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_Readme_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_ContributionGuide_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_Bom_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_ManufacturingInstructions_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_UserManual_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
 type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_Product struct {
 	ID string "json:\"id\" graphql:\"id\""
 }
 type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_UsedIn struct {
 	ID string "json:\"id\" graphql:\"id\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_Source_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_Export_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
+type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_Auxiliary_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type SearchProducts_QueryProduct_ProductSearchFragment_Release_ComponentFullFragment_Organization struct {
 	ID string "json:\"id\" graphql:\"id\""
@@ -2725,6 +3262,10 @@ type DeleteRepositories_DeleteRepository_Repository struct {
 type DeleteRepositories_DeleteRepository struct {
 	Repository []*DeleteRepositories_DeleteRepository_Repository "json:\"repository\" graphql:\"repository\""
 }
+type GetSoftwareByID_GetSoftware_SoftwareFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
+}
 type GetSoftwareByID_GetSoftware_SoftwareFragment_InstallationGuide struct {
 	ID   string "json:\"id\" graphql:\"id\""
 	Path string "json:\"path\" graphql:\"path\""
@@ -2732,6 +3273,10 @@ type GetSoftwareByID_GetSoftware_SoftwareFragment_InstallationGuide struct {
 type GetSoftwareByID_GetSoftware_SoftwareFragment_License struct {
 	ID  string "json:\"id\" graphql:\"id\""
 	Xid string "json:\"xid\" graphql:\"xid\""
+}
+type GetSoftwares_QuerySoftware_SoftwareFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetSoftwares_QuerySoftware_SoftwareFragment_InstallationGuide struct {
 	ID   string "json:\"id\" graphql:\"id\""
@@ -2892,9 +3437,9 @@ type GetUserOrGroupByID_GetUserOrGroup_User_UserFragment_UserOrGroupFragment_Hos
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type GetUserOrGroupByID_GetUserOrGroup_User_UserFragment_UserOrGroupFragment_Avatar struct {
-	ID  string "json:\"id\" graphql:\"id\""
-	URL string "json:\"url\" graphql:\"url\""
+type GetUserOrGroupByID_GetUserOrGroup_User_UserFragment_UserOrGroupFragment_Avatar_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetUserOrGroupByID_GetUserOrGroup_User_UserFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -2908,9 +3453,9 @@ type GetUserOrGroupByID_GetUserOrGroup_Group_GroupFragment_UserOrGroupFragment_H
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type GetUserOrGroupByID_GetUserOrGroup_Group_GroupFragment_UserOrGroupFragment_Avatar struct {
-	ID  string "json:\"id\" graphql:\"id\""
-	URL string "json:\"url\" graphql:\"url\""
+type GetUserOrGroupByID_GetUserOrGroup_Group_GroupFragment_UserOrGroupFragment_Avatar_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetUserOrGroupByID_GetUserOrGroup_Group_GroupFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -2932,9 +3477,9 @@ type GetUserOrGroupByXid_GetUserOrGroup_User_UserFragment_UserOrGroupFragment_Ho
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type GetUserOrGroupByXid_GetUserOrGroup_User_UserFragment_UserOrGroupFragment_Avatar struct {
-	ID  string "json:\"id\" graphql:\"id\""
-	URL string "json:\"url\" graphql:\"url\""
+type GetUserOrGroupByXid_GetUserOrGroup_User_UserFragment_UserOrGroupFragment_Avatar_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetUserOrGroupByXid_GetUserOrGroup_User_UserFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -2948,9 +3493,9 @@ type GetUserOrGroupByXid_GetUserOrGroup_Group_GroupFragment_UserOrGroupFragment_
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type GetUserOrGroupByXid_GetUserOrGroup_Group_GroupFragment_UserOrGroupFragment_Avatar struct {
-	ID  string "json:\"id\" graphql:\"id\""
-	URL string "json:\"url\" graphql:\"url\""
+type GetUserOrGroupByXid_GetUserOrGroup_Group_GroupFragment_UserOrGroupFragment_Avatar_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetUserOrGroupByXid_GetUserOrGroup_Group_GroupFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -2975,9 +3520,9 @@ type GetUserOrGroups_QueryUserOrGroup_User_UserFragment_UserOrGroupFragment_Host
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type GetUserOrGroups_QueryUserOrGroup_User_UserFragment_UserOrGroupFragment_Avatar struct {
-	ID  string "json:\"id\" graphql:\"id\""
-	URL string "json:\"url\" graphql:\"url\""
+type GetUserOrGroups_QueryUserOrGroup_User_UserFragment_UserOrGroupFragment_Avatar_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetUserOrGroups_QueryUserOrGroup_User_UserFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -2991,9 +3536,9 @@ type GetUserOrGroups_QueryUserOrGroup_Group_GroupFragment_UserOrGroupFragment_Ho
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type GetUserOrGroups_QueryUserOrGroup_Group_GroupFragment_UserOrGroupFragment_Avatar struct {
-	ID  string "json:\"id\" graphql:\"id\""
-	URL string "json:\"url\" graphql:\"url\""
+type GetUserOrGroups_QueryUserOrGroup_Group_GroupFragment_UserOrGroupFragment_Avatar_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetUserOrGroups_QueryUserOrGroup_Group_GroupFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -3030,9 +3575,9 @@ type GetUserByID_GetUser_UserFragment_UserOrGroupFragment_Host struct {
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type GetUserByID_GetUser_UserFragment_UserOrGroupFragment_Avatar struct {
-	ID  string "json:\"id\" graphql:\"id\""
-	URL string "json:\"url\" graphql:\"url\""
+type GetUserByID_GetUser_UserFragment_UserOrGroupFragment_Avatar_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetUserByID_GetUser_UserFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -3046,9 +3591,9 @@ type GetUserByXid_GetUser_UserFragment_UserOrGroupFragment_Host struct {
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type GetUserByXid_GetUser_UserFragment_UserOrGroupFragment_Avatar struct {
-	ID  string "json:\"id\" graphql:\"id\""
-	URL string "json:\"url\" graphql:\"url\""
+type GetUserByXid_GetUser_UserFragment_UserOrGroupFragment_Avatar_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetUserByXid_GetUser_UserFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -3065,9 +3610,9 @@ type GetUsers_QueryUser_UserFragment_UserOrGroupFragment_Host struct {
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type GetUsers_QueryUser_UserFragment_UserOrGroupFragment_Avatar struct {
-	ID  string "json:\"id\" graphql:\"id\""
-	URL string "json:\"url\" graphql:\"url\""
+type GetUsers_QueryUser_UserFragment_UserOrGroupFragment_Avatar_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetUsers_QueryUser_UserFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -3102,9 +3647,9 @@ type GetGroupByID_GetGroup_GroupFragment_UserOrGroupFragment_Host struct {
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type GetGroupByID_GetGroup_GroupFragment_UserOrGroupFragment_Avatar struct {
-	ID  string "json:\"id\" graphql:\"id\""
-	URL string "json:\"url\" graphql:\"url\""
+type GetGroupByID_GetGroup_GroupFragment_UserOrGroupFragment_Avatar_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetGroupByID_GetGroup_GroupFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -3122,9 +3667,9 @@ type GetGroupByXid_GetGroup_GroupFragment_UserOrGroupFragment_Host struct {
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type GetGroupByXid_GetGroup_GroupFragment_UserOrGroupFragment_Avatar struct {
-	ID  string "json:\"id\" graphql:\"id\""
-	URL string "json:\"url\" graphql:\"url\""
+type GetGroupByXid_GetGroup_GroupFragment_UserOrGroupFragment_Avatar_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetGroupByXid_GetGroup_GroupFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -3145,9 +3690,9 @@ type GetGroups_QueryGroup_GroupFragment_UserOrGroupFragment_Host struct {
 	ID   string "json:\"id\" graphql:\"id\""
 	Name string "json:\"name\" graphql:\"name\""
 }
-type GetGroups_QueryGroup_GroupFragment_UserOrGroupFragment_Avatar struct {
-	ID  string "json:\"id\" graphql:\"id\""
-	URL string "json:\"url\" graphql:\"url\""
+type GetGroups_QueryGroup_GroupFragment_UserOrGroupFragment_Avatar_FileFragment_CrawlerMetaFragment_DataSource_RepositoryFragment_Host struct {
+	ID   string "json:\"id\" graphql:\"id\""
+	Name string "json:\"name\" graphql:\"name\""
 }
 type GetGroups_QueryGroup_GroupFragment_UserOrGroupFragment_MemberOf struct {
 	ID       string  "json:\"id\" graphql:\"id\""
@@ -4007,21 +4552,6 @@ const GetComponentByIDDocument = `query GetComponentByID ($id: ID!) {
 		... ComponentFragment
 	}
 }
-fragment UserOrGroupBasicFragment on UserOrGroup {
-	__typename
-	name
-	fullName
-	id
-}
-fragment OuterDimensionsFragment on OuterDimensions {
-	__typename
-	... on BoundingBoxDimensions {
-		... BoundingBoxDimensionsFragment
-	}
-	... on OpenSCADDimensions {
-		... OpenSCADDimensionsFragment
-	}
-}
 fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
 	id
 	height
@@ -4048,6 +4578,7 @@ fragment KeyValueFragment on KeyValue {
 	}
 }
 fragment ComponentFragment on Component {
+	... CrawlerMetaFragment
 	id
 	xid
 	name
@@ -4157,6 +4688,44 @@ fragment ComponentFragment on Component {
 	}
 	productionMetadata {
 		... KeyValueFragment
+	}
+}
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
+	dataSource {
+		... RepositoryFragment
+	}
+}
+fragment RepositoryFragment on Repository {
+	id
+	xid
+	url
+	permaUrl
+	host {
+		id
+		name
+	}
+	owner {
+		... UserOrGroupBasicFragment
+	}
+	name
+	reference
+	path
+}
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
+}
+fragment OuterDimensionsFragment on OuterDimensions {
+	__typename
+	... on BoundingBoxDimensions {
+		... BoundingBoxDimensionsFragment
+	}
+	... on OpenSCADDimensions {
+		... OpenSCADDimensionsFragment
 	}
 }
 `
@@ -4201,6 +4770,43 @@ const GetComponentByXidDocument = `query GetComponentByXid ($xid: String!) {
 		... ComponentFragment
 	}
 }
+fragment RepositoryFragment on Repository {
+	id
+	xid
+	url
+	permaUrl
+	host {
+		id
+		name
+	}
+	owner {
+		... UserOrGroupBasicFragment
+	}
+	name
+	reference
+	path
+}
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
+}
+fragment OuterDimensionsFragment on OuterDimensions {
+	__typename
+	... on BoundingBoxDimensions {
+		... BoundingBoxDimensionsFragment
+	}
+	... on OpenSCADDimensions {
+		... OpenSCADDimensionsFragment
+	}
+}
+fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
+	id
+	height
+	width
+	depth
+}
 fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
 	id
 	openscad
@@ -4221,6 +4827,7 @@ fragment KeyValueFragment on KeyValue {
 	}
 }
 fragment ComponentFragment on Component {
+	... CrawlerMetaFragment
 	id
 	xid
 	name
@@ -4332,26 +4939,12 @@ fragment ComponentFragment on Component {
 		... KeyValueFragment
 	}
 }
-fragment UserOrGroupBasicFragment on UserOrGroup {
-	__typename
-	name
-	fullName
-	id
-}
-fragment OuterDimensionsFragment on OuterDimensions {
-	__typename
-	... on BoundingBoxDimensions {
-		... BoundingBoxDimensionsFragment
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
+	dataSource {
+		... RepositoryFragment
 	}
-	... on OpenSCADDimensions {
-		... OpenSCADDimensionsFragment
-	}
-}
-fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
-	id
-	height
-	width
-	depth
 }
 `
 
@@ -4440,7 +5033,48 @@ const GetComponentsDocument = `query GetComponents ($getFilter: ComponentFilter,
 		count
 	}
 }
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
+}
+fragment OuterDimensionsFragment on OuterDimensions {
+	__typename
+	... on BoundingBoxDimensions {
+		... BoundingBoxDimensionsFragment
+	}
+	... on OpenSCADDimensions {
+		... OpenSCADDimensionsFragment
+	}
+}
+fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
+	id
+	height
+	width
+	depth
+}
+fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
+	id
+	openscad
+	unit
+}
+fragment KeyValueFragment on KeyValue {
+	id
+	key
+	value {
+		... on StringV {
+			id
+			stringValue: value
+		}
+		... on FloatV {
+			id
+			floatValue: value
+		}
+	}
+}
 fragment ComponentFragment on Component {
+	... CrawlerMetaFragment
 	id
 	xid
 	name
@@ -4552,45 +5186,28 @@ fragment ComponentFragment on Component {
 		... KeyValueFragment
 	}
 }
-fragment UserOrGroupBasicFragment on UserOrGroup {
-	__typename
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
+	dataSource {
+		... RepositoryFragment
+	}
+}
+fragment RepositoryFragment on Repository {
+	id
+	xid
+	url
+	permaUrl
+	host {
+		id
+		name
+	}
+	owner {
+		... UserOrGroupBasicFragment
+	}
 	name
-	fullName
-	id
-}
-fragment OuterDimensionsFragment on OuterDimensions {
-	__typename
-	... on BoundingBoxDimensions {
-		... BoundingBoxDimensionsFragment
-	}
-	... on OpenSCADDimensions {
-		... OpenSCADDimensionsFragment
-	}
-}
-fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
-	id
-	height
-	width
-	depth
-}
-fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
-	id
-	openscad
-	unit
-}
-fragment KeyValueFragment on KeyValue {
-	id
-	key
-	value {
-		... on StringV {
-			id
-			stringValue: value
-		}
-		... on FloatV {
-			id
-			floatValue: value
-		}
-	}
+	reference
+	path
 }
 `
 
@@ -5005,18 +5622,44 @@ const GetFileByIDDocument = `query GetFileByID ($id: ID!) {
 		... FileFragment
 	}
 }
-fragment CrawlerMetaFragment on CrawlerMeta {
-	discoveredAt
-	lastIndexedAt
+fragment RepositoryFragment on Repository {
+	id
+	xid
+	url
+	permaUrl
+	host {
+		id
+		name
+	}
+	owner {
+		... UserOrGroupBasicFragment
+	}
+	name
+	reference
+	path
+}
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
 }
 fragment FileFragment on File {
 	... CrawlerMetaFragment
 	id
+	xid
 	name
 	path
 	mimeType
 	url
 	createdAt
+}
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
+	dataSource {
+		... RepositoryFragment
+	}
 }
 `
 
@@ -5063,6 +5706,7 @@ const GetFileByXidDocument = `query GetFileByXid ($xid: String!) {
 fragment FileFragment on File {
 	... CrawlerMetaFragment
 	id
+	xid
 	name
 	path
 	mimeType
@@ -5072,6 +5716,31 @@ fragment FileFragment on File {
 fragment CrawlerMetaFragment on CrawlerMeta {
 	discoveredAt
 	lastIndexedAt
+	dataSource {
+		... RepositoryFragment
+	}
+}
+fragment RepositoryFragment on Repository {
+	id
+	xid
+	url
+	permaUrl
+	host {
+		id
+		name
+	}
+	owner {
+		... UserOrGroupBasicFragment
+	}
+	name
+	reference
+	path
+}
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
 }
 `
 
@@ -5163,6 +5832,7 @@ const GetFilesDocument = `query GetFiles ($getFilter: FileFilter, $order: FileOr
 fragment FileFragment on File {
 	... CrawlerMetaFragment
 	id
+	xid
 	name
 	path
 	mimeType
@@ -5172,6 +5842,31 @@ fragment FileFragment on File {
 fragment CrawlerMetaFragment on CrawlerMeta {
 	discoveredAt
 	lastIndexedAt
+	dataSource {
+		... RepositoryFragment
+	}
+}
+fragment RepositoryFragment on Repository {
+	id
+	xid
+	url
+	permaUrl
+	host {
+		id
+		name
+	}
+	owner {
+		... UserOrGroupBasicFragment
+	}
+	name
+	reference
+	path
+}
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
 }
 `
 
@@ -7975,7 +8670,96 @@ const GetProductByIDDocument = `query GetProductByID ($id: ID!) {
 		... ProductFullFragment
 	}
 }
+fragment UserFragment on User {
+	... UserOrGroupFragment
+	locale
+}
+fragment GroupFragment on Group {
+	... UserOrGroupFragment
+	members {
+		__typename
+		id
+	}
+}
+fragment ProductFullFragment on Product {
+	... CrawlerMetaFragment
+	id
+	xid
+	name
+	description
+	documentationLanguage
+	version
+	license {
+		id
+		xid
+	}
+	licensor {
+		... UserOrGroupBasicFragment
+	}
+	website
+	state
+	lastUpdatedAt
+	renamedTo {
+		id
+	}
+	renamedFrom {
+		id
+	}
+	forkOf {
+		id
+		release {
+			repository {
+				url
+			}
+		}
+	}
+	forks {
+		id
+	}
+	forkCount
+	starCount
+	tags {
+		... TagFragment
+	}
+	category {
+		... CategoryFragment
+	}
+	releases {
+		... ComponentFullFragment
+	}
+	release {
+		... ComponentFullFragment
+	}
+}
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
+	dataSource {
+		... RepositoryFragment
+	}
+}
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
+}
+fragment KeyValueFragment on KeyValue {
+	id
+	key
+	value {
+		... on StringV {
+			id
+			stringValue: value
+		}
+		... on FloatV {
+			id
+			floatValue: value
+		}
+	}
+}
 fragment ComponentFullFragment on Component {
+	... CrawlerMetaFragment
 	id
 	xid
 	name
@@ -8066,6 +8850,25 @@ fragment ComponentFullFragment on Component {
 		... KeyValueFragment
 	}
 }
+fragment LicenseFragmentBasic on License {
+	id
+	xid
+	name
+	isSpdx
+	isDeprecated
+	isOsiApproved
+	isFsfLibre
+	isBlocked
+}
+fragment OuterDimensionsFragment on OuterDimensions {
+	__typename
+	... on BoundingBoxDimensions {
+		... BoundingBoxDimensionsFragment
+	}
+	... on OpenSCADDimensions {
+		... OpenSCADDimensionsFragment
+	}
+}
 fragment CategoryFragment on Category {
 	id
 	xid
@@ -8085,17 +8888,51 @@ fragment CategoryFragment on Category {
 		name
 	}
 }
-fragment TagFragment on Tag {
+fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
 	id
+	openscad
+	unit
+}
+fragment UserOrGroupFragment on UserOrGroup {
+	__typename
+	id
+	xid
+	host {
+		id
+		name
+	}
 	name
-	aliases {
+	fullName
+	email
+	description
+	avatar {
+		... FileFragment
+	}
+	url
+	memberOf {
+		id
+		fullName
+	}
+	products {
 		id
 		name
 	}
-	related {
-		id
-		name
-	}
+}
+fragment FileFragment on File {
+	... CrawlerMetaFragment
+	id
+	xid
+	name
+	path
+	mimeType
+	url
+	createdAt
+}
+fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
+	id
+	height
+	width
+	depth
 }
 fragment RepositoryFragment on Repository {
 	id
@@ -8113,144 +8950,16 @@ fragment RepositoryFragment on Repository {
 	reference
 	path
 }
-fragment UserOrGroupBasicFragment on UserOrGroup {
-	__typename
+fragment TagFragment on Tag {
+	id
 	name
-	fullName
-	id
-}
-fragment UserFragment on User {
-	... UserOrGroupFragment
-	locale
-}
-fragment CrawlerMetaFragment on CrawlerMeta {
-	discoveredAt
-	lastIndexedAt
-}
-fragment LicenseFragmentBasic on License {
-	id
-	xid
-	name
-	isSpdx
-	isDeprecated
-	isOsiApproved
-	isFsfLibre
-	isBlocked
-}
-fragment GroupFragment on Group {
-	... UserOrGroupFragment
-	members {
-		__typename
-		id
-	}
-}
-fragment OuterDimensionsFragment on OuterDimensions {
-	__typename
-	... on BoundingBoxDimensions {
-		... BoundingBoxDimensionsFragment
-	}
-	... on OpenSCADDimensions {
-		... OpenSCADDimensionsFragment
-	}
-}
-fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
-	id
-	height
-	width
-	depth
-}
-fragment ProductFullFragment on Product {
-	... CrawlerMetaFragment
-	id
-	xid
-	name
-	website
-	state
-	lastUpdatedAt
-	renamedTo {
-		id
-	}
-	renamedFrom {
-		id
-	}
-	forkOf {
-		id
-		release {
-			repository {
-				url
-			}
-		}
-	}
-	forks {
-		id
-	}
-	forkCount
-	starCount
-	tags {
-		... TagFragment
-	}
-	category {
-		... CategoryFragment
-	}
-	releases {
-		... ComponentFullFragment
-	}
-	release {
-		... ComponentFullFragment
-	}
-}
-fragment UserOrGroupFragment on UserOrGroup {
-	__typename
-	id
-	xid
-	host {
+	aliases {
 		id
 		name
 	}
-	name
-	fullName
-	email
-	description
-	avatar {
-		id
-		url
-	}
-	url
-	memberOf {
-		id
-		fullName
-	}
-	products {
+	related {
 		id
 		name
-	}
-}
-fragment FileFragment on File {
-	... CrawlerMetaFragment
-	id
-	name
-	path
-	mimeType
-	url
-	createdAt
-}
-fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
-	id
-	openscad
-	unit
-}
-fragment KeyValueFragment on KeyValue {
-	id
-	key
-	value {
-		... on StringV {
-			id
-			stringValue: value
-		}
-		... on FloatV {
-			id
-			floatValue: value
-		}
 	}
 }
 fragment UserOrGroupFullFragment on UserOrGroup {
@@ -8304,7 +9013,217 @@ const GetProductByXidDocument = `query GetProductByXid ($xid: String!) {
 		... ProductFullFragment
 	}
 }
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
+	dataSource {
+		... RepositoryFragment
+	}
+}
+fragment CategoryFragment on Category {
+	id
+	xid
+	fullName
+	name
+	description
+	parent {
+		id
+		fullName
+	}
+	children {
+		id
+		fullName
+	}
+	products {
+		id
+		name
+	}
+}
+fragment UserOrGroupFullFragment on UserOrGroup {
+	__typename
+	... on User {
+		... UserFragment
+	}
+	... on Group {
+		... GroupFragment
+	}
+}
+fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
+	id
+	height
+	width
+	depth
+}
+fragment RepositoryFragment on Repository {
+	id
+	xid
+	url
+	permaUrl
+	host {
+		id
+		name
+	}
+	owner {
+		... UserOrGroupBasicFragment
+	}
+	name
+	reference
+	path
+}
+fragment TagFragment on Tag {
+	id
+	name
+	aliases {
+		id
+		name
+	}
+	related {
+		id
+		name
+	}
+}
+fragment LicenseFragmentBasic on License {
+	id
+	xid
+	name
+	isSpdx
+	isDeprecated
+	isOsiApproved
+	isFsfLibre
+	isBlocked
+}
+fragment UserFragment on User {
+	... UserOrGroupFragment
+	locale
+}
+fragment UserOrGroupFragment on UserOrGroup {
+	__typename
+	id
+	xid
+	host {
+		id
+		name
+	}
+	name
+	fullName
+	email
+	description
+	avatar {
+		... FileFragment
+	}
+	url
+	memberOf {
+		id
+		fullName
+	}
+	products {
+		id
+		name
+	}
+}
+fragment OuterDimensionsFragment on OuterDimensions {
+	__typename
+	... on BoundingBoxDimensions {
+		... BoundingBoxDimensionsFragment
+	}
+	... on OpenSCADDimensions {
+		... OpenSCADDimensionsFragment
+	}
+}
+fragment FileFragment on File {
+	... CrawlerMetaFragment
+	id
+	xid
+	name
+	path
+	mimeType
+	url
+	createdAt
+}
+fragment GroupFragment on Group {
+	... UserOrGroupFragment
+	members {
+		__typename
+		id
+	}
+}
+fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
+	id
+	openscad
+	unit
+}
+fragment KeyValueFragment on KeyValue {
+	id
+	key
+	value {
+		... on StringV {
+			id
+			stringValue: value
+		}
+		... on FloatV {
+			id
+			floatValue: value
+		}
+	}
+}
+fragment ProductFullFragment on Product {
+	... CrawlerMetaFragment
+	id
+	xid
+	name
+	description
+	documentationLanguage
+	version
+	license {
+		id
+		xid
+	}
+	licensor {
+		... UserOrGroupBasicFragment
+	}
+	website
+	state
+	lastUpdatedAt
+	renamedTo {
+		id
+	}
+	renamedFrom {
+		id
+	}
+	forkOf {
+		id
+		release {
+			repository {
+				url
+			}
+		}
+	}
+	forks {
+		id
+	}
+	forkCount
+	starCount
+	tags {
+		... TagFragment
+	}
+	category {
+		... CategoryFragment
+	}
+	releases {
+		... ComponentFullFragment
+	}
+	release {
+		... ComponentFullFragment
+	}
+}
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
+}
 fragment ComponentFullFragment on Component {
+	... CrawlerMetaFragment
 	id
 	xid
 	name
@@ -8394,202 +9313,6 @@ fragment ComponentFullFragment on Component {
 	productionMetadata {
 		... KeyValueFragment
 	}
-}
-fragment RepositoryFragment on Repository {
-	id
-	xid
-	url
-	permaUrl
-	host {
-		id
-		name
-	}
-	owner {
-		... UserOrGroupBasicFragment
-	}
-	name
-	reference
-	path
-}
-fragment LicenseFragmentBasic on License {
-	id
-	xid
-	name
-	isSpdx
-	isDeprecated
-	isOsiApproved
-	isFsfLibre
-	isBlocked
-}
-fragment UserOrGroupFragment on UserOrGroup {
-	__typename
-	id
-	xid
-	host {
-		id
-		name
-	}
-	name
-	fullName
-	email
-	description
-	avatar {
-		id
-		url
-	}
-	url
-	memberOf {
-		id
-		fullName
-	}
-	products {
-		id
-		name
-	}
-}
-fragment KeyValueFragment on KeyValue {
-	id
-	key
-	value {
-		... on StringV {
-			id
-			stringValue: value
-		}
-		... on FloatV {
-			id
-			floatValue: value
-		}
-	}
-}
-fragment ProductFullFragment on Product {
-	... CrawlerMetaFragment
-	id
-	xid
-	name
-	website
-	state
-	lastUpdatedAt
-	renamedTo {
-		id
-	}
-	renamedFrom {
-		id
-	}
-	forkOf {
-		id
-		release {
-			repository {
-				url
-			}
-		}
-	}
-	forks {
-		id
-	}
-	forkCount
-	starCount
-	tags {
-		... TagFragment
-	}
-	category {
-		... CategoryFragment
-	}
-	releases {
-		... ComponentFullFragment
-	}
-	release {
-		... ComponentFullFragment
-	}
-}
-fragment UserFragment on User {
-	... UserOrGroupFragment
-	locale
-}
-fragment OuterDimensionsFragment on OuterDimensions {
-	__typename
-	... on BoundingBoxDimensions {
-		... BoundingBoxDimensionsFragment
-	}
-	... on OpenSCADDimensions {
-		... OpenSCADDimensionsFragment
-	}
-}
-fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
-	id
-	height
-	width
-	depth
-}
-fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
-	id
-	openscad
-	unit
-}
-fragment CrawlerMetaFragment on CrawlerMeta {
-	discoveredAt
-	lastIndexedAt
-}
-fragment TagFragment on Tag {
-	id
-	name
-	aliases {
-		id
-		name
-	}
-	related {
-		id
-		name
-	}
-}
-fragment UserOrGroupBasicFragment on UserOrGroup {
-	__typename
-	name
-	fullName
-	id
-}
-fragment GroupFragment on Group {
-	... UserOrGroupFragment
-	members {
-		__typename
-		id
-	}
-}
-fragment CategoryFragment on Category {
-	id
-	xid
-	fullName
-	name
-	description
-	parent {
-		id
-		fullName
-	}
-	children {
-		id
-		fullName
-	}
-	products {
-		id
-		name
-	}
-}
-fragment UserOrGroupFullFragment on UserOrGroup {
-	__typename
-	... on User {
-		... UserFragment
-	}
-	... on Group {
-		... GroupFragment
-	}
-}
-fragment FileFragment on File {
-	... CrawlerMetaFragment
-	id
-	name
-	path
-	mimeType
-	url
-	createdAt
 }
 `
 
@@ -8678,194 +9401,14 @@ const GetProductsDocument = `query GetProducts ($getFilter: ProductFilter, $orde
 		count
 	}
 }
-fragment RepositoryFragment on Repository {
-	id
-	xid
-	url
-	permaUrl
-	host {
-		id
-		name
-	}
-	owner {
-		... UserOrGroupBasicFragment
-	}
-	name
-	reference
-	path
-}
 fragment UserOrGroupBasicFragment on UserOrGroup {
 	__typename
 	name
 	fullName
 	id
 }
-fragment UserOrGroupFragment on UserOrGroup {
-	__typename
-	id
-	xid
-	host {
-		id
-		name
-	}
-	name
-	fullName
-	email
-	description
-	avatar {
-		id
-		url
-	}
-	url
-	memberOf {
-		id
-		fullName
-	}
-	products {
-		id
-		name
-	}
-}
-fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
-	id
-	openscad
-	unit
-}
-fragment LicenseFragmentBasic on License {
-	id
-	xid
-	name
-	isSpdx
-	isDeprecated
-	isOsiApproved
-	isFsfLibre
-	isBlocked
-}
-fragment UserFragment on User {
-	... UserOrGroupFragment
-	locale
-}
-fragment ProductFullFragment on Product {
-	... CrawlerMetaFragment
-	id
-	xid
-	name
-	website
-	state
-	lastUpdatedAt
-	renamedTo {
-		id
-	}
-	renamedFrom {
-		id
-	}
-	forkOf {
-		id
-		release {
-			repository {
-				url
-			}
-		}
-	}
-	forks {
-		id
-	}
-	forkCount
-	starCount
-	tags {
-		... TagFragment
-	}
-	category {
-		... CategoryFragment
-	}
-	releases {
-		... ComponentFullFragment
-	}
-	release {
-		... ComponentFullFragment
-	}
-}
-fragment UserOrGroupFullFragment on UserOrGroup {
-	__typename
-	... on User {
-		... UserFragment
-	}
-	... on Group {
-		... GroupFragment
-	}
-}
-fragment GroupFragment on Group {
-	... UserOrGroupFragment
-	members {
-		__typename
-		id
-	}
-}
-fragment OuterDimensionsFragment on OuterDimensions {
-	__typename
-	... on BoundingBoxDimensions {
-		... BoundingBoxDimensionsFragment
-	}
-	... on OpenSCADDimensions {
-		... OpenSCADDimensionsFragment
-	}
-}
-fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
-	id
-	height
-	width
-	depth
-}
-fragment KeyValueFragment on KeyValue {
-	id
-	key
-	value {
-		... on StringV {
-			id
-			stringValue: value
-		}
-		... on FloatV {
-			id
-			floatValue: value
-		}
-	}
-}
-fragment CrawlerMetaFragment on CrawlerMeta {
-	discoveredAt
-	lastIndexedAt
-}
-fragment TagFragment on Tag {
-	id
-	name
-	aliases {
-		id
-		name
-	}
-	related {
-		id
-		name
-	}
-}
-fragment CategoryFragment on Category {
-	id
-	xid
-	fullName
-	name
-	description
-	parent {
-		id
-		fullName
-	}
-	children {
-		id
-		fullName
-	}
-	products {
-		id
-		name
-	}
-}
 fragment ComponentFullFragment on Component {
+	... CrawlerMetaFragment
 	id
 	xid
 	name
@@ -8959,11 +9502,205 @@ fragment ComponentFullFragment on Component {
 fragment FileFragment on File {
 	... CrawlerMetaFragment
 	id
+	xid
 	name
 	path
 	mimeType
 	url
 	createdAt
+}
+fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
+	id
+	height
+	width
+	depth
+}
+fragment ProductFullFragment on Product {
+	... CrawlerMetaFragment
+	id
+	xid
+	name
+	description
+	documentationLanguage
+	version
+	license {
+		id
+		xid
+	}
+	licensor {
+		... UserOrGroupBasicFragment
+	}
+	website
+	state
+	lastUpdatedAt
+	renamedTo {
+		id
+	}
+	renamedFrom {
+		id
+	}
+	forkOf {
+		id
+		release {
+			repository {
+				url
+			}
+		}
+	}
+	forks {
+		id
+	}
+	forkCount
+	starCount
+	tags {
+		... TagFragment
+	}
+	category {
+		... CategoryFragment
+	}
+	releases {
+		... ComponentFullFragment
+	}
+	release {
+		... ComponentFullFragment
+	}
+}
+fragment TagFragment on Tag {
+	id
+	name
+	aliases {
+		id
+		name
+	}
+	related {
+		id
+		name
+	}
+}
+fragment UserOrGroupFullFragment on UserOrGroup {
+	__typename
+	... on User {
+		... UserFragment
+	}
+	... on Group {
+		... GroupFragment
+	}
+}
+fragment UserFragment on User {
+	... UserOrGroupFragment
+	locale
+}
+fragment UserOrGroupFragment on UserOrGroup {
+	__typename
+	id
+	xid
+	host {
+		id
+		name
+	}
+	name
+	fullName
+	email
+	description
+	avatar {
+		... FileFragment
+	}
+	url
+	memberOf {
+		id
+		fullName
+	}
+	products {
+		id
+		name
+	}
+}
+fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
+	id
+	openscad
+	unit
+}
+fragment RepositoryFragment on Repository {
+	id
+	xid
+	url
+	permaUrl
+	host {
+		id
+		name
+	}
+	owner {
+		... UserOrGroupBasicFragment
+	}
+	name
+	reference
+	path
+}
+fragment LicenseFragmentBasic on License {
+	id
+	xid
+	name
+	isSpdx
+	isDeprecated
+	isOsiApproved
+	isFsfLibre
+	isBlocked
+}
+fragment GroupFragment on Group {
+	... UserOrGroupFragment
+	members {
+		__typename
+		id
+	}
+}
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
+	dataSource {
+		... RepositoryFragment
+	}
+}
+fragment CategoryFragment on Category {
+	id
+	xid
+	fullName
+	name
+	description
+	parent {
+		id
+		fullName
+	}
+	children {
+		id
+		fullName
+	}
+	products {
+		id
+		name
+	}
+}
+fragment OuterDimensionsFragment on OuterDimensions {
+	__typename
+	... on BoundingBoxDimensions {
+		... BoundingBoxDimensionsFragment
+	}
+	... on OpenSCADDimensions {
+		... OpenSCADDimensionsFragment
+	}
+}
+fragment KeyValueFragment on KeyValue {
+	id
+	key
+	value {
+		... on StringV {
+			id
+			stringValue: value
+		}
+		... on FloatV {
+			id
+			floatValue: value
+		}
+	}
 }
 `
 
@@ -9016,52 +9753,8 @@ const SearchProductsDocument = `query SearchProducts ($getFilter: ProductFilter,
 		count
 	}
 }
-fragment UserFragment on User {
-	... UserOrGroupFragment
-	locale
-}
-fragment UserOrGroupFragment on UserOrGroup {
-	__typename
-	id
-	xid
-	host {
-		id
-		name
-	}
-	name
-	fullName
-	email
-	description
-	avatar {
-		id
-		url
-	}
-	url
-	memberOf {
-		id
-		fullName
-	}
-	products {
-		id
-		name
-	}
-}
-fragment FileFragment on File {
-	... CrawlerMetaFragment
-	id
-	name
-	path
-	mimeType
-	url
-	createdAt
-}
-fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
-	id
-	height
-	width
-	depth
-}
 fragment ComponentFullFragment on Component {
+	... CrawlerMetaFragment
 	id
 	xid
 	name
@@ -9152,27 +9845,60 @@ fragment ComponentFullFragment on Component {
 		... KeyValueFragment
 	}
 }
+fragment LicenseFragmentBasic on License {
+	id
+	xid
+	name
+	isSpdx
+	isDeprecated
+	isOsiApproved
+	isFsfLibre
+	isBlocked
+}
 fragment UserOrGroupBasicFragment on UserOrGroup {
 	__typename
 	name
 	fullName
 	id
 }
-fragment GroupFragment on Group {
-	... UserOrGroupFragment
-	members {
-		__typename
-		id
+fragment UserOrGroupFullFragment on UserOrGroup {
+	__typename
+	... on User {
+		... UserFragment
+	}
+	... on Group {
+		... GroupFragment
 	}
 }
-fragment OuterDimensionsFragment on OuterDimensions {
+fragment UserOrGroupFragment on UserOrGroup {
 	__typename
-	... on BoundingBoxDimensions {
-		... BoundingBoxDimensionsFragment
+	id
+	xid
+	host {
+		id
+		name
 	}
-	... on OpenSCADDimensions {
-		... OpenSCADDimensionsFragment
+	name
+	fullName
+	email
+	description
+	avatar {
+		... FileFragment
 	}
+	url
+	memberOf {
+		id
+		fullName
+	}
+	products {
+		id
+		name
+	}
+}
+fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
+	id
+	openscad
+	unit
 }
 fragment ProductSearchFragment on Product {
 	... CrawlerMetaFragment
@@ -9230,35 +9956,13 @@ fragment RepositoryFragment on Repository {
 	reference
 	path
 }
-fragment LicenseFragmentBasic on License {
-	id
-	xid
-	name
-	isSpdx
-	isDeprecated
-	isOsiApproved
-	isFsfLibre
-	isBlocked
-}
-fragment OpenSCADDimensionsFragment on OpenSCADDimensions {
-	id
-	openscad
-	unit
-}
-fragment CrawlerMetaFragment on CrawlerMeta {
-	discoveredAt
-	lastIndexedAt
-}
-fragment TagFragment on Tag {
-	id
-	name
-	aliases {
-		id
-		name
+fragment OuterDimensionsFragment on OuterDimensions {
+	__typename
+	... on BoundingBoxDimensions {
+		... BoundingBoxDimensionsFragment
 	}
-	related {
-		id
-		name
+	... on OpenSCADDimensions {
+		... OpenSCADDimensionsFragment
 	}
 }
 fragment KeyValueFragment on KeyValue {
@@ -9273,6 +9977,38 @@ fragment KeyValueFragment on KeyValue {
 			id
 			floatValue: value
 		}
+	}
+}
+fragment GroupFragment on Group {
+	... UserOrGroupFragment
+	members {
+		__typename
+		id
+	}
+}
+fragment BoundingBoxDimensionsFragment on BoundingBoxDimensions {
+	id
+	height
+	width
+	depth
+}
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
+	dataSource {
+		... RepositoryFragment
+	}
+}
+fragment TagFragment on Tag {
+	id
+	name
+	aliases {
+		id
+		name
+	}
+	related {
+		id
+		name
 	}
 }
 fragment CategoryFragment on Category {
@@ -9294,14 +10030,19 @@ fragment CategoryFragment on Category {
 		name
 	}
 }
-fragment UserOrGroupFullFragment on UserOrGroup {
-	__typename
-	... on User {
-		... UserFragment
-	}
-	... on Group {
-		... GroupFragment
-	}
+fragment UserFragment on User {
+	... UserOrGroupFragment
+	locale
+}
+fragment FileFragment on File {
+	... CrawlerMetaFragment
+	id
+	xid
+	name
+	path
+	mimeType
+	url
+	createdAt
 }
 `
 
@@ -9547,6 +10288,12 @@ const GetRepositoryByXidDocument = `query GetRepositoryByXid ($xid: String!) {
 		... RepositoryFragment
 	}
 }
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
+}
 fragment RepositoryFragment on Repository {
 	id
 	xid
@@ -9562,12 +10309,6 @@ fragment RepositoryFragment on Repository {
 	name
 	reference
 	path
-}
-fragment UserOrGroupBasicFragment on UserOrGroup {
-	__typename
-	name
-	fullName
-	id
 }
 `
 
@@ -9656,6 +10397,12 @@ const GetRepositoriesDocument = `query GetRepositories ($getFilter: RepositoryFi
 		count
 	}
 }
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
+}
 fragment RepositoryFragment on Repository {
 	id
 	xid
@@ -9671,12 +10418,6 @@ fragment RepositoryFragment on Repository {
 	name
 	reference
 	path
-}
-fragment UserOrGroupBasicFragment on UserOrGroup {
-	__typename
-	name
-	fullName
-	id
 }
 `
 
@@ -9858,6 +10599,35 @@ const GetSoftwareByIDDocument = `query GetSoftwareByID ($id: ID!) {
 		... SoftwareFragment
 	}
 }
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
+	dataSource {
+		... RepositoryFragment
+	}
+}
+fragment RepositoryFragment on Repository {
+	id
+	xid
+	url
+	permaUrl
+	host {
+		id
+		name
+	}
+	owner {
+		... UserOrGroupBasicFragment
+	}
+	name
+	reference
+	path
+}
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
+}
 fragment SoftwareFragment on Software {
 	... CrawlerMetaFragment
 	id
@@ -9872,10 +10642,6 @@ fragment SoftwareFragment on Software {
 		xid
 	}
 	licensor
-}
-fragment CrawlerMetaFragment on CrawlerMeta {
-	discoveredAt
-	lastIndexedAt
 }
 `
 
@@ -9922,6 +10688,35 @@ const GetSoftwaresDocument = `query GetSoftwares ($getFilter: SoftwareFilter, $o
 		count
 	}
 }
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
+	dataSource {
+		... RepositoryFragment
+	}
+}
+fragment RepositoryFragment on Repository {
+	id
+	xid
+	url
+	permaUrl
+	host {
+		id
+		name
+	}
+	owner {
+		... UserOrGroupBasicFragment
+	}
+	name
+	reference
+	path
+}
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
+}
 fragment SoftwareFragment on Software {
 	... CrawlerMetaFragment
 	id
@@ -9936,10 +10731,6 @@ fragment SoftwareFragment on Software {
 		xid
 	}
 	licensor
-}
-fragment CrawlerMetaFragment on CrawlerMeta {
-	discoveredAt
-	lastIndexedAt
 }
 `
 
@@ -11192,6 +11983,13 @@ const GetUserOrGroupByIDDocument = `query GetUserOrGroupByID ($id: ID!) {
 		}
 	}
 }
+fragment GroupFragment on Group {
+	... UserOrGroupFragment
+	members {
+		__typename
+		id
+	}
+}
 fragment UserFragment on User {
 	... UserOrGroupFragment
 	locale
@@ -11209,8 +12007,7 @@ fragment UserOrGroupFragment on UserOrGroup {
 	email
 	description
 	avatar {
-		id
-		url
+		... FileFragment
 	}
 	url
 	memberOf {
@@ -11222,12 +12019,44 @@ fragment UserOrGroupFragment on UserOrGroup {
 		name
 	}
 }
-fragment GroupFragment on Group {
-	... UserOrGroupFragment
-	members {
-		__typename
-		id
+fragment FileFragment on File {
+	... CrawlerMetaFragment
+	id
+	xid
+	name
+	path
+	mimeType
+	url
+	createdAt
+}
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
+	dataSource {
+		... RepositoryFragment
 	}
+}
+fragment RepositoryFragment on Repository {
+	id
+	xid
+	url
+	permaUrl
+	host {
+		id
+		name
+	}
+	owner {
+		... UserOrGroupBasicFragment
+	}
+	name
+	reference
+	path
+}
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
 }
 `
 
@@ -11289,8 +12118,7 @@ fragment UserOrGroupFragment on UserOrGroup {
 	email
 	description
 	avatar {
-		id
-		url
+		... FileFragment
 	}
 	url
 	memberOf {
@@ -11301,6 +12129,45 @@ fragment UserOrGroupFragment on UserOrGroup {
 		id
 		name
 	}
+}
+fragment FileFragment on File {
+	... CrawlerMetaFragment
+	id
+	xid
+	name
+	path
+	mimeType
+	url
+	createdAt
+}
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
+	dataSource {
+		... RepositoryFragment
+	}
+}
+fragment RepositoryFragment on Repository {
+	id
+	xid
+	url
+	permaUrl
+	host {
+		id
+		name
+	}
+	owner {
+		... UserOrGroupBasicFragment
+	}
+	name
+	reference
+	path
+}
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
 }
 fragment GroupFragment on Group {
 	... UserOrGroupFragment
@@ -11405,6 +12272,52 @@ const GetUserOrGroupsDocument = `query GetUserOrGroups ($getFilter: UserOrGroupF
 		count
 	}
 }
+fragment FileFragment on File {
+	... CrawlerMetaFragment
+	id
+	xid
+	name
+	path
+	mimeType
+	url
+	createdAt
+}
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
+	dataSource {
+		... RepositoryFragment
+	}
+}
+fragment RepositoryFragment on Repository {
+	id
+	xid
+	url
+	permaUrl
+	host {
+		id
+		name
+	}
+	owner {
+		... UserOrGroupBasicFragment
+	}
+	name
+	reference
+	path
+}
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
+}
+fragment GroupFragment on Group {
+	... UserOrGroupFragment
+	members {
+		__typename
+		id
+	}
+}
 fragment UserFragment on User {
 	... UserOrGroupFragment
 	locale
@@ -11422,8 +12335,7 @@ fragment UserOrGroupFragment on UserOrGroup {
 	email
 	description
 	avatar {
-		id
-		url
+		... FileFragment
 	}
 	url
 	memberOf {
@@ -11433,13 +12345,6 @@ fragment UserOrGroupFragment on UserOrGroup {
 	products {
 		id
 		name
-	}
-}
-fragment GroupFragment on Group {
-	... UserOrGroupFragment
-	members {
-		__typename
-		id
 	}
 }
 `
@@ -11578,6 +12483,32 @@ const GetUserByIDDocument = `query GetUserByID ($id: ID!) {
 		... UserFragment
 	}
 }
+fragment RepositoryFragment on Repository {
+	id
+	xid
+	url
+	permaUrl
+	host {
+		id
+		name
+	}
+	owner {
+		... UserOrGroupBasicFragment
+	}
+	name
+	reference
+	path
+}
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
+}
+fragment UserFragment on User {
+	... UserOrGroupFragment
+	locale
+}
 fragment UserOrGroupFragment on UserOrGroup {
 	__typename
 	id
@@ -11591,8 +12522,7 @@ fragment UserOrGroupFragment on UserOrGroup {
 	email
 	description
 	avatar {
-		id
-		url
+		... FileFragment
 	}
 	url
 	memberOf {
@@ -11604,9 +12534,22 @@ fragment UserOrGroupFragment on UserOrGroup {
 		name
 	}
 }
-fragment UserFragment on User {
-	... UserOrGroupFragment
-	locale
+fragment FileFragment on File {
+	... CrawlerMetaFragment
+	id
+	xid
+	name
+	path
+	mimeType
+	url
+	createdAt
+}
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
+	dataSource {
+		... RepositoryFragment
+	}
 }
 `
 
@@ -11650,6 +12593,28 @@ const GetUserByXidDocument = `query GetUserByXid ($xid: String!) {
 		... UserFragment
 	}
 }
+fragment RepositoryFragment on Repository {
+	id
+	xid
+	url
+	permaUrl
+	host {
+		id
+		name
+	}
+	owner {
+		... UserOrGroupBasicFragment
+	}
+	name
+	reference
+	path
+}
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
+}
 fragment UserFragment on User {
 	... UserOrGroupFragment
 	locale
@@ -11667,8 +12632,7 @@ fragment UserOrGroupFragment on UserOrGroup {
 	email
 	description
 	avatar {
-		id
-		url
+		... FileFragment
 	}
 	url
 	memberOf {
@@ -11678,6 +12642,23 @@ fragment UserOrGroupFragment on UserOrGroup {
 	products {
 		id
 		name
+	}
+}
+fragment FileFragment on File {
+	... CrawlerMetaFragment
+	id
+	xid
+	name
+	path
+	mimeType
+	url
+	createdAt
+}
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
+	dataSource {
+		... RepositoryFragment
 	}
 }
 `
@@ -11767,6 +12748,45 @@ const GetUsersDocument = `query GetUsers ($getFilter: UserFilter, $order: UserOr
 		count
 	}
 }
+fragment FileFragment on File {
+	... CrawlerMetaFragment
+	id
+	xid
+	name
+	path
+	mimeType
+	url
+	createdAt
+}
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
+	dataSource {
+		... RepositoryFragment
+	}
+}
+fragment RepositoryFragment on Repository {
+	id
+	xid
+	url
+	permaUrl
+	host {
+		id
+		name
+	}
+	owner {
+		... UserOrGroupBasicFragment
+	}
+	name
+	reference
+	path
+}
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
+}
 fragment UserFragment on User {
 	... UserOrGroupFragment
 	locale
@@ -11784,8 +12804,7 @@ fragment UserOrGroupFragment on UserOrGroup {
 	email
 	description
 	avatar {
-		id
-		url
+		... FileFragment
 	}
 	url
 	memberOf {
@@ -11997,8 +13016,7 @@ fragment UserOrGroupFragment on UserOrGroup {
 	email
 	description
 	avatar {
-		id
-		url
+		... FileFragment
 	}
 	url
 	memberOf {
@@ -12009,6 +13027,45 @@ fragment UserOrGroupFragment on UserOrGroup {
 		id
 		name
 	}
+}
+fragment FileFragment on File {
+	... CrawlerMetaFragment
+	id
+	xid
+	name
+	path
+	mimeType
+	url
+	createdAt
+}
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
+	dataSource {
+		... RepositoryFragment
+	}
+}
+fragment RepositoryFragment on Repository {
+	id
+	xid
+	url
+	permaUrl
+	host {
+		id
+		name
+	}
+	owner {
+		... UserOrGroupBasicFragment
+	}
+	name
+	reference
+	path
+}
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
 }
 `
 
@@ -12052,6 +13109,28 @@ const GetGroupByXidDocument = `query GetGroupByXid ($xid: String!) {
 		... GroupFragment
 	}
 }
+fragment RepositoryFragment on Repository {
+	id
+	xid
+	url
+	permaUrl
+	host {
+		id
+		name
+	}
+	owner {
+		... UserOrGroupBasicFragment
+	}
+	name
+	reference
+	path
+}
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
+}
 fragment GroupFragment on Group {
 	... UserOrGroupFragment
 	members {
@@ -12072,8 +13151,7 @@ fragment UserOrGroupFragment on UserOrGroup {
 	email
 	description
 	avatar {
-		id
-		url
+		... FileFragment
 	}
 	url
 	memberOf {
@@ -12083,6 +13161,23 @@ fragment UserOrGroupFragment on UserOrGroup {
 	products {
 		id
 		name
+	}
+}
+fragment FileFragment on File {
+	... CrawlerMetaFragment
+	id
+	xid
+	name
+	path
+	mimeType
+	url
+	createdAt
+}
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
+	dataSource {
+		... RepositoryFragment
 	}
 }
 `
@@ -12172,6 +13267,35 @@ const GetGroupsDocument = `query GetGroups ($getFilter: GroupFilter, $order: Gro
 		count
 	}
 }
+fragment CrawlerMetaFragment on CrawlerMeta {
+	discoveredAt
+	lastIndexedAt
+	dataSource {
+		... RepositoryFragment
+	}
+}
+fragment RepositoryFragment on Repository {
+	id
+	xid
+	url
+	permaUrl
+	host {
+		id
+		name
+	}
+	owner {
+		... UserOrGroupBasicFragment
+	}
+	name
+	reference
+	path
+}
+fragment UserOrGroupBasicFragment on UserOrGroup {
+	__typename
+	name
+	fullName
+	id
+}
 fragment GroupFragment on Group {
 	... UserOrGroupFragment
 	members {
@@ -12192,8 +13316,7 @@ fragment UserOrGroupFragment on UserOrGroup {
 	email
 	description
 	avatar {
-		id
-		url
+		... FileFragment
 	}
 	url
 	memberOf {
@@ -12204,6 +13327,16 @@ fragment UserOrGroupFragment on UserOrGroup {
 		id
 		name
 	}
+}
+fragment FileFragment on File {
+	... CrawlerMetaFragment
+	id
+	xid
+	name
+	path
+	mimeType
+	url
+	createdAt
 }
 `
 

@@ -70,15 +70,16 @@ func (c DetailsController) Handle(ctx *fiber.Ctx) error {
 		tplNme = "details-product.html"
 
 		// select specific release version
+		prd := data.(*models.Product)
 		var selectedRelease *models.Component
-		for _, r := range data.(*models.Product).Releases {
+		for _, r := range prd.Releases {
 			if *r.Version == queryParams.Version {
 				selectedRelease = r
 				break
 			}
 		}
 		if selectedRelease == nil {
-			selectedRelease = data.(*models.Product).Releases[0]
+			selectedRelease = prd.Releases[len(prd.Releases)-1]
 		}
 		page["release"] = selectedRelease
 

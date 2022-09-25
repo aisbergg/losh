@@ -6,6 +6,9 @@ fragment NodeFragment on Node {
 fragment CrawlerMetaFragment on CrawlerMeta {
 	discoveredAt
 	lastIndexedAt
+	dataSource {
+		...RepositoryFragment
+	}
 }
 
 # ------------------------------------------------------------------------------

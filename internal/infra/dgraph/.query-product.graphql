@@ -85,6 +85,11 @@ fragment ProductFullFragment on Product {
 	id
 	xid
 	name
+	description
+	documentationLanguage
+	version
+	license {id, xid}
+	licensor {...UserOrGroupBasicFragment}
 	website
 	state
 	lastUpdatedAt

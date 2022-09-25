@@ -7,6 +7,7 @@
 	<meta http-equiv="X-UA-Compatible" content="ie=edge"/>
 
 	<title>{% if title %}{{ title }} - {% endif %}{% if site.title %}{{ site.title }} - {% endif %}{{ site.description }}</title>
+	<meta name="description" content="{{ site.description | escape }}"/>
 
 	<meta name="msapplication-TileColor" content="{{ site.data.colors.blue }}"/>
 	<meta name="theme-color" content="{{ site.data.colors.blue }}"/>
@@ -19,8 +20,9 @@
 
 	<link rel="icon" href="/favicon.ico" type="image/x-icon"/>
 	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
-
-	<meta name="description" content="{{ site.description | escape }}"/>
+	{%- for header in page.extraHeaders %}
+	{{ header }}
+	{%- endfor %}
 
 	{% include layout/css.html %}
 </head>

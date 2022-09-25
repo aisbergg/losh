@@ -59,6 +59,7 @@ func addFilters(e *liquid.Engine) {
 	e.RegisterFilter("ternary", ternaryFilter)
 	e.RegisterFilter("is_nil", isNilFilter)
 	e.RegisterFilter("is", isFilter)
+	e.RegisterFilter("deref", dereferenceFilter)
 
 }
 
@@ -171,12 +172,17 @@ func shortenVersionFilter(version string) string {
 }
 
 func isFilter(value interface{}, t ...string) bool {
+	rv := reflectutil.Indirect(reflect.ValueOf(value))
 	for _, t := range t {
-		if reflect.TypeOf(value).String() == t {
+		if rv.Type().String() == t {
 			return true
 		}
 	}
 	return false
+}
+
+func dereferenceFilter(value interface{}) interface{} {
+	return reflectutil.Indirect(reflect.ValueOf(value)).Interface()
 }
 
 func isNilFilter(value interface{}) bool {

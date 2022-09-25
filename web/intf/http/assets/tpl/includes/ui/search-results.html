@@ -480,13 +480,13 @@ orderSelect:
 							{%- if ep.orderable == true %}
 					<th>
 						<a class="text-reset d-block orderable" data-value="{{ ep.operator }}">
-							{{ ep.title }}
+							{{ ep.title | escape }}
 							{%- if order == (ep.operator | append: 'asc') %}{% include ui/icon.html icon="chevron-up" size="sm" class="icon-bold" %}{% endif %}
 							{%- if order == (ep.operator | append: 'dsc') %}{% include ui/icon.html icon="chevron-down" size="sm" class="icon-bold" %}{% endif %}
 						</a>
 					</th>
 							{%- else %}
-					<th data-bs-toggle="tooltip" data-bs-placement="top" title="{{ ep.description }}">{{ ep.title }}</th>
+					<th data-bs-toggle="tooltip" data-bs-placement="top" title="{{ ep.description | escape }}">{{ ep.title | escape }}</th>
 							{%- endif %}
 						{%- endif %}
 					{%- endfor %}
@@ -526,7 +526,11 @@ orderSelect:
 					</td>
 
 					<td>
+						{%- unless (product.Release.License | is_nil) %}{{ product.Release.License.Xid }}
 						<a href="/details/{{ product.Release.License.ID | idhex }}" class="search-result-info-link">{{ product.Release.License.Xid }}</a>
+						{%- else %}
+						N/A
+						{%- endunless %}
 					</td>
 
 					<td>
@@ -567,6 +571,8 @@ orderSelect:
 						<a href="{{ val.URL }}" class="search-result-info-link m-0">{% include ui/icon.html icon="file-download" %}</a>
 						{%- elsif ep.is == "url" %}
 						<a href="{{ val }}" class="search-result-info-link m-0">{{ val }}</a>
+						{%- elsif (val | is: "time.Time") %}
+						{{ val | deref | date: "%Y-%m-%d %H:%M" }}
 						{%- else %}
 						{{ val | escape }}
 						{%- endif %}
@@ -633,6 +639,11 @@ orderSelect:
 					<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="License">{% include ui/icon.html icon="license" %}</span>
 					<span>{{ product.Release.License.Xid }}</span>
 				</a>
+				{%- else %}
+				<div class="search-result-info mb-1">
+					<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="License">{% include ui/icon.html icon="license" %}</span>
+					<span>N/A</span>
+				</div>
 				{%- endunless %}
 				{%- unless product.Category | is_nil %}
 				<div class="search-result-info mb-1">
@@ -643,7 +654,7 @@ orderSelect:
 				{%- if (product.Tags | size) > 1 %}
 				<div class="search-result-info mb-1">
 					<span class="search-result-info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Tags">{% include ui/icon.html icon="tag" %}</span>
-					<span>{% for tag in product.Tags %}{{ tag.Name }}{% unless forloop.last %}, {% endunless %}{% endfor %}</span>
+					<span>{% for tag in product.Tags %}<a href='/search?q=tag:"{{ tag.Name | escape }}"' class="search-result-info-link d-inline-block">{{ tag.Name | escape }}</a>{% unless forloop.last %}, {% endunless %}{% endfor %}</span>
 				</div>
 				{%- endif %}
 				{%- for ep in extraProperties %}
@@ -668,6 +679,8 @@ orderSelect:
 								{%- if (val | is: "bool") %}
 									{%- if val %}{% assign icon = "check" %}{% else %}{% assign icon = "x" %}{% endif %}
 						{{ ep.title }}: {% include ui/icon.html icon="{{ icon }}" size="sm" class="icon-bold" %}
+								{%- elsif (val | is: "time.Time") %}
+									{{ val | deref | date: "%Y-%m-%d %H:%M" }}
 								{%- else %}
 									{{ val | escape }}
 								{%- endif %}

@@ -9,4 +9,4 @@ log:
 
 accessLog:
   format: console
-  enabled: false
+  enabled: true
