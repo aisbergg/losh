@@ -109,8 +109,8 @@ func NewServer(config *config.Config, db *dgraph.DgraphRepository) (*Server, err
 		tplBndPrv: tplBndPrv,
 	}
 
-	// register middleware
-	if err := app.registerMiddlewares(); err != nil {
+	// register common middleware
+	if err := app.registerCommonMiddlewares(app); err != nil {
 		return nil, errors.Wrap(err, "failed to register middlewares")
 	}
 
@@ -172,6 +172,16 @@ func (s *Server) registerRoutes() error {
 		Browse:     false,
 	}))
 
+	// api routes
+	// api := app.Group("/api")
+	// apiv1 := api.Group("/v1")
+	// routes.RegisterAPI(apiv1, app.DB)
+
+	// register logging middleware for all following routes
+	if err := s.registerLoggingMiddleware(s); err != nil {
+		return errors.Wrap(err, "failed to register middlewares")
+	}
+
 	// web routes
 	tplBndPrv := binding.NewTemplateBindingProvider(s.config)
 	web := s.Group("")
@@ -180,11 +190,6 @@ func (s *Server) registerRoutes() error {
 	controllers.NewDetailsController(s.db, s.prdSvc, tplBndPrv, s.config.Debug.Enabled).Register(web)
 	controllers.NewAboutController(tplBndPrv).Register(web)
 	controllers.NewRDFController(s.prdSvc, tplBndPrv).Register(web)
-
-	// api routes
-	// api := app.Group("/api")
-	// apiv1 := api.Group("/v1")
-	// routes.RegisterAPI(apiv1, app.DB)
 
 	// routes for debugging purposes
 	if s.config.Debug.Enabled {
@@ -200,22 +205,14 @@ func (s *Server) registerRoutes() error {
 	return nil
 }
 
-func (s *Server) registerMiddlewares() error {
-	// Access Logs
-	if s.config.AccessLog.Enabled {
-		lgMdlw, err := middleware.AccessLogger(s.config.AccessLog)
-		if err != nil {
-			return errors.Wrap(err, "failed to create access logger middleware")
-		}
-		s.Use(lgMdlw)
-	}
+func (s *Server) registerCommonMiddlewares(r fiber.Router) error {
 
 	// remove trailing slash
-	s.Use(middleware.RemoveTrailingSlash())
+	r.Use(middleware.RemoveTrailingSlash())
 
 	// Cache
 	if s.config.Server.Cache.Enabled {
-		s.Use(cache.New(cache.Config{
+		r.Use(cache.New(cache.Config{
 			Expiration:   s.config.Server.Cache.Expiration,
 			CacheControl: s.config.Server.Cache.CacheControl, // use client side caching
 			KeyGenerator: func(ctx *fiber.Ctx) string {
@@ -230,7 +227,7 @@ func (s *Server) registerMiddlewares() error {
 		if s.config.Server.Compress > 2 {
 			return errors.New("invalid compress level")
 		}
-		s.Use(compress.New(compress.Config{
+		r.Use(compress.New(compress.Config{
 			Level: compress.Level(s.config.Server.Compress),
 		}))
 	}
@@ -241,13 +238,13 @@ func (s *Server) registerMiddlewares() error {
 		td = strings.TrimSpace(td)
 		allowedOrigins = append(allowedOrigins, "http://"+td, "https://"+td)
 	}
-	s.Use(cors.New(cors.Config{
+	r.Use(cors.New(cors.Config{
 		AllowOrigins: strings.Join(allowedOrigins, ", "),
 		MaxAge:       600, // 10 minutes
 	}))
 
 	// CSRF
-	s.Use(csrf.New(csrf.Config{
+	r.Use(csrf.New(csrf.Config{
 		KeyLookup:      "header:X-Csrf-Token",
 		CookieName:     "csrf_",
 		CookieSameSite: "Strict",
@@ -256,14 +253,14 @@ func (s *Server) registerMiddlewares() error {
 	}))
 
 	// ETag
-	s.Use(etag.New(etag.Config{
+	r.Use(etag.New(etag.Config{
 		Weak: true,
 	}))
 
 	// TODO: Favicon
 
 	// RequestID
-	s.Use(requestid.New(requestid.Config{
+	r.Use(requestid.New(requestid.Config{
 		Header:     "X-Request-ID",
 		ContextKey: "requestid",
 	}))
@@ -304,12 +301,25 @@ func (s *Server) registerMiddlewares() error {
 
 	// Pprof
 	if s.config.Debug.Pprof {
-		s.Use(pprof.New())
+		r.Use(pprof.New())
 	}
 
 	// Expvar
 	if s.config.Debug.Expvar {
-		s.Use(expvar.New())
+		r.Use(expvar.New())
+	}
+
+	return nil
+}
+
+func (s *Server) registerLoggingMiddleware(r fiber.Router) error {
+	// Access Logs
+	if s.config.AccessLog.Enabled {
+		lgMdlw, err := middleware.AccessLogger(s.config.AccessLog)
+		if err != nil {
+			return errors.Wrap(err, "failed to create access logger middleware")
+		}
+		r.Use(lgMdlw)
 	}
 
 	return nil
