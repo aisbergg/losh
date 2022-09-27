@@ -331,9 +331,10 @@ func createDQLQuery(query *parser.Query, order searchmodels.OrderBy, pagination 
 	ordFrg := ""
 	if order.Descending {
 		// XXX: multiple sorting works only for predicates, not for variables (second term in this case will be ignored); if you change the order of those two terms, the query will fail telling you the fact I just stated
-		ordFrg = "orderdesc: val(order), orderasc: Product.name"
+		// ordFrg = "orderdesc: val(order), orderasc: Product.name"
+		ordFrg = "orderdesc: val(order)"
 	} else {
-		ordFrg = "orderasc: val(order), orderasc: Product.name"
+		ordFrg = "orderasc: val(order)"
 	}
 
 	encoder.appendSelectQuery(selectQueryFragment, ordFrg, lastVar)
@@ -471,10 +472,12 @@ func (e *encoder) encodeExpression(expr *parser.Expression, parVar string) (curV
 	if expr.Text != nil {
 		// extract the value as text
 		text := ""
+		exactPhrase := false
 		if expr.Text.Words != nil {
 			text = *expr.Text.Words
 		} else {
 			text = *expr.Text.Exact
+			exactPhrase = true
 		}
 		if text == "" {
 			return
@@ -483,8 +486,8 @@ func (e *encoder) encodeExpression(expr *parser.Expression, parVar string) (curV
 		descOpr := operators["description"]
 		tagOpr := operators["tag"]
 		filter := e.generateOrFilter(
-			e.generateTextFilter(nameOpr.Predicate, nameOpr.Type, text, false, false),
-			e.generateTextFilter(descOpr.Predicate, descOpr.Type, text, false, false),
+			e.generateTextFilter(nameOpr.Predicate, nameOpr.Type, text, exactPhrase, false),
+			e.generateTextFilter(descOpr.Predicate, descOpr.Type, text, exactPhrase, false),
 		)
 		if filter == nil {
 			return
@@ -492,7 +495,7 @@ func (e *encoder) encodeExpression(expr *parser.Expression, parVar string) (curV
 		filter = e.generateFilterExpression(filter)
 		var1 := e.addVariableWithFilter(string(filter), "", parVar)
 
-		tagfilter := e.generateTextFilter(tagOpr.Predicate, tagOpr.Type, text, false, false)
+		tagfilter := e.generateTextFilter(tagOpr.Predicate, tagOpr.Type, text, exactPhrase, false)
 		tagfilter = e.generateFilterExpression(tagfilter)
 		sel := fmt.Sprintf(`%s %s %s`, tagOpr.SelectionStart, string(tagfilter), tagOpr.SelectionEnd)
 		var2 := e.addVariableWithFilter("", sel, parVar)
@@ -589,11 +592,11 @@ func (e *encoder) encodeOperator(opr *parser.Operator, parVar string) (curVar st
 		return
 
 	case textFullContainsOperator, textTermExactOperator, textTermContainsOperator, textExactOperator:
-		text, exact, match, not := e.extractOperatorText(opr)
+		text, exactPhrase, fullMatch, not := e.extractOperatorText(opr)
 		if text == "" {
 			return
 		}
-		filter := e.generateTextFilter(o.Predicate, o.Type, text, exact, match)
+		filter := e.generateTextFilter(o.Predicate, o.Type, text, exactPhrase, fullMatch)
 		if filter == nil || len(filter) == 0 {
 			return
 		}
@@ -633,14 +636,14 @@ const (
 	//   opr:"text" -> contains-match (regexp: /.../i)
 	//   opr:* or opr:`text*` -> wildcard-contains-match (regexp: /.../i and alloftext)
 	//   opr:"*" -> wildcard-contains-match (regexp: /.../i)
-	//   opr:==text -> exact-match (allof with exacti index)
+	//   opr:==text -> exact-full-match (allof with exacti index)
 	textFullContainsOperator
 	// Matches either terms or the exact text.
 	// Requires indexes: term, regexp, exacti
 	//   opr:text or opr:`text` -> term-match (allofterms)
-	//   opr:"text" or opr:==text -> exact-match (allof with exacti index)
+	//   opr:"text" or opr:==text -> exact-full-match (allof with exacti index)
 	//   opr:* or opr:`text*` -> wildcard-contains-match (regexp: /.../i and allofterms)
-	//   opr:"*" -> wildcard exact-match (regexp: /^...$/)
+	//   opr:"*" -> wildcard exact-full-match (regexp: /^...$/)
 	textTermExactOperator
 	// Matches either terms or phrases contained in the text.
 	// Requires indexes: term, regexp, exacti
@@ -648,12 +651,12 @@ const (
 	//   opr:"text" -> contains-match (regexp: /.../i)
 	//   opr:* or opr:`text*` -> wildcard-contains-match (regexp: /.../i and allofterms)
 	//   opr:"*" -> wildcard-contains-match (regexp: /.../i)
-	//   opr:==text -> exact-match (allof with exacti index)
+	//   opr:==text -> exact-full-match (allof with exacti index)
 	textTermContainsOperator
 	// Matches the exact text (case insensitive).
 	// Requires indexes: regexp, exacti
-	//   opr:text or opr:`text` or opr:"text" or opr:==text -> exact-match (allof with exacti index)
-	//   opr:* or opr:`*` or opr:"*" -> wildcard exact-match (regexp: /^...$/i)
+	//   opr:text or opr:`text` or opr:"text" or opr:==text -> exact-full-match (allof with exacti index)
+	//   opr:* or opr:`*` or opr:"*" -> wildcard exact-full-match (regexp: /^...$/i)
 	textExactOperator
 	numberFloatOperator
 	numberIntOperator
@@ -1189,7 +1192,7 @@ var operators = map[string]operator{
 	// TODO: more fields
 }
 
-func (e *encoder) extractOperatorText(opr *parser.Operator) (text string, exact, match, not bool) {
+func (e *encoder) extractOperatorText(opr *parser.Operator) (text string, exactPhrase, fullMatch, not bool) {
 	var val *parser.Text
 
 	// check if the operator is a range, comparison or a plain value
@@ -1200,7 +1203,7 @@ func (e *encoder) extractOperatorText(opr *parser.Operator) (text string, exact,
 		val = opr.Value
 	} else if opr.Comparison != nil {
 		val = opr.Comparison.Value
-		match = true
+		fullMatch = true
 		switch opr.Comparison.Operator {
 		case parser.CompOpEq:
 			not = false
@@ -1219,7 +1222,7 @@ func (e *encoder) extractOperatorText(opr *parser.Operator) (text string, exact,
 	if val.Words != nil {
 		text = *val.Words
 	} else {
-		exact = true
+		exactPhrase = true
 		text = *val.Exact
 	}
 
@@ -1292,17 +1295,17 @@ func (e *encoder) generateUIDFilter(uid string) []byte {
 // generateTextFilter ...
 //
 // match indicates whether the text need to be matched (enclosed with quotes "")
-func (e *encoder) generateTextFilter(predicate string, oprTyp operatorType, text string, exact, match bool) []byte {
+func (e *encoder) generateTextFilter(predicate string, oprTyp operatorType, text string, exactPhrase, fullMatch bool) []byte {
 	var b bytes.Buffer
 
 	if oprTyp == textExactOperator { // only supports exact matches
-		match = true
+		exactPhrase = true
 	}
 
 	// check first if has to be matched exactly
-	if match {
-		if oprTyp == textExactOperator || oprTyp == textTermExactOperator { // only supports exact-matches
-			exact = true
+	if exactPhrase {
+		if oprTyp == textExactOperator || oprTyp == textTermExactOperator { // only supports exact-full-matches
+			fullMatch = true
 		}
 
 		// handle wildcards (*)
@@ -1314,7 +1317,7 @@ func (e *encoder) generateTextFilter(predicate string, oprTyp operatorType, text
 			}
 			var barg strings.Builder
 			barg.WriteRune('/')
-			if exact {
+			if fullMatch {
 				barg.WriteRune('^')
 			}
 			for j, part := range parts {
@@ -1331,7 +1334,7 @@ func (e *encoder) generateTextFilter(predicate string, oprTyp operatorType, text
 				}
 				barg.WriteString(part)
 			}
-			if exact {
+			if fullMatch {
 				barg.WriteRune('$')
 			}
 			barg.WriteString(`/i`)
@@ -1360,11 +1363,11 @@ func (e *encoder) generateTextFilter(predicate string, oprTyp operatorType, text
 			var barg strings.Builder
 			barg.Grow(len(text) + 10)
 			barg.WriteRune('/')
-			if exact {
+			if fullMatch {
 				barg.WriteRune('^')
 			}
 			barg.WriteString(text)
-			if exact {
+			if fullMatch {
 				barg.WriteRune('$')
 			}
 			barg.WriteString(`/i`)
