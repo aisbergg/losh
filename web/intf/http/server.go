@@ -165,6 +165,16 @@ func createFiberConfig(config *config.Config, log *zap.SugaredLogger, tplBndPrv 
 }
 
 func (s *Server) registerRoutes() error {
+	// robots.txt route
+	robotsTxt := `User-agent: *
+Disallow: /search
+Disallow: /rdf
+Disallow: /details
+`
+	s.Get("/robots.txt", func(c *fiber.Ctx) error {
+		return c.SendString(robotsTxt)
+	})
+
 	// static files
 	s.Use("/static", filesystem.New(filesystem.Config{
 		Root:       assets.AssetsHTTP,
