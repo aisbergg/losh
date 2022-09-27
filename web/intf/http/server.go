@@ -15,6 +15,7 @@
 package app
 
 import (
+	"runtime/debug"
 	"strings"
 	"time"
 
@@ -274,6 +275,28 @@ func (s *Server) registerMiddlewares() error {
 	// TODO: Proxy
 
 	// TODO: Timeout
+
+	if !s.config.Debug.Enabled {
+		// We handle panics in prod mode by logging the panic as a regular error
+		// and returning a "500 - Internal Server Error" page. In debug mode we
+		// want to "fail fast" and therefore let the application simply die when
+		// a panic occurs.
+		r.Use(func(c *fiber.Ctx) (err error) {
+			// Catch panics
+			defer func() {
+				if r := recover(); r != nil {
+					// var ok bool
+					if rerr, ok := r.(error); ok {
+						// attaching the panic stack directly to the error would be nice
+						err = errors.CEWrap(rerr, "panic").Add("panicStack", string(debug.Stack()))
+					} else {
+						err = errors.Errorf("%v", r)
+					}
+				}
+			}()
+			return c.Next()
+		})
+	}
 
 	//
 	// For Debugging
