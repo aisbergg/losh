@@ -1,5 +1,5 @@
 crawler:
-  userAgent: "OKH-LOSH-Crawler github.com/OPEN-NEXT/OKH-LOSH"  # (opt)
+  userAgent: "LOSH Bot (github.com/aisbergg/losh)"
 
 log:
   level: info  # debug, info, warning, error, critical

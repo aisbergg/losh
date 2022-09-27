@@ -1,3 +1,6 @@
+crawler:
+  userAgent: "LOSH Bot (github.com/aisbergg/losh)"
+
 log:
   level: debug
   format: console
