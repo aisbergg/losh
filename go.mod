@@ -16,7 +16,6 @@ require (
 	github.com/alecthomas/chroma v0.10.0
 	github.com/alecthomas/participle/v2 v2.0.0-beta.5
 	github.com/dgraph-io/dgo/v200 v200.0.0-20210401091508-95bfd74de60e
-	github.com/fenos/dqlx v0.2.1-0.20210902154011-e8c319a835d3
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/gofiber/fiber/v2 v2.36.0
 	github.com/gofiber/template v1.6.27
@@ -79,7 +78,6 @@ require (
 )
 
 replace (
-	github.com/fenos/dqlx => github.com/aisbergg/go-dqlx v0.0.0-20220822230403-6ac098906135
 	github.com/osteele/liquid => github.com/aisbergg/go-liquid v1.3.1-0.20220719205958-08f515a337ef
 	github.com/wk8/go-ordered-map => github.com/aisbergg/go-orderedmap v1.0.1-0.20220812065708-63d414488359
 )

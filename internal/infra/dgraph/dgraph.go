@@ -35,7 +35,6 @@ import (
 	"github.com/aisbergg/go-retry/pkg/retry"
 	"github.com/dgraph-io/dgo/v200"
 	"github.com/dgraph-io/dgo/v200/protos/api"
-	"github.com/fenos/dqlx"
 	"google.golang.org/grpc"
 
 	gql "github.com/Yamashou/gqlgenc/clientv2"
@@ -57,8 +56,6 @@ type DgraphRepository struct {
 	// copierFull *copier.Copier
 	log *zap.SugaredLogger
 
-	// dqlxClient
-	dqlxClient   dqlx.DB
 	dgraphClient *dgo.Dgraph
 }
 
@@ -146,7 +143,6 @@ func NewDgraphRepository(dbConfig Config) (*DgraphRepository, error) {
 	})
 
 	// -------------------------------------------------------------------------
-	// dqlxClient
 	// dgraphClient := api.DgraphClient, len(addresses))
 	// TODO: TLS stuff
 	dial, err := grpc.Dial(strings.TrimSpace(dbConfig.Host)+":9080", grpc.WithInsecure())
@@ -154,7 +150,6 @@ func NewDgraphRepository(dbConfig Config) (*DgraphRepository, error) {
 		return nil, err
 	}
 	dgraphClient := dgo.NewDgraphClient(api.NewDgraphClient(dial))
-	dqlxClient := dqlx.FromClient(dgraphClient)
 
 	// TODO: access to cluster
 	// func Connect(addresses ...string) (DB, error) {
@@ -185,7 +180,6 @@ func NewDgraphRepository(dbConfig Config) (*DgraphRepository, error) {
 		address: address,
 		log:     log,
 
-		dqlxClient:   dqlxClient,
 		dgraphClient: dgraphClient,
 	}
 	return dgraphRepo, nil

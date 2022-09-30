@@ -18,14 +18,7 @@ import (
 	"context"
 
 	"losh/internal/infra/dgraph/dgclient"
-
-	"github.com/fenos/dqlx"
 )
-
-var CrawlerMetaDQLFragment = dqlx.QueryBuilder{}.Raw(`
-	CrawlerMeta.discoveredAt
-	CrawlerMeta.lastIndexedAt
-`)
 
 var (
 	errGetNodeStr    = "failed to get node(s)"
