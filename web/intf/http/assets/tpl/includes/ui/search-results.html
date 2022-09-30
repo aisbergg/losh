@@ -526,7 +526,7 @@ orderSelect:
 					</td>
 
 					<td>
-						{%- unless (product.Release.License | is_nil) %}{{ product.Release.License.Xid }}
+						{%- unless (product.Release.License | is_nil) %}
 						<a href="/details/{{ product.Release.License.ID | idhex }}" class="search-result-info-link">{{ product.Release.License.Xid }}</a>
 						{%- else %}
 						N/A
