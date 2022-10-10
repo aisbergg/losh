@@ -15,6 +15,7 @@ require (
 	github.com/aisbergg/go-unidecode v1.1.1
 	github.com/alecthomas/chroma v0.10.0
 	github.com/alecthomas/participle/v2 v2.0.0-beta.5
+	github.com/anglo-korean/rdf v0.0.0-20210327070916-93fe8828a7cb
 	github.com/dgraph-io/dgo/v200 v200.0.0-20210401091508-95bfd74de60e
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/gofiber/fiber/v2 v2.36.0
@@ -81,3 +82,5 @@ replace (
 	github.com/osteele/liquid => github.com/aisbergg/go-liquid v1.3.1-0.20220719205958-08f515a337ef
 	github.com/wk8/go-ordered-map => github.com/aisbergg/go-orderedmap v1.0.1-0.20220812065708-63d414488359
 )
+
+replace github.com/anglo-korean/rdf => github.com/aisbergg/go-rdf v0.0.0-20210327070916-93fe8828a7cb

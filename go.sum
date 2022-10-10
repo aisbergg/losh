@@ -84,6 +84,8 @@ github.com/aisbergg/go-orderedmap v1.0.1-0.20220812065708-63d414488359 h1:dlbtUb
 github.com/aisbergg/go-orderedmap v1.0.1-0.20220812065708-63d414488359/go.mod h1:9ZIbRunKbuvfPKyBP1SIKLcXNlv74YCOZ3t3VTS6gRk=
 github.com/aisbergg/go-pathlib v0.12.1-0.20220826142213-89265f98d94e h1:HyLPuZ+CoTS92lnklDPlktq6F8o9TKMLDzsHKqs8+1Y=
 github.com/aisbergg/go-pathlib v0.12.1-0.20220826142213-89265f98d94e/go.mod h1:aHd1stGy8mCvDEsGIa6JyvfGA8sFNRzbmZ187+CRFnc=
+github.com/aisbergg/go-rdf v0.0.0-20210327070916-93fe8828a7cb h1:FvorqtYBXa5iVXx5j0DcsfQSFq+2micq54YhLSg437A=
+github.com/aisbergg/go-rdf v0.0.0-20210327070916-93fe8828a7cb/go.mod h1:AzbsZ7qlds+UW4UuSr6P9of5i0jB+HaEgTCd97JqlpQ=
 github.com/aisbergg/go-retry v1.0.0 h1:N+rQINcZQGqf4fpGu3+UqgRwTq65CzxvDlmS/aL0hJE=
 github.com/aisbergg/go-retry v1.0.0/go.mod h1:tKtfsUUPWPmSNI898VRUjNAnRdmHCMAXilDasfzY72A=
 github.com/aisbergg/go-unidecode v1.1.1 h1:ub++vd3jRYIkYD11XPleAFwHtJFKvujzR0Q0QiGsH70=
