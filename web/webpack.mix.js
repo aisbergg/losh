@@ -38,6 +38,7 @@ mix.options({
     processCssUrls: false,
     publicPath: staticPath,  // base output path for generated assets
     resourceRoot: "static",  // base path used for serving the assets (used with processCssUrls)
+    manifest: false,
 })
 
 
@@ -166,7 +167,7 @@ mix.sourceMaps()
 
     // libs
     // .js(`node_modules/masonry-layout/dist/masonry.pkgd.min.js`, "js")
-    .copy(`node_modules/masonry-layout/dist/masonry.pkgd.min.js`, `${staticPath}` + "/js/masonry.pkgd.min.js")
+    .copy(`node_modules/masonry-layout/dist/masonry.pkgd.min.js`, `${staticPath}/js/masonry.pkgd.min.js`)
 
     // app
     .copyTemplates(`${assetsSrcPath}/tpl`, `${outputPath}/templates`)
