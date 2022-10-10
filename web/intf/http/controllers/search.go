@@ -151,7 +151,7 @@ func performExport(fbrCtx *fiber.Ctx, svcCtx context.Context, searchService *sea
 		if err != nil {
 			return errors.CEWrap(err, "failed to export results as CSV").
 				Add("query", queryParams.Query).
-				Add("oder", queryParams.Order).
+				Add("order", queryParams.Order).
 				Add("page", queryParams.Page)
 		}
 		fbrCtx.Response().Header.SetContentType(MIMECSVCharsetUTF8)
@@ -164,7 +164,7 @@ func performExport(fbrCtx *fiber.Ctx, svcCtx context.Context, searchService *sea
 		if err != nil {
 			return errors.CEWrap(err, "failed to export results as TSV").
 				Add("query", queryParams.Query).
-				Add("oder", queryParams.Order).
+				Add("order", queryParams.Order).
 				Add("page", queryParams.Page)
 		}
 		fbrCtx.Response().Header.SetContentType(MIMETSVCharsetUTF8)
