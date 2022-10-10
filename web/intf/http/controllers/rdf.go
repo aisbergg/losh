@@ -20,6 +20,7 @@ import (
 	"reflect"
 	"sort"
 	"strings"
+	"time"
 	"unsafe"
 
 	"losh/internal/core/product/models"
@@ -27,7 +28,10 @@ import (
 	"losh/internal/lib/util/reflectutil"
 	"losh/web/intf/http/controllers/binding"
 
+	"github.com/aisbergg/go-errors/pkg/errors"
+	"github.com/anglo-korean/rdf"
 	"github.com/gofiber/fiber/v2"
+	"github.com/valyala/bytebufferpool"
 )
 
 const (
@@ -38,13 +42,18 @@ const (
 
 // RDFController is the controller for the rdf resource pages at '/rdf/*'.
 type RDFController struct {
-	prdSvc    *services.Service
-	tplBndPrv binding.TemplateBindingProvider
+	Controller
+	prdSvc  *services.Service
+	baseURL string
 }
 
 // NewRDFController creates a new RDFController.
-func NewRDFController(svc *services.Service, tplBndPrv binding.TemplateBindingProvider) RDFController {
-	return RDFController{svc, tplBndPrv}
+func NewRDFController(svc *services.Service, tplBndPrv binding.TemplateBindingProvider, baseURL string) RDFController {
+	return RDFController{
+		Controller: Controller{tplBndPrv},
+		prdSvc:     svc,
+		baseURL:    baseURL,
+	}
 }
 
 // Register registers the controller with the given router.
@@ -85,16 +94,12 @@ func (c RDFController) HandleResource(ctx *fiber.Ctx) error {
 
 // HandlePage handles the request for the RDF HTML page.
 func (c RDFController) HandlePage(ctx *fiber.Ctx) error {
+	reqInfo, tplBnd := c.preprocessRequest(ctx, nil, nil)
+
 	id := parseHexID(ctx.Params("id"))
 	if id == "" {
 		return fiber.ErrNotFound
 	}
-
-	// tell client that hints about color scheme are accepted
-	ctx.Set("Accept-CH", "Sec-CH-Prefers-Color-Scheme")
-	ctx.Set("Vary", "Sec-CH-Prefers-Color-Scheme")
-	ctx.Set("Critical-CH", "Sec-CH-Prefers-Color-Scheme")
-	preferredColorScheme := ctx.Get("Sec-CH-Prefers-Color-Scheme")
 
 	// get node from database
 	svcCtx, cancel := context.WithTimeout(ctx.Context(), dbTimeout)
@@ -107,19 +112,17 @@ func (c RDFController) HandlePage(ctx *fiber.Ctx) error {
 		return fiber.ErrNotFound
 	}
 
-	tplBnd := c.tplBndPrv.Get()
 	page := tplBnd["page"].(map[string]interface{})
 	page["title"] = "Resource"
+	page["id"] = id
 	page["resource"] = processNode(node.(models.Node))
-	v, t := nodeValueType(node.(models.Node))
+	v, t := extractValueAndType(node.(models.Node))
 	page["page-header"] = fmt.Sprintf("%s: %s", t, v)
-	if preferredColorScheme == "dark" {
-		page["body-class"] = "theme-dark"
-	} else {
-		page["body-class"] = "theme-light"
+	page["extraHeaders"] = []string{
+		`<link rel="alternate" type="text/turtle" href="` + reqInfo.BaseURL + `/rdf/data/ttl/` + id[2:] + `" />`,
 	}
 
-	return ctx.Render("resource", tplBnd)
+	return ctx.Render("rdf-page", tplBnd)
 }
 
 // HandleData handles the request for the RDF data page.
@@ -129,29 +132,41 @@ func (c RDFController) HandleData(ctx *fiber.Ctx) error {
 		return fiber.ErrNotFound
 	}
 	rdfType := ctx.Params("type")
+	var encFmt rdf.Format
 	switch rdfType {
+	case "ntriples":
+		encFmt = rdf.NTriples
 	case "ttl":
-		// get resource from database
-		svcCtx, cancel := context.WithTimeout(ctx.Context(), dbTimeout)
-		defer cancel()
-		node, err := c.prdSvc.GetNode(svcCtx, id)
-		if err != nil {
-			return err
-		}
-		if node == nil {
-			return ctx.SendStatus(fiber.StatusNotFound)
-		}
-
-		// TODO: implement
-		return ctx.JSON("something")
-		// return ctx.SendFile(c.prdSvc.GetProductRDF(id), MIMETurtle)
+		encFmt = rdf.Turtle
 	}
 
-	return fiber.ErrNotFound
+	// get resource from database
+	svcCtx, cancel := context.WithTimeout(ctx.Context(), dbTimeout)
+	defer cancel()
+	node, err := c.prdSvc.GetNode(svcCtx, id)
+	if err != nil {
+		return err
+	}
+	if node == nil {
+		return fiber.ErrNotFound
+	}
+
+	triples := newRDFProcessor(c.baseURL).process(node.(models.Node))
+	bb := bytebufferpool.Get()
+	defer bytebufferpool.Put(bb)
+	enc := rdf.NewTripleEncoder(bb, encFmt)
+	err = enc.EncodeAll(triples)
+	if err != nil {
+		return errors.CEWrap(err, "failed to encode RDF").
+			Add("type", rdfType).
+			Add("id", id)
+	}
+	enc.Close()
+	return ctx.Send(bb.B)
 }
 
 func processNode(node models.Node) []map[string]interface{} {
-	ret := make([]map[string]interface{}, 0, 40)
+	ret := make([]map[string]interface{}, 0, 30)
 	val := reflect.ValueOf(node)
 	valDrf := reflectutil.Indirect(val)
 	flds := reflectutil.GetStructFields(valDrf)
@@ -175,16 +190,17 @@ func processNode(node models.Node) []map[string]interface{} {
 	return ret
 }
 
+var timeType = reflect.TypeOf(time.Time{})
+
 func formatValue(value interface{}, m map[string]interface{}) {
 	if reflectutil.IsNil(value) {
 		m["value"] = nil
 		return
 	}
 
-	n, ok := value.(models.Node)
-	if ok {
+	if n, ok := value.(models.Node); ok {
 		m["link"] = "/rdf/resource/" + (*n.GetID())[2:]
-		m["value"], m["type"] = nodeValueType(n)
+		m["value"], m["type"] = extractValueAndType(n)
 		return
 	}
 
@@ -230,10 +246,13 @@ func formatValue(value interface{}, m map[string]interface{}) {
 		m["type"] = "list"
 	default:
 		m["value"] = fmt.Sprintf("%v", vd.Interface())
+		if vd.Type() == timeType {
+			m["type"] = "datetime"
+		}
 	}
 }
 
-func nodeValueType(node models.Node) (value, typ string) {
+func extractValueAndType(node models.Node) (value, typ string) {
 	switch t := node.(type) {
 	case *models.BoundingBoxDimensions:
 		value = fmt.Sprintf("%fm x %fm x %fm", *t.Width, *t.Height, *t.Depth)
@@ -309,4 +328,78 @@ func nodeValueType(node models.Node) (value, typ string) {
 		panic(fmt.Sprintf("unsupported node type: %T", node))
 	}
 	return
+}
+
+type rdfProcessor struct {
+	baseURL string
+	triples []rdf.Triple
+}
+
+func newRDFProcessor(baseURL string) *rdfProcessor {
+	return &rdfProcessor{
+		baseURL: baseURL,
+		triples: make([]rdf.Triple, 0, 40),
+	}
+}
+
+func (p *rdfProcessor) process(node models.Node) []rdf.Triple {
+	val := reflect.ValueOf(node)
+	valDrf := reflectutil.Indirect(val)
+	flds := reflectutil.GetStructFields(valDrf)
+
+	keys := make([]string, 0, len(flds))
+	for k := range flds {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+
+	subj, _ := rdf.NewIRI(p.baseURL + "/rdf/resource/" + *node.GetID())
+
+	for _, k := range keys {
+		fldVal := valDrf.Field(flds[k].Index)
+		fldInf := fldVal.Interface()
+
+		p.nodeToTriple(subj, k, fldInf)
+	}
+
+	return p.triples
+}
+
+func (p *rdfProcessor) nodeToTriple(subj rdf.IRI, key string, value interface{}) {
+	if reflectutil.IsNil(value) {
+		return
+	}
+
+	if n, ok := value.(models.Node); ok {
+		pred, _ := rdf.NewIRI(key)
+		obj, _ := rdf.NewIRI(p.baseURL + "/rdf/resource/" + *n.GetID())
+		p.triples = append(p.triples, rdf.Triple{subj, pred, obj})
+		return
+	}
+
+	v := reflect.ValueOf(value)
+	vd := reflectutil.Indirect(v)
+	if !vd.IsValid() {
+		return
+	}
+	vdInf := vd.Interface()
+	pred, _ := rdf.NewIRI(key)
+	var obj rdf.Object
+
+	switch vd.Kind() {
+	case reflect.Slice, reflect.Array:
+		for i := 0; i < vd.Len(); i++ {
+			v := vd.Index(i).Interface()
+			p.nodeToTriple(subj, key, v)
+		}
+		return
+	case reflect.String:
+		obj, _ = rdf.NewLiteral(vd.String())
+	default:
+		obj, _ = rdf.NewLiteral(vdInf)
+		fmt.Println("value", value)
+		fmt.Println("obj", obj)
+	}
+
+	p.triples = append(p.triples, rdf.Triple{subj, pred, obj})
 }

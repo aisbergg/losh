@@ -199,7 +199,7 @@ Disallow: /details
 	controllers.NewSearchController(s.db, tplBndPrv, s.config.Debug.Enabled).Register(web)
 	controllers.NewDetailsController(s.db, s.prdSvc, tplBndPrv, s.config.Debug.Enabled).Register(web)
 	controllers.NewAboutController(tplBndPrv).Register(web)
-	controllers.NewRDFController(s.prdSvc, tplBndPrv).Register(web)
+	controllers.NewRDFController(s.prdSvc, tplBndPrv, s.config.Server.BaseURL).Register(web)
 
 	// routes for debugging purposes
 	if s.config.Debug.Enabled {

@@ -1,0 +1,96 @@
+---
+layout: layouts/base
+---
+<div class="page">
+	{% assign breakpoint = include.breakpoint | default: 'md' %}
+	<header class="navbar navbar-expand-{{ breakpoint }}{% if include.transparent %} navbar-transparent{% else %}{% if include.dark %} navbar-dark{% else %} navbar-light{% endif %}{% if include.background %} bg-{{ include.background }}{% endif %}{% endif %}{% if include.sticky %} sticky-top{% endif %}{% if include.overlap %} navbar-overlap{% endif %}{% if include.class %} {{ include.class }}{% endif %} d-print-none"{% if include.background-color %} style="background: {{ include.background-color }}"{% endif %}>
+		<div class="container-xl">
+			{% include layout/navbar-toggler.html target="navbar-menu" %}
+
+			{% include layout/navbar-logo.html dark=include.dark small-logo=include.small-logo hide-logo=include.hide-logo class="d-none-navbar-horizontal pe-0 pe-md-3" breakpoint=breakpoint show-title=include.show-title header=true %}
+
+			<div class="collapse navbar-collapse" id="navbar-menu">
+				<div class="d-flex flex-column flex-md-row flex-fill align-items-stretch align-items-md-center">
+					{% include layout/navbar-menu.html hide-icons=include.hide-icons %}
+				</div>
+			</div>
+		</div>
+	</header>
+
+	<div class="page-wrapper{% if page.layout-wrapper-full %} page-wrapper-full{% endif %}">
+		<div class="container-xl">
+			<div class="page-header mb-3">
+				<div class="d-flex justify-content-between align-items-center">
+					<div>
+						<h2 class="page-title">
+							{{ page.page-header }}
+						</h2>
+					</div>
+
+					<div class="btn-group d-print-none" role="button">
+						<button id="exportResults" type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" {% if page.results.count == 0 %} disabled{% endif %}>
+							{% include ui/icon.html icon="file-download" use-svg=true %}
+							Download As
+						</button>
+						<div class="dropdown-menu dropdown-menu-end">
+							<div class="dropdown-header">RDF:</div>
+							<a class="dropdown-item" href="/rdf/data/ttl/{{ page.id | idhex }}">
+								Turtle
+							</a>
+							<a class="dropdown-item" href="/rdf/data/ntriples/{{ page.id | idhex }}">
+								N-Triples
+							</a>
+							<div class="dropdown-divider"></div>
+							<div class="dropdown-header">Other:</div>
+							<a class="dropdown-item" href="{{ req.url  }}">
+								CSV
+							</a>
+							<a class="dropdown-item" href="{{ req.url  }}">
+								TSV
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="page-body">
+			<div class="container-xl d-flex flex-column justify-content-center">
+				<div class="card">
+					<div class="table-responsive">
+						<table class="table">
+							<thead>
+								<tr>
+								<th scope="col" class="w-25">Property</th>
+								<th scope="col" class="w-75">Value</th>
+								</tr>
+							</thead>
+							<tbody>
+								{%- for field in page.resource %}
+								<tr>
+									<td>{{ field.name | escape }}</td>
+									<td>
+										{% unless (field.value | is_nil) %}
+										{%- if field.type == "list" %}
+										<ul>
+										{%- for item in field.value %}
+											<li>{% if item.link %}<a href="{{ item.link }}">{% endif %}{{ item.value | escape }}{% if item.link %}</a>{% endif %}{% if item.type %} <span class="text-muted">({{ item.type }})</span>{% endif %}</li>
+										{%- endfor %}
+										</ul>
+										{%- else %}
+										<div>{% if field.link %}<a href="{{ field.link }}">{% endif %}{{ field.value | escape }}{% if field.link %}</a>{% endif %}{% if field.type %} <span class="text-muted">({{ field.type }})</span>{% endif %}</div>
+										{%- endif %}
+										{% endunless %}
+									</td>
+								</tr>
+								{%- endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		{% include layout/footer.html %}
+	</div>
+</div>
